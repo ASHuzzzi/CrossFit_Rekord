@@ -11,15 +11,15 @@ import ru.profit_group.scorocode_sdk.scorocode_objects.DocumentInfo;
  * Created by Peter Staranchuk on 10/30/16
  */
 
-public class DocumentFields {
+public class DocumentFields_Table {
     private Context context;
     private DocumentInfo documentInfo;
 
-    public DocumentFields(Context context) {
+    public DocumentFields_Table(Context context) {
         this(context, null);
     }
 
-    public DocumentFields(Context context, DocumentInfo documentInfo) {
+    public DocumentFields_Table(Context context, DocumentInfo documentInfo) {
         this.context = context;
         this.documentInfo = documentInfo;
     }
@@ -30,9 +30,9 @@ public class DocumentFields {
 
     public enum Fields {
 
-        period(R.string.period),
-        types_of_training(R.string.types_of_training),
-        price(R.string.price);
+        day_of_week(R.string.day_of_week),
+        start_time(R.string.start_time),
+        type(R.string.type);
 
         /*
         PLATFORM(R.string.fieldPlatformName),
@@ -54,18 +54,17 @@ public class DocumentFields {
         }
 
     }
-    public String getTypesOfTrainingFields() {
-        return context.getString(Fields.types_of_training.getNameId());
+    public String getDayOfWeekFields() {
+        return context.getString(Fields.day_of_week.getNameId());
     }
 
 
-    public String getPeriodField() {
-        return context.getString(Fields.period.getNameId());
-
+    public String getStartTimeField() {
+        return context.getString(Fields.start_time.getNameId());
     }
 
-    public String getPriceField() {
-        return context.getString(Fields.price.getNameId());
+    public String getTypeField() {
+        return context.getString(Fields.type.getNameId());
     }
 /*
     public String getCameraInfoField() {
@@ -99,7 +98,7 @@ public class DocumentFields {
     @NonNull
     public String getTypesOfTraining() {
         if(documentInfo != null) {
-            return getFieldValue(documentInfo, Fields.types_of_training);
+            return getFieldValue(documentInfo, Fields.day_of_week);
         }
         return "";
     }
@@ -107,7 +106,7 @@ public class DocumentFields {
     @NonNull
     public String getPeriod() {
         if(documentInfo != null) {
-            return getFieldValue(documentInfo, Fields.period);
+            return getFieldValue(documentInfo, Fields.start_time);
         }
         return "";
     }
@@ -115,7 +114,7 @@ public class DocumentFields {
     @NonNull
     public String getPrice() {
         if(documentInfo != null) {
-            return getFieldValue(documentInfo, Fields.price);
+            return getFieldValue(documentInfo, Fields.type);
         }
         return "";
     }

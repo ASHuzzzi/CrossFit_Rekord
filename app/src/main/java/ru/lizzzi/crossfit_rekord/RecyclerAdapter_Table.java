@@ -77,19 +77,19 @@ import ru.profit_group.scorocode_sdk.scorocode_objects.DocumentInfo;
     }
     */
 
-public class RecyclerAdapterMenu extends BaseAdapter {
+public class RecyclerAdapter_Table extends BaseAdapter {
     private Context context;
     private List<DocumentInfo> storedItems;
     private int layoutId;
     private LayoutInflater inflater;
-    private DocumentFields fields;
+    private DocumentFields_Table fields;
 
-    public RecyclerAdapterMenu(Context context, @NonNull List<DocumentInfo> storedItems, int layoutId) {
+    public RecyclerAdapter_Table(Context context, @NonNull List<DocumentInfo> storedItems, int layoutId) {
         this.context = context;
         this.storedItems = storedItems;
         this.layoutId = layoutId;
         inflater = LayoutInflater.from(context);
-        fields = new DocumentFields(context, null);
+        fields = new DocumentFields_Table(context, null);
     }
 
     @Override
@@ -126,13 +126,11 @@ public class RecyclerAdapterMenu extends BaseAdapter {
 
     private void customizeView(View view, ViewHolder holder, final DocumentInfo documentInfo) {
 
-        String period = (String) documentInfo.getFields().get(fields.getPeriodField());
-        String typesoftraining = (String) documentInfo.getFields().get(fields.getTypesOfTrainingFields());
-        Double price = (Double) documentInfo.getFields().get(fields.getPriceField());
+        String start_time = (String) documentInfo.getFields().get(fields.getStartTimeField());
+        String type = (String) documentInfo.getFields().get(fields.getTypeField());
 
-        holder.PeriodItem.setText(period);
-        holder.TypesOfTrainingItem.setText(typesoftraining);
-        holder.PriceItem.setText(String.valueOf(price));
+        holder.StartTimeItem.setText(start_time);
+        holder.TypesItem.setText(type);
 
 
         view.setOnClickListener(new View.OnClickListener() {
@@ -143,15 +141,14 @@ public class RecyclerAdapterMenu extends BaseAdapter {
     }
 
     static class ViewHolder {
-        private TextView PeriodItem;
-        private TextView TypesOfTrainingItem;
-        private TextView PriceItem;
+        private TextView StartTimeItem;
+        private TextView TypesItem;
         //@BindView(R.id.label) TextView tvStoredItemName;;
 
         public ViewHolder(View view) {
-            PeriodItem = (TextView) view.findViewById(R.id.period);
-            TypesOfTrainingItem = (TextView) view.findViewById(R.id.types_of_training);
-            PriceItem = (TextView) view.findViewById(R.id.price);
+            StartTimeItem = (TextView) view.findViewById(R.id.start_time);
+            TypesItem = (TextView) view.findViewById(R.id.type);
+
         }
     }
 }

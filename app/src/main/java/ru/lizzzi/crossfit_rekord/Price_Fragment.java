@@ -49,13 +49,12 @@ public class Price_Fragment extends Fragment{
         final ListView lvItemsInStorehouse = (ListView) v.findViewById(R.id.lvItemsInStorehouse);
         fields = new DocumentFields(getContext());
 
-        Query query2 = new Query(COLLECTION_NAME);
-        query2.findDocuments(new CallbackFindDocument() {
+        Query query = new Query(COLLECTION_NAME);
+        query.findDocuments(new CallbackFindDocument() {
             @Override
             public void onDocumentFound(List<DocumentInfo> documentInfos) {
                 if(documentInfos != null) {
-                    //setAdapter(documentInfos);
-                    RecyclerAdapterMenu adapter = new RecyclerAdapterMenu(getContext(), documentInfos, R.layout.item_menu);
+                    RecyclerAdapterMenu adapter = new RecyclerAdapterMenu(getContext(), documentInfos, R.layout.item_lv_subscription);
                     lvItemsInStorehouse.setAdapter(adapter);
                 }
             }

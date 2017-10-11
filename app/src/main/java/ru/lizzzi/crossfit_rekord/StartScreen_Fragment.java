@@ -43,6 +43,18 @@ public class StartScreen_Fragment extends Fragment {
         schedule.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Fragment fragment = null;
+                Class fragmentClass;
+                fragmentClass = Table_Fragment.class;
+                try {
+                    fragment = (Fragment) fragmentClass.newInstance();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction ft = fragmentManager.beginTransaction();
+                ft.replace(R.id.container, fragment);
+                ft.commit();
 
             }
         });
