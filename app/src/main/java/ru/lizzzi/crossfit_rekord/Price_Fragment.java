@@ -14,10 +14,8 @@ import java.util.List;
 import ru.lizzzi.crossfit_rekord.views.FastScrollRecyclerView;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackCountDocument;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackFindDocument;
-import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetDocumentById;
 import ru.profit_group.scorocode_sdk.Responses.data.ResponseCount;
 import ru.profit_group.scorocode_sdk.ScorocodeSdk;
-import ru.profit_group.scorocode_sdk.scorocode_objects.Document;
 import ru.profit_group.scorocode_sdk.scorocode_objects.DocumentInfo;
 import ru.profit_group.scorocode_sdk.scorocode_objects.Query;
 
@@ -41,7 +39,6 @@ public class Price_Fragment extends Fragment{
     private RecyclerView.Adapter mAdapter;
     private List<DocumentInfo> documentInfos;
     private DocumentFields fields;
-    //@BindView(R.id.lvItemsInStorehouse) ListView lvItemsInStorehouse;
 
 
     @Override
@@ -51,20 +48,6 @@ public class Price_Fragment extends Fragment{
         ScorocodeSdk.initWith(APPLICATION_ID, CLIENT_KEY, MASTER_KEY, FILE_KEY, MESSAGE_KEY, SCRIPT_KEY, WEBSOCKET_KEY);
         final ListView lvItemsInStorehouse = (ListView) v.findViewById(R.id.lvItemsInStorehouse);
         fields = new DocumentFields(getContext());
-
-        final Document document = new Document(COLLECTION_NAME);
-        document.getDocumentById("sGny2Ycs8S", new CallbackGetDocumentById() {
-            @Override
-            public void onDocumentFound(DocumentInfo documentInfo) {
-                Toast.makeText(getContext(), "Нет данных", Toast.LENGTH_SHORT).show();
-            }
-
-
-            @Override
-            public void onDocumentNotFound(String errorCode, String errorMessage) {
-                Toast.makeText(getContext(), "Нет данных", Toast.LENGTH_SHORT).show();
-            }
-        });
 
         Query query2 = new Query(COLLECTION_NAME);
         query2.findDocuments(new CallbackFindDocument() {

@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">CrossFit_Rekord</string>
-    <string name="cost">rate</string>
+    <string name="cost">types_of_training</string>
 </resources>
