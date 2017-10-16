@@ -9,24 +9,74 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <TableRow
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="6">
+            android:layout_weight="6"
+            android:orientation="horizontal">
 
             <Button
-                android:id="@+id/button"
+                android:id="@+id/day_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Button" />
+                android:layout_weight="1"
+                android:text="пн" />
 
-        </TableRow>
+            <Button
+                android:id="@+id/day_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="вт" />
+
+            <Button
+                android:id="@+id/day_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="ср" />
+
+            <Button
+                android:id="@+id/day_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="чт" />
+
+            <Button
+                android:id="@+id/day_5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="пт" />
+
+            <Button
+                android:id="@+id/day_6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="сб" />
+
+            <Button
+                android:id="@+id/day_7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="вс" />
+        </LinearLayout>
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:elevation="0dp">
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
 
             <ListView
                 android:id="@+id/lvTable"

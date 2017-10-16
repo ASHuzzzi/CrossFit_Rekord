@@ -24,18 +24,7 @@ public class StartScreen_Fragment extends Fragment {
         subscription.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment fragment = null;
-                Class fragmentClass;
-                fragmentClass = Price_Fragment.class;
-                try {
-                    fragment = (Fragment) fragmentClass.newInstance();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                FragmentManager fragmentManager = getFragmentManager();
-                FragmentTransaction ft = fragmentManager.beginTransaction();
-                ft.replace(R.id.container, fragment);
-                ft.commit();
+                TransactionFragment(Price_Fragment.class);
 
             }
         });
@@ -43,19 +32,7 @@ public class StartScreen_Fragment extends Fragment {
         schedule.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment fragment = null;
-                Class fragmentClass;
-                fragmentClass = Table_Fragment.class;
-                try {
-                    fragment = (Fragment) fragmentClass.newInstance();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                FragmentManager fragmentManager = getFragmentManager();
-                FragmentTransaction ft = fragmentManager.beginTransaction();
-                ft.replace(R.id.container, fragment);
-                ft.commit();
-
+                TransactionFragment(Table_Fragment.class);
             }
         });
 
@@ -74,8 +51,21 @@ public class StartScreen_Fragment extends Fragment {
         });
 
         return v;
-
-
     }
 
+    private void TransactionFragment(Class fragmentClass) {
+
+        Fragment fragment = null;
+        try {
+            fragment = (Fragment) fragmentClass.newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        ft.replace(R.id.container, fragment);
+        ft.addToBackStack(null);
+        ft.commit();
+
+    }
 }
