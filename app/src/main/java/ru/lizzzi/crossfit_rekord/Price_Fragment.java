@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -48,6 +49,8 @@ public class Price_Fragment extends Fragment{
         ScorocodeSdk.initWith(APPLICATION_ID, CLIENT_KEY, MASTER_KEY, FILE_KEY, MESSAGE_KEY, SCRIPT_KEY, WEBSOCKET_KEY);
         final ListView lvItemsInStorehouse = (ListView) v.findViewById(R.id.lvItemsInStorehouse);
         fields = new DocumentFields(getContext());
+
+        ExpandableListView elvMain;
 
         Query query = new Query(COLLECTION_NAME);
         query.findDocuments(new CallbackFindDocument() {

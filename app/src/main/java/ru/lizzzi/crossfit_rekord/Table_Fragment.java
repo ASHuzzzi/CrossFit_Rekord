@@ -11,10 +11,10 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import java.util.Arrays;
 import java.util.List;
 
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackFindDocument;
-import ru.profit_group.scorocode_sdk.ScorocodeSdk;
 import ru.profit_group.scorocode_sdk.scorocode_objects.DocumentInfo;
 import ru.profit_group.scorocode_sdk.scorocode_objects.Query;
 
@@ -25,25 +25,23 @@ import ru.profit_group.scorocode_sdk.scorocode_objects.Query;
 public class Table_Fragment extends Fragment{
 
     public static final String COLLECTION_NAME = "table";
-    public static final String APPLICATION_ID = "24accf90596a4630a107e14d03a6a3a7";
-    public static final String MASTER_KEY = "aee8341a0a22449ebd6a707702689c4e";
-    public static final String CLIENT_KEY = "f539a69f0d5940a38e0ca0e83a394d00";
-    public static final String FILE_KEY = "c785108f61304a2680a53e1a44ae15b2";
-    private static final String MESSAGE_KEY = "e812ec1547b84b62bc9a5c145d442f77";
-    private static final String SCRIPT_KEY = "6920f997815244f2bc77949974e4b215";
-    private static final String WEBSOCKET_KEY = "6920f997815244f2bc77949974e4b215";
+
 
     private DocumentFields_Table fields;
-    RecyclerAdapter_Table adapter;
     private ProgressBar mProgressBar;
     ListView lvItemsInStorehouse;
     View v;
+    List<String> fieldNames = Arrays.asList("start_time","Type");
+    RecyclerAdapter_Table adapter;
+    List<DocumentInfo> documentInfos;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_table, container, false);
-        ScorocodeSdk.initWith(APPLICATION_ID, CLIENT_KEY, MASTER_KEY, FILE_KEY, MESSAGE_KEY, SCRIPT_KEY, WEBSOCKET_KEY);
+
+
+
 
 
         Button button_monday= (Button) v.findViewById(R.id.day_1);
@@ -56,6 +54,7 @@ public class Table_Fragment extends Fragment{
         fields = new DocumentFields_Table(getContext());
         mProgressBar = (ProgressBar) v.findViewById(R.id.progressBar);
         lvItemsInStorehouse = (ListView) v.findViewById(R.id.lvTable);
+
 
 
         final DownloadTable downloadTable = new DownloadTable();
@@ -95,7 +94,11 @@ public class Table_Fragment extends Fragment{
 
             String dayofweek = params[0];
 
+            //fieldNames.add("start_time");
+            //fieldNames.add("Type");
+
             Query query = new Query(COLLECTION_NAME);
+            query.setFieldsForSearch(fieldNames);
             query.equalTo("day_of_week", dayofweek);
             query.findDocuments(new CallbackFindDocument() {
                 @Override

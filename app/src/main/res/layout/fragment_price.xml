@@ -8,11 +8,23 @@
     android:orientation="vertical"
     tools:context="ru.lizzzi.crossfit_rekord.Price_Fragment">
 
-    <ListView
-    android:id="@+id/lvItemsInStorehouse"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
+        <ListView
+            android:id="@+id/lvItemsInStorehouse"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <ExpandableListView
+            android:id="@+id/elvprice"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+    </LinearLayout>
 
 
 </FrameLayout>
