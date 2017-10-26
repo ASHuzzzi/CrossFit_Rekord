@@ -76,6 +76,48 @@ public class Table_Fragment extends Fragment{
             }
         });
 
+        button_wednesday.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final DownloadTable downloadTable = new DownloadTable();
+                downloadTable.execute("3");
+            }
+        });
+
+        button_thursday.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final DownloadTable downloadTable = new DownloadTable();
+                downloadTable.execute("4");
+            }
+        });
+
+        button_friday.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final DownloadTable downloadTable = new DownloadTable();
+                downloadTable.execute("5");
+            }
+        });
+
+        button_saturday.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final DownloadTable downloadTable = new DownloadTable();
+                downloadTable.execute("6");
+            }
+        });
+
+        button_sunday.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final DownloadTable downloadTable = new DownloadTable();
+                downloadTable.execute("7");
+            }
+        });
+
+
+
         return v;
     }
 
@@ -99,6 +141,7 @@ public class Table_Fragment extends Fragment{
 
             Query query = new Query(COLLECTION_NAME);
             query.setFieldsForSearch(fieldNames);
+            query.ascending("start_time");
             query.equalTo("day_of_week", dayofweek);
             query.findDocuments(new CallbackFindDocument() {
                 @Override

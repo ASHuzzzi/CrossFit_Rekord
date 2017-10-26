@@ -4,8 +4,6 @@
     android:layout_height="match_parent"
     tools:context="ru.lizzzi.crossfit_rekord.RecordForTraining_Fragment">
 
-    <!-- TODO: Update blank fragment layout -->
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -21,7 +19,7 @@
                 android:id="@+id/textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Выберите день" />
+                android:text="@string/select_day" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -29,32 +27,32 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/button4"
+                    android:id="@+id/btToday"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Button" />
+                    android:text="@string/empty" />
 
                 <Button
-                    android:id="@+id/button3"
+                    android:id="@+id/btTommorow"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Button" />
+                    android:text="@string/empty" />
 
                 <Button
-                    android:id="@+id/button2"
+                    android:id="@+id/btAftertommorow"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Button" />
+                    android:text="@string/empty" />
             </LinearLayout>
 
             <TextView
                 android:id="@+id/textView4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Выберите время" />
+                android:text="@string/select_time" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -62,138 +60,126 @@
                 android:orientation="vertical">
 
                 <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal">
 
                     <Button
-                        android:id="@+id/button8"
+                        android:id="@+id/t900"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Button" />
+                        android:text="@string/T900" />
 
                     <Button
-                        android:id="@+id/button7"
+                        android:id="@+id/t1000"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Button" />
+                        android:text="@string/T1000" />
 
                     <Button
-                        android:id="@+id/button6"
+                        android:id="@+id/t1100"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Button" />
+                        android:text="@string/T1100" />
 
                     <Button
-                        android:id="@+id/button5"
+                        android:id="@+id/t1200"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Button" />
+                        android:text="@string/T1200" />
                 </TableRow>
 
                 <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal">
 
                     <Button
-                        android:id="@+id/button9"
+                        android:id="@+id/t1300"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Button" />
+                        android:text="@string/T1300" />
 
                     <Button
-                        android:id="@+id/button10"
+                        android:id="@+id/t1400"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Button" />
+                        android:text="@string/T1400" />
 
                     <Button
-                        android:id="@+id/button11"
+                        android:id="@+id/t1500"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Button" />
+                        android:text="@string/T1500" />
 
                     <Button
-                        android:id="@+id/button12"
+                        android:id="@+id/t1600"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Button" />
+                        android:text="@string/T1600" />
                 </TableRow>
 
                 <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal">
 
                     <Button
-                        android:id="@+id/button13"
+                        android:id="@+id/t1700"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Button" />
+                        android:text="@string/T1700" />
 
                     <Button
-                        android:id="@+id/button14"
+                        android:id="@+id/t1800"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Button" />
+                        android:text="@string/T1800" />
 
                     <Button
-                        android:id="@+id/button15"
+                        android:id="@+id/t1900"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Button" />
+                        android:text="@string/T1900" />
 
                     <Button
-                        android:id="@+id/button16"
+                        android:id="@+id/t2000"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Button" />
+                        android:text="@string/T2000" />
                 </TableRow>
 
                 <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal">
 
                     <Button
-                        android:id="@+id/button17"
+                        android:id="@+id/t2100"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Button" />
+                        android:text="@string/T2100" />
 
-                    <Button
-                        android:id="@+id/button18"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Button" />
-
-                    <Button
-                        android:id="@+id/button19"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Button" />
-
-                    <Button
-                        android:id="@+id/button20"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Button" />
                 </TableRow>
             </LinearLayout>
 
         </LinearLayout>
 
         <ListView
+            android:id="@+id/lvRecord"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/linearLayout"
-            android:layout_above="@+id/button22" />
+            android:layout_above="@+id/btRecord"
+            android:layout_below="@+id/linearLayout" />
 
         <Button
-            android:id="@+id/button22"
+            android:id="@+id/btRecord"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Button"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:text="Button" />
 
     </RelativeLayout>
 

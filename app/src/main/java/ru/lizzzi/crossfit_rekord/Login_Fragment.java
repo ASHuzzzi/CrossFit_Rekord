@@ -84,9 +84,9 @@ public class Login_Fragment extends Fragment {
                             e.printStackTrace();
                         }
                         FragmentManager fragmentManager = getFragmentManager();
+                        fragmentManager.popBackStack();
                         FragmentTransaction ft = fragmentManager.beginTransaction();
                         ft.replace(R.id.container, fragment);
-                        //ft.disallowAddToBackStack();
                         ft.addToBackStack(null);
                         ft.commit();
 
