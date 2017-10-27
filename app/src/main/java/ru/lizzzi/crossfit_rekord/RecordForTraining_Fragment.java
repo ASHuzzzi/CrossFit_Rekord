@@ -1,6 +1,7 @@
 package ru.lizzzi.crossfit_rekord;
 
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -38,6 +39,8 @@ public class RecordForTraining_Fragment extends Fragment {
 
     RecyclerAdapterRecord adapter;
     ListView lvRecord;
+
+    DocumentInfo documentInfo;
 
     public RecordForTraining_Fragment() {
         // Required empty public constructor
@@ -93,11 +96,15 @@ public class RecordForTraining_Fragment extends Fragment {
 
         date_select = sdf2.format(date);
         time_select = getContext().getString(R.string.T900);
+        username =  mSettings.getString(APP_PREFERENCES_USERNAME, "");
 
         btToday.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 date_select = sdf2.format(date);
+                time_select = getContext().getString(R.string.T900);
+                DownloadData downloadData = new DownloadData();
+                downloadData.execute();
             }
         });
 
@@ -105,6 +112,9 @@ public class RecordForTraining_Fragment extends Fragment {
             @Override
             public void onClick(View view) {
                 date_select = sdf2.format(tomorrow);
+                time_select = getContext().getString(R.string.T900);
+                DownloadData downloadData = new DownloadData();
+                downloadData.execute();
             }
         });
 
@@ -112,6 +122,9 @@ public class RecordForTraining_Fragment extends Fragment {
             @Override
             public void onClick(View view) {
                 date_select = sdf2.format(aftertomorrow);
+                time_select = getContext().getString(R.string.T900);
+                DownloadData downloadData = new DownloadData();
+                downloadData.execute();
             }
         });
 
@@ -119,25 +132,10 @@ public class RecordForTraining_Fragment extends Fragment {
             @Override
             public void onClick(View view) {
                 time_select = getContext().getString(R.string.T900);
+                DownloadData downloadData = new DownloadData();
+                downloadData.execute();
 
-                Query query = new Query(COLLECTION_NAME);
-                query.equalTo("data", date_select);
-                query.equalTo("time", time_select);
-                query.findDocuments(new CallbackFindDocument() {
-                    @Override
-                    public void onDocumentFound(List<DocumentInfo> documentInfos) {
-                        if(documentInfos != null) {
-                            adapter = new RecyclerAdapterRecord(getContext(), documentInfos, R.layout.item_lv_record);
-                            lvRecord.setAdapter(adapter);
-                        }
-                    }
 
-                    @Override
-                    public void onDocumentNotFound(String errorCode, String errorMessage) {
-                        Toast.makeText(getContext(), "Нет данных", Toast.LENGTH_SHORT).show();
-                    }
-                });
-                return;
 
             }
         });
@@ -222,7 +220,7 @@ public class RecordForTraining_Fragment extends Fragment {
         btRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                username =  mSettings.getString(APP_PREFERENCES_USERNAME, "");
+
 
                 Document newDocument = new Document("recordings_for_training");
                 newDocument.setField("data", date_select);
@@ -250,6 +248,68 @@ public class RecordForTraining_Fragment extends Fragment {
         return v;
     }
 
+    private class DownloadData extends AsyncTask<Void,Void, Void>{
 
+        @Override
+        protected void onPreExecute(){
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+            Query query = new Query(COLLECTION_NAME);
+            query.equalTo("data", date_select);
+            query.equalTo("time", time_select);
+            query.findDocuments(new CallbackFindDocument() {
+                @Override
+                public void onDocumentFound(List<DocumentInfo> documentInfos) {
+                    if(documentInfos != null) {
+                        adapter = new RecyclerAdapterRecord(getContext(), documentInfos, R.layout.item_lv_record);
+                        lvRecord.setAdapter(adapter);
+
+                        Query query2 = new Query(COLLECTION_NAME);
+                        query2.equalTo("data", date_select);
+                        query2.equalTo("time", time_select);
+                        query2.equalTo("username", username);
+                        query2.findDocuments(new CallbackFindDocument() {
+                            @Override
+                            public void onDocumentFound(List<DocumentInfo> documentInfos) {
+                                if(documentInfos != null) {
+                                    String rere2 = String.valueOf(documentInfos.get(0).get("_id"));
+                                    Toast.makeText(getContext(), rere2, Toast.LENGTH_SHORT).show();
+
+
+
+                                }
+                            }
+
+                            @Override
+                            public void onDocumentNotFound(String errorCode, String errorMessage) {
+                                Toast.makeText(getContext(), "Нет данных", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                        return;
+
+
+                    }
+                }
+
+                @Override
+                public void onDocumentNotFound(String errorCode, String errorMessage) {
+                    Toast.makeText(getContext(), "Нет данных", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            return null;
+        }
+
+        @Override
+        public void onPostExecute(Void result){
+            super.onPostExecute(result);
+        }
+
+
+    }
 
 }

@@ -40,10 +40,6 @@ public class Table_Fragment extends Fragment{
                              Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_table, container, false);
 
-
-
-
-
         Button button_monday= (Button) v.findViewById(R.id.day_1);
         Button button_tuesday= (Button) v.findViewById(R.id.day_2);
         Button button_wednesday= (Button) v.findViewById(R.id.day_3);
