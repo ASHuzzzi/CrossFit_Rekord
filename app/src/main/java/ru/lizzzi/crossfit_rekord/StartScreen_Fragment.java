@@ -77,21 +77,19 @@ public class StartScreen_Fragment extends Fragment {
                     user.login(mSettings.getString(APP_PREFERENCES_EMAIL, ""), mSettings.getString(APP_PREFERENCES_PASSWORD, ""), new CallbackLoginUser() {
                         @Override
                         public void onLoginSucceed(ResponseLogin responseLogin) {
-                            Toast.makeText(getContext(), "Авторизация успешно", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getContext(), "Авторизация успешно", Toast.LENGTH_SHORT).show();
+                            TransactionFragment(RecordForTraining_Fragment.class);
                         }
 
                         @Override
                         public void onLoginFailed(String errorCode, String errorMessage) {
-                            Toast.makeText(getContext(), "Авторизация не успешно", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "Авторизация не прошла. Попробуйте снова.", Toast.LENGTH_SHORT).show();
                         }
                     });
-
-                    TransactionFragment(RecordForTraining_Fragment.class);
 
                 }else {
                     TransactionFragment(Login_Fragment.class);
                 }
-
 
             }
         });

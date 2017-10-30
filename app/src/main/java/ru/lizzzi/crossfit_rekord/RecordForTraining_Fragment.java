@@ -18,6 +18,9 @@ import java.util.List;
 
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackDocumentSaved;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackFindDocument;
+import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetDocumentById;
+import ru.profit_group.scorocode_sdk.Callbacks.CallbackRemoveDocument;
+import ru.profit_group.scorocode_sdk.Responses.data.ResponseRemove;
 import ru.profit_group.scorocode_sdk.scorocode_objects.Document;
 import ru.profit_group.scorocode_sdk.scorocode_objects.DocumentInfo;
 import ru.profit_group.scorocode_sdk.scorocode_objects.Query;
@@ -27,6 +30,7 @@ public class RecordForTraining_Fragment extends Fragment {
 
     public static final String APP_PREFERENCES = "audata";
     public static final String APP_PREFERENCES_USERNAME = "Username";
+    public static final String APP_PREFERENCES_USERCOUNT = "Usercount";
     SharedPreferences mSettings;
 
     public static final String COLLECTION_NAME = "recordings_for_training";
@@ -36,11 +40,14 @@ public class RecordForTraining_Fragment extends Fragment {
     String time_select;
     String date_select;
     String username;
+    String userid;
 
     RecyclerAdapterRecord adapter;
     ListView lvRecord;
 
     DocumentInfo documentInfo;
+
+    Button btRegister;
 
     public RecordForTraining_Fragment() {
         // Required empty public constructor
@@ -75,7 +82,7 @@ public class RecordForTraining_Fragment extends Fragment {
         Button btt2000 = ((Button) v.findViewById(R.id.t2000));
         Button btt2100 = ((Button) v.findViewById(R.id.t2100));
 
-        Button btRegister = ((Button) v.findViewById(R.id.btRecord));
+        btRegister = ((Button) v.findViewById(R.id.btRecord));
 
         SimpleDateFormat sdf = new SimpleDateFormat("EEEE dd MMMM");
         final SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM");
@@ -97,6 +104,9 @@ public class RecordForTraining_Fragment extends Fragment {
         date_select = sdf2.format(date);
         time_select = getContext().getString(R.string.T900);
         username =  mSettings.getString(APP_PREFERENCES_USERNAME, "");
+
+        DownloadData downloadData = new DownloadData();
+        downloadData.execute();
 
         btToday.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,86 +144,112 @@ public class RecordForTraining_Fragment extends Fragment {
                 time_select = getContext().getString(R.string.T900);
                 DownloadData downloadData = new DownloadData();
                 downloadData.execute();
-
-
-
             }
         });
 
         btt1000.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                time_select = getContext().getString(R.string.T1000);
+                DownloadData downloadData = new DownloadData();
+                downloadData.execute();
             }
         });
 
         btt1100.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                time_select = getContext().getString(R.string.T1100);
+                DownloadData downloadData = new DownloadData();
+                downloadData.execute();
             }
         });
 
         btt1200.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                time_select = getContext().getString(R.string.T1200);
+                DownloadData downloadData = new DownloadData();
+                downloadData.execute();
             }
         });
 
         btt1300.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                time_select = getContext().getString(R.string.T1300);
+                DownloadData downloadData = new DownloadData();
+                downloadData.execute();
             }
         });
 
         btt1400.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                time_select = getContext().getString(R.string.T1400);
+                DownloadData downloadData = new DownloadData();
+                downloadData.execute();
             }
         });
+
         btt1500.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                time_select = getContext().getString(R.string.T1500);
+                DownloadData downloadData = new DownloadData();
+                downloadData.execute();
             }
         });
+
         btt1600.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                time_select = getContext().getString(R.string.T1600);
+                DownloadData downloadData = new DownloadData();
+                downloadData.execute();
             }
         });
+
         btt1700.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                time_select = getContext().getString(R.string.T1700);
+                DownloadData downloadData = new DownloadData();
+                downloadData.execute();
             }
         });
+
         btt1800.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                time_select = getContext().getString(R.string.T1800);
+                DownloadData downloadData = new DownloadData();
+                downloadData.execute();
             }
         });
         btt1900.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                time_select = getContext().getString(R.string.T1900);
+                DownloadData downloadData = new DownloadData();
+                downloadData.execute();
             }
         });
+
         btt2000.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                time_select = getContext().getString(R.string.T2000);
+                DownloadData downloadData = new DownloadData();
+                downloadData.execute();
             }
         });
         btt2100.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                time_select = getContext().getString(R.string.T2100);
+                DownloadData downloadData = new DownloadData();
+                downloadData.execute();
             }
         });
 
@@ -221,26 +257,51 @@ public class RecordForTraining_Fragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-
-                Document newDocument = new Document("recordings_for_training");
-                newDocument.setField("data", date_select);
-                newDocument.setField("time", time_select);
-                newDocument.setField("username", username);
-
-
-                newDocument.saveDocument(new CallbackDocumentSaved() {
-                    @Override
-                    public void onDocumentSaved() {
-                        Toast.makeText(getContext(), username + " " + date_select + " " + time_select , Toast.LENGTH_SHORT).show();
-                    }
+                if (userid.equals("noId")){
+                    Document newDocument = new Document("recordings_for_training");
+                    newDocument.setField("data", date_select);
+                    newDocument.setField("time", time_select);
+                    newDocument.setField("username", username);
 
 
-                    @Override
-                    public void onDocumentSaveFailed(String errorCode, String errorMessage) {
-                        Toast.makeText(getContext(), "Не сохранилось" , Toast.LENGTH_SHORT).show();
-                    }
-                });
+                    newDocument.saveDocument(new CallbackDocumentSaved() {
+                        @Override
+                        public void onDocumentSaved() {
+                            Toast.makeText(getContext(), username + " " + date_select + " " + time_select , Toast.LENGTH_SHORT).show();
+                            DownloadData downloadData = new DownloadData();
+                            downloadData.execute();
+                        }
 
+                        @Override
+                        public void onDocumentSaveFailed(String errorCode, String errorMessage) {
+                            Toast.makeText(getContext(), "Не сохранилось. Попробуйте еще раз." , Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }else {
+                    final Document newDocument = new Document(COLLECTION_NAME);
+                    newDocument.getDocumentById(userid, new CallbackGetDocumentById() {
+                        @Override
+                        public void onDocumentFound(DocumentInfo documentInfo) {
+                            newDocument.removeDocument(new CallbackRemoveDocument() {
+                                @Override
+                                public void onRemoveSucceed(ResponseRemove responseRemove) {
+                                    DownloadData downloadData = new DownloadData();
+                                    downloadData.execute();
+                                }
+
+                                @Override
+                                public void onRemoveFailed(String errorCode, String errorMessage) {
+                                    Toast.makeText(getContext(), "Не удалилось. Попробуйте еще раз." , Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onDocumentNotFound(String errorCode, String errorMessage) {
+                            Toast.makeText(getContext(), "Запись не найдена" , Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
             }
         });
 
@@ -265,6 +326,10 @@ public class RecordForTraining_Fragment extends Fragment {
                 @Override
                 public void onDocumentFound(List<DocumentInfo> documentInfos) {
                     if(documentInfos != null) {
+
+                        final SharedPreferences.Editor editor = mSettings.edit();
+                        editor.putString(APP_PREFERENCES_USERCOUNT, "1");
+                        editor.apply();
                         adapter = new RecyclerAdapterRecord(getContext(), documentInfos, R.layout.item_lv_record);
                         lvRecord.setAdapter(adapter);
 
@@ -276,17 +341,16 @@ public class RecordForTraining_Fragment extends Fragment {
                             @Override
                             public void onDocumentFound(List<DocumentInfo> documentInfos) {
                                 if(documentInfos != null) {
-                                    String rere2 = String.valueOf(documentInfos.get(0).get("_id"));
-                                    Toast.makeText(getContext(), rere2, Toast.LENGTH_SHORT).show();
-
-
-
+                                    btRegister.setText(R.string.delete_entry);
+                                    userid = String.valueOf(documentInfos.get(0).get("_id"));
                                 }
                             }
 
                             @Override
                             public void onDocumentNotFound(String errorCode, String errorMessage) {
-                                Toast.makeText(getContext(), "Нет данных", Toast.LENGTH_SHORT).show();
+                                btRegister.setText(R.string.whrite_entry);
+                                userid = "noId";
+
                             }
                         });
                         return;
@@ -298,6 +362,8 @@ public class RecordForTraining_Fragment extends Fragment {
                 @Override
                 public void onDocumentNotFound(String errorCode, String errorMessage) {
                     Toast.makeText(getContext(), "Нет данных", Toast.LENGTH_SHORT).show();
+                    btRegister.setText(R.string.whrite_entry);
+                    userid = "noId";
                 }
             });
 

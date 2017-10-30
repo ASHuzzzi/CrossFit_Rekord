@@ -1,6 +1,7 @@
 package ru.lizzzi.crossfit_rekord;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -84,12 +85,17 @@ public class RecyclerAdapterRecord extends BaseAdapter {
     private LayoutInflater inflater;
     private DocumentFields_Record fields;
 
+    public static final String APP_PREFERENCES = "audata";
+    public static final String APP_PREFERENCES_USERCOUNT = "Usercount";
+    SharedPreferences mSettings;
+
     public RecyclerAdapterRecord(Context context, @NonNull List<DocumentInfo> storedItems, int layoutId) {
         this.context = context;
         this.storedItems = storedItems;
         this.layoutId = layoutId;
         inflater = LayoutInflater.from(context);
         fields = new DocumentFields_Record(context, null);
+        mSettings = context.getSharedPreferences(APP_PREFERENCES, context.MODE_PRIVATE);
     }
 
     @Override
@@ -126,10 +132,19 @@ public class RecyclerAdapterRecord extends BaseAdapter {
 
     private void customizeView(View view, ViewHolder holder, final DocumentInfo documentInfo) {
 
+        String number = mSettings.getString(APP_PREFERENCES_USERCOUNT, "");
+
+        int i = Integer.parseInt(mSettings.getString(APP_PREFERENCES_USERCOUNT, ""));
+        i = i + 1;
+        final SharedPreferences.Editor editor = mSettings.edit();
+        editor.putString(APP_PREFERENCES_USERCOUNT, String.valueOf(i));
+        editor.apply();
+
         String username = (String) documentInfo.getFields().get(fields.getUsernameFields());
 
 
         holder.UsernameItem.setText(username);
+        holder.UserCountItem.setText(number);
 
 
         view.setOnClickListener(new View.OnClickListener() {
@@ -141,10 +156,13 @@ public class RecyclerAdapterRecord extends BaseAdapter {
 
     static class ViewHolder {
         private TextView UsernameItem;
+        private TextView UserCountItem;
+
         //@BindView(R.id.label) TextView tvStoredItemName;;
 
         public ViewHolder(View view) {
             UsernameItem = (TextView) view.findViewById(R.id.username);
+            UserCountItem = (TextView) view.findViewById(R.id.number);
 
         }
     }

@@ -15,6 +15,8 @@ public class DocumentFields_Record {
     private Context context;
     private DocumentInfo documentInfo;
 
+
+
     public DocumentFields_Record(Context context) {
         this(context, null);
     }

@@ -47,6 +47,10 @@
     <string name="sign_up">Записаться на тренировку</string>
     <string name="set_a_record">Удалить запись</string>
 
+    <!-- Значения для фрагмента RecodrForTraining-->
+    <string name="whrite_entry">Записаться</string>
+    <string name="delete_entry">Удалить запись</string>
+
     <string name="_id">_id</string>
 
 
