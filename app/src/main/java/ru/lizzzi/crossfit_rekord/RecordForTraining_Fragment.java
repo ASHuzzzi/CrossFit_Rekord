@@ -327,6 +327,7 @@ public class RecordForTraining_Fragment extends Fragment {
                 public void onDocumentFound(List<DocumentInfo> documentInfos) {
                     if(documentInfos != null) {
 
+                        lvRecord.setVisibility(View.VISIBLE);
                         final SharedPreferences.Editor editor = mSettings.edit();
                         editor.putString(APP_PREFERENCES_USERCOUNT, "1");
                         editor.apply();
@@ -364,6 +365,7 @@ public class RecordForTraining_Fragment extends Fragment {
                     Toast.makeText(getContext(), "Нет данных", Toast.LENGTH_SHORT).show();
                     btRegister.setText(R.string.whrite_entry);
                     userid = "noId";
+                    lvRecord.setVisibility(View.INVISIBLE);
                 }
             });
 

@@ -46,6 +46,7 @@ public class StartScreen_Fragment extends Fragment {
         Button subscription = ((Button) v.findViewById(R.id.button_subscription));
         Button schedule = ((Button) v.findViewById(R.id.button_schedule));
         Button record_training = ((Button) v.findViewById(R.id.button_record_training));
+        Button description = (Button) v.findViewById(R.id.button_definition);
         final Button contacts = ((Button) v.findViewById(R.id.button_contacts));
 
         subscription.setOnClickListener(new View.OnClickListener() {
@@ -98,6 +99,13 @@ public class StartScreen_Fragment extends Fragment {
             @Override
             public void onClick(View view) {
 
+            }
+        });
+
+        description.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TransactionFragment(Definition_Fragment.class);
             }
         });
 
