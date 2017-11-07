@@ -105,7 +105,7 @@ public class StartScreen_Fragment extends Fragment {
         description.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TransactionFragment(Definition_Fragment.class);
+                TransactionFragment(Character_Fragment.class);
             }
         });
 

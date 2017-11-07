@@ -34,6 +34,7 @@ public class Table_Fragment extends Fragment{
     List<String> fieldNames = Arrays.asList("start_time","Type");
     RecyclerAdapter_Table adapter;
     List<DocumentInfo> documentInfos;
+    int position;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -145,6 +146,7 @@ public class Table_Fragment extends Fragment{
                     if(documentInfos != null) {
                         adapter = new RecyclerAdapter_Table(getContext(), documentInfos, R.layout.item_lv_table);
                         lvItemsInStorehouse.setAdapter(adapter);
+
                     }
                 }
 

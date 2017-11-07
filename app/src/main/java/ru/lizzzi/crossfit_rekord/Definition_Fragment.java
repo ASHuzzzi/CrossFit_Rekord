@@ -8,8 +8,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import ru.lizzzi.crossfit_rekord.data.DefinitionDBHelper;
@@ -32,6 +32,7 @@ public class Definition_Fragment extends Fragment {
 
     private DefinitionDBHelper mDbHelper = new DefinitionDBHelper(getContext());
     private ArrayList<String> Item_list_termin = new ArrayList<>();
+    private ArrayList<String> Item_list_character = new ArrayList<>();
     private ArrayList<String> Item_list_definition = new ArrayList<>();
 
     // TODO: Rename and change types of parameters
@@ -76,17 +77,22 @@ public class Definition_Fragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
+
+
+        final View v = inflater.inflate(R.layout.fragment_definition, container, false);
+        ListView lvdefinition1 = (ListView)v.findViewById(R.id.lvtest);
+
+
+
         mDbHelper = new DefinitionDBHelper(getContext());
 
-        try {
-          mDbHelper.createDataBase();
-       } catch (IOException ioe) {
-            throw new Error("Unable to create database");
-       }
+        final Bundle bundle = getArguments();
+        final String ri = bundle.getString("tag");
+        CreateItemList(ri);
+        RecyclerAdapter_Definition adapter = new RecyclerAdapter_Definition(getContext(), Item_list_termin, Item_list_definition, R.layout.item_lv_description);
+        lvdefinition1.setAdapter(adapter);
 
-       mDbHelper.openDataBase();
-        CreateItemList();
-        return inflater.inflate(R.layout.fragment_definition, container, false);
+        return  v;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -118,7 +124,7 @@ public class Definition_Fragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    private void CreateItemList(){
+    private void CreateItemList(String ri){
         // Подумать на досуге о упрощении запроса до одного
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
@@ -128,7 +134,7 @@ public class Definition_Fragment extends Fragment {
         String[] columns = new  String[]{DBdefinition.Column_termin};
         Cursor cursor = db.query(DBdefinition.TABLE_NAME,
                 columns,
-                null,
+                DBdefinition.Column_character + "= '" + ri + "'",
                 null,
                 null,
                 null,
@@ -147,7 +153,7 @@ public class Definition_Fragment extends Fragment {
         columns = new  String[]{DBdefinition.Column_description};
         cursor = db.query(DBdefinition.TABLE_NAME,
                 columns,
-                null,
+                DBdefinition.Column_character + "= '" + ri + "'",
                 null,
                 null,
                 null,
