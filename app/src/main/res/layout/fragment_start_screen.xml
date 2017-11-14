@@ -9,6 +9,7 @@
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
         android:layout_weight="2"
         android:src="@drawable/logo_black" />
 
@@ -53,6 +54,13 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Словарь CrossFit" />
+
+        <Button
+            android:id="@+id/button_result"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Результаты" />
 
     </LinearLayout>
 
