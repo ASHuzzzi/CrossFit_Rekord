@@ -18,6 +18,7 @@ public class DefinitionDbContarct {
         public final static String Column_termin = "termin";
         public final static String Column_description = "description";
         public final static String Column_character = "character";
+        public final static String Column_attribute = "attribute";
 
     }
 }

@@ -12,19 +12,18 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
- * Created by Liza on 02.11.2017.
+ * Created by Liza on 15.11.2017.
  */
 
-public class DefinitionDBHelper  extends SQLiteOpenHelper{
+public class WodDBHelper  extends SQLiteOpenHelper{
 
     // путь к базе данных вашего приложения
     private static String DB_PATH = "/data/data/ru.lizzzi.crossfit_rekord/databases/";
-    private static String DB_PATH2;
-    private static String DB_NAME = "DefinitionDirectory.db";
+    private static String DB_NAME = "Wod.db";
     private SQLiteDatabase myDataBase;
     private final Context mContext;
 
-    public DefinitionDBHelper(Context context) {
+    public WodDBHelper(Context context) {
         super(context, DB_NAME, null, 1);
         this.mContext = context;
     }
@@ -122,4 +121,5 @@ public class DefinitionDBHelper  extends SQLiteOpenHelper{
     // Здесь можно добавить вспомогательные методы для доступа и получения данных из БД
     // вы можете возвращать курсоры через "return myDataBase.query(....)", это облегчит их использование
     // в создании адаптеров для ваших view
+
 }

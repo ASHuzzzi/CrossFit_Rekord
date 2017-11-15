@@ -86,7 +86,7 @@ public class Character_Fragment extends Fragment {
 
 
         mDbHelper = new DefinitionDBHelper(getContext());
-        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+
 
         try {
             mDbHelper.createDataBase();
@@ -95,6 +95,9 @@ public class Character_Fragment extends Fragment {
         }
 
         mDbHelper.openDataBase();
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+
+        Item_list_character.clear();
 
         String[] columns = new  String[]{DefinitionDbContarct.DBdefinition.Column_character};
         Cursor cursor = db.query(true,
