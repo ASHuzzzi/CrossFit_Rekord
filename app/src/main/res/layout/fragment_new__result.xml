@@ -8,7 +8,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <LinearLayout
@@ -34,13 +34,12 @@
                 android:inputType="textPersonName"
                 android:text="@string/empty" />
 
-            <EditText
-                android:id="@+id/etWodCaption"
-                android:layout_width="wrap_content"
+            <AutoCompleteTextView
+                android:id="@+id/aCTVWodCaption"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:ems="10"
-                android:inputType="textPersonName"
+                android:completionThreshold="0"
                 android:text="@string/empty" />
 
             <EditText
@@ -49,14 +48,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
-                android:inputType="textPersonName"
+                android:inputType="time"
                 android:text="@string/empty" />
-
-            <Spinner
-                android:id="@+id/spinner"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
 
         </LinearLayout>
 
@@ -78,7 +71,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
-                android:inputType="textPersonName"
+                android:inputType="text"
                 android:text="@string/empty" />
 
             <EditText
@@ -89,6 +82,15 @@
                 android:ems="10"
                 android:inputType="textPersonName"
                 android:text="@string/empty" />
+
         </LinearLayout>
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Button" />
+
     </LinearLayout>
 </FrameLayout>

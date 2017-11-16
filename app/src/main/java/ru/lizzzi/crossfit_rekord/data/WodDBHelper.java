@@ -73,7 +73,7 @@ public class WodDBHelper  extends SQLiteOpenHelper{
      * */
     private void copyDataBase() throws IOException{
         //Открываем локальную БД как входящий поток
-        InputStream myInput = mContext.getAssets().open(DB_NAME);
+        InputStream myInput = mContext.getAssets().open("db/" + DB_NAME);
 
         //Путь ко вновь созданной БД
         String outFileName = DB_PATH + DB_NAME;

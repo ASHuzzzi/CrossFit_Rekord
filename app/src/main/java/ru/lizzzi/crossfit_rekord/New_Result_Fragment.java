@@ -1,6 +1,7 @@
 package ru.lizzzi.crossfit_rekord;
 
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -8,6 +9,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
 
 import java.io.IOException;
@@ -18,6 +22,7 @@ import java.util.Date;
 import ru.lizzzi.crossfit_rekord.data.DefinitionDBHelper;
 import ru.lizzzi.crossfit_rekord.data.DefinitionDbContarct;
 import ru.lizzzi.crossfit_rekord.data.WodDBHelper;
+import ru.lizzzi.crossfit_rekord.data.WodDbContract;
 
 
 /**
@@ -26,6 +31,13 @@ import ru.lizzzi.crossfit_rekord.data.WodDBHelper;
 public class New_Result_Fragment extends Fragment {
 
     Date date = new Date();
+    EditText etDay;
+    EditText etMonth;
+    EditText etTime;
+    AutoCompleteTextView autoCompleteTextView;
+    EditText etLevel;
+    EditText etResult;
+    SQLiteDatabase db2;
     private DefinitionDBHelper mDbHelper = new DefinitionDBHelper(getContext());
     private WodDBHelper mDbHelper2 = new WodDBHelper(getContext());
     private ArrayList<String> Item_list = new ArrayList<>();
@@ -42,12 +54,13 @@ public class New_Result_Fragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_new__result, container, false);
         // Inflate the layout for this fragment
 
-        EditText etDay = (EditText) view.findViewById(R.id.etDay);
-        EditText etMonth = (EditText) view.findViewById(R.id.etMonth);
-        EditText etWodCaption = (EditText) view.findViewById(R.id.etWodCaption);
-        EditText etTime = (EditText) view.findViewById(R.id.etTime);
-        EditText etLevel = (EditText) view.findViewById(R.id.etLevel);
-        EditText etResult = (EditText) view.findViewById(R.id.etResult);
+        etDay = (EditText) view.findViewById(R.id.etDay);
+        etMonth = (EditText) view.findViewById(R.id.etMonth);
+        etTime = (EditText) view.findViewById(R.id.etTime);
+        etLevel = (EditText) view.findViewById(R.id.etLevel);
+        etResult = (EditText) view.findViewById(R.id.etResult);
+
+        Button button = (Button) view.findViewById(R.id.button);
 
         SimpleDateFormat sdf_day = new SimpleDateFormat("dd");
         SimpleDateFormat sdf_Month = new SimpleDateFormat("MMMM");
@@ -93,12 +106,39 @@ public class New_Result_Fragment extends Fragment {
         db.close();
 
         mDbHelper2 = new WodDBHelper(getContext());
+        db2 = mDbHelper2.getReadableDatabase();
         try {
             mDbHelper2.createDataBase();
         } catch (IOException ioe) {
             throw new Error("Unable to create database");
         }
 
+        autoCompleteTextView = (AutoCompleteTextView) view.findViewById(R.id.aCTVWodCaption);
+        autoCompleteTextView.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, Item_list));
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int Day = Integer.parseInt(etDay.getText().toString());
+                String Month = etMonth.getText().toString();
+                String Time = etTime.getText().toString();
+                String WodCaption = autoCompleteTextView.getText().toString();
+                String Level = etLevel.getText().toString();
+                String Result = etResult.getText().toString();
+
+                ContentValues values = new ContentValues();
+                values.put(WodDbContract.DBCaptionWod.Column_Day, Day);
+                values.put(WodDbContract.DBCaptionWod.Column_Month, Month);
+                values.put(WodDbContract.DBCaptionWod.Column_Time, Time);
+                values.put(WodDbContract.DBCaptionWod.Column_CaptionWod, WodCaption);
+                values.put(WodDbContract.DBCaptionWod.Column_Level, Level);
+
+                db2.insert(WodDbContract.DBCaptionWod.TABLE_NAME,
+                        null,
+                        values);
+
+            }
+        });
 
         return view;
     }
