@@ -34,7 +34,7 @@ public class Result_Fragment extends Fragment {
             public void onClick(View view) {
                 Fragment fragment = null;
                 Class fragmentClass;
-                fragmentClass = New_Result_Fragment.class;
+                fragmentClass = New_Result_F1_Fragment.class;
                 try {
                     fragment = (Fragment) fragmentClass.newInstance();
                 } catch (Exception e) {

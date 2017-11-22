@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +30,7 @@ import ru.lizzzi.crossfit_rekord.data.WodDbContract;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class New_Result_Fragment extends Fragment {
+public class New_Result_F1_Fragment extends Fragment {
 
     Date date = new Date();
     EditText etDay;
@@ -43,7 +45,7 @@ public class New_Result_Fragment extends Fragment {
     private ArrayList<String> Item_list = new ArrayList<>();
 
 
-    public New_Result_Fragment() {
+    public New_Result_F1_Fragment() {
         // Required empty public constructor
     }
 
@@ -51,7 +53,7 @@ public class New_Result_Fragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_new__result, container, false);
+        View view = inflater.inflate(R.layout.fragment_new_result_f1, container, false);
         // Inflate the layout for this fragment
 
         etDay = (EditText) view.findViewById(R.id.etDay);
@@ -64,9 +66,11 @@ public class New_Result_Fragment extends Fragment {
 
         SimpleDateFormat sdf_day = new SimpleDateFormat("dd");
         SimpleDateFormat sdf_Month = new SimpleDateFormat("MMMM");
+        SimpleDateFormat sdf_Year = new SimpleDateFormat("yyyy");
 
         String currentDay = sdf_day.format(date);
         String currentMonth = sdf_Month.format(date);
+        final String currentYear = sdf_Year.format(date);
 
         etDay.setText(currentDay);
         etMonth.setText(currentMonth);
@@ -106,12 +110,14 @@ public class New_Result_Fragment extends Fragment {
         db.close();
 
         mDbHelper2 = new WodDBHelper(getContext());
-        db2 = mDbHelper2.getReadableDatabase();
+
         try {
             mDbHelper2.createDataBase();
         } catch (IOException ioe) {
             throw new Error("Unable to create database");
         }
+
+        db2 = mDbHelper2.getReadableDatabase();
 
         autoCompleteTextView = (AutoCompleteTextView) view.findViewById(R.id.aCTVWodCaption);
         autoCompleteTextView.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, Item_list));
@@ -121,22 +127,41 @@ public class New_Result_Fragment extends Fragment {
             public void onClick(View view) {
                 int Day = Integer.parseInt(etDay.getText().toString());
                 String Month = etMonth.getText().toString();
+                String Year = currentYear;
                 String Time = etTime.getText().toString();
                 String WodCaption = autoCompleteTextView.getText().toString();
                 String Level = etLevel.getText().toString();
                 String Result = etResult.getText().toString();
+                String WodKey = Day + Month + WodCaption;
 
                 ContentValues values = new ContentValues();
                 values.put(WodDbContract.DBCaptionWod.Column_Day, Day);
                 values.put(WodDbContract.DBCaptionWod.Column_Month, Month);
+                values.put(WodDbContract.DBCaptionWod.Column_Year, Year);
                 values.put(WodDbContract.DBCaptionWod.Column_Time, Time);
                 values.put(WodDbContract.DBCaptionWod.Column_CaptionWod, WodCaption);
                 values.put(WodDbContract.DBCaptionWod.Column_Level, Level);
+                values.put(WodDbContract.DBCaptionWod.Column_WodKey, WodKey);
+                values.put(WodDbContract.DBCaptionWod.Column_Result, Result);
 
                 db2.insert(WodDbContract.DBCaptionWod.TABLE_NAME,
                         null,
                         values);
 
+                Fragment fragment = null;
+                Class fragmentClass;
+                fragmentClass = New_Result_F2_Fragment.class;
+                try {
+                    fragment = (Fragment) fragmentClass.newInstance();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.popBackStack();
+                FragmentTransaction ft = fragmentManager.beginTransaction();
+                ft.replace(R.id.container, fragment);
+                ft.addToBackStack(null);
+                ft.commit();
             }
         });
 

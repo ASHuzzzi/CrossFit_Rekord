@@ -31,6 +31,8 @@ public class WodDbContract {
         public final static String Column_Time = "Time";
         public final static String Column_Level = "Level";
         public final static String Column_WodKey = "WodKey";
+        public final static String Column_Result = "Result";
+
 
     }
 }
