@@ -132,7 +132,7 @@ public class New_Result_F1_Fragment extends Fragment {
                 String WodCaption = autoCompleteTextView.getText().toString();
                 String Level = etLevel.getText().toString();
                 String Result = etResult.getText().toString();
-                String WodKey = Day + Month + WodCaption;
+                String WodKey = Day + Month + Year + WodCaption;
 
                 ContentValues values = new ContentValues();
                 values.put(WodDbContract.DBCaptionWod.Column_Day, Day);
@@ -151,6 +151,11 @@ public class New_Result_F1_Fragment extends Fragment {
                 Fragment fragment = null;
                 Class fragmentClass;
                 fragmentClass = New_Result_F2_Fragment.class;
+                New_Result_F2_Fragment yfc = new New_Result_F2_Fragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("tag", WodKey);
+                yfc.setArguments(bundle);
+
                 try {
                     fragment = (Fragment) fragmentClass.newInstance();
                 } catch (Exception e) {
@@ -159,7 +164,7 @@ public class New_Result_F1_Fragment extends Fragment {
                 FragmentManager fragmentManager = getFragmentManager();
                 fragmentManager.popBackStack();
                 FragmentTransaction ft = fragmentManager.beginTransaction();
-                ft.replace(R.id.container, fragment);
+                ft.replace(R.id.container, yfc);
                 ft.addToBackStack(null);
                 ft.commit();
             }

@@ -1,5 +1,6 @@
 package ru.lizzzi.crossfit_rekord;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
@@ -12,11 +13,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
+import android.widget.EditText;
 
 import java.util.ArrayList;
 
 import ru.lizzzi.crossfit_rekord.data.DefinitionDBHelper;
 import ru.lizzzi.crossfit_rekord.data.DefinitionDbContarct;
+import ru.lizzzi.crossfit_rekord.data.WodDBHelper;
+import ru.lizzzi.crossfit_rekord.data.WodDbContract;
 
 
 /**
@@ -44,6 +49,14 @@ public class New_Result_F2_Fragment extends Fragment {
     DefinitionDBHelper mDbHelper = new DefinitionDBHelper(getContext());
     private ArrayList<String> Item_list = new ArrayList<>();
     AutoCompleteTextView autoCompleteTextView;
+
+    String m_new_quantity;
+    String m_new_exercise;
+    String m_new_weigth;
+    String key;
+
+    SQLiteDatabase db2;
+    private WodDBHelper mDbHelper2 = new WodDBHelper(getContext());
 
     private OnFragmentInteractionListener mListener;
 
@@ -84,6 +97,18 @@ public class New_Result_F2_Fragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_new_result_f2, container, false);
         // Inflate the layout for this fragment
 
+        final EditText new_quantity = (EditText) view.findViewById(R.id.et_new_qantity);
+        final AutoCompleteTextView new_exercise = (AutoCompleteTextView) view.findViewById(R.id.aCTV_new_exercise);
+        final EditText new_weigth = (EditText) view.findViewById(R.id.et_new_weight);
+
+        final Bundle bundle = getArguments();
+        key = bundle.getString("tag");
+
+
+        Button add_exercise = (Button) view.findViewById(R.id.bt_add_exercise);
+        Button save = (Button) view.findViewById(R.id.bt_save);
+
+
         mDbHelper = new DefinitionDBHelper(getContext());
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
@@ -109,24 +134,62 @@ public class New_Result_F2_Fragment extends Fragment {
         cursor.close();
         db.close();
 
-        autoCompleteTextView = (AutoCompleteTextView) view.findViewById(R.id.autoCompleteTextView1);
+        autoCompleteTextView = (AutoCompleteTextView) view.findViewById(R.id.aCTV_new_exercise);
         autoCompleteTextView.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, Item_list));
 
 
-        fillData();
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerview_1);
+        //fillData(); использовалв первых тестах, пока оставил на случай если понадобиться позже
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.rlv_exercise_list);
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new RecyclerAdapterExercises(exercises, new ListenerActivity() {
             @Override
             public void Remove(String exercise, int position) {
                 exercises.remove(position);
-                mAdapter.notifyItemChanged(position);
+                mAdapter.notifyItemRemoved(position);
                 mAdapter.notifyItemRangeChanged(position, getItemCount());
+                autoCompleteTextView.setText(" ");
             }
         });
 
         mRecyclerView.setAdapter(mAdapter);
+
+        add_exercise.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                m_new_quantity = new_quantity.getText().toString();
+                m_new_exercise = new_exercise.getText().toString();
+                m_new_weigth = new_weigth.getText().toString();
+
+                exercises.add(new Exercises(m_new_quantity,m_new_exercise,m_new_weigth, key));
+                mAdapter.notifyDataSetChanged();
+            }
+        });
+
+        mDbHelper2 = new WodDBHelper(getContext());
+        db2 = mDbHelper2.getReadableDatabase();
+
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                for (int j = 0; j < exercises.size() ; j++ ){
+                    m_new_quantity = String.valueOf(exercises.get(j).quantity);
+                    m_new_exercise = String.valueOf(exercises.get(j).exercise);
+                    m_new_weigth = String.valueOf(exercises.get(j).weight);
+                    key = String.valueOf(exercises.get(j).wodkey);
+
+                    ContentValues values = new ContentValues();
+                    values.put(WodDbContract.DBWod.Column_quantity, m_new_quantity);
+                    values.put(WodDbContract.DBWod.Column_exercise, m_new_exercise);
+                    values.put(WodDbContract.DBWod.Column_weight, m_new_weigth);
+                    values.put(WodDbContract.DBWod.Column_wodkey, key);
+
+                    db2.insert(WodDbContract.DBWod.TABLE_NAME,
+                            null,
+                            values);
+                }
+            }
+        });
 
         return view;
     }
@@ -160,8 +223,10 @@ public class New_Result_F2_Fragment extends Fragment {
     }
 
     void fillData(){
+        final Bundle bundle = getArguments();
+        final String ri = bundle.getString("tag");
         exercises.clear();
-        exercises.add(new Exercises("1", "1","1","1"));
+        exercises.add(new Exercises("1", "1","1", ri));
     }
 
     public int getItemCount(){

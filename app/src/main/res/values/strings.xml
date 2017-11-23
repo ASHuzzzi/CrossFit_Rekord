@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">CrossFit_Rekord</string>
     <string name="empty"> </string>
+    <string name="save">Сохранить</string>
 
 
     <!-- Поля для составления списка по абониментам -->
@@ -53,6 +54,11 @@
 
     <string name="_id">_id</string>
 
+    <!-- Значения для фрагмента New_Result_f2-->
+    <string name="new_quantity">Количество повторов</string>
+    <string name="new_exercise">Упражнение</string>
+    <string name="new_weight">Вес</string>
+    <string name="add_exercise">Добавить в тренировку</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
