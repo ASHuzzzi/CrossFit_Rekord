@@ -111,11 +111,12 @@ public class New_Result_F1_Fragment extends Fragment {
 
         mDbHelper2 = new WodDBHelper(getContext());
 
+        /*
         try {
             mDbHelper2.createDataBase();
         } catch (IOException ioe) {
             throw new Error("Unable to create database");
-        }
+        }*/
 
         db2 = mDbHelper2.getReadableDatabase();
 

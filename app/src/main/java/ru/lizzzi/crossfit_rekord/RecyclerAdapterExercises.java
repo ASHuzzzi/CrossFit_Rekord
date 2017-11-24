@@ -24,7 +24,6 @@ public class RecyclerAdapterExercises extends RecyclerView.Adapter<RecyclerAdapt
         private EditText mEditText2;
         private EditText mEditText3;
         private Button mButton;
-        private EditText autoCompleteTextView;
 
 
         public ViewHolder(View v){
