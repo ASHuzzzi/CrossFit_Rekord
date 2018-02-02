@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/shedule"
+        android:title="@string/schedule"
+        android:enabled="true" />
+    <item
+        android:id="@+id/record_training"
+        android:title="@string/record_training"
+        android:enabled="true" />
+    <item
+        android:id="@+id/result"
+        android:title="@string/result"
+        android:enabled="true" />
+    <item
+        android:id="@+id/definition"
+        android:title="@string/definition"
+        android:enabled="true" />
+    <item
+        android:id="@+id/contacts"
+        android:title="@string/contacts"
+        android:enabled="true" />
+    <item
+        android:id="@+id/profile"
+        android:title="@string/profile"
+        android:enabled="true" />
+
+</menu>

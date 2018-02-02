@@ -1,6 +1,7 @@
 package ru.lizzzi.crossfit_rekord;
 
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -50,7 +51,8 @@ public class Login_Fragment extends Fragment {
         final EditText etpassword = (EditText) v.findViewById(R.id.password);
         final EditText etemail = (EditText)v.findViewById(R.id.email);
 
-        mSettings = getContext().getSharedPreferences(APP_PREFERENCES, getContext().MODE_PRIVATE);
+        getContext();
+        mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         final SharedPreferences.Editor editor = mSettings.edit();
 
 

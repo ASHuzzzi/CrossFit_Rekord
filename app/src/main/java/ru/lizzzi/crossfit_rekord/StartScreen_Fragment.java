@@ -1,5 +1,6 @@
 package ru.lizzzi.crossfit_rekord;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,8 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
-
-import java.util.Map;
 
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackLoginUser;
 import ru.profit_group.scorocode_sdk.Responses.user.ResponseLogin;
@@ -41,7 +40,8 @@ public class StartScreen_Fragment extends Fragment {
 
         ScorocodeSdk.initWith(APPLICATION_ID, CLIENT_KEY, MASTER_KEY, FILE_KEY, MESSAGE_KEY, SCRIPT_KEY, WEBSOCKET_KEY);
 
-        mSettings = getContext().getSharedPreferences(APP_PREFERENCES, getContext().MODE_PRIVATE);
+        getContext();
+        mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
         Button subscription = ((Button) v.findViewById(R.id.button_subscription));
         Button schedule = ((Button) v.findViewById(R.id.button_schedule));
@@ -69,11 +69,10 @@ public class StartScreen_Fragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                Map<String, ?> allPreferences = mSettings.getAll();
                 boolean containtsusername = mSettings.contains(APP_PREFERENCES_USERNAME);
                 boolean containtemail = mSettings.contains(APP_PREFERENCES_EMAIL);
                 boolean containtpassword = mSettings.contains(APP_PREFERENCES_PASSWORD);
-                if (containtsusername == true && containtpassword == true && containtemail == true) {
+                if (containtsusername && containtpassword && containtemail) {
 
                     User user = new User();
                     user.login(mSettings.getString(APP_PREFERENCES_EMAIL, ""), mSettings.getString(APP_PREFERENCES_PASSWORD, ""), new CallbackLoginUser() {
