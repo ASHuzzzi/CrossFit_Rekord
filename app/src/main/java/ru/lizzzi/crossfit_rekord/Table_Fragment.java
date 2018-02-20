@@ -1,5 +1,6 @@
 package ru.lizzzi.crossfit_rekord;
 
+import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,29 +15,19 @@ import android.widget.Toast;
 import com.backendless.Backendless;
 import com.backendless.persistence.DataQueryBuilder;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import ru.profit_group.scorocode_sdk.scorocode_objects.DocumentInfo;
-
-/**
- * Created by Liza on 11.10.2017.
+/*
+  Created by Liza on 11.10.2017.
  */
 
 public class Table_Fragment extends Fragment{
 
-    public static final String COLLECTION_NAME = "table";
-
-
-    private DocumentFields_Table fields;
     private ProgressBar mProgressBar;
     ListView lvItemsInStorehouse;
     View v;
-    List<String> fieldNames = Arrays.asList("start_time","type");
     RecyclerAdapter_Table adapter;
-    List<DocumentInfo> documentInfos;
-    int position;
     List<Map> result;
 
     @Override
@@ -44,75 +35,64 @@ public class Table_Fragment extends Fragment{
                              Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_table, container, false);
 
-        Button button_monday= (Button) v.findViewById(R.id.day_1);
-        Button button_tuesday= (Button) v.findViewById(R.id.day_2);
-        Button button_wednesday= (Button) v.findViewById(R.id.day_3);
-        Button button_thursday= (Button) v.findViewById(R.id.day_4);
-        Button button_friday= (Button) v.findViewById(R.id.day_5);
-        Button button_saturday= (Button) v.findViewById(R.id.day_6);
-        Button button_sunday= (Button) v.findViewById(R.id.day_7);
-        fields = new DocumentFields_Table(getContext());
-        mProgressBar = (ProgressBar) v.findViewById(R.id.progressBar);
-        lvItemsInStorehouse = (ListView) v.findViewById(R.id.lvTable);
+        Button button_monday= v.findViewById(R.id.day_1);
+        Button button_tuesday= v.findViewById(R.id.day_2);
+        Button button_wednesday= v.findViewById(R.id.day_3);
+        Button button_thursday= v.findViewById(R.id.day_4);
+        Button button_friday= v.findViewById(R.id.day_5);
+        Button button_saturday= v.findViewById(R.id.day_6);
+        Button button_sunday= v.findViewById(R.id.day_7);
+        mProgressBar = v.findViewById(R.id.progressBar);
+        lvItemsInStorehouse = v.findViewById(R.id.lvTable);
 
-
-
-        final DownloadTable downloadTable = new DownloadTable();
-        downloadTable.execute("1");
+        StartNewAsyncTask("1");
 
         button_monday.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final DownloadTable downloadTable = new DownloadTable();
-                downloadTable.execute("1");
+                StartNewAsyncTask("1");
             }
         });
 
         button_tuesday.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final DownloadTable downloadTable = new DownloadTable();
-                downloadTable.execute("2");
+                StartNewAsyncTask("2");
             }
         });
 
         button_wednesday.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final DownloadTable downloadTable = new DownloadTable();
-                downloadTable.execute("3");
+                StartNewAsyncTask("3");
             }
         });
 
         button_thursday.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final DownloadTable downloadTable = new DownloadTable();
-                downloadTable.execute("4");
+                StartNewAsyncTask("4");
             }
         });
 
         button_friday.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final DownloadTable downloadTable = new DownloadTable();
-                downloadTable.execute("5");
+                StartNewAsyncTask("5");
             }
         });
 
         button_saturday.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final DownloadTable downloadTable = new DownloadTable();
-                downloadTable.execute("6");
+                StartNewAsyncTask("6");
             }
         });
 
         button_sunday.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final DownloadTable downloadTable = new DownloadTable();
-                downloadTable.execute("7");
+                StartNewAsyncTask("7");
             }
         });
 
@@ -121,6 +101,12 @@ public class Table_Fragment extends Fragment{
         return v;
     }
 
+    private void StartNewAsyncTask(String sNumberOfDay){
+        final DownloadTable downloadTable = new DownloadTable();
+        downloadTable.execute(sNumberOfDay);
+    }
+
+    @SuppressLint("StaticFieldLeak")
     private class DownloadTable extends AsyncTask<String,Void, Void>{
 
         @Override
@@ -147,9 +133,7 @@ public class Table_Fragment extends Fragment{
             result = Backendless.Data.of("Table").find(queryBuilder);
             if (result != null){
                 adapter = new RecyclerAdapter_Table(getContext(), result, R.layout.item_lv_table);
-
             }
-
 
             return null;
         }
