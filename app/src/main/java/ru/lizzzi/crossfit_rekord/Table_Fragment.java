@@ -11,12 +11,14 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.backendless.Backendless;
+import com.backendless.persistence.DataQueryBuilder;
+
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
-import ru.profit_group.scorocode_sdk.Callbacks.CallbackFindDocument;
 import ru.profit_group.scorocode_sdk.scorocode_objects.DocumentInfo;
-import ru.profit_group.scorocode_sdk.scorocode_objects.Query;
 
 /**
  * Created by Liza on 11.10.2017.
@@ -31,10 +33,11 @@ public class Table_Fragment extends Fragment{
     private ProgressBar mProgressBar;
     ListView lvItemsInStorehouse;
     View v;
-    List<String> fieldNames = Arrays.asList("start_time","Type");
+    List<String> fieldNames = Arrays.asList("start_time","type");
     RecyclerAdapter_Table adapter;
     List<DocumentInfo> documentInfos;
     int position;
+    List<Map> result;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -132,37 +135,36 @@ public class Table_Fragment extends Fragment{
         protected Void doInBackground(String... params) {
 
             String dayofweek = params[0];
+            String whereClause = "day_of_week = " + dayofweek;
+            DataQueryBuilder queryBuilder = DataQueryBuilder.create();
+            queryBuilder.setWhereClause(whereClause);
+            queryBuilder.setSortBy("start_time");
+            /*
+            setPageSize(20)  - пока использую этот метод. Но в будущем надо бы переделать
+            корректно на динамику.
+             */
+            queryBuilder.setPageSize(20);
+            result = Backendless.Data.of("Table").find(queryBuilder);
+            if (result != null){
+                adapter = new RecyclerAdapter_Table(getContext(), result, R.layout.item_lv_table);
 
-            //fieldNames.add("start_time");
-            //fieldNames.add("Type");
+            }
 
-            Query query = new Query(COLLECTION_NAME);
-            query.setFieldsForSearch(fieldNames);
-            query.ascending("start_time");
-            query.equalTo("day_of_week", dayofweek);
-            query.findDocuments(new CallbackFindDocument() {
-                @Override
-                public void onDocumentFound(List<DocumentInfo> documentInfos) {
-                    if(documentInfos != null) {
-                        adapter = new RecyclerAdapter_Table(getContext(), documentInfos, R.layout.item_lv_table);
-                        lvItemsInStorehouse.setAdapter(adapter);
 
-                    }
-                }
-
-                @Override
-                public void onDocumentNotFound(String errorCode, String errorMessage) {
-                    Toast.makeText(getContext(), "Нет данных", Toast.LENGTH_SHORT).show();
-                }
-            });
             return null;
         }
 
         @Override
         protected void onPostExecute(Void result){
             super.onPostExecute(result);
-            lvItemsInStorehouse.setVisibility(View.VISIBLE);
+
             mProgressBar.setVisibility(View.INVISIBLE);
+            if (adapter.getCount() > 0){
+                lvItemsInStorehouse.setAdapter(adapter);
+                lvItemsInStorehouse.setVisibility(View.VISIBLE);
+            }else {
+                Toast.makeText(getContext(), "Нет данных", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }

@@ -16,6 +16,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.backendless.Backendless;
+
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackLoginUser;
 import ru.profit_group.scorocode_sdk.Responses.user.ResponseLogin;
 import ru.profit_group.scorocode_sdk.ScorocodeSdk;
@@ -37,24 +39,49 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     SharedPreferences mSettings;
     private int counter;
 
+    public static final String APPLICATION_IDB = "215CF2B1-C44E-E365-FFB6-9C35DD6A9300";
+    public static final String API_KEYB = "8764616E-C5FE-CE43-FF54-17B4A8026F00";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         ScorocodeSdk.initWith(APPLICATION_ID, CLIENT_KEY, null, FILE_KEY, MESSAGE_KEY, SCRIPT_KEY, null);
+        Backendless.initApp(this, APPLICATION_IDB, API_KEYB);
+
+        /*
+        BackendlessUser user = new BackendlessUser();
+        user.setEmail( "green.goblin@backendless.com" );
+        user.setPassword( "sp1dey" );
+        user.setProperty( "name", "Green Goblin" );
+        user.setProperty( "phoneNumber", "212-555-1212" );
+
+
+        Backendless.UserService.register(user, new AsyncCallback<BackendlessUser>() {
+            @Override
+            public void handleResponse(BackendlessUser response) {
+                Toast.makeText(getContext(), "User has been registered", Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void handleFault(BackendlessFault fault) {
+
+                Toast.makeText(getContext(), fault.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });*/
 
 
         Fragment fragment = null;
@@ -150,5 +177,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         return true;
+    }
+
+    public Context getContext() {
+        return this;
     }
 }

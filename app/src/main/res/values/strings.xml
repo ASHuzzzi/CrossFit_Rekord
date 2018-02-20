@@ -12,7 +12,8 @@
     <!-- Поля для составления расписания -->
     <string name="day_of_week">day_of_week</string>
     <string name="start_time">start_time</string>
-    <string name="type">Type</string>
+    <string name="type">type</string>
+    <string name="table">table</string>
 
     <!-- Поля для составления списка по записавшимся -->
     <string name="username">username</string>

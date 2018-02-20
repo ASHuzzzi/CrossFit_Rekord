@@ -9,8 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.util.List;
-
-import ru.profit_group.scorocode_sdk.scorocode_objects.DocumentInfo;
+import java.util.Map;
 
 /*public class RecyclerAdapterMenu extends RecyclerView.Adapter<RecyclerAdapterMenu.ViewHolder> {
 //public class RecyclerAdapterMenu extends RecyclerView.Adapter<RecyclerAdapterMenu.ViewHolder> { //implements FastScrollRecyclerView.SectionedAdapter {
@@ -79,12 +78,12 @@ import ru.profit_group.scorocode_sdk.scorocode_objects.DocumentInfo;
 
 public class RecyclerAdapter_Table extends BaseAdapter {
     private Context context;
-    private List<DocumentInfo> storedItems;
+    private List<Map> storedItems;
     private int layoutId;
     private LayoutInflater inflater;
     private DocumentFields_Table fields;
 
-    public RecyclerAdapter_Table(Context context, @NonNull List<DocumentInfo> storedItems, int layoutId) {
+    public RecyclerAdapter_Table(Context context, @NonNull List<Map> storedItems, int layoutId) {
         this.context = context;
         this.storedItems = storedItems;
         this.layoutId = layoutId;
@@ -124,10 +123,10 @@ public class RecyclerAdapter_Table extends BaseAdapter {
         return view;
     }
 
-    private void customizeView(View view, ViewHolder holder, final DocumentInfo documentInfo) {
+    private void customizeView(View view, ViewHolder holder, final Map documentInfo) {
 
-        String start_time = (String) documentInfo.getFields().get(fields.getStartTimeField());
-        String type = (String) documentInfo.getFields().get(fields.getTypeField());
+        String start_time = (String) documentInfo.get(fields.getStartTimeField());
+        String type = (String) documentInfo.get(fields.getTypeField());
 
         holder.StartTimeItem.setText(start_time);
         holder.TypesItem.setText(type);
