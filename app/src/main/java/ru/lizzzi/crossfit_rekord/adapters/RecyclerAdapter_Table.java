@@ -1,41 +1,40 @@
-package ru.lizzzi.crossfit_rekord;
+package ru.lizzzi.crossfit_rekord.adapters;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
+import ru.lizzzi.crossfit_rekord.DocumentFields_Table;
+import ru.lizzzi.crossfit_rekord.R;
 
-
-public class RecyclerAdapter_Definition extends BaseAdapter {
-
-    private Context context;
-    private ArrayList<String> mDataset;
-    private ArrayList<String> mPriceset;
+public class RecyclerAdapter_Table extends BaseAdapter {
+    private List<Map> shediletems;
     private int layoutId;
     private LayoutInflater inflater;
+    private DocumentFields_Table fields;
 
-    public RecyclerAdapter_Definition(Context context, ArrayList<String> dataset, ArrayList<String> priceset, int layoutId) {
-        this.context = context;
-        this.mDataset = dataset;
-        this.mPriceset = priceset;
+    public RecyclerAdapter_Table(Context context, @NonNull List<Map> shediletems, int layoutId) {
+        this.shediletems = shediletems;
         this.layoutId = layoutId;
         inflater = LayoutInflater.from(context);
+        fields = new DocumentFields_Table(context);
     }
-
 
     @Override
     public int getCount() {
-        return mDataset.size();
+        return shediletems.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return mDataset.get(position);
+        return shediletems.get(position);
     }
 
     @Override
@@ -55,16 +54,18 @@ public class RecyclerAdapter_Definition extends BaseAdapter {
             view.setTag(holder);
         }
 
-        customizeView(view, holder, position);
+        customizeView(view, holder, shediletems.get(position));
 
         return view;
     }
 
-    private void customizeView(View view, ViewHolder holder, int position) {
+    private void customizeView(View view, ViewHolder holder, final Map documentInfo) {
 
-        holder.StartTimeItem.setText(mDataset.get(position));
-        holder.TypesItem.setText(mPriceset.get(position));
+        String start_time = (String) documentInfo.get(fields.getStartTimeField());
+        String type = (String) documentInfo.get(fields.getTypeField());
 
+        holder.StartTimeItem.setText(start_time);
+        holder.TypesItem.setText(type);
 
         view.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,14 +77,11 @@ public class RecyclerAdapter_Definition extends BaseAdapter {
     static class ViewHolder {
         private TextView StartTimeItem;
         private TextView TypesItem;
-        //@BindView(R.id.label) TextView tvStoredItemName;;
 
-        public ViewHolder(View view) {
-            StartTimeItem = (TextView) view.findViewById(R.id.termin);
-            TypesItem = (TextView) view.findViewById(R.id.description);
+        ViewHolder(View view) {
+            StartTimeItem = view.findViewById(R.id.start_time);
+            TypesItem = view.findViewById(R.id.type);
 
         }
     }
 }
-
-

@@ -1,4 +1,4 @@
-package ru.lizzzi.crossfit_rekord;
+package ru.lizzzi.crossfit_rekord.adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -9,7 +9,10 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.util.List;
-import java.util.Map;
+
+import ru.lizzzi.crossfit_rekord.DocumentFields;
+import ru.lizzzi.crossfit_rekord.R;
+import ru.profit_group.scorocode_sdk.scorocode_objects.DocumentInfo;
 
 /*public class RecyclerAdapterMenu extends RecyclerView.Adapter<RecyclerAdapterMenu.ViewHolder> {
 //public class RecyclerAdapterMenu extends RecyclerView.Adapter<RecyclerAdapterMenu.ViewHolder> { //implements FastScrollRecyclerView.SectionedAdapter {
@@ -76,19 +79,19 @@ import java.util.Map;
     }
     */
 
-public class RecyclerAdapter_Table extends BaseAdapter {
+public class RecyclerAdapterMenu extends BaseAdapter {
     private Context context;
-    private List<Map> storedItems;
+    private List<DocumentInfo> storedItems;
     private int layoutId;
     private LayoutInflater inflater;
-    private DocumentFields_Table fields;
+    private DocumentFields fields;
 
-    public RecyclerAdapter_Table(Context context, @NonNull List<Map> storedItems, int layoutId) {
+    public RecyclerAdapterMenu(Context context, @NonNull List<DocumentInfo> storedItems, int layoutId) {
         this.context = context;
         this.storedItems = storedItems;
         this.layoutId = layoutId;
         inflater = LayoutInflater.from(context);
-        fields = new DocumentFields_Table(context, null);
+        fields = new DocumentFields(context, null);
     }
 
     @Override
@@ -123,13 +126,15 @@ public class RecyclerAdapter_Table extends BaseAdapter {
         return view;
     }
 
-    private void customizeView(View view, ViewHolder holder, final Map documentInfo) {
+    private void customizeView(View view, ViewHolder holder, final DocumentInfo documentInfo) {
 
-        String start_time = (String) documentInfo.get(fields.getStartTimeField());
-        String type = (String) documentInfo.get(fields.getTypeField());
+        String period = (String) documentInfo.getFields().get(fields.getPeriodField());
+        String typesoftraining = (String) documentInfo.getFields().get(fields.getTypesOfTrainingFields());
+        Double price = (Double) documentInfo.getFields().get(fields.getPriceField());
 
-        holder.StartTimeItem.setText(start_time);
-        holder.TypesItem.setText(type);
+        holder.PeriodItem.setText(period);
+        holder.TypesOfTrainingItem.setText(typesoftraining);
+        holder.PriceItem.setText(String.valueOf(price));
 
 
         view.setOnClickListener(new View.OnClickListener() {
@@ -140,14 +145,15 @@ public class RecyclerAdapter_Table extends BaseAdapter {
     }
 
     static class ViewHolder {
-        private TextView StartTimeItem;
-        private TextView TypesItem;
+        private TextView PeriodItem;
+        private TextView TypesOfTrainingItem;
+        private TextView PriceItem;
         //@BindView(R.id.label) TextView tvStoredItemName;;
 
         public ViewHolder(View view) {
-            StartTimeItem = (TextView) view.findViewById(R.id.start_time);
-            TypesItem = (TextView) view.findViewById(R.id.type);
-
+            PeriodItem = (TextView) view.findViewById(R.id.period);
+            TypesOfTrainingItem = (TextView) view.findViewById(R.id.types_of_training);
+            PriceItem = (TextView) view.findViewById(R.id.price);
         }
     }
 }

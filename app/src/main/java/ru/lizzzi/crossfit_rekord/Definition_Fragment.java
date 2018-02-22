@@ -12,6 +12,7 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
+import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapter_Definition;
 import ru.lizzzi.crossfit_rekord.data.DefinitionDBHelper;
 import ru.lizzzi.crossfit_rekord.data.DefinitionDbContarct.DBdefinition;
 

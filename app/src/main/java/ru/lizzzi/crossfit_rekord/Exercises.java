@@ -5,9 +5,9 @@ package ru.lizzzi.crossfit_rekord;
  */
 
 public class Exercises {
-    String quantity;
-    String exercise;
-    String weight;
+    public String quantity;
+    public String exercise;
+    public String weight;
     String wodkey;
 
     Exercises(String _quantity, String _exercise, String _weight, String _wodkey){

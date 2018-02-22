@@ -18,6 +18,7 @@ import android.widget.EditText;
 
 import java.util.ArrayList;
 
+import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterExercises;
 import ru.lizzzi.crossfit_rekord.data.DefinitionDBHelper;
 import ru.lizzzi.crossfit_rekord.data.DefinitionDbContarct;
 import ru.lizzzi.crossfit_rekord.data.WodDBHelper;

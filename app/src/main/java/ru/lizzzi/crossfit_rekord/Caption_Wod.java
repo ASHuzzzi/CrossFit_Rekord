@@ -5,11 +5,11 @@ package ru.lizzzi.crossfit_rekord;
  */
 
 public class Caption_Wod {
-    String day;
-    String month;
-    String caption_wod;
-    String level;
-    String result;
+    public String day;
+    public String month;
+    public String caption_wod;
+    public String level;
+    public String result;
 
     Caption_Wod(String _day, String _month, String _caption_wod, String _level, String _result){
         day = _day;

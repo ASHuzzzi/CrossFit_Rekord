@@ -16,6 +16,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterRecord;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackDocumentSaved;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackFindDocument;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetDocumentById;

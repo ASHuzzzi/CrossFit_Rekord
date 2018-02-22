@@ -18,6 +18,8 @@ import com.backendless.persistence.DataQueryBuilder;
 import java.util.List;
 import java.util.Map;
 
+import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapter_Table;
+
 /*
   Created by Liza on 11.10.2017.
  */
@@ -95,8 +97,6 @@ public class Table_Fragment extends Fragment{
                 StartNewAsyncTask("7");
             }
         });
-
-
 
         return v;
     }

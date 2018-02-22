@@ -17,6 +17,7 @@ import android.widget.Button;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapter_Result;
 import ru.lizzzi.crossfit_rekord.data.WodDBHelper;
 import ru.lizzzi.crossfit_rekord.data.WodDbContract;
 

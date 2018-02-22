@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterMenu;
 import ru.lizzzi.crossfit_rekord.views.FastScrollRecyclerView;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackCountDocument;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackFindDocument;

@@ -1,4 +1,4 @@
-package ru.lizzzi.crossfit_rekord;
+package ru.lizzzi.crossfit_rekord.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,6 +8,10 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import java.util.ArrayList;
+
+import ru.lizzzi.crossfit_rekord.Exercises;
+import ru.lizzzi.crossfit_rekord.ListenerActivity;
+import ru.lizzzi.crossfit_rekord.R;
 
 /**
  * Created by Liza on 22.11.2017.
