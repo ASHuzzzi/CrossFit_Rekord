@@ -1,5 +1,6 @@
 package ru.lizzzi.crossfit_rekord;
 
+import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,20 +12,20 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.backendless.Backendless;
+import com.backendless.async.callback.AsyncCallback;
+import com.backendless.exceptions.BackendlessFault;
+import com.backendless.persistence.DataQueryBuilder;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterRecord;
-import ru.profit_group.scorocode_sdk.Callbacks.CallbackDocumentSaved;
-import ru.profit_group.scorocode_sdk.Callbacks.CallbackFindDocument;
-import ru.profit_group.scorocode_sdk.Callbacks.CallbackGetDocumentById;
-import ru.profit_group.scorocode_sdk.Callbacks.CallbackRemoveDocument;
-import ru.profit_group.scorocode_sdk.Responses.data.ResponseRemove;
-import ru.profit_group.scorocode_sdk.scorocode_objects.Document;
 import ru.profit_group.scorocode_sdk.scorocode_objects.DocumentInfo;
-import ru.profit_group.scorocode_sdk.scorocode_objects.Query;
 
 
 public class RecordForTraining_Fragment extends Fragment {
@@ -45,6 +46,8 @@ public class RecordForTraining_Fragment extends Fragment {
 
     RecyclerAdapterRecord adapter;
     ListView lvRecord;
+    List<Map> results;
+    List<Map> result2;
 
     DocumentInfo documentInfo;
 
@@ -259,7 +262,30 @@ public class RecordForTraining_Fragment extends Fragment {
             public void onClick(View view) {
 
                 if (userid.equals("noId")){
-                    Document newDocument = new Document("recordings_for_training");
+
+                    HashMap record = new HashMap();
+                    record.put( "data", date_select);
+                    record.put( "time", time_select);
+                    record.put( "username", username);
+
+                    // save object asynchronously
+                    Backendless.Persistence.of( "recording_on_training" ).save( record, new AsyncCallback<Map>() {
+                        public void handleResponse( Map response )
+                        {
+                            // new Contact instance has been saved
+                            Toast.makeText(getContext(), username + " " + date_select + " " + time_select , Toast.LENGTH_SHORT).show();
+                            DownloadData downloadData = new DownloadData();
+                            downloadData.execute();
+                        }
+
+                        public void handleFault( BackendlessFault fault )
+                        {
+                            // an error has occurred, the error code can be retrieved with fault.getCode()
+                            Toast.makeText(getContext(), "Не сохранилось. Попробуйте еще раз." , Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                    /*Document newDocument = new Document("recordings_for_training");
                     newDocument.setField("data", date_select);
                     newDocument.setField("time", time_select);
                     newDocument.setField("username", username);
@@ -277,9 +303,26 @@ public class RecordForTraining_Fragment extends Fragment {
                         public void onDocumentSaveFailed(String errorCode, String errorMessage) {
                             Toast.makeText(getContext(), "Не сохранилось. Попробуйте еще раз." , Toast.LENGTH_SHORT).show();
                         }
-                    });
+                    });*/
                 }else {
-                    final Document newDocument = new Document(COLLECTION_NAME);
+
+                    HashMap record2 = new HashMap();
+                    record2.put( "objectId", userid);
+                    Backendless.Persistence.of( "recording_on_training" ).remove(record2, new AsyncCallback<Long>() {
+                        @Override
+                        public void handleResponse(Long response) {
+                            DownloadData downloadData = new DownloadData();
+                            downloadData.execute();
+                        }
+
+                        @Override
+                        public void handleFault(BackendlessFault fault) {
+                            Toast.makeText(getContext(), "Не удалилось. Попробуйте еще раз." , Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+
+                    /*final Document newDocument = new Document(COLLECTION_NAME);
                     newDocument.getDocumentById(userid, new CallbackGetDocumentById() {
                         @Override
                         public void onDocumentFound(DocumentInfo documentInfo) {
@@ -301,7 +344,7 @@ public class RecordForTraining_Fragment extends Fragment {
                         public void onDocumentNotFound(String errorCode, String errorMessage) {
                             Toast.makeText(getContext(), "Запись не найдена" , Toast.LENGTH_SHORT).show();
                         }
-                    });
+                    });*/
                 }
             }
         });
@@ -310,6 +353,7 @@ public class RecordForTraining_Fragment extends Fragment {
         return v;
     }
 
+    @SuppressLint("StaticFieldLeak")
     private class DownloadData extends AsyncTask<Void,Void, Void>{
 
         @Override
@@ -320,7 +364,44 @@ public class RecordForTraining_Fragment extends Fragment {
         @Override
         protected Void doInBackground(Void... voids) {
 
-            Query query = new Query(COLLECTION_NAME);
+            String whereClause = "data = '" + date_select + "' and time = '" + time_select + "'";
+            DataQueryBuilder queryBuilder = DataQueryBuilder.create();
+            queryBuilder.setWhereClause(whereClause);
+            /*
+            setPageSize(20)  - пока использую этот метод. Но в будущем надо бы переделать
+            корректно на динамику.
+             */
+            queryBuilder.setPageSize(20);
+            results = Backendless.Data.of("recording_on_training").find(queryBuilder);
+            if (results.size() > 0 ){
+
+                final SharedPreferences.Editor editor = mSettings.edit();
+                editor.putString(APP_PREFERENCES_USERCOUNT, "1");
+                editor.apply();
+                adapter = new RecyclerAdapterRecord(getContext(), results, R.layout.item_lv_record);
+
+                String whereClause2 = "data = '" + date_select + "' and time = '" + time_select + "' and username = '" + username + "'";
+                DataQueryBuilder queryBuilder2 = DataQueryBuilder.create();
+                queryBuilder2.setWhereClause(whereClause2);
+                queryBuilder2.setPageSize(20);
+                result2 = Backendless.Data.of("recording_on_training").find(queryBuilder2);
+                /*if (results.size() > 0 ){
+                    btRegister.setText(R.string.delete_entry);
+                    userid = String.valueOf( result2.get(0).get("objectId"));
+                }else {
+                    btRegister.setText(R.string.whrite_entry);
+                    userid = "noId";
+                }*/
+
+            }else {
+                //Toast.makeText(getContext(), "Нет данных", Toast.LENGTH_SHORT).show();
+                /*btRegister.setText(R.string.whrite_entry);
+                userid = "noId";
+                lvRecord.setVisibility(View.INVISIBLE);*/
+            }
+
+
+            /*Query query = new Query(COLLECTION_NAME);
             query.equalTo("data", date_select);
             query.equalTo("time", time_select);
             query.findDocuments(new CallbackFindDocument() {
@@ -363,12 +444,9 @@ public class RecordForTraining_Fragment extends Fragment {
 
                 @Override
                 public void onDocumentNotFound(String errorCode, String errorMessage) {
-                    Toast.makeText(getContext(), "Нет данных", Toast.LENGTH_SHORT).show();
-                    btRegister.setText(R.string.whrite_entry);
-                    userid = "noId";
-                    lvRecord.setVisibility(View.INVISIBLE);
+v
                 }
-            });
+            });*/
 
             return null;
         }
@@ -376,6 +454,21 @@ public class RecordForTraining_Fragment extends Fragment {
         @Override
         public void onPostExecute(Void result){
             super.onPostExecute(result);
+
+            if (adapter != null){
+                lvRecord.setVisibility(View.VISIBLE);
+                lvRecord.setAdapter(adapter);
+            }
+            if (results.size() > 0 ){
+                btRegister.setText(R.string.delete_entry);
+                userid = String.valueOf( result2.get(0).get("objectId"));
+            }else {
+                btRegister.setText(R.string.whrite_entry);
+                userid = "noId";
+                lvRecord.setVisibility(View.INVISIBLE);
+            }
+
+
         }
 
 

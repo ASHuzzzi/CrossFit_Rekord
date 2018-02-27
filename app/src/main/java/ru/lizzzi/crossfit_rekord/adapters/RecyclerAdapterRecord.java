@@ -10,10 +10,10 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.util.List;
+import java.util.Map;
 
 import ru.lizzzi.crossfit_rekord.DocumentFields_Record;
 import ru.lizzzi.crossfit_rekord.R;
-import ru.profit_group.scorocode_sdk.scorocode_objects.DocumentInfo;
 
 /*public class RecyclerAdapterMenu extends RecyclerView.Adapter<RecyclerAdapterMenu.ViewHolder> {
 //public class RecyclerAdapterMenu extends RecyclerView.Adapter<RecyclerAdapterMenu.ViewHolder> { //implements FastScrollRecyclerView.SectionedAdapter {
@@ -82,7 +82,7 @@ import ru.profit_group.scorocode_sdk.scorocode_objects.DocumentInfo;
 
 public class RecyclerAdapterRecord extends BaseAdapter {
     private Context context;
-    private List<DocumentInfo> storedItems;
+    private List<Map> storedItems;
     private int layoutId;
     private LayoutInflater inflater;
     private DocumentFields_Record fields;
@@ -91,13 +91,13 @@ public class RecyclerAdapterRecord extends BaseAdapter {
     public static final String APP_PREFERENCES_USERCOUNT = "Usercount";
     SharedPreferences mSettings;
 
-    public RecyclerAdapterRecord(Context context, @NonNull List<DocumentInfo> storedItems, int layoutId) {
+    public RecyclerAdapterRecord(Context context, @NonNull List<Map> shediletems, int layoutId) {
         this.context = context;
-        this.storedItems = storedItems;
+        this.storedItems = shediletems;
         this.layoutId = layoutId;
         inflater = LayoutInflater.from(context);
         fields = new DocumentFields_Record(context, null);
-        mSettings = context.getSharedPreferences(APP_PREFERENCES, context.MODE_PRIVATE);
+        mSettings = context.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
     }
 
     @Override
@@ -132,7 +132,7 @@ public class RecyclerAdapterRecord extends BaseAdapter {
         return view;
     }
 
-    private void customizeView(View view, ViewHolder holder, final DocumentInfo documentInfo) {
+    private void customizeView(View view, ViewHolder holder, final Map documentInfo) {
 
         String number = mSettings.getString(APP_PREFERENCES_USERCOUNT, "");
 
@@ -142,7 +142,7 @@ public class RecyclerAdapterRecord extends BaseAdapter {
         editor.putString(APP_PREFERENCES_USERCOUNT, String.valueOf(i));
         editor.apply();
 
-        String username = (String) documentInfo.getFields().get(fields.getUsernameFields());
+        String username = (String) documentInfo.get(fields.getUsernameFields());
 
 
         holder.UsernameItem.setText(username);

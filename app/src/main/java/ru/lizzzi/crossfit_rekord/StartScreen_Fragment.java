@@ -10,27 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
-
-import ru.profit_group.scorocode_sdk.Callbacks.CallbackLoginUser;
-import ru.profit_group.scorocode_sdk.Responses.user.ResponseLogin;
-import ru.profit_group.scorocode_sdk.ScorocodeSdk;
-import ru.profit_group.scorocode_sdk.scorocode_objects.User;
 
 public class StartScreen_Fragment extends Fragment {
 
-    public static final String APPLICATION_ID = "24accf90596a4630a107e14d03a6a3a7";
-    public static final String MASTER_KEY = "aee8341a0a22449ebd6a707702689c4e";
-    public static final String CLIENT_KEY = "f539a69f0d5940a38e0ca0e83a394d00";
-    public static final String FILE_KEY = "c785108f61304a2680a53e1a44ae15b2";
-    private static final String MESSAGE_KEY = "e812ec1547b84b62bc9a5c145d442f77";
-    private static final String SCRIPT_KEY = "6920f997815244f2bc77949974e4b215";
-    private static final String WEBSOCKET_KEY = "6920f997815244f2bc77949974e4b215";
-
     public static final String APP_PREFERENCES = "audata";
-    public static final String APP_PREFERENCES_USERNAME = "Username";
-    public static final String APP_PREFERENCES_EMAIL = "Email";
-    public static final String APP_PREFERENCES_PASSWORD = "Password";
+    public static final String APP_PREFERENCES_OBJECTID = "ObjectId";
     SharedPreferences mSettings;
 
     @Override
@@ -38,17 +22,49 @@ public class StartScreen_Fragment extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_start_screen, container, false);
 
-        ScorocodeSdk.initWith(APPLICATION_ID, CLIENT_KEY, MASTER_KEY, FILE_KEY, MESSAGE_KEY, SCRIPT_KEY, WEBSOCKET_KEY);
-
         getContext();
         mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
-        Button subscription = ((Button) v.findViewById(R.id.button_subscription));
-        Button schedule = ((Button) v.findViewById(R.id.button_schedule));
-        Button record_training = ((Button) v.findViewById(R.id.button_record_training));
-        Button description = (Button) v.findViewById(R.id.button_definition);
-        final Button contacts = ((Button) v.findViewById(R.id.button_contacts));
-        Button result = ((Button) v.findViewById(R.id.button_result));
+        /*boolean containtsusername = mSettings.contains(APP_PREFERENCES_USERNAME);
+        boolean containtemail = mSettings.contains(APP_PREFERENCES_EMAIL);
+        boolean containtpassword = mSettings.contains(APP_PREFERENCES_PASSWORD);
+        if (containtsusername && containtpassword && containtemail) {
+
+            Backendless.UserService.login(mSettings.getString(APP_PREFERENCES_EMAIL, ""), mSettings.getString(APP_PREFERENCES_PASSWORD, ""), new AsyncCallback<BackendlessUser>() {
+                @Override
+                public void handleResponse(BackendlessUser response) {
+                    //Toast.makeText(getContext(), "[ASYNC] Is login valid? - " + response.getObjectId(), Toast.LENGTH_SHORT).show();
+
+                    AsyncCallback<Boolean> isValidLoginCallback = new AsyncCallback<Boolean>() {
+                        @Override
+                        public void handleResponse(Boolean response) {
+                            Toast.makeText(getContext(), "[ASYNC] Is login valid? - " + response.booleanValue(), Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void handleFault(BackendlessFault fault) {
+                            Toast.makeText(getContext(), "[ASYNC] Is login valid? - " + fault.getMessage(), Toast.LENGTH_SHORT).show();
+
+                        }
+                    };
+                    Backendless.UserService.isValidLogin( isValidLoginCallback );
+
+                }
+
+                @Override
+                public void handleFault(BackendlessFault fault) {
+
+                }
+            }, true);
+
+        }*/
+
+        Button subscription = v.findViewById(R.id.button_subscription);
+        Button schedule = v.findViewById(R.id.button_schedule);
+        Button record_training = v.findViewById(R.id.button_record_training);
+        Button description = v.findViewById(R.id.button_definition);
+        final Button contacts = v.findViewById(R.id.button_contacts);
+        Button result = v.findViewById(R.id.button_result);
 
         subscription.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,24 +85,10 @@ public class StartScreen_Fragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                boolean containtsusername = mSettings.contains(APP_PREFERENCES_USERNAME);
-                boolean containtemail = mSettings.contains(APP_PREFERENCES_EMAIL);
-                boolean containtpassword = mSettings.contains(APP_PREFERENCES_PASSWORD);
-                if (containtsusername && containtpassword && containtemail) {
+                boolean containtobjectid = mSettings.contains(APP_PREFERENCES_OBJECTID);
+                if (containtobjectid) {
 
-                    User user = new User();
-                    user.login(mSettings.getString(APP_PREFERENCES_EMAIL, ""), mSettings.getString(APP_PREFERENCES_PASSWORD, ""), new CallbackLoginUser() {
-                        @Override
-                        public void onLoginSucceed(ResponseLogin responseLogin) {
-                            //Toast.makeText(getContext(), "Авторизация успешно", Toast.LENGTH_SHORT).show();
-                            TransactionFragment(RecordForTraining_Fragment.class);
-                        }
-
-                        @Override
-                        public void onLoginFailed(String errorCode, String errorMessage) {
-                            Toast.makeText(getContext(), "Авторизация не прошла. Попробуйте снова.", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                    TransactionFragment(RecordForTraining_Fragment.class);
 
                 }else {
                     TransactionFragment(Login_Fragment.class);

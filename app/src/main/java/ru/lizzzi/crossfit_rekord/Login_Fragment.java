@@ -14,25 +14,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import ru.profit_group.scorocode_sdk.Callbacks.CallbackRegisterUser;
-import ru.profit_group.scorocode_sdk.scorocode_objects.User;
+import com.backendless.Backendless;
+import com.backendless.BackendlessUser;
+import com.backendless.async.callback.AsyncCallback;
+import com.backendless.exceptions.BackendlessFault;
 
 
 public class Login_Fragment extends Fragment {
-    /*
-    public static final String APPLICATION_ID = "24accf90596a4630a107e14d03a6a3a7";
-    public static final String MASTER_KEY = "aee8341a0a22449ebd6a707702689c4e";
-    public static final String CLIENT_KEY = "f539a69f0d5940a38e0ca0e83a394d00";
-    public static final String FILE_KEY = "c785108f61304a2680a53e1a44ae15b2";
-    private static final String MESSAGE_KEY = "e812ec1547b84b62bc9a5c145d442f77";
-    private static final String SCRIPT_KEY = "6920f997815244f2bc77949974e4b215";
-    private static final String WEBSOCKET_KEY = "6920f997815244f2bc77949974e4b215";
-*/
 
     public static final String APP_PREFERENCES = "audata";
     public static final String APP_PREFERENCES_USERNAME = "Username";
     public static final String APP_PREFERENCES_EMAIL = "Email";
     public static final String APP_PREFERENCES_PASSWORD = "Password";
+    public static final String APP_PREFERENCES_OBJECTID = "ObjectId";
     SharedPreferences mSettings;
 
 
@@ -46,17 +40,14 @@ public class Login_Fragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_login, container, false);
-        Button register = (Button) v.findViewById(R.id.btn_register);
-        final EditText etusername = (EditText) v.findViewById(R.id.username);
-        final EditText etpassword = (EditText) v.findViewById(R.id.password);
-        final EditText etemail = (EditText)v.findViewById(R.id.email);
+        Button register = v.findViewById(R.id.btn_register);
+        final EditText etusername = v.findViewById(R.id.username);
+        final EditText etpassword = v.findViewById(R.id.password);
+        final EditText etemail = v.findViewById(R.id.email);
 
         getContext();
         mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         final SharedPreferences.Editor editor = mSettings.edit();
-
-
-        //ScorocodeSdk.initWith(APPLICATION_ID, CLIENT_KEY, MASTER_KEY, FILE_KEY, MESSAGE_KEY, SCRIPT_KEY, WEBSOCKET_KEY);
 
         register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,16 +57,21 @@ public class Login_Fragment extends Fragment {
                 final String spassword = etpassword.getText().toString();
                 final String semail = etemail.getText().toString();
 
-                new User().register(susername, semail, spassword, new CallbackRegisterUser() {
-                    @Override
-                    public void onRegisterSucceed() {
+                BackendlessUser user = new BackendlessUser();
+                user.setEmail( semail );
+                user.setPassword( spassword );
+                user.setProperty( "name", susername);
 
+
+                Backendless.UserService.register(user, new AsyncCallback<BackendlessUser>() {
+                    @Override
+                    public void handleResponse(BackendlessUser response) {
 
                         editor.putString(APP_PREFERENCES_USERNAME, susername);
                         editor.putString(APP_PREFERENCES_EMAIL, semail);
                         editor.putString(APP_PREFERENCES_PASSWORD, spassword);
+                        editor.putString(APP_PREFERENCES_OBJECTID, response.getObjectId());
                         editor.apply();
-
                         Toast.makeText(getContext(), "Новый пользователь зарегистрирован", Toast.LENGTH_SHORT).show();
                         Fragment fragment = null;
                         Class fragmentClass;
@@ -91,15 +87,15 @@ public class Login_Fragment extends Fragment {
                         ft.replace(R.id.container, fragment);
                         ft.addToBackStack(null);
                         ft.commit();
-
                     }
 
                     @Override
-                    public void onRegisterFailed(String errorCode, String errorMessage) {
-                        Toast.makeText(getContext(), "Ошибка", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                    public void handleFault(BackendlessFault fault) {
 
+                        Toast.makeText(getContext(), fault.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+
+                });
             }
         });
 

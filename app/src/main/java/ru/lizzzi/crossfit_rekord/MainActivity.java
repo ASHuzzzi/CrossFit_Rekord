@@ -14,14 +14,10 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.backendless.Backendless;
 
-import ru.profit_group.scorocode_sdk.Callbacks.CallbackLoginUser;
-import ru.profit_group.scorocode_sdk.Responses.user.ResponseLogin;
 import ru.profit_group.scorocode_sdk.ScorocodeSdk;
-import ru.profit_group.scorocode_sdk.scorocode_objects.User;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -36,6 +32,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static final String APP_PREFERENCES_USERNAME = "Username";
     public static final String APP_PREFERENCES_EMAIL = "Email";
     public static final String APP_PREFERENCES_PASSWORD = "Password";
+    public static final String APP_PREFERENCES_OBJECTID = "ObjectId";
     SharedPreferences mSettings;
     private int counter;
 
@@ -61,27 +58,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         ScorocodeSdk.initWith(APPLICATION_ID, CLIENT_KEY, null, FILE_KEY, MESSAGE_KEY, SCRIPT_KEY, null);
         Backendless.initApp(this, APPLICATION_IDB, API_KEYB);
-
-        /*
-        BackendlessUser user = new BackendlessUser();
-        user.setEmail( "green.goblin@backendless.com" );
-        user.setPassword( "sp1dey" );
-        user.setProperty( "name", "Green Goblin" );
-        user.setProperty( "phoneNumber", "212-555-1212" );
-
-
-        Backendless.UserService.register(user, new AsyncCallback<BackendlessUser>() {
-            @Override
-            public void handleResponse(BackendlessUser response) {
-                Toast.makeText(getContext(), "User has been registered", Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void handleFault(BackendlessFault fault) {
-
-                Toast.makeText(getContext(), fault.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });*/
 
 
         Fragment fragment = null;
@@ -114,36 +90,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         }else if (id == R.id.record_training) {
 
-            boolean containtsusername = mSettings.contains(APP_PREFERENCES_USERNAME);
-            boolean containtemail = mSettings.contains(APP_PREFERENCES_EMAIL);
-            boolean containtpassword = mSettings.contains(APP_PREFERENCES_PASSWORD);
-            if (containtsusername && containtpassword && containtemail) {
+            boolean containtobjectid = mSettings.contains(APP_PREFERENCES_OBJECTID);
+            if (containtobjectid) {
 
-                User user = new User();
-                user.login(mSettings.getString(APP_PREFERENCES_EMAIL, ""), mSettings.getString(APP_PREFERENCES_PASSWORD, ""), new CallbackLoginUser() {
-                    @Override
-                    public void onLoginSucceed(ResponseLogin responseLogin) {
-                        //Toast.makeText(getContext(), "Авторизация успешно", Toast.LENGTH_SHORT).show();
-                        counter = 1;
-
-                    }
-
-                    @Override
-                    public void onLoginFailed(String errorCode, String errorMessage) {
-                        counter = 2;
-
-                    }
-                });
-
-            }else {
-                counter = 3;
-
-            }
-
-            if (counter == 1){
                 fragmentClass = RecordForTraining_Fragment.class;
-            }else if (counter == 2){
-                Toast.makeText(this, "Авторизация не прошла. Попробуйте снова.", Toast.LENGTH_SHORT).show();
+
             }else {
                 fragmentClass = Login_Fragment.class;
             }
@@ -161,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }*/
 
         try {
-            fragment = (Fragment) fragmentClass.newInstance();
+            fragment = (Fragment) (fragmentClass != null ? fragmentClass.newInstance() : null);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -172,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ft.addToBackStack(null);
         ft.commit();
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
 
 
