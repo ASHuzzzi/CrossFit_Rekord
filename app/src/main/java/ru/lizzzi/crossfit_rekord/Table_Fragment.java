@@ -1,6 +1,9 @@
 package ru.lizzzi.crossfit_rekord;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,6 +18,9 @@ import android.widget.Toast;
 import com.backendless.Backendless;
 import com.backendless.persistence.DataQueryBuilder;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
@@ -27,10 +33,10 @@ import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapter_Table;
 public class Table_Fragment extends Fragment{
 
     private ProgressBar mProgressBar;
-    ListView lvItemsInStorehouse;
+    ListView lvItemsInTable;
     View v;
     RecyclerAdapter_Table adapter;
-    List<Map> result;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -45,7 +51,7 @@ public class Table_Fragment extends Fragment{
         Button button_saturday= v.findViewById(R.id.day_6);
         Button button_sunday= v.findViewById(R.id.day_7);
         mProgressBar = v.findViewById(R.id.progressBar);
-        lvItemsInStorehouse = v.findViewById(R.id.lvTable);
+        lvItemsInTable = v.findViewById(R.id.lvTable);
 
         StartNewAsyncTask("1");
 
@@ -112,7 +118,7 @@ public class Table_Fragment extends Fragment{
         @Override
         protected void onPreExecute(){
             super.onPreExecute();
-            lvItemsInStorehouse.setVisibility(View.INVISIBLE);
+            lvItemsInTable.setVisibility(View.INVISIBLE);
             mProgressBar.setVisibility(View.VISIBLE);
 
         }
@@ -120,20 +126,25 @@ public class Table_Fragment extends Fragment{
         @Override
         protected Void doInBackground(String... params) {
 
-            String dayofweek = params[0];
-            String whereClause = "day_of_week = " + dayofweek;
-            DataQueryBuilder queryBuilder = DataQueryBuilder.create();
-            queryBuilder.setWhereClause(whereClause);
-            queryBuilder.setSortBy("start_time");
+            List<Map> result;
+
+            if (checkInternet()) {
+                String dayofweek = params[0];
+                String whereClause = "day_of_week = " + dayofweek;
+                DataQueryBuilder queryBuilder = DataQueryBuilder.create();
+                queryBuilder.setWhereClause(whereClause);
+                queryBuilder.setSortBy("start_time");
             /*
             setPageSize(20)  - пока использую этот метод. Но в будущем надо бы переделать
             корректно на динамику.
              */
-            queryBuilder.setPageSize(20);
-            result = Backendless.Data.of("Table").find(queryBuilder);
-            if (result != null){
-                adapter = new RecyclerAdapter_Table(getContext(), result, R.layout.item_lv_table);
+                queryBuilder.setPageSize(20);
+                result = Backendless.Data.of("Table").find(queryBuilder);
+                if (result != null){
+                    adapter = new RecyclerAdapter_Table(getContext(), result, R.layout.item_lv_table);
+                }
             }
+
 
             return null;
         }
@@ -143,12 +154,22 @@ public class Table_Fragment extends Fragment{
             super.onPostExecute(result);
 
             mProgressBar.setVisibility(View.INVISIBLE);
-            if (adapter.getCount() > 0){
-                lvItemsInStorehouse.setAdapter(adapter);
-                lvItemsInStorehouse.setVisibility(View.VISIBLE);
+            if (adapter != null){
+                lvItemsInTable.setAdapter(adapter);
+                lvItemsInTable.setVisibility(View.VISIBLE);
             }else {
                 Toast.makeText(getContext(), "Нет данных", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    public boolean checkInternet() {
+
+        ConnectivityManager cm = (ConnectivityManager)getActivity().getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm != null ? cm.getActiveNetworkInfo() : null;
+        // проверка подключения
+        return activeNetwork != null && activeNetwork.isConnected();
+
     }
 }
