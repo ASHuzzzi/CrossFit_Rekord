@@ -357,6 +357,7 @@ public class RecordForTraining_Fragment extends Fragment {
 
     }
 
+
     public boolean checkInternet() {
 
         ConnectivityManager cm = (ConnectivityManager)getActivity().getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);

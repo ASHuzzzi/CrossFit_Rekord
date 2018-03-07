@@ -3,6 +3,8 @@ package ru.lizzzi.crossfit_rekord;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -53,53 +55,68 @@ public class Registry_Fragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                final String susername = etusername.getText().toString();
-                final String spassword = etpassword.getText().toString();
-                final String semail = etemail.getText().toString();
+                if (checkInternet()){
+                    final String susername = etusername.getText().toString();
+                    final String spassword = etpassword.getText().toString();
+                    final String semail = etemail.getText().toString();
 
-                BackendlessUser user = new BackendlessUser();
-                user.setEmail( semail );
-                user.setPassword( spassword );
-                user.setProperty( "name", susername);
+                    BackendlessUser user = new BackendlessUser();
+                    user.setEmail( semail );
+                    user.setPassword( spassword );
+                    user.setProperty( "name", susername);
 
 
-                Backendless.UserService.register(user, new AsyncCallback<BackendlessUser>() {
-                    @Override
-                    public void handleResponse(BackendlessUser response) {
+                    Backendless.UserService.register(user, new AsyncCallback<BackendlessUser>() {
+                        @Override
+                        public void handleResponse(BackendlessUser response) {
 
-                        editor.putString(APP_PREFERENCES_USERNAME, susername);
-                        editor.putString(APP_PREFERENCES_EMAIL, semail);
-                        editor.putString(APP_PREFERENCES_PASSWORD, spassword);
-                        editor.putString(APP_PREFERENCES_OBJECTID, response.getObjectId());
-                        editor.apply();
-                        Toast.makeText(getContext(), "Новый пользователь зарегистрирован", Toast.LENGTH_SHORT).show();
-                        Fragment fragment = null;
-                        Class fragmentClass;
-                        fragmentClass = RecordForTraining_Fragment.class;
-                        try {
-                            fragment = (Fragment) fragmentClass.newInstance();
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                            editor.putString(APP_PREFERENCES_USERNAME, susername);
+                            editor.putString(APP_PREFERENCES_EMAIL, semail);
+                            editor.putString(APP_PREFERENCES_PASSWORD, spassword);
+                            editor.putString(APP_PREFERENCES_OBJECTID, response.getObjectId());
+                            editor.apply();
+                            Toast.makeText(getContext(), "Новый пользователь зарегистрирован", Toast.LENGTH_SHORT).show();
+                            Fragment fragment = null;
+                            Class fragmentClass;
+                            fragmentClass = RecordForTraining_Fragment.class;
+                            try {
+                                fragment = (Fragment) fragmentClass.newInstance();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            FragmentManager fragmentManager = getFragmentManager();
+                            fragmentManager.popBackStack();
+                            FragmentTransaction ft = fragmentManager.beginTransaction();
+                            ft.replace(R.id.container, fragment);
+                            ft.addToBackStack(null);
+                            ft.commit();
                         }
-                        FragmentManager fragmentManager = getFragmentManager();
-                        fragmentManager.popBackStack();
-                        FragmentTransaction ft = fragmentManager.beginTransaction();
-                        ft.replace(R.id.container, fragment);
-                        ft.addToBackStack(null);
-                        ft.commit();
-                    }
 
-                    @Override
-                    public void handleFault(BackendlessFault fault) {
+                        @Override
+                        public void handleFault(BackendlessFault fault) {
 
-                        Toast.makeText(getContext(), fault.getMessage(), Toast.LENGTH_LONG).show();
-                    }
+                            Toast.makeText(getContext(), fault.getMessage(), Toast.LENGTH_LONG).show();
+                        }
 
-                });
+                    });
+                }else {
+                    Toast.makeText(getContext(), "Нет подключения" , Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 
         return v;
+    }
+
+    public boolean checkInternet() {
+
+        ConnectivityManager cm = (ConnectivityManager)getActivity().getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm != null ? cm.getActiveNetworkInfo() : null;
+        // проверка подключения
+        return activeNetwork != null && activeNetwork.isConnected();
+
     }
 
 }

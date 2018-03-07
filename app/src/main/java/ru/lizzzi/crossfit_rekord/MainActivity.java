@@ -91,12 +91,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }else if (id == R.id.definition){
             fragmentClass = Character_Fragment.class;
 
-        }/*else if (id == R.id.contacts){
-            Toast.makeText(this, "В разработке", Toast.LENGTH_SHORT).show();
+        }else if (id == R.id.contacts){
+
 
         }else if (id == R.id.profile){
-            Toast.makeText(this, "В разработке", Toast.LENGTH_SHORT).show();
-        }*/
+            //fragmentClass = AboutMe_Fragment.class;
+            fragmentClass = AboutMe_Fragment.class;
+        }
 
         try {
             fragment = (Fragment) (fragmentClass != null ? fragmentClass.newInstance() : null);

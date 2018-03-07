@@ -25,39 +25,6 @@ public class StartScreen_Fragment extends Fragment {
         getContext();
         mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
-        /*boolean containtsusername = mSettings.contains(APP_PREFERENCES_USERNAME);
-        boolean containtemail = mSettings.contains(APP_PREFERENCES_EMAIL);
-        boolean containtpassword = mSettings.contains(APP_PREFERENCES_PASSWORD);
-        if (containtsusername && containtpassword && containtemail) {
-
-            Backendless.UserService.login(mSettings.getString(APP_PREFERENCES_EMAIL, ""), mSettings.getString(APP_PREFERENCES_PASSWORD, ""), new AsyncCallback<BackendlessUser>() {
-                @Override
-                public void handleResponse(BackendlessUser response) {
-                    //Toast.makeText(getContext(), "[ASYNC] Is login valid? - " + response.getObjectId(), Toast.LENGTH_SHORT).show();
-
-                    AsyncCallback<Boolean> isValidLoginCallback = new AsyncCallback<Boolean>() {
-                        @Override
-                        public void handleResponse(Boolean response) {
-                            Toast.makeText(getContext(), "[ASYNC] Is login valid? - " + response.booleanValue(), Toast.LENGTH_SHORT).show();
-                        }
-
-                        @Override
-                        public void handleFault(BackendlessFault fault) {
-                            Toast.makeText(getContext(), "[ASYNC] Is login valid? - " + fault.getMessage(), Toast.LENGTH_SHORT).show();
-
-                        }
-                    };
-                    Backendless.UserService.isValidLogin( isValidLoginCallback );
-
-                }
-
-                @Override
-                public void handleFault(BackendlessFault fault) {
-
-                }
-            }, true);
-
-        }*/
 
         Button subscription = v.findViewById(R.id.button_subscription);
         Button schedule = v.findViewById(R.id.button_schedule);

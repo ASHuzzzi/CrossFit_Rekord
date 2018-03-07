@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.backendless.Backendless;
@@ -22,9 +21,8 @@ import com.backendless.BackendlessUser;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 
-/**
- * Created by basso on 07.03.2018.
- */
+
+ //* Created by basso on 07.03.2018.
 
 public class Login_Fragment extends Fragment {
 
@@ -60,8 +58,6 @@ public class Login_Fragment extends Fragment {
                     return;
                 }
 
-                String stEmail = tvEmail.getText().toString();
-                String stPassword = tvPassword.getText().toString();
                 if (checkInternet()){
                     Backendless.UserService.login(tvEmail.getText().toString() , tvPassword.getText().toString(), new AsyncCallback<BackendlessUser>() {
                         @Override
