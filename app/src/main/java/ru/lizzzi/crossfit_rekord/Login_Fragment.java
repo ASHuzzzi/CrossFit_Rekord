@@ -3,6 +3,8 @@ package ru.lizzzi.crossfit_rekord;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.backendless.Backendless;
@@ -19,87 +22,98 @@ import com.backendless.BackendlessUser;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 
+/**
+ * Created by basso on 07.03.2018.
+ */
 
 public class Login_Fragment extends Fragment {
 
     public static final String APP_PREFERENCES = "audata";
-    public static final String APP_PREFERENCES_USERNAME = "Username";
-    public static final String APP_PREFERENCES_EMAIL = "Email";
-    public static final String APP_PREFERENCES_PASSWORD = "Password";
     public static final String APP_PREFERENCES_OBJECTID = "ObjectId";
     SharedPreferences mSettings;
 
-
-    public Login_Fragment() {
-        // Required empty public constructor
-    }
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+                             Bundle savedInstanceState){
         View v = inflater.inflate(R.layout.fragment_login, container, false);
-        Button register = v.findViewById(R.id.btn_register);
-        final EditText etusername = v.findViewById(R.id.username);
-        final EditText etpassword = v.findViewById(R.id.password);
-        final EditText etemail = v.findViewById(R.id.email);
+        final EditText tvEmail = v.findViewById(R.id.editText4);
+        final EditText tvPassword = v.findViewById(R.id.editText5);
+        Button btnComeIn = v.findViewById(R.id.button2);
+        Button btnRegisration = v.findViewById(R.id.button4);
 
         getContext();
         mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         final SharedPreferences.Editor editor = mSettings.edit();
 
-        register.setOnClickListener(new View.OnClickListener() {
+        btnComeIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (tvEmail.getText().length() == 0 && !android.util.Patterns.EMAIL_ADDRESS.matcher((CharSequence) tvEmail).matches()){
+                    tvEmail.setFocusable(true);
+                    Toast.makeText(getContext(), "Email не корректный", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
-                final String susername = etusername.getText().toString();
-                final String spassword = etpassword.getText().toString();
-                final String semail = etemail.getText().toString();
+                if (tvPassword.getText().length() == 0){
+                    tvPassword.setFocusable(true);
+                    Toast.makeText(getContext(), "Введите пароль", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
-                BackendlessUser user = new BackendlessUser();
-                user.setEmail( semail );
-                user.setPassword( spassword );
-                user.setProperty( "name", susername);
+                String stEmail = tvEmail.getText().toString();
+                String stPassword = tvPassword.getText().toString();
+                if (checkInternet()){
+                    Backendless.UserService.login(tvEmail.getText().toString() , tvPassword.getText().toString(), new AsyncCallback<BackendlessUser>() {
+                        @Override
+                        public void handleResponse(BackendlessUser response) {
+                            editor.putString(APP_PREFERENCES_OBJECTID, response.getObjectId());
+                            editor.apply();
 
-
-                Backendless.UserService.register(user, new AsyncCallback<BackendlessUser>() {
-                    @Override
-                    public void handleResponse(BackendlessUser response) {
-
-                        editor.putString(APP_PREFERENCES_USERNAME, susername);
-                        editor.putString(APP_PREFERENCES_EMAIL, semail);
-                        editor.putString(APP_PREFERENCES_PASSWORD, spassword);
-                        editor.putString(APP_PREFERENCES_OBJECTID, response.getObjectId());
-                        editor.apply();
-                        Toast.makeText(getContext(), "Новый пользователь зарегистрирован", Toast.LENGTH_SHORT).show();
-                        Fragment fragment = null;
-                        Class fragmentClass;
-                        fragmentClass = RecordForTraining_Fragment.class;
-                        try {
-                            fragment = (Fragment) fragmentClass.newInstance();
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                            TransactionFragment(RecordForTraining_Fragment.class);
                         }
-                        FragmentManager fragmentManager = getFragmentManager();
-                        fragmentManager.popBackStack();
-                        FragmentTransaction ft = fragmentManager.beginTransaction();
-                        ft.replace(R.id.container, fragment);
-                        ft.addToBackStack(null);
-                        ft.commit();
-                    }
 
-                    @Override
-                    public void handleFault(BackendlessFault fault) {
+                        @Override
+                        public void handleFault(BackendlessFault fault) {
+                            Toast.makeText(getContext(), "Авторизация не прошла.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
 
-                        Toast.makeText(getContext(), fault.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-
-                });
             }
         });
 
-        return v;
+        btnRegisration.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TransactionFragment(Registry_Fragment.class);
+            }
+        });
+        return  v;
     }
 
+    private void TransactionFragment(Class fragmentClass) {
+
+        android.support.v4.app.Fragment fragment = null;
+        try {
+            fragment = (android.support.v4.app.Fragment) fragmentClass.newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        ft.replace(R.id.container, fragment);
+        ft.addToBackStack(null);
+        ft.commit();
+
+    }
+
+    public boolean checkInternet() {
+
+        ConnectivityManager cm = (ConnectivityManager)getActivity().getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm != null ? cm.getActiveNetworkInfo() : null;
+        // проверка подключения
+        return activeNetwork != null && activeNetwork.isConnected();
+
+    }
 }

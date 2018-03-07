@@ -126,9 +126,8 @@ public class Table_Fragment extends Fragment{
         @Override
         protected Void doInBackground(String... params) {
 
-            List<Map> result;
-
             if (checkInternet()) {
+                List<Map> result;
                 String dayofweek = params[0];
                 String whereClause = "day_of_week = " + dayofweek;
                 DataQueryBuilder queryBuilder = DataQueryBuilder.create();
@@ -144,7 +143,6 @@ public class Table_Fragment extends Fragment{
                     adapter = new RecyclerAdapter_Table(getContext(), result, R.layout.item_lv_table);
                 }
             }
-
 
             return null;
         }
