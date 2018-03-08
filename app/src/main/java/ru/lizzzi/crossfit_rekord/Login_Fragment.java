@@ -28,6 +28,8 @@ public class Login_Fragment extends Fragment {
 
     public static final String APP_PREFERENCES = "audata";
     public static final String APP_PREFERENCES_OBJECTID = "ObjectId";
+    public static final String APP_PREFERENCES_USERNAME = "Username";
+    public static final String APP_PREFERENCES_EMAIL = "Email";
     SharedPreferences mSettings;
 
     @Override
@@ -63,6 +65,8 @@ public class Login_Fragment extends Fragment {
                         @Override
                         public void handleResponse(BackendlessUser response) {
                             editor.putString(APP_PREFERENCES_OBJECTID, response.getObjectId());
+                            // TODO Сделать получение имени юзера
+                            editor.putString(APP_PREFERENCES_EMAIL, response.getEmail());
                             editor.apply();
 
                             TransactionFragment(RecordForTraining_Fragment.class);
