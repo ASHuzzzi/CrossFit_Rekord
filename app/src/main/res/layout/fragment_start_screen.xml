@@ -21,13 +21,6 @@
         android:orientation="vertical">
 
         <Button
-            android:id="@+id/button_subscription"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Абонемент" />
-
-        <Button
             android:id="@+id/button_schedule"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -42,13 +35,6 @@
             android:text="Записаться на тренировку" />
 
         <Button
-            android:id="@+id/button_contacts"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Контакты" />
-
-        <Button
             android:id="@+id/button_definition"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -56,11 +42,26 @@
             android:text="Словарь CrossFit" />
 
         <Button
+            android:id="@+id/button_calendar_wod"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Результаты тренировок" />
+
+        <Button
             android:id="@+id/button_result"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Результаты" />
+
+        <Button
+            android:id="@+id/button_contacts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:enabled="false"
+            android:text="Контакты" />
 
     </LinearLayout>
 

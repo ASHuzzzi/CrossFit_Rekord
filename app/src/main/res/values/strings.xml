@@ -74,5 +74,11 @@
     <string name="definition">Словарь CrossFit</string>
     <string name="result">Результаты</string>
     <string name="profile">Профиль</string>
+    <string name="calendar_wod">Результаты тренировок</string>
+
+    <string name="error_connection1">При загрузке данных произошла ошибка.</string>
+    <string name="error_connection2">Проверьте Ваше подключение к сети.</string>
+    <string name="error_connection_button">Повторить попытку</string>
+
 
 </resources>

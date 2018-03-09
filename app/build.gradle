@@ -54,5 +54,6 @@ dependencies {
     compile 'com.android.support:design:26.1.0'
     compile 'com.jakewharton:butterknife:8.4.0'
     compile 'com.backendless:backendless:4.4.0'
+    compile 'com.prolificinteractive:material-calendarview:1.4.3'
     testCompile 'junit:junit:4.12'
 }

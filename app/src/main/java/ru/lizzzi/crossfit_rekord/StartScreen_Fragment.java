@@ -26,20 +26,14 @@ public class StartScreen_Fragment extends Fragment {
         mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
 
-        Button subscription = v.findViewById(R.id.button_subscription);
         Button schedule = v.findViewById(R.id.button_schedule);
         Button record_training = v.findViewById(R.id.button_record_training);
         Button description = v.findViewById(R.id.button_definition);
-        final Button contacts = v.findViewById(R.id.button_contacts);
+        Button calendar_wod = v.findViewById(R.id.button_calendar_wod);
         Button result = v.findViewById(R.id.button_result);
+        final Button contacts = v.findViewById(R.id.button_contacts);
 
-        subscription.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                TransactionFragment(Price_Fragment.class);
 
-            }
-        });
 
         schedule.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,17 +58,17 @@ public class StartScreen_Fragment extends Fragment {
             }
         });
 
-        contacts.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-
         description.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 TransactionFragment(Character_Fragment.class);
+            }
+        });
+
+        calendar_wod.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TransactionFragment(Calendar_wod_Fragment.class);
             }
         });
 
@@ -84,6 +78,17 @@ public class StartScreen_Fragment extends Fragment {
                 TransactionFragment(Result_Fragment.class);
             }
         });
+
+        contacts.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+
+
+
 
         return v;
     }

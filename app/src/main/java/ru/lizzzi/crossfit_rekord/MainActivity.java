@@ -75,28 +75,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.shedule) {
             fragmentClass = Table_Fragment.class;
 
-        }else if (id == R.id.record_training) {
+        } else if (id == R.id.record_training) {
 
             boolean containtobjectid = mSettings.contains(APP_PREFERENCES_OBJECTID);
             if (containtobjectid) {
 
                 fragmentClass = RecordForTraining_Fragment.class;
 
-            }else {
+            } else {
                 fragmentClass = Login_Fragment.class;
             }
-        }else if (id == R.id.result){
+        } else if (id == R.id.result) {
             fragmentClass = Result_Fragment.class;
 
-        }else if (id == R.id.definition){
+        } else if (id == R.id.definition) {
             fragmentClass = Character_Fragment.class;
 
-        }else if (id == R.id.contacts){
+        } else if (id == R.id.contacts) {
 
 
-        }else if (id == R.id.profile){
+        } else if (id == R.id.profile) {
             //fragmentClass = AboutMe_Fragment.class;
             fragmentClass = AboutMe_Fragment.class;
+        } else if (id == R.id.calendar_wod){
+            fragmentClass = Calendar_wod_Fragment.class;
         }
 
         try {
