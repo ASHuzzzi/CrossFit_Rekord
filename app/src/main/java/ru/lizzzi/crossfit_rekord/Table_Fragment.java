@@ -6,7 +6,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
@@ -22,8 +21,6 @@ import com.backendless.Backendless;
 import com.backendless.persistence.DataQueryBuilder;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
@@ -72,11 +69,14 @@ public class Table_Fragment extends Fragment implements SwipeRefreshLayout.OnRef
                 android.R.color.holo_red_light);
 
         if (checkInternet()){
-            sNumberOfDay = "1";
-            StartNewAsyncTask(sNumberOfDay);
-            layouterror.setVisibility(View.INVISIBLE);
-            layoutbuttonDayOfWeek.setVisibility(View.VISIBLE);
-            mSwipeRefreshLayout.setEnabled(true);
+            if (isOnline()){
+                sNumberOfDay = "1";
+                StartNewAsyncTask(sNumberOfDay);
+                layouterror.setVisibility(View.INVISIBLE);
+                layoutbuttonDayOfWeek.setVisibility(View.VISIBLE);
+                mSwipeRefreshLayout.setEnabled(true);
+            }
+
         }else {
             mProgressBar.setVisibility(View.INVISIBLE);
             layouterror.setVisibility(View.VISIBLE);
@@ -265,5 +265,18 @@ public class Table_Fragment extends Fragment implements SwipeRefreshLayout.OnRef
 
             }
         }, 6000);*/
+    }
+
+    public boolean isOnline() {
+        Runtime runtime = Runtime.getRuntime();
+        try {
+            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
+            int     exitValue = ipProcess.waitFor();
+            return (exitValue == 0);
+        }
+        catch (IOException e)          { e.printStackTrace(); }
+        catch (InterruptedException e) { e.printStackTrace(); }
+
+        return false;
     }
 }

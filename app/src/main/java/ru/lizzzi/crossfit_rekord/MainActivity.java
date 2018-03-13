@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mSettings = this.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
         Fragment fragment = null;
+        
         Class fragmentClass = null;
 
         int id = item.getItemId();

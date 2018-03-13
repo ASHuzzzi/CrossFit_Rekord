@@ -13,7 +13,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.backendless.Backendless;
 import com.backendless.persistence.DataQueryBuilder;
@@ -105,6 +104,44 @@ public class Calendar_wod_Fragment extends Fragment implements OnDateSelectedLis
 
     @Override
     public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
-        Toast.makeText(getContext(), "Выбран" + date.getDay() + "/" + date.getMonth()+ "/" + date.getYear(), Toast.LENGTH_SHORT).show();
+        String selectedDate;
+        String Day;
+        String Month;
+
+        if (date.getDay() <10){
+            Day = "0" + date.getDay();
+        }else{
+            Day = String.valueOf(date.getDay());
+        }
+
+         if (date.getMonth() <10){
+             Month = "0" + (date.getMonth() + 1);
+         }else{
+             Month = String.valueOf((date.getMonth() + 1));
+         }
+
+        selectedDate = Month + "/" + Day + "/" + date.getYear();
+        Fragment fragment = null;
+        Class fragmentClass;
+        fragmentClass = Workout_details_Fragment.class;
+        Workout_details_Fragment yfc = new Workout_details_Fragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("tag", selectedDate);
+        yfc.setArguments(bundle);
+
+
+        try {
+            fragment = (Fragment) fragmentClass.newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        ft.replace(R.id.container, yfc);
+        ft.addToBackStack(null);
+
+        ft.commit();
+        //Toast.makeText(getContext(), "Выбран" + date.getDay() + "/" + date.getMonth()+ "/" + date.getYear(), Toast.LENGTH_SHORT).show();
     }
 }
