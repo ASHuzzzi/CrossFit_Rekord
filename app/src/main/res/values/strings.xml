@@ -80,5 +80,11 @@
     <string name="error_connection2">Проверьте Ваше подключение к сети.</string>
     <string name="error_connection_button">Повторить попытку</string>
 
+    <!-- Поля для составления результатов тренировки -->
+    <string name="Name">Name</string>
+    <string name="skill">skill</string>
+    <string name="wod_level">wod_level</string>
+    <string name="wod_result">wod_result</string>
+
 
 </resources>

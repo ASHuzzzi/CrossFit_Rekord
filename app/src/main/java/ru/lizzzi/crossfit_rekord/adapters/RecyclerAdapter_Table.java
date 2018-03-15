@@ -67,6 +67,10 @@ public class RecyclerAdapter_Table extends BaseAdapter {
         holder.StartTimeItem.setText(start_time);
         holder.TypesItem.setText(type);
 
+        if (type.equals("CrossFit")){
+            view.setBackgroundResource(R.color.selectButton);
+        }
+
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
