@@ -8,12 +8,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.backendless.Backendless;
 import com.backendless.persistence.DataQueryBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapter_Workout_details;
 
 /**
@@ -23,8 +26,13 @@ import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapter_Workout_details;
 public class Workout_details_Fragment extends Fragment {
 
     List<Map> results;
+    List<Map> results2;
     RecyclerAdapter_Workout_details adapter;
     ListView lvItemsInWod;
+    TextView tvWarmUp;
+    TextView tvSkill;
+    TextView tvWOD;
+    List<String> list;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -34,6 +42,9 @@ public class Workout_details_Fragment extends Fragment {
         final Bundle bundle = getArguments();
         final String ri = bundle.getString("tag");
         lvItemsInWod = v.findViewById(R.id.lvWodResult);
+        tvWarmUp = v.findViewById(R.id.tvWarmUp);
+        tvSkill = v.findViewById(R.id.tvSkill);
+        tvWOD = v.findViewById(R.id.tvWOD);
 
 
 
@@ -52,6 +63,11 @@ public class Workout_details_Fragment extends Fragment {
                     adapter = new RecyclerAdapter_Workout_details(getContext(), results, R.layout.item_lv_workout_details);
                 }
 
+                results2 = Backendless.Data.of("Exercise_assignment").find(queryBuilder);
+                for (int i = 0; i< results2.size(); i++){
+                    list = new ArrayList<String>(results2.get(i).values());
+                }
+
                 return null;
             }
 
@@ -59,6 +75,11 @@ public class Workout_details_Fragment extends Fragment {
             protected void  onPostExecute(Void result){
                 if(adapter !=null){
                     lvItemsInWod.setAdapter(adapter);
+                }
+                if (list.size() > 0){
+                    tvWarmUp.setText(String.valueOf(list.get(0)));
+                    tvSkill.setText(String.valueOf(list.get(3)));
+                    tvWOD.setText(String.valueOf(list.get(6)));
                 }
             }
 
