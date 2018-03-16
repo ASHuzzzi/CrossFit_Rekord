@@ -18,11 +18,12 @@ import android.widget.EditText;
 
 import java.util.ArrayList;
 
-import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterExercises;
+import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapter_Exercises;
 import ru.lizzzi.crossfit_rekord.data.DefinitionDBHelper;
 import ru.lizzzi.crossfit_rekord.data.DefinitionDbContarct;
 import ru.lizzzi.crossfit_rekord.data.WodDBHelper;
 import ru.lizzzi.crossfit_rekord.data.WodDbContract;
+import ru.lizzzi.crossfit_rekord.interfaces.ListenerActivity;
 
 
 /**
@@ -143,7 +144,7 @@ public class New_Result_F2_Fragment extends Fragment {
         mRecyclerView = (RecyclerView) view.findViewById(R.id.rlv_exercise_list);
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new RecyclerAdapterExercises(exercises, new ListenerActivity() {
+        mAdapter = new RecyclerAdapter_Exercises(exercises, new ListenerActivity() {
             @Override
             public void Remove(String exercise, int position) {
                 exercises.remove(position);

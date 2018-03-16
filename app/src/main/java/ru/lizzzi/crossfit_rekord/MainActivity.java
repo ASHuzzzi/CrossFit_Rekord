@@ -20,9 +20,10 @@ import com.backendless.Backendless;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    SharedPreferences mSettings;
     public static final String APP_PREFERENCES = "audata";
     public static final String APP_PREFERENCES_OBJECTID = "ObjectId";
-    SharedPreferences mSettings;
+
 
     public static final String APPLICATION_IDB = "215CF2B1-C44E-E365-FFB6-9C35DD6A9300";
     public static final String API_KEYB = "8764616E-C5FE-CE43-FF54-17B4A8026F00";
@@ -46,29 +47,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Backendless.initApp(this, APPLICATION_IDB, API_KEYB);
 
-
-        Fragment fragment = null;
-        Class fragmentClass;
-        fragmentClass = StartScreen_Fragment.class;
-        try {
-            fragment = (Fragment) fragmentClass.newInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction ft = fragmentManager.beginTransaction();
-        ft.replace(R.id.container, fragment);
-        ft.commit();
+        OpenFragment(StartScreen_Fragment.class);
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-
-        mSettings = this.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-
-        Fragment fragment = null;
-        
         Class fragmentClass = null;
 
         int id = item.getItemId();
@@ -78,9 +62,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         } else if (id == R.id.record_training) {
 
+            mSettings = this.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
             boolean containtobjectid = mSettings.contains(APP_PREFERENCES_OBJECTID);
             if (containtobjectid) {
-
                 fragmentClass = RecordForTraining_Fragment.class;
 
             } else {
@@ -96,11 +80,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         } else if (id == R.id.profile) {
-            //fragmentClass = AboutMe_Fragment.class;
             fragmentClass = AboutMe_Fragment.class;
+
         } else if (id == R.id.calendar_wod){
             fragmentClass = Calendar_wod_Fragment.class;
         }
+
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+
+        OpenFragment(fragmentClass);
+
+        return true;
+    }
+
+    public Context getContext() {
+        return this;
+    }
+
+    public void OpenFragment(Class fragmentClass){
+
+        Fragment fragment = null;
 
         try {
             fragment = (Fragment) (fragmentClass != null ? fragmentClass.newInstance() : null);
@@ -114,14 +114,5 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ft.addToBackStack(null);
         ft.commit();
 
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-
-
-        return true;
-    }
-
-    public Context getContext() {
-        return this;
     }
 }

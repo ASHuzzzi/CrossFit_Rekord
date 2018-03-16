@@ -1,8 +1,9 @@
-package ru.lizzzi.crossfit_rekord;
+package ru.lizzzi.crossfit_rekord.documentfields;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import ru.lizzzi.crossfit_rekord.R;
 import ru.profit_group.scorocode_sdk.scorocode_objects.DocumentInfo;
 
 //import static prof_itgroup.ru.storehouseapp.Helpers.Helper.getColorsListFrom;
@@ -11,15 +12,15 @@ import ru.profit_group.scorocode_sdk.scorocode_objects.DocumentInfo;
  * Created by Peter Staranchuk on 10/30/16
  */
 
-public class DocumentFields {
+public class DocumentFields_Price {
     private Context context;
     private DocumentInfo documentInfo;
 
-    public DocumentFields(Context context) {
+    public DocumentFields_Price(Context context) {
         this(context, null);
     }
 
-    public DocumentFields(Context context, DocumentInfo documentInfo) {
+    public DocumentFields_Price(Context context, DocumentInfo documentInfo) {
         this.context = context;
         this.documentInfo = documentInfo;
     }

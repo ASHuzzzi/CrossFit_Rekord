@@ -1,5 +1,6 @@
 package ru.lizzzi.crossfit_rekord.adapters;
 
+import android.annotation.SuppressLint;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,50 +11,30 @@ import android.widget.EditText;
 import java.util.ArrayList;
 
 import ru.lizzzi.crossfit_rekord.Exercises;
-import ru.lizzzi.crossfit_rekord.ListenerActivity;
+import ru.lizzzi.crossfit_rekord.interfaces.ListenerActivity;
 import ru.lizzzi.crossfit_rekord.R;
 
-/**
- * Created by Liza on 22.11.2017.
- */
 
-public class RecyclerAdapterExercises extends RecyclerView.Adapter<RecyclerAdapterExercises.ViewHolder>{
+public class RecyclerAdapter_Exercises extends RecyclerView.Adapter<RecyclerAdapter_Exercises.ViewHolder>{
 
     private final ArrayList<Exercises> exercises;
     private ListenerActivity mlistener;
     private Exercises e;
 
-    public static class  ViewHolder extends RecyclerView.ViewHolder {
-        private EditText mEditText;
-        private EditText mEditText2;
-        private EditText mEditText3;
-        private Button mButton;
 
-
-        public ViewHolder(View v){
-            super(v);
-            mEditText = (EditText) v.findViewById(R.id.editText);
-            mEditText2 = (EditText) v.findViewById(R.id.editText2);
-            mEditText3 = (EditText) v.findViewById(R.id.editText3);
-            mButton = (Button) v.findViewById(R.id.button3);
-
-        }
-    }
-
-    public RecyclerAdapterExercises (ArrayList<Exercises> exercises, ListenerActivity listener){
+    public RecyclerAdapter_Exercises(ArrayList<Exercises> exercises, ListenerActivity listener){
         this.exercises = exercises;
         mlistener = listener;
     }
 
-    public RecyclerAdapterExercises.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
+    public RecyclerAdapter_Exercises.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_lv_new_record_f2, parent, false);
 
-        ViewHolder vh = new ViewHolder(v);
-        return vh;
+        return new ViewHolder(v);
     }
 
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ViewHolder holder, @SuppressLint("RecyclerView") final int position) {
         holder.mEditText.setText(exercises.get(position).quantity);
         holder.mEditText2.setText(exercises.get(position).exercise);
         holder.mEditText3.setText(exercises.get(position).weight);
@@ -72,5 +53,22 @@ public class RecyclerAdapterExercises extends RecyclerView.Adapter<RecyclerAdapt
     @Override
     public int getItemCount() {
         return exercises.size();
+    }
+
+    static class  ViewHolder extends RecyclerView.ViewHolder {
+        private EditText mEditText;
+        private EditText mEditText2;
+        private EditText mEditText3;
+        private Button mButton;
+
+
+        ViewHolder(View v){
+            super(v);
+            mEditText = v.findViewById(R.id.editText);
+            mEditText2 = v.findViewById(R.id.editText2);
+            mEditText3 = v.findViewById(R.id.editText3);
+            mButton = v.findViewById(R.id.button3);
+
+        }
     }
 }

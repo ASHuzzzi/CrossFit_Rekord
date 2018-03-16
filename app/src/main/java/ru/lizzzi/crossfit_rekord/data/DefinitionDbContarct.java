@@ -2,10 +2,6 @@ package ru.lizzzi.crossfit_rekord.data;
 
 import android.provider.BaseColumns;
 
-/**
- * Created by Liza on 02.11.2017.
- */
-
 public class DefinitionDbContarct {
     private DefinitionDbContarct(){
 

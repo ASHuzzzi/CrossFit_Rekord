@@ -4,10 +4,6 @@ import android.content.Context;
 
 import ru.lizzzi.crossfit_rekord.R;
 
-/**
- * Created by Liza on 15.03.2018.
- */
-
 public class DocumentFields_Workout_details {
     private Context context;
 

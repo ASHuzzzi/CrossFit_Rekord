@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 import java.util.List;
 
-import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterMenu;
+import ru.lizzzi.crossfit_rekord.documentfields.DocumentFields_Price;
 import ru.lizzzi.crossfit_rekord.views.FastScrollRecyclerView;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackCountDocument;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackFindDocument;
@@ -21,9 +21,7 @@ import ru.profit_group.scorocode_sdk.ScorocodeSdk;
 import ru.profit_group.scorocode_sdk.scorocode_objects.DocumentInfo;
 import ru.profit_group.scorocode_sdk.scorocode_objects.Query;
 
-/**
- * Created by Liza on 20.09.2017.
- */
+//Данный файл не используется. Пока оставлен на всякий случай
 
 public class Price_Fragment extends Fragment{
 
@@ -40,7 +38,7 @@ public class Price_Fragment extends Fragment{
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerView.Adapter mAdapter;
     private List<DocumentInfo> documentInfos;
-    private DocumentFields fields;
+    private DocumentFields_Price fields;
 
 
     @Override
@@ -49,7 +47,7 @@ public class Price_Fragment extends Fragment{
         View v = inflater.inflate(R.layout.fragment_price, container, false);
         ScorocodeSdk.initWith(APPLICATION_ID, CLIENT_KEY, MASTER_KEY, FILE_KEY, MESSAGE_KEY, SCRIPT_KEY, WEBSOCKET_KEY);
         final ListView lvItemsInStorehouse = (ListView) v.findViewById(R.id.lvItemsInStorehouse);
-        fields = new DocumentFields(getContext());
+        fields = new DocumentFields_Price(getContext());
 
         ExpandableListView elvMain;
 
@@ -58,8 +56,8 @@ public class Price_Fragment extends Fragment{
             @Override
             public void onDocumentFound(List<DocumentInfo> documentInfos) {
                 if(documentInfos != null) {
-                    RecyclerAdapterMenu adapter = new RecyclerAdapterMenu(getContext(), documentInfos, R.layout.item_lv_subscription);
-                    lvItemsInStorehouse.setAdapter(adapter);
+                    //RecyclerAdapter_Price adapter = new RecyclerAdapter_Price(getContext(), documentInfos, R.layout.item_lv_subscription);
+                    //lvItemsInStorehouse.setAdapter(adapter);
                 }
             }
 
@@ -99,7 +97,7 @@ public class Price_Fragment extends Fragment{
     }
 
     private void setAdapter(List<DocumentInfo> documentInfos) {
-        //RecyclerAdapterMenu adapter = new RecyclerAdapterMenu(Price_Fragment.this, documentInfos, R.layout.item_menu);
+
         //lvItemsInStorehouse.setAdapter(adapter);
     }
 }

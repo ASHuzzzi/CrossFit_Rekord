@@ -11,7 +11,7 @@ import android.widget.TextView;
 import java.util.List;
 import java.util.Map;
 
-import ru.lizzzi.crossfit_rekord.DocumentFields_Table;
+import ru.lizzzi.crossfit_rekord.documentfields.DocumentFields_Table;
 import ru.lizzzi.crossfit_rekord.R;
 
 public class RecyclerAdapter_Table extends BaseAdapter {

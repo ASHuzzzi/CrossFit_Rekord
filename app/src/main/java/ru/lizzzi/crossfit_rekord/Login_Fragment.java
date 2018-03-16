@@ -22,6 +22,7 @@ import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 
 
+
  //* Created by basso on 07.03.2018.
 
 public class Login_Fragment extends Fragment {
@@ -61,12 +62,17 @@ public class Login_Fragment extends Fragment {
                 }
 
                 if (checkInternet()){
+
                     Backendless.UserService.login(tvEmail.getText().toString() , tvPassword.getText().toString(), new AsyncCallback<BackendlessUser>() {
+
                         @Override
                         public void handleResponse(BackendlessUser response) {
-                            editor.putString(APP_PREFERENCES_OBJECTID, response.getObjectId());
+                            BackendlessUser user = Backendless.UserService.CurrentUser();
+
+                            editor.putString(APP_PREFERENCES_OBJECTID, user.getObjectId());
                             // TODO Сделать получение имени юзера
-                            editor.putString(APP_PREFERENCES_EMAIL, response.getEmail());
+                            editor.putString(APP_PREFERENCES_EMAIL, user.getEmail());
+                            editor.putString(APP_PREFERENCES_USERNAME, String.valueOf(user.getProperty("name")));
                             editor.apply();
 
                             TransactionFragment(RecordForTraining_Fragment.class);
@@ -77,6 +83,7 @@ public class Login_Fragment extends Fragment {
                             Toast.makeText(getContext(), "Авторизация не прошла.", Toast.LENGTH_SHORT).show();
                         }
                     });
+                    Backendless.UserService.CurrentUser();
                 }
 
             }

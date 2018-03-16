@@ -13,18 +13,15 @@ import android.widget.Button;
 
 public class StartScreen_Fragment extends Fragment {
 
+    SharedPreferences mSettings;
     public static final String APP_PREFERENCES = "audata";
     public static final String APP_PREFERENCES_OBJECTID = "ObjectId";
-    SharedPreferences mSettings;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_start_screen, container, false);
-
-        getContext();
-        mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-
 
         Button schedule = v.findViewById(R.id.button_schedule);
         Button record_training = v.findViewById(R.id.button_record_training);
@@ -33,12 +30,10 @@ public class StartScreen_Fragment extends Fragment {
         Button result = v.findViewById(R.id.button_result);
         final Button contacts = v.findViewById(R.id.button_contacts);
 
-
-
         schedule.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TransactionFragment(Table_Fragment.class);
+                OpenFragment(Table_Fragment.class);
             }
         });
 
@@ -46,13 +41,14 @@ public class StartScreen_Fragment extends Fragment {
             @Override
             public void onClick(View view) {
 
+                getContext();
+                mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
                 boolean containtobjectid = mSettings.contains(APP_PREFERENCES_OBJECTID);
                 if (containtobjectid) {
-
-                    TransactionFragment(RecordForTraining_Fragment.class);
+                    OpenFragment(RecordForTraining_Fragment.class);
 
                 }else {
-                    TransactionFragment(Login_Fragment.class);
+                    OpenFragment(Login_Fragment.class);
                 }
 
             }
@@ -61,21 +57,21 @@ public class StartScreen_Fragment extends Fragment {
         description.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TransactionFragment(Character_Fragment.class);
+                OpenFragment(Character_Fragment.class);
             }
         });
 
         calendar_wod.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TransactionFragment(Calendar_wod_Fragment.class);
+                OpenFragment(Calendar_wod_Fragment.class);
             }
         });
 
         result.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TransactionFragment(Result_Fragment.class);
+                OpenFragment(Result_Fragment.class);
             }
         });
 
@@ -86,14 +82,10 @@ public class StartScreen_Fragment extends Fragment {
             }
         });
 
-
-
-
-
         return v;
     }
 
-    private void TransactionFragment(Class fragmentClass) {
+    private void OpenFragment(Class fragmentClass) {
 
         Fragment fragment = null;
         try {

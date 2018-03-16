@@ -75,6 +75,10 @@ public class Table_Fragment extends Fragment implements SwipeRefreshLayout.OnRef
                 layouterror.setVisibility(View.INVISIBLE);
                 layoutbuttonDayOfWeek.setVisibility(View.VISIBLE);
                 mSwipeRefreshLayout.setEnabled(true);
+            }else {
+                mProgressBar.setVisibility(View.INVISIBLE);
+                layouterror.setVisibility(View.VISIBLE);
+                mSwipeRefreshLayout.setEnabled(true);
             }
 
         }else {
@@ -228,15 +232,7 @@ public class Table_Fragment extends Fragment implements SwipeRefreshLayout.OnRef
         }
     }
 
-    public boolean checkInternet() {
 
-        ConnectivityManager cm = (ConnectivityManager)getActivity().getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-
-        NetworkInfo activeNetwork = cm != null ? cm.getActiveNetworkInfo() : null;
-        // проверка подключения
-        return activeNetwork != null && activeNetwork.isConnected();
-
-    }
 
     @Override
     public void onRefresh() {
@@ -251,20 +247,16 @@ public class Table_Fragment extends Fragment implements SwipeRefreshLayout.OnRef
 
         }
 
+    }
 
-        /*new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                // Отменяем анимацию обновления
-                if (checkInternet()){
+    public boolean checkInternet() {
 
+        ConnectivityManager cm = (ConnectivityManager)getActivity().getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 
-                }else{
-                    mSwipeRefreshLayout.setRefreshing(false);
-                }
+        NetworkInfo activeNetwork = cm != null ? cm.getActiveNetworkInfo() : null;
+        // проверка подключения
+        return activeNetwork != null && activeNetwork.isConnected();
 
-            }
-        }, 6000);*/
     }
 
     public boolean isOnline() {

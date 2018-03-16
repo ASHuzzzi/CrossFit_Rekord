@@ -12,39 +12,15 @@ import ru.lizzzi.crossfit_rekord.Caption_Wod;
 import ru.lizzzi.crossfit_rekord.Listener_Result;
 import ru.lizzzi.crossfit_rekord.R;
 
-/**
- * Created by Liza on 24.11.2017.
- */
 
 public class RecyclerAdapter_Result extends RecyclerView.Adapter<RecyclerAdapter_Result.ViewHolder>{
 
     private ArrayList<Caption_Wod> caption_wod;
-    private Listener_Result mlistener;
-    private Caption_Wod cw;
 
-    public static class  ViewHolder extends RecyclerView.ViewHolder {
-        private TextView mTV_Day;
-        private TextView mTV_Month;
-        private TextView mTV_Caption;
-        private TextView mTV_Level;
-        private TextView mTV_Time;
-
-
-        public ViewHolder(View v){
-            super(v);
-            mTV_Day = (TextView) v.findViewById(R.id.tv_day);
-            mTV_Month = (TextView) v.findViewById(R.id.tv_month);
-            mTV_Caption = (TextView) v.findViewById(R.id.tv_caption_wod);
-            mTV_Level = (TextView) v.findViewById(R.id.tv_level);
-            mTV_Time = (TextView) v.findViewById(R.id.tv_time);
-
-
-        }
-    }
 
     public RecyclerAdapter_Result(ArrayList<Caption_Wod> caption_wod, Listener_Result listener){
         this.caption_wod = caption_wod;
-        mlistener = listener;
+        Listener_Result mlistener = listener;
     }
 
     @Override
@@ -52,8 +28,7 @@ public class RecyclerAdapter_Result extends RecyclerView.Adapter<RecyclerAdapter
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_lv_result, parent, false);
 
-        RecyclerAdapter_Result.ViewHolder vh = new RecyclerAdapter_Result.ViewHolder(v);
-        return vh;
+        return new ViewHolder(v);
     }
 
     @Override
@@ -68,5 +43,25 @@ public class RecyclerAdapter_Result extends RecyclerView.Adapter<RecyclerAdapter
     @Override
     public int getItemCount() {
         return caption_wod.size();
+    }
+
+    static class  ViewHolder extends RecyclerView.ViewHolder {
+        private TextView mTV_Day;
+        private TextView mTV_Month;
+        private TextView mTV_Caption;
+        private TextView mTV_Level;
+        private TextView mTV_Time;
+
+
+        ViewHolder(View v){
+            super(v);
+            mTV_Day = v.findViewById(R.id.tv_day);
+            mTV_Month = v.findViewById(R.id.tv_month);
+            mTV_Caption = v.findViewById(R.id.tv_caption_wod);
+            mTV_Level = v.findViewById(R.id.tv_level);
+            mTV_Time = v.findViewById(R.id.tv_time);
+
+
+        }
     }
 }

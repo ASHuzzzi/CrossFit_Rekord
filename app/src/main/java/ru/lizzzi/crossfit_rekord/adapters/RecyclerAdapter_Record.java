@@ -1,40 +1,41 @@
 package ru.lizzzi.crossfit_rekord.adapters;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
+import ru.lizzzi.crossfit_rekord.documentfields.DocumentFields_Record;
 import ru.lizzzi.crossfit_rekord.R;
 
-
-public class RecyclerAdapter_Definition extends BaseAdapter {
-
-    private ArrayList<String> mDataset;
-    private ArrayList<String> mPriceset;
+public class RecyclerAdapter_Record extends BaseAdapter {
+    private List<Map> storedItems;
     private int layoutId;
     private LayoutInflater inflater;
+    private DocumentFields_Record fields;
+    private int i = 1;
 
-    public RecyclerAdapter_Definition(Context context, ArrayList<String> dataset, ArrayList<String> priceset, int layoutId) {
-        this.mDataset = dataset;
-        this.mPriceset = priceset;
+    public RecyclerAdapter_Record(Context context, @NonNull List<Map> shediletems, int layoutId) {
+        this.storedItems = shediletems;
         this.layoutId = layoutId;
         inflater = LayoutInflater.from(context);
+        fields = new DocumentFields_Record(context);
     }
-
 
     @Override
     public int getCount() {
-        return mDataset.size();
+        return storedItems.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return mDataset.get(position);
+        return storedItems.get(position);
     }
 
     @Override
@@ -54,15 +55,19 @@ public class RecyclerAdapter_Definition extends BaseAdapter {
             view.setTag(holder);
         }
 
-        customizeView(view, holder, position);
+        customizeView(view, holder, storedItems.get(position));
 
         return view;
     }
 
-    private void customizeView(View view, ViewHolder holder, int position) {
+    private void customizeView(View view, ViewHolder holder, final Map documentInfo) {
 
-        holder.StartTimeItem.setText(mDataset.get(position));
-        holder.TypesItem.setText(mPriceset.get(position));
+        String username = (String) documentInfo.get(fields.getUsernameFields());
+        String number = String.valueOf(i);
+        i++;
+
+        holder.UsernameItem.setText(username);
+        holder.UserCountItem.setText(number);
 
 
         view.setOnClickListener(new View.OnClickListener() {
@@ -73,15 +78,13 @@ public class RecyclerAdapter_Definition extends BaseAdapter {
     }
 
     static class ViewHolder {
-        private TextView StartTimeItem;
-        private TextView TypesItem;
+        private TextView UsernameItem;
+        private TextView UserCountItem;
 
         ViewHolder(View view) {
-            StartTimeItem = view.findViewById(R.id.termin);
-            TypesItem = view.findViewById(R.id.description);
+            UsernameItem = view.findViewById(R.id.username);
+            UserCountItem = view.findViewById(R.id.number);
 
         }
     }
 }
-
-

@@ -21,13 +21,14 @@ import com.backendless.exceptions.BackendlessFault;
 import com.backendless.persistence.DataQueryBuilder;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterRecord;
+import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapter_Record;
 
 
 public class RecordForTraining_Fragment extends Fragment {
@@ -46,10 +47,11 @@ public class RecordForTraining_Fragment extends Fragment {
     String username;
     String userid;
 
-    RecyclerAdapterRecord adapter;
+    RecyclerAdapter_Record adapter;
     ListView lvRecord;
     List<Map> results;
     List<Map> result2;
+    List<String> list;
 
     Button btRegister;
 
@@ -321,7 +323,12 @@ public class RecordForTraining_Fragment extends Fragment {
                     final SharedPreferences.Editor editor = mSettings.edit();
                     editor.putString(APP_PREFERENCES_USERCOUNT, "1");
                     editor.apply();
-                    adapter = new RecyclerAdapterRecord(getContext(), results, R.layout.item_lv_record);
+                    adapter = new RecyclerAdapter_Record(getContext(), results, R.layout.item_lv_record);
+
+                    for (int i = 0; i< results.size(); i++){
+                        list = new ArrayList<String>(results.get(i).values());
+                    }
+
 
                     String whereClause2 = "data = '" + date_select + "' and time = '" + time_select + "' and username = '" + username + "'";
                     DataQueryBuilder queryBuilder2 = DataQueryBuilder.create();
@@ -343,8 +350,11 @@ public class RecordForTraining_Fragment extends Fragment {
                 lvRecord.setAdapter(adapter);
             }
             if (results.size() > 0 ){
-                btRegister.setText(R.string.delete_entry);
-                userid = String.valueOf( result2.get(0).get("objectId"));
+                if(list.contains(String.valueOf(username))){
+                    btRegister.setText(R.string.delete_entry);
+                    userid = String.valueOf( result2.get(0).get("objectId"));
+                }
+
             }else {
                 btRegister.setText(R.string.whrite_entry);
                 userid = "noId";

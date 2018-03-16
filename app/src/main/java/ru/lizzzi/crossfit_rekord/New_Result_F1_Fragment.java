@@ -84,7 +84,7 @@ public class New_Result_F1_Fragment extends Fragment {
             throw new Error("Unable to create database");
         }
 
-        //mDbHelper.openDataBase();
+        mDbHelper.openDataBase();
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
         Item_list.clear();

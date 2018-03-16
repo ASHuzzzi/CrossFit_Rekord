@@ -15,10 +15,6 @@ import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.documentfields.DocumentFields_Workout_details;
 
 
-/**
- * Created by Liza on 15.03.2018.
- */
-
 public class RecyclerAdapter_Workout_details  extends BaseAdapter{
 
     private List<Map> woditems;

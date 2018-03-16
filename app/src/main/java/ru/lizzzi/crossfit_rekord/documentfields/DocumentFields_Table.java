@@ -1,6 +1,8 @@
-package ru.lizzzi.crossfit_rekord;
+package ru.lizzzi.crossfit_rekord.documentfields;
 
 import android.content.Context;
+
+import ru.lizzzi.crossfit_rekord.R;
 
 public class DocumentFields_Table {
     private Context context;

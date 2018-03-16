@@ -2,9 +2,6 @@ package ru.lizzzi.crossfit_rekord.data;
 
 import android.provider.BaseColumns;
 
-/**
- * Created by Liza on 14.11.2017.
- */
 
 public class WodDbContract {
     private WodDbContract(){

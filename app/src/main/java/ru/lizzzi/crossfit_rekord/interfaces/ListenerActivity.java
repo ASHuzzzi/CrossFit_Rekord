@@ -1,4 +1,4 @@
-package ru.lizzzi.crossfit_rekord;
+package ru.lizzzi.crossfit_rekord.interfaces;
 
 /**
  * Created by Liza on 22.11.2017.
