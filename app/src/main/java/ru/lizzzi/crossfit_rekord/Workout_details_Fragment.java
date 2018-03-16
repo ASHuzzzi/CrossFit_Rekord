@@ -32,6 +32,9 @@ public class Workout_details_Fragment extends Fragment {
     TextView tvWarmUp;
     TextView tvSkill;
     TextView tvWOD;
+    TextView tvLevelA;
+    TextView tvLevelB;
+    TextView tvLevelC;
     List<String> list;
 
     @Override
@@ -45,6 +48,9 @@ public class Workout_details_Fragment extends Fragment {
         tvWarmUp = v.findViewById(R.id.tvWarmUp);
         tvSkill = v.findViewById(R.id.tvSkill);
         tvWOD = v.findViewById(R.id.tvWOD);
+        tvLevelA = v.findViewById(R.id.tvLevelA);
+        tvLevelB = v.findViewById(R.id.tvLevelB);
+        tvLevelC = v.findViewById(R.id.tvLevelC);
 
 
 
@@ -78,8 +84,11 @@ public class Workout_details_Fragment extends Fragment {
                 }
                 if (list.size() > 0){
                     tvWarmUp.setText(String.valueOf(list.get(0)));
-                    tvSkill.setText(String.valueOf(list.get(3)));
-                    tvWOD.setText(String.valueOf(list.get(6)));
+                    tvSkill.setText(String.valueOf(list.get(5)));
+                    tvWOD.setText(String.valueOf(list.get(8)));
+                    tvLevelA.setText((String.valueOf(list.get(2))));
+                    tvLevelB.setText((String.valueOf(list.get(9))));
+                    tvLevelC.setText((String.valueOf(list.get(2))));
                 }
             }
 
