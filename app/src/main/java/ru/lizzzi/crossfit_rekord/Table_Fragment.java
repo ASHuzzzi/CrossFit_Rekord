@@ -1,9 +1,6 @@
 package ru.lizzzi.crossfit_rekord;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -20,7 +17,6 @@ import android.widget.Toast;
 import com.backendless.Backendless;
 import com.backendless.persistence.DataQueryBuilder;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -39,6 +35,7 @@ public class Table_Fragment extends Fragment implements SwipeRefreshLayout.OnRef
     RecyclerAdapter_Table adapter;
     String sNumberOfDay;
     Button button_monday;
+    Network_check network_check;
 
 
     @Override
@@ -60,26 +57,18 @@ public class Table_Fragment extends Fragment implements SwipeRefreshLayout.OnRef
         final LinearLayout layoutbuttonDayOfWeek = v.findViewById(R.id.Layout_Button_Day_of_Week);
         Button button_error = v.findViewById(R.id.button5);
 
-
-
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
 
-        if (checkInternet()){
-            if (isOnline()){
-                sNumberOfDay = "1";
-                StartNewAsyncTask(sNumberOfDay);
-                layouterror.setVisibility(View.INVISIBLE);
-                layoutbuttonDayOfWeek.setVisibility(View.VISIBLE);
-                mSwipeRefreshLayout.setEnabled(true);
-            }else {
-                mProgressBar.setVisibility(View.INVISIBLE);
-                layouterror.setVisibility(View.VISIBLE);
-                mSwipeRefreshLayout.setEnabled(true);
-            }
+        if (network_check.checkInternet()){
+            sNumberOfDay = "1";
+            StartNewAsyncTask("1");
+            layouterror.setVisibility(View.INVISIBLE);
+            layoutbuttonDayOfWeek.setVisibility(View.VISIBLE);
+            mSwipeRefreshLayout.setEnabled(true);
 
         }else {
             mProgressBar.setVisibility(View.INVISIBLE);
@@ -91,9 +80,9 @@ public class Table_Fragment extends Fragment implements SwipeRefreshLayout.OnRef
         button_error.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (checkInternet()){
+                if (network_check.checkInternet()){
                     sNumberOfDay = "1";
-                    StartNewAsyncTask(sNumberOfDay);
+                    StartNewAsyncTask("1");
                     layouterror.setVisibility(View.INVISIBLE);
                     layoutbuttonDayOfWeek.setVisibility(View.VISIBLE);
                     mSwipeRefreshLayout.setEnabled(true);
@@ -176,7 +165,7 @@ public class Table_Fragment extends Fragment implements SwipeRefreshLayout.OnRef
         @Override
         protected void onPreExecute(){
             super.onPreExecute();
-            if(checkInternet()){
+            if(network_check.checkInternet()){
                 lvItemsInTable.setVisibility(View.INVISIBLE);
                 mProgressBar.setVisibility(View.VISIBLE);
             }
@@ -185,7 +174,7 @@ public class Table_Fragment extends Fragment implements SwipeRefreshLayout.OnRef
         @Override
         protected Void doInBackground(String... params) {
 
-            if (checkInternet()) {
+            if (network_check.checkInternet()) {
                 List<Map> result;
                 String dayofweek = params[0];
                 String whereClause = "day_of_week = " + dayofweek;
@@ -210,7 +199,6 @@ public class Table_Fragment extends Fragment implements SwipeRefreshLayout.OnRef
         protected void onPostExecute(Void result){
             super.onPostExecute(result);
 
-
             mProgressBar.setVisibility(View.INVISIBLE);
             if (adapter != null){
                 lvItemsInTable.setAdapter(adapter);
@@ -222,53 +210,22 @@ public class Table_Fragment extends Fragment implements SwipeRefreshLayout.OnRef
                     button_monday.setBackgroundResource(android.R.drawable.btn_default);
                 }
             }else {
-                if (checkInternet()){
+                if (network_check.checkInternet()){
                     Toast.makeText(getContext(), "Нет подключения", Toast.LENGTH_SHORT).show();
-                }else{
-                    Toast.makeText(getContext(), "Нет данных", Toast.LENGTH_SHORT).show();
                 }
-
             }
         }
     }
 
-
-
     @Override
     public void onRefresh() {
-
-        if (checkInternet()){
+        if (network_check.checkInternet()){
             StartNewAsyncTask(sNumberOfDay);
             mSwipeRefreshLayout.setRefreshing(false);
         }else {
             mSwipeRefreshLayout.setRefreshing(false);
             mSwipeRefreshLayout.showContextMenu();
             Toast.makeText(getContext(), "Нет подключения к сети", Toast.LENGTH_SHORT).show();
-
         }
-
-    }
-
-    public boolean checkInternet() {
-
-        ConnectivityManager cm = (ConnectivityManager)getActivity().getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-
-        NetworkInfo activeNetwork = cm != null ? cm.getActiveNetworkInfo() : null;
-        // проверка подключения
-        return activeNetwork != null && activeNetwork.isConnected();
-
-    }
-
-    public boolean isOnline() {
-        Runtime runtime = Runtime.getRuntime();
-        try {
-            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
-            int     exitValue = ipProcess.waitFor();
-            return (exitValue == 0);
-        }
-        catch (IOException e)          { e.printStackTrace(); }
-        catch (InterruptedException e) { e.printStackTrace(); }
-
-        return false;
     }
 }
