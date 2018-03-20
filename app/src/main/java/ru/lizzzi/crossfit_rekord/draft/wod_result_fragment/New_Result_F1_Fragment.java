@@ -1,4 +1,4 @@
-package ru.lizzzi.crossfit_rekord;
+package ru.lizzzi.crossfit_rekord.draft.wod_result_fragment;
 
 
 import android.content.ContentValues;
@@ -21,6 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.data.DefinitionDBHelper;
 import ru.lizzzi.crossfit_rekord.data.DefinitionDbContarct;
 import ru.lizzzi.crossfit_rekord.data.WodDBHelper;

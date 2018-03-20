@@ -1,4 +1,4 @@
-package ru.lizzzi.crossfit_rekord;
+package ru.lizzzi.crossfit_rekord.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -27,6 +27,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import ru.lizzzi.crossfit_rekord.R;
 
 
 public class Calendar_wod_Fragment extends Fragment implements OnDateSelectedListener {

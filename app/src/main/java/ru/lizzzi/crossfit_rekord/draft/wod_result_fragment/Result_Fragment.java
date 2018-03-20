@@ -1,4 +1,4 @@
-package ru.lizzzi.crossfit_rekord;
+package ru.lizzzi.crossfit_rekord.draft.wod_result_fragment;
 
 
 import android.database.Cursor;
@@ -17,6 +17,8 @@ import android.widget.Button;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import ru.lizzzi.crossfit_rekord.fragments.Listener_Result;
+import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapter_Result;
 import ru.lizzzi.crossfit_rekord.data.WodDBHelper;
 import ru.lizzzi.crossfit_rekord.data.WodDbContract;

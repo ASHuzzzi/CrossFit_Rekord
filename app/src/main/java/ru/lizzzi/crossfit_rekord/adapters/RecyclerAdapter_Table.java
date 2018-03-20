@@ -1,11 +1,13 @@
 package ru.lizzzi.crossfit_rekord.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -59,6 +61,7 @@ public class RecyclerAdapter_Table extends BaseAdapter {
         return view;
     }
 
+    @SuppressLint("ResourceAsColor")
     private void customizeView(View view, ViewHolder holder, final Map documentInfo) {
 
         String start_time = (String) documentInfo.get(fields.getStartTimeField());
@@ -67,9 +70,38 @@ public class RecyclerAdapter_Table extends BaseAdapter {
         holder.StartTimeItem.setText(start_time);
         holder.TypesItem.setText(type);
 
+        LinearLayout ll_item_table = view.findViewById(R.id.ll_item_table);
+
+
         if (type.equals("CrossFit")){
-            view.setBackgroundResource(R.color.selectButton);
+            ll_item_table.setBackgroundResource(R.color.color_Table_CrossFit);
+            //ll_item_table.setBackgroundResource(R.color.color_Table_CrossFit);
         }
+        if (type.equals("On-Ramp")){
+            ll_item_table.setBackgroundResource(R.color.color_Table_On_Ramp);
+        }
+        if (type.equals("Open Gym")){
+            ll_item_table.setBackgroundResource(R.color.color_Table_Open_Gym);
+        }
+        if (type.equals("Stretching")){
+            ll_item_table.setBackgroundResource(R.color.color_Table_Stretching);
+        }
+        if (type.equals("CrossFit Kids")){
+            ll_item_table.setBackgroundResource(R.color.color_Table_Crossfit_Kids);
+        }
+        if (type.equals("Weightlifting/Athleticism")){
+            ll_item_table.setBackgroundResource(R.color.color_Table_Weighlifting);
+        }
+        if (type.equals("Gymnastics/Defence")){
+            ll_item_table.setBackgroundResource(R.drawable.gymnastics_and_defenceclass);
+        }
+        if (type.equals("Rowing/Lady class")){
+            ll_item_table.setBackgroundResource(R.drawable.row_and_ladyclass);
+        }
+        if (type.equals("Weightlifting")){
+            ll_item_table.setBackgroundResource(R.color.color_Table_Weighlifting);
+        }
+
 
         view.setOnClickListener(new View.OnClickListener() {
             @Override

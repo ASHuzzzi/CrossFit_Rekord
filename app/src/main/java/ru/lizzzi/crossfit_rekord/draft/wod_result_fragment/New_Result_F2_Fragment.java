@@ -1,4 +1,4 @@
-package ru.lizzzi.crossfit_rekord;
+package ru.lizzzi.crossfit_rekord.draft.wod_result_fragment;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -18,6 +18,7 @@ import android.widget.EditText;
 
 import java.util.ArrayList;
 
+import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapter_Exercises;
 import ru.lizzzi.crossfit_rekord.data.DefinitionDBHelper;
 import ru.lizzzi.crossfit_rekord.data.DefinitionDbContarct;

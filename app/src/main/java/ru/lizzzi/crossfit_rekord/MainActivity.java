@@ -14,8 +14,19 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import com.backendless.Backendless;
+
+import ru.lizzzi.crossfit_rekord.draft.wod_result_fragment.Result_Fragment;
+import ru.lizzzi.crossfit_rekord.fragments.AboutMe_Fragment;
+import ru.lizzzi.crossfit_rekord.fragments.Calendar_wod_Fragment;
+import ru.lizzzi.crossfit_rekord.fragments.Character_Fragment;
+import ru.lizzzi.crossfit_rekord.fragments.Login_Fragment;
+import ru.lizzzi.crossfit_rekord.fragments.RecordForTraining_Fragment;
+import ru.lizzzi.crossfit_rekord.fragments.StartScreen_Fragment;
+import ru.lizzzi.crossfit_rekord.fragments.Table_Fragment;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -37,8 +48,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close){
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                // Code here will be triggered once the drawer closes as we dont want anything to happen so we leave this blank
+                super.onDrawerClosed(drawerView);
+                InputMethodManager inputMethodManager = (InputMethodManager)
+                        getSystemService(Context.INPUT_METHOD_SERVICE);
+                assert inputMethodManager != null;
+                inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                // Code here will be triggered once the drawer open as we dont want anything to happen so we leave this blank
+                super.onDrawerOpened(drawerView);
+                InputMethodManager inputMethodManager = (InputMethodManager)
+                        getSystemService(Context.INPUT_METHOD_SERVICE);
+                assert inputMethodManager != null;
+                inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+            }
+        };
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
@@ -89,6 +122,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
 
+
         OpenFragment(fragmentClass);
 
         return true;
@@ -114,5 +148,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ft.addToBackStack(null);
         ft.commit();
 
+    }
+
+    @Override
+    public void onBackPressed(){
+        int count = getSupportFragmentManager().getBackStackEntryCount();
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        if(drawer.isDrawerOpen(GravityCompat.START)){
+            drawer.closeDrawer(GravityCompat.START);
+        }
+        else{
+            if (count == 1) {
+                finish();
+            } else {
+                getSupportFragmentManager().popBackStack();
+            }
+        }
     }
 }

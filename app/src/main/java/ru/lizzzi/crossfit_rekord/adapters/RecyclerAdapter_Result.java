@@ -8,8 +8,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import ru.lizzzi.crossfit_rekord.Caption_Wod;
-import ru.lizzzi.crossfit_rekord.Listener_Result;
+import ru.lizzzi.crossfit_rekord.draft.wod_result_fragment.Caption_Wod;
+import ru.lizzzi.crossfit_rekord.fragments.Listener_Result;
 import ru.lizzzi.crossfit_rekord.R;
 
 

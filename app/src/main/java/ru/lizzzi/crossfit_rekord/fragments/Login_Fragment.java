@@ -1,4 +1,4 @@
-package ru.lizzzi.crossfit_rekord;
+package ru.lizzzi.crossfit_rekord.fragments;
 
 
 import android.content.Context;
@@ -21,9 +21,10 @@ import com.backendless.BackendlessUser;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 
+import ru.lizzzi.crossfit_rekord.R;
 
 
- //* Created by basso on 07.03.2018.
+//* Created by basso on 07.03.2018.
 
 public class Login_Fragment extends Fragment {
 

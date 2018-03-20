@@ -1,4 +1,4 @@
-package ru.lizzzi.crossfit_rekord;
+package ru.lizzzi.crossfit_rekord.fragments;
 
 
 import android.content.Context;
@@ -20,6 +20,8 @@ import com.backendless.Backendless;
 import com.backendless.BackendlessUser;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
+
+import ru.lizzzi.crossfit_rekord.R;
 
 
 public class Registry_Fragment extends Fragment {

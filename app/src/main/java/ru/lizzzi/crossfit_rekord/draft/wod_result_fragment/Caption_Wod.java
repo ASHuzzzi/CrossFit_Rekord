@@ -1,4 +1,4 @@
-package ru.lizzzi.crossfit_rekord;
+package ru.lizzzi.crossfit_rekord.draft.wod_result_fragment;
 
 /**
  * Created by Liza on 24.11.2017.

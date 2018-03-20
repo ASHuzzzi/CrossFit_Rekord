@@ -1,4 +1,4 @@
-package ru.lizzzi.crossfit_rekord;
+package ru.lizzzi.crossfit_rekord.draft.price_fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.documentfields.DocumentFields_Price;
 import ru.lizzzi.crossfit_rekord.views.FastScrollRecyclerView;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackCountDocument;

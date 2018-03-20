@@ -1,4 +1,4 @@
-package ru.lizzzi.crossfit_rekord;
+package ru.lizzzi.crossfit_rekord.fragments;
 
 
 import android.support.v4.app.Fragment;
@@ -18,6 +18,8 @@ import com.backendless.persistence.DataQueryBuilder;
 
 import java.util.List;
 import java.util.Map;
+
+import ru.lizzzi.crossfit_rekord.R;
 
 /**
  * Created by basso on 07.03.2018.

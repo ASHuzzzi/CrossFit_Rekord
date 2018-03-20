@@ -1,4 +1,4 @@
-package ru.lizzzi.crossfit_rekord;
+package ru.lizzzi.crossfit_rekord.fragments;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import ru.lizzzi.crossfit_rekord.R;
 
 public class StartScreen_Fragment extends Fragment {
 
@@ -27,7 +29,6 @@ public class StartScreen_Fragment extends Fragment {
         Button record_training = v.findViewById(R.id.button_record_training);
         Button description = v.findViewById(R.id.button_definition);
         Button calendar_wod = v.findViewById(R.id.button_calendar_wod);
-        Button result = v.findViewById(R.id.button_result);
         final Button contacts = v.findViewById(R.id.button_contacts);
 
         schedule.setOnClickListener(new View.OnClickListener() {
@@ -65,13 +66,6 @@ public class StartScreen_Fragment extends Fragment {
             @Override
             public void onClick(View view) {
                 OpenFragment(Calendar_wod_Fragment.class);
-            }
-        });
-
-        result.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                OpenFragment(Result_Fragment.class);
             }
         });
 

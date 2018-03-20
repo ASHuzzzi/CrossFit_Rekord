@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ru.lizzzi.crossfit_rekord.New_Result_F2_Fragment">
+    tools:context="ru.lizzzi.crossfit_rekord.draft.wod_result_fragment.New_Result_F2_Fragment">
 
 
     <LinearLayout

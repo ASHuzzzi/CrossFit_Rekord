@@ -10,7 +10,7 @@ import android.widget.EditText;
 
 import java.util.ArrayList;
 
-import ru.lizzzi.crossfit_rekord.Exercises;
+import ru.lizzzi.crossfit_rekord.draft.wod_result_fragment.Exercises;
 import ru.lizzzi.crossfit_rekord.interfaces.ListenerActivity;
 import ru.lizzzi.crossfit_rekord.R;
 
