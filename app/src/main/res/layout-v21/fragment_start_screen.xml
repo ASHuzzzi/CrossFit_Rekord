@@ -27,8 +27,9 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:layout_weight="1"
+            android:elevation="2dp"
             android:text="@string/button_shedule"
-            android:textAlignment="gravity"
+            android:translationZ="2dp"
             tools:ignore="NestedWeights" />
 
         <Button
@@ -37,9 +38,9 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:layout_weight="1"
+            android:elevation="2dp"
             android:text="@string/button_record_training"
-            android:textAlignment="gravity"
-            android:textStyle="bold" />
+            android:translationZ="2dp" />
 
         <Button
             android:id="@+id/button_calendar_wod"
@@ -47,7 +48,9 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:text="@string/button_calendar_wod" />
+            android:elevation="2dp"
+            android:text="@string/button_calendar_wod"
+            android:translationZ="2dp" />
 
         <Button
             android:id="@+id/button_definition"
@@ -55,7 +58,9 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:text="@string/button_definition" />
+            android:elevation="2dp"
+            android:text="@string/button_definition"
+            android:translationZ="2dp" />
 
         <Button
             android:id="@+id/button_contacts"
@@ -65,10 +70,12 @@
             android:layout_marginEnd="5dp"
             android:layout_marginStart="5dp"
             android:layout_marginTop="5dp"
-            android:layout_weight="1"
+            android:elevation="2dp"
             android:enabled="false"
-            android:text="@string/button_contacts" />
+            android:text="@string/button_contacts"
+            android:translationZ="2dp" />
 
     </LinearLayout>
+
 
 </LinearLayout>

@@ -2,7 +2,9 @@ package ru.lizzzi.crossfit_rekord.fragments;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -27,13 +29,15 @@ public class StartScreen_Fragment extends Fragment {
 
         Button schedule = v.findViewById(R.id.button_schedule);
         Button record_training = v.findViewById(R.id.button_record_training);
-        Button description = v.findViewById(R.id.button_definition);
+        final Button description = v.findViewById(R.id.button_definition);
         Button calendar_wod = v.findViewById(R.id.button_calendar_wod);
         final Button contacts = v.findViewById(R.id.button_contacts);
 
         schedule.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onClick(View view) {
+
                 OpenFragment(Table_Fragment.class);
             }
         });
@@ -56,6 +60,7 @@ public class StartScreen_Fragment extends Fragment {
         });
 
         description.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onClick(View view) {
                 OpenFragment(Character_Fragment.class);

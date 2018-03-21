@@ -88,5 +88,11 @@
 
     <string name="name">name</string>
 
+    <!-- Значения для экрана Start_screen -->
+    <string name="button_shedule">Расписание</string>
+    <string name="button_record_training">Записаться на тренировку</string>
+    <string name="button_definition">Словарь CrossFit</string>
+    <string name="button_calendar_wod">Результаты тренировок</string>
+    <string name="button_contacts">Контакты</string>
 
 </resources>

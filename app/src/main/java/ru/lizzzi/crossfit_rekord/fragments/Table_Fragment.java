@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,10 +26,9 @@ import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapter_Table;
   Created by Liza on 11.10.2017.
  */
 
-public class Table_Fragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class Table_Fragment extends Fragment {
 
     private ProgressBar mProgressBar;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
     ListView lvItemsInTable;
     View v;
     RecyclerAdapter_Table adapter;
@@ -60,16 +58,11 @@ public class Table_Fragment extends Fragment implements SwipeRefreshLayout.OnRef
         button_sunday= v.findViewById(R.id.day_7);
         mProgressBar = v.findViewById(R.id.progressBar);
         lvItemsInTable = v.findViewById(R.id.lvTable);
-        mSwipeRefreshLayout = v.findViewById(R.id.swipe_container);
+
         final LinearLayout layouterror = v.findViewById(R.id.Layout_Error);
         final LinearLayout layoutbuttonDayOfWeek = v.findViewById(R.id.Layout_Button_Day_of_Week);
         Button button_error = v.findViewById(R.id.button5);
 
-        mSwipeRefreshLayout.setOnRefreshListener(this);
-        mSwipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
 
         network_check = new Network_check(getContext());
         if (network_check.checkInternet()){
@@ -77,13 +70,11 @@ public class Table_Fragment extends Fragment implements SwipeRefreshLayout.OnRef
             StartNewAsyncTask(iNumberOfDay);
             layouterror.setVisibility(View.INVISIBLE);
             layoutbuttonDayOfWeek.setVisibility(View.VISIBLE);
-            mSwipeRefreshLayout.setEnabled(true);
 
         }else {
             mProgressBar.setVisibility(View.INVISIBLE);
             layouterror.setVisibility(View.VISIBLE);
             layoutbuttonDayOfWeek.setVisibility(View.INVISIBLE);
-            mSwipeRefreshLayout.setEnabled(false);
         }
 
         button_error.setOnClickListener(new View.OnClickListener() {
@@ -94,12 +85,10 @@ public class Table_Fragment extends Fragment implements SwipeRefreshLayout.OnRef
                     StartNewAsyncTask(iNumberOfDay);
                     layouterror.setVisibility(View.INVISIBLE);
                     layoutbuttonDayOfWeek.setVisibility(View.VISIBLE);
-                    mSwipeRefreshLayout.setEnabled(true);
                 }else {
                     mProgressBar.setVisibility(View.INVISIBLE);
                     layouterror.setVisibility(View.VISIBLE);
                     layoutbuttonDayOfWeek.setVisibility(View.INVISIBLE);
-                    mSwipeRefreshLayout.setEnabled(false);
                 }
             }
         });
@@ -177,6 +166,7 @@ public class Table_Fragment extends Fragment implements SwipeRefreshLayout.OnRef
             if(network_check.checkInternet()){
                 lvItemsInTable.setVisibility(View.INVISIBLE);
                 mProgressBar.setVisibility(View.VISIBLE);
+                PreSelectionButtonDay(8);
 
             }
         }
@@ -228,18 +218,6 @@ public class Table_Fragment extends Fragment implements SwipeRefreshLayout.OnRef
         }
     }
 
-    @Override
-    public void onRefresh() {
-        if (network_check.checkInternet()){
-            StartNewAsyncTask(iNumberOfDay);
-            mSwipeRefreshLayout.setRefreshing(false);
-        }else {
-            mSwipeRefreshLayout.setRefreshing(false);
-            mSwipeRefreshLayout.showContextMenu();
-            Toast.makeText(getContext(), "Нет подключения к сети", Toast.LENGTH_SHORT).show();
-        }
-    }
-
     private void PreSelectionButtonDay(int iDayOfWeek){
         if (iDayOfWeek == 1 ){
             SelectButtonDay(true, false, false, false, false, false, false);
@@ -276,5 +254,10 @@ public class Table_Fragment extends Fragment implements SwipeRefreshLayout.OnRef
         button_friday.setPressed(f);
         button_saturday.setPressed(sa);
         button_sunday.setPressed(su);
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
     }
 }
