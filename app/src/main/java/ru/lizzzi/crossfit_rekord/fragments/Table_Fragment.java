@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +21,7 @@ import com.backendless.persistence.DataQueryBuilder;
 import java.util.List;
 import java.util.Map;
 
+import ru.lizzzi.crossfit_rekord.DownloadTableInLoader;
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapter_Table;
 
@@ -26,7 +29,7 @@ import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapter_Table;
   Created by Liza on 11.10.2017.
  */
 
-public class Table_Fragment extends Fragment {
+public class Table_Fragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Map>> {
 
     private ProgressBar mProgressBar;
     ListView lvItemsInTable;
@@ -42,6 +45,9 @@ public class Table_Fragment extends Fragment {
     Button button_saturday;
     Button button_sunday;
     Network_check network_check;
+    private Loader<String> loader;
+    public int LOADER_ID = 1;
+
 
 
     @Override
@@ -64,12 +70,17 @@ public class Table_Fragment extends Fragment {
         Button button_error = v.findViewById(R.id.button5);
 
 
+
+
         network_check = new Network_check(getContext());
         if (network_check.checkInternet()){
             iNumberOfDay = 1;
-            StartNewAsyncTask(iNumberOfDay);
+            //StartNewAsyncTask(iNumberOfDay);
             layouterror.setVisibility(View.INVISIBLE);
             layoutbuttonDayOfWeek.setVisibility(View.VISIBLE);
+            Bundle bundle = new Bundle();
+            bundle.putString(String.valueOf(DownloadTableInLoader.ARG_WORD), String.valueOf(iNumberOfDay));
+            getLoaderManager().initLoader(LOADER_ID, bundle, this).forceLoad();
 
         }else {
             mProgressBar.setVisibility(View.INVISIBLE);
@@ -155,6 +166,43 @@ public class Table_Fragment extends Fragment {
     private void StartNewAsyncTask(int sNumberOfDay){
         final DownloadTable downloadTable = new DownloadTable();
         downloadTable.execute(sNumberOfDay);
+    }
+
+    @Override
+    public Loader<List<Map>> onCreateLoader(int id, Bundle args) {
+
+        Loader<List<Map>> loader = null;
+        loader = new DownloadTableInLoader(getContext(), args);
+        return loader;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<List<Map>> loader, List<Map> data) {
+
+        if (data != null){
+            adapter = new RecyclerAdapter_Table(getContext(), data, R.layout.item_lv_table);
+        }
+
+        mProgressBar.setVisibility(View.INVISIBLE);
+        if (adapter != null){
+            lvItemsInTable.setAdapter(adapter);
+            lvItemsInTable.setVisibility(View.VISIBLE);
+            PreSelectionButtonDay(iNumberOfDay); //ToDo разобраться почему эта функция работает только в этом месте
+            iPreviousOfDay = iNumberOfDay;
+
+        }else {
+            if (!network_check.checkInternet()){
+                Toast.makeText(getContext(), "Нет подключения", Toast.LENGTH_SHORT).show();
+                PreSelectionButtonDay(iPreviousOfDay);
+            }else {
+                Toast.makeText(getContext(), "Нет данных", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<List<Map>> loader) {
+
     }
 
     @SuppressLint("StaticFieldLeak")

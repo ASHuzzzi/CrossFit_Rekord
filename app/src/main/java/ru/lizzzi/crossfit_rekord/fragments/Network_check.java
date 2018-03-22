@@ -6,14 +6,14 @@ import android.net.NetworkInfo;
 
 import java.io.IOException;
 
-class Network_check {
+public class Network_check {
     private Context context;
 
-    Network_check(Context context) {
+    public Network_check(Context context) {
         this.context = context;
     }
 
-    boolean checkInternet() {
+    public boolean checkInternet() {
 
         ConnectivityManager cm = (ConnectivityManager)context.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 
