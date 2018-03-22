@@ -74,32 +74,32 @@ public class RecyclerAdapter_Table extends BaseAdapter {
 
 
         if (type.equals("CrossFit")){
-            ll_item_table.setBackgroundResource(R.color.color_Table_CrossFit);
-            //ll_item_table.setBackgroundResource(R.color.color_Table_CrossFit);
+            holder.TypesItem.setBackgroundResource(R.drawable.table_item_crossfit);
         }
         if (type.equals("On-Ramp")){
-            ll_item_table.setBackgroundResource(R.color.color_Table_On_Ramp);
+            holder.TypesItem.setBackgroundResource(R.drawable.table_item_onramp);
         }
         if (type.equals("Open Gym")){
-            ll_item_table.setBackgroundResource(R.color.color_Table_Open_Gym);
+            holder.TypesItem.setBackgroundResource(R.drawable.table_item_opengym);
         }
         if (type.equals("Stretching")){
-            ll_item_table.setBackgroundResource(R.color.color_Table_Stretching);
+            holder.TypesItem.setBackgroundResource(R.drawable.table_item_stretching);
         }
         if (type.equals("CrossFit Kids")){
-            ll_item_table.setBackgroundResource(R.color.color_Table_Crossfit_Kids);
+            holder.TypesItem.setBackgroundResource(R.drawable.table_item_crossfitkids);
         }
         if (type.equals("Weightlifting/Athleticism")){
-            ll_item_table.setBackgroundResource(R.color.color_Table_Weighlifting);
+            holder.TypesItem.setBackgroundResource(R.drawable.table_item_weightlifting_and_athleticism);
         }
         if (type.equals("Gymnastics/Defence")){
-            ll_item_table.setBackgroundResource(R.drawable.gymnastics_and_defenceclass);
+            holder.TypesItem.setBackgroundResource(R.drawable.table_item_gymnastics_and_defence);
+
         }
         if (type.equals("Rowing/Lady class")){
-            ll_item_table.setBackgroundResource(R.drawable.row_and_ladyclass);
+            holder.TypesItem.setBackgroundResource(R.drawable.table_item_rowing_and_ladyclass);
         }
         if (type.equals("Weightlifting")){
-            ll_item_table.setBackgroundResource(R.color.color_Table_Weighlifting);
+            holder.TypesItem.setBackgroundResource(R.drawable.table_item_weighlifting);
         }
 
 

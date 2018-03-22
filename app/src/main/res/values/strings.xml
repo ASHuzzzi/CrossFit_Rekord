@@ -95,4 +95,13 @@
     <string name="button_calendar_wod">Результаты тренировок</string>
     <string name="button_contacts">Контакты</string>
 
+    <!-- Значения для крана Расписание -->
+    <string name="day_1">ПН</string>
+    <string name="day_2">ВТ</string>
+    <string name="day_3">СР</string>
+    <string name="day_4">ЧТ</string>
+    <string name="day_5">ПТ</string>
+    <string name="day_6">СБ</string>
+    <string name="day_7">ВС</string>
+
 </resources>
