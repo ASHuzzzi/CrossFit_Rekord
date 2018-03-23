@@ -1,7 +1,5 @@
 package ru.lizzzi.crossfit_rekord.fragments;
 
-import android.annotation.SuppressLint;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -15,13 +13,10 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.backendless.Backendless;
-import com.backendless.persistence.DataQueryBuilder;
-
 import java.util.List;
 import java.util.Map;
 
-import ru.lizzzi.crossfit_rekord.DownloadTableInLoader;
+import ru.lizzzi.crossfit_rekord.loaders.Table_Fragment_Loader;
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapter_Table;
 
@@ -45,13 +40,12 @@ public class Table_Fragment extends Fragment implements LoaderManager.LoaderCall
     Button button_saturday;
     Button button_sunday;
     Network_check network_check;
-    private Loader<String> loader;
     public int LOADER_ID = 1;
 
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_table, container, false);
 
@@ -69,19 +63,14 @@ public class Table_Fragment extends Fragment implements LoaderManager.LoaderCall
         final LinearLayout layoutbuttonDayOfWeek = v.findViewById(R.id.Layout_Button_Day_of_Week);
         Button button_error = v.findViewById(R.id.button5);
 
-
-
-
         network_check = new Network_check(getContext());
         if (network_check.checkInternet()){
             iNumberOfDay = 1;
-            //StartNewAsyncTask(iNumberOfDay);
+            Bundle bundle = new Bundle();
+            bundle.putString(String.valueOf(Table_Fragment_Loader.ARG_WORD), String.valueOf(iNumberOfDay));
+            getLoaderManager().initLoader(LOADER_ID, bundle, this).forceLoad();
             layouterror.setVisibility(View.INVISIBLE);
             layoutbuttonDayOfWeek.setVisibility(View.VISIBLE);
-            Bundle bundle = new Bundle();
-            bundle.putString(String.valueOf(DownloadTableInLoader.ARG_WORD), String.valueOf(iNumberOfDay));
-            getLoaderManager().initLoader(LOADER_ID, bundle, this).forceLoad();
-
         }else {
             mProgressBar.setVisibility(View.INVISIBLE);
             layouterror.setVisibility(View.VISIBLE);
@@ -93,7 +82,7 @@ public class Table_Fragment extends Fragment implements LoaderManager.LoaderCall
             public void onClick(View view) {
                 if (network_check.checkInternet()){
                     iNumberOfDay = 1;
-                    StartNewAsyncTask(iNumberOfDay);
+                    StartNewAsyncTaskLoader(iNumberOfDay);
                     layouterror.setVisibility(View.INVISIBLE);
                     layoutbuttonDayOfWeek.setVisibility(View.VISIBLE);
                 }else {
@@ -108,7 +97,7 @@ public class Table_Fragment extends Fragment implements LoaderManager.LoaderCall
             @Override
             public void onClick(View view) {
                 iNumberOfDay = 1;
-                StartNewAsyncTask(iNumberOfDay);
+                StartNewAsyncTaskLoader(iNumberOfDay);
             }
         });
 
@@ -116,7 +105,7 @@ public class Table_Fragment extends Fragment implements LoaderManager.LoaderCall
             @Override
             public void onClick(View view) {
                 iNumberOfDay = 2;
-                StartNewAsyncTask(iNumberOfDay);
+                StartNewAsyncTaskLoader(iNumberOfDay);
             }
         });
 
@@ -124,7 +113,7 @@ public class Table_Fragment extends Fragment implements LoaderManager.LoaderCall
             @Override
             public void onClick(View view) {
                 iNumberOfDay = 3;
-                StartNewAsyncTask(iNumberOfDay);
+                StartNewAsyncTaskLoader(iNumberOfDay);
             }
         });
 
@@ -132,7 +121,7 @@ public class Table_Fragment extends Fragment implements LoaderManager.LoaderCall
             @Override
             public void onClick(View view) {
                 iNumberOfDay = 4;
-                StartNewAsyncTask(iNumberOfDay);
+                StartNewAsyncTaskLoader(iNumberOfDay);
             }
         });
 
@@ -140,7 +129,7 @@ public class Table_Fragment extends Fragment implements LoaderManager.LoaderCall
             @Override
             public void onClick(View view) {
                 iNumberOfDay = 5;
-                StartNewAsyncTask(iNumberOfDay);
+                StartNewAsyncTaskLoader(iNumberOfDay);
             }
         });
 
@@ -148,7 +137,7 @@ public class Table_Fragment extends Fragment implements LoaderManager.LoaderCall
             @Override
             public void onClick(View view) {
                 iNumberOfDay = 6;
-                StartNewAsyncTask(iNumberOfDay);
+                StartNewAsyncTaskLoader(iNumberOfDay);
             }
         });
 
@@ -156,40 +145,42 @@ public class Table_Fragment extends Fragment implements LoaderManager.LoaderCall
             @Override
             public void onClick(View view) {
                 iNumberOfDay = 7;
-                StartNewAsyncTask(iNumberOfDay);
+                StartNewAsyncTaskLoader(iNumberOfDay);
             }
         });
 
         return v;
     }
 
-    private void StartNewAsyncTask(int sNumberOfDay){
-        final DownloadTable downloadTable = new DownloadTable();
-        downloadTable.execute(sNumberOfDay);
+    private void StartNewAsyncTaskLoader(int iNumberOfDay){
+        lvItemsInTable.setVisibility(View.INVISIBLE);
+        mProgressBar.setVisibility(View.VISIBLE);
+        PreSelectionButtonDay(8);
+        Bundle bundle = new Bundle();
+        bundle.putString(String.valueOf(Table_Fragment_Loader.ARG_WORD), String.valueOf(iNumberOfDay));
+        getLoaderManager().restartLoader(LOADER_ID, bundle,this).onContentChanged();
     }
 
     @Override
     public Loader<List<Map>> onCreateLoader(int id, Bundle args) {
-
-        Loader<List<Map>> loader = null;
-        loader = new DownloadTableInLoader(getContext(), args);
-        return loader;
+        if (network_check.checkInternet()) {
+            Loader<List<Map>> loader;
+            loader = new Table_Fragment_Loader(getContext(), args);
+            return loader;
+        }
+        return null;
     }
 
     @Override
     public void onLoadFinished(Loader<List<Map>> loader, List<Map> data) {
 
+        mProgressBar.setVisibility(View.INVISIBLE);
         if (data != null){
             adapter = new RecyclerAdapter_Table(getContext(), data, R.layout.item_lv_table);
-        }
-
-        mProgressBar.setVisibility(View.INVISIBLE);
-        if (adapter != null){
             lvItemsInTable.setAdapter(adapter);
             lvItemsInTable.setVisibility(View.VISIBLE);
             PreSelectionButtonDay(iNumberOfDay); //ToDo разобраться почему эта функция работает только в этом месте
             iPreviousOfDay = iNumberOfDay;
-
         }else {
             if (!network_check.checkInternet()){
                 Toast.makeText(getContext(), "Нет подключения", Toast.LENGTH_SHORT).show();
@@ -202,68 +193,6 @@ public class Table_Fragment extends Fragment implements LoaderManager.LoaderCall
 
     @Override
     public void onLoaderReset(Loader<List<Map>> loader) {
-
-    }
-
-    @SuppressLint("StaticFieldLeak")
-    private class DownloadTable extends AsyncTask<Integer,Void, Void>{
-
-        @Override
-        protected void onPreExecute(){
-            super.onPreExecute();
-            if(network_check.checkInternet()){
-                lvItemsInTable.setVisibility(View.INVISIBLE);
-                mProgressBar.setVisibility(View.VISIBLE);
-                PreSelectionButtonDay(8);
-
-            }
-        }
-
-        @Override
-        protected Void doInBackground(Integer... params) {
-
-            if (network_check.checkInternet()) {
-                List<Map> result;
-                int dayofweek = params[0];
-                String whereClause = "day_of_week = " + dayofweek;
-                DataQueryBuilder queryBuilder = DataQueryBuilder.create();
-                queryBuilder.setWhereClause(whereClause);
-                queryBuilder.setSortBy("start_time");
-            /*
-            setPageSize(20)  - пока использую этот метод. Но в будущем надо бы переделать
-            корректно на динамику.
-             */
-                queryBuilder.setPageSize(20);
-                result = Backendless.Data.of("Table").find(queryBuilder);
-                if (result != null){
-                    adapter = new RecyclerAdapter_Table(getContext(), result, R.layout.item_lv_table);
-                }
-            }
-
-            return null;
-        }
-
-        @SuppressLint("ResourceAsColor")
-        @Override
-        protected void onPostExecute(Void result){
-            super.onPostExecute(result);
-
-            mProgressBar.setVisibility(View.INVISIBLE);
-            if (adapter != null){
-                lvItemsInTable.setAdapter(adapter);
-                lvItemsInTable.setVisibility(View.VISIBLE);
-                PreSelectionButtonDay(iNumberOfDay); //ToDo разобраться почему эта функция работает только в этом месте
-                iPreviousOfDay = iNumberOfDay;
-
-            }else {
-                if (!network_check.checkInternet()){
-                    Toast.makeText(getContext(), "Нет подключения", Toast.LENGTH_SHORT).show();
-                    PreSelectionButtonDay(iPreviousOfDay);
-                }else {
-                    Toast.makeText(getContext(), "Нет данных", Toast.LENGTH_SHORT).show();
-                }
-            }
-        }
     }
 
     private void PreSelectionButtonDay(int iDayOfWeek){
