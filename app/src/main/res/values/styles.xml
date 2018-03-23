@@ -1,27 +1,32 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
-    <!-- Base application theme. -->
+    <!-- Основная тема приложения -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-    </style>
-
-    <style name="AppTheme.NoActionBar">
+        <item name="android:buttonStyle">@style/MainStyleButton</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
+    <!-- Стили для Nav bar -->
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
-    <style name="LayoutStand" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="android:layout_marginEnd" tools:ignore="NewApi">@dimen/layout_marginStart</item>
-        <item name="android:layout_marginStart" tools:ignore="NewApi">@dimen/layout_marginStart</item>
-        <item name="android:layout_marginTop">@dimen/layout_marginTop</item>
+    <!-- Стиль кнопок приложения -->
+    <style name="MainStyleButton" parent="@android:style/Widget.Button">
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/button_text_size</item>
+        <item name="android:background">@drawable/startscreen_button</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceSmallInverse</item>
+        <item name="android:gravity">center_vertical|center_horizontal</item>
     </style>
 
+    <!-- Стиль кнопок для экрана с расписанием тренировок -->
+    <style name="TableStyleButton" parent="MainStyleButton">
+        <item name="android:background">@drawable/table_button</item>
+    </style>
 
 </resources>

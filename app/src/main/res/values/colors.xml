@@ -1,7 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
-    <color name="CenterColor">#3f51b5</color>
+    <color name="colorPrimary">#141414</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorPrimaryLight">#3a3a3a</color>
+    <color name="colorAccent">#ff0000</color>
+
+    <color name="colorRedPrimary">#ff0000</color>
+    <color name="colorRedDark">#c20000</color>
+    <color name="colorRedLight">#ff5a36</color>
+
+    <color name="colorWhite">#ffffff</color>
+
+    <color name="color_Table_CrossFit">#ff0000</color>
+    <color name="color_Table_On_Ramp">#a06334</color>
+    <color name="color_Table_Stretching">#80917F</color>
+    <color name="color_Table_Rowing">#217597</color>
+    <color name="color_Table_Open_Gym">#86903A</color>
+    <color name="color_Table_Endurance">#A38182</color>
+    <color name="color_Table_Lady_Class">#A62565</color>
+    <color name="color_Table_Gymnastics">#277A4C</color>
+    <color name="color_Table_Weighlifting">#836484</color>
+    <color name="color_Table_Defence_Class">#5C6864</color>
+    <color name="color_Table_Athleticism">#8E5983</color>
+    <color name="color_Table_Crossfit_Kids">#A8A390</color>
+
 </resources>

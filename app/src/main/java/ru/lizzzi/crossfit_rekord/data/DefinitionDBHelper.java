@@ -1,5 +1,6 @@
 package ru.lizzzi.crossfit_rekord.data;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -11,15 +12,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-/**
- * Created by Liza on 02.11.2017.
- */
-
 public class DefinitionDBHelper  extends SQLiteOpenHelper{
 
     // путь к базе данных вашего приложения
+    @SuppressLint("SdCardPath")
     private static String DB_PATH = "/data/data/ru.lizzzi.crossfit_rekord/databases/";
-    private static String DB_PATH2;
     private static String DB_NAME = "DefinitionDirectory.db";
     private SQLiteDatabase myDataBase;
     private final Context mContext;
@@ -33,11 +30,8 @@ public class DefinitionDBHelper  extends SQLiteOpenHelper{
      * Создает пустую базу данных и перезаписывает ее нашей собственной базой
      * */
     public void createDataBase() throws IOException {
-        boolean dbExist = checkDataBase();
 
-        if(dbExist){
-            //ничего не делать - база уже есть
-        }else{
+        if(!checkDataBase()){
             //вызывая этот метод создаем пустую базу, позже она будет перезаписана
             this.getReadableDatabase();
 
@@ -65,7 +59,7 @@ public class DefinitionDBHelper  extends SQLiteOpenHelper{
         if(checkDB != null){
             checkDB.close();
         }
-        return checkDB != null ? true : false;
+        return checkDB != null;
     }
 
     /**

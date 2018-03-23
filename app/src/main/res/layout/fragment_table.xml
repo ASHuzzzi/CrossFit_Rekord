@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.widget.FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -10,79 +10,127 @@
         android:orientation="vertical">
 
         <LinearLayout
+            android:id="@+id/Layout_Button_Day_of_Week"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="6"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
             android:orientation="horizontal">
 
             <Button
                 android:id="@+id/day_1"
+                style="@style/TableStyleButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="5dp"
                 android:layout_weight="1"
-                android:text="пн" />
+                android:text="@string/day_1" />
 
             <Button
                 android:id="@+id/day_2"
+                style="@style/TableStyleButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="5dp"
                 android:layout_weight="1"
-                android:text="вт" />
+                android:text="@string/day_2" />
 
             <Button
                 android:id="@+id/day_3"
+                style="@style/TableStyleButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="5dp"
                 android:layout_weight="1"
-                android:text="ср" />
+                android:text="@string/day_3" />
 
             <Button
                 android:id="@+id/day_4"
+                style="@style/TableStyleButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="5dp"
                 android:layout_weight="1"
-                android:text="чт" />
+                android:text="@string/day_4" />
 
             <Button
                 android:id="@+id/day_5"
+                style="@style/TableStyleButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="5dp"
                 android:layout_weight="1"
-                android:text="пт" />
+                android:text="@string/day_5" />
 
             <Button
                 android:id="@+id/day_6"
+                style="@style/TableStyleButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="5dp"
                 android:layout_weight="1"
-                android:text="сб" />
+                android:text="@string/day_6" />
 
             <Button
                 android:id="@+id/day_7"
+                style="@style/TableStyleButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="5dp"
                 android:layout_weight="1"
-                android:text="вс" />
+                android:text="@string/day_7" />
         </LinearLayout>
 
-        <FrameLayout
+        <ListView
+            android:id="@+id/lvTable"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
+            android:layout_height="match_parent" />
 
-            <ProgressBar
-                android:id="@+id/progressBar"
-                style="?android:attr/progressBarStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center" />
-
-            <ListView
-                android:id="@+id/lvTable"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-        </FrameLayout>
     </LinearLayout>
 
-</FrameLayout>
+    <LinearLayout
+        android:id="@+id/Layout_Error"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="false"
+        android:layout_centerVertical="true"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView16"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center_horizontal"
+            android:text="@string/error_connection1"
+            android:textColor="@color/colorPrimaryLight" />
+
+        <TextView
+            android:id="@+id/textView17"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center_horizontal"
+            android:text="@string/error_connection2"
+            android:textColor="@color/colorPrimaryLight" />
+
+        <Button
+            android:id="@+id/button5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:text="@string/error_connection_button"
+            android:textColor="@color/colorPrimary" />
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="false"
+        android:layout_gravity="center"
+        tools:layout_editor_absoluteY="8dp" />
+
+</android.widget.FrameLayout>

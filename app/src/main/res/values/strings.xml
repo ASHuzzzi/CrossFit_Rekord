@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CrossFit_Rekord</string>
+    <string name="app_name">CrossFit Rekord</string>
     <string name="empty"> </string>
     <string name="save">Сохранить</string>
 
@@ -12,7 +12,8 @@
     <!-- Поля для составления расписания -->
     <string name="day_of_week">day_of_week</string>
     <string name="start_time">start_time</string>
-    <string name="type">Type</string>
+    <string name="type">type</string>
+    <string name="table">table</string>
 
     <!-- Поля для составления списка по записавшимся -->
     <string name="username">username</string>
@@ -73,5 +74,34 @@
     <string name="definition">Словарь CrossFit</string>
     <string name="result">Результаты</string>
     <string name="profile">Профиль</string>
+    <string name="calendar_wod">Результаты тренировок</string>
+
+    <string name="error_connection1">При загрузке данных произошла ошибка.</string>
+    <string name="error_connection2">Проверьте Ваше подключение к сети.</string>
+    <string name="error_connection_button">Повторить попытку</string>
+
+    <!-- Поля для составления результатов тренировки -->
+    <string name="Name">Name</string>
+    <string name="skill">skill</string>
+    <string name="wod_level">wod_level</string>
+    <string name="wod_result">wod_result</string>
+
+    <string name="name">name</string>
+
+    <!-- Значения для экрана Start_screen -->
+    <string name="button_shedule">Расписание</string>
+    <string name="button_record_training">Записаться на тренировку</string>
+    <string name="button_definition">Словарь CrossFit</string>
+    <string name="button_calendar_wod">Результаты тренировок</string>
+    <string name="button_contacts">Контакты</string>
+
+    <!-- Значения для крана Расписание -->
+    <string name="day_1">ПН</string>
+    <string name="day_2">ВТ</string>
+    <string name="day_3">СР</string>
+    <string name="day_4">ЧТ</string>
+    <string name="day_5">ПТ</string>
+    <string name="day_6">СБ</string>
+    <string name="day_7">ВС</string>
 
 </resources>

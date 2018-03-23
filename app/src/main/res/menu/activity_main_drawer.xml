@@ -10,20 +10,25 @@
         android:title="@string/record_training"
         android:enabled="true" />
     <item
-        android:id="@+id/result"
-        android:title="@string/result"
-        android:enabled="true" />
-    <item
         android:id="@+id/definition"
         android:title="@string/definition"
         android:enabled="true" />
     <item
-        android:id="@+id/contacts"
-        android:title="@string/contacts"
+        android:id="@+id/calendar_wod"
+        android:title="@string/calendar_wod"
+        android:enabled="true" />
+    <item
+        android:id="@+id/result"
+        android:title="@string/result"
         android:enabled="true" />
     <item
         android:id="@+id/profile"
         android:title="@string/profile"
         android:enabled="true" />
+    <item
+        android:id="@+id/contacts"
+        android:enabled="false"
+        android:title="@string/contacts" />
+
 
 </menu>

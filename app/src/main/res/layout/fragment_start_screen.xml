@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,58 +10,64 @@
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
         android:layout_weight="2"
-        android:src="@drawable/logo_black" />
+        android:scaleType="centerCrop"
+        android:src="@drawable/start_screen_main_logo"
+        tools:ignore="ContentDescription" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:elevation="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="3"
         android:orientation="vertical">
-
-        <Button
-            android:id="@+id/button_subscription"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Абонемент" />
 
         <Button
             android:id="@+id/button_schedule"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="5dp"
             android:layout_weight="1"
-            android:text="расписание" />
+            android:text="@string/button_shedule"
+            android:textAlignment="gravity"
+            tools:ignore="NestedWeights" />
 
         <Button
             android:id="@+id/button_record_training"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="5dp"
             android:layout_weight="1"
-            android:text="Записаться на тренировку" />
+            android:text="@string/button_record_training"
+            android:textAlignment="gravity"
+            android:textStyle="bold" />
 
         <Button
-            android:id="@+id/button_contacts"
+            android:id="@+id/button_calendar_wod"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="5dp"
             android:layout_weight="1"
-            android:text="Контакты" />
+            android:text="@string/button_calendar_wod" />
 
         <Button
             android:id="@+id/button_definition"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="5dp"
             android:layout_weight="1"
-            android:text="Словарь CrossFit" />
+            android:text="@string/button_definition" />
 
         <Button
-            android:id="@+id/button_result"
+            android:id="@+id/button_contacts"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
             android:layout_weight="1"
-            android:text="Результаты" />
+            android:enabled="false"
+            android:text="@string/button_contacts" />
 
     </LinearLayout>
 

@@ -1,9 +1,9 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="ru.lizzzi.crossfit_rekord.Login_Fragment">
-
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -11,60 +11,63 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/textView1"
+            android:id="@+id/textView10"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/user_name" />
+            android:text="Введите почту"
+            tools:layout_editor_absoluteX="163dp"
+            tools:layout_editor_absoluteY="47dp" />
 
         <EditText
-            android:id="@+id/username"
+            android:id="@+id/editText4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="@string/hint_user_name"
-            android:inputType="textPersonName" />
+            android:inputType="textEmailAddress"
+            tools:layout_editor_absoluteX="85dp"
+            tools:layout_editor_absoluteY="74dp" />
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/textView11"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/email" />
+            android:text="Введите пароль"
+            tools:layout_editor_absoluteX="163dp"
+            tools:layout_editor_absoluteY="132dp" />
 
         <EditText
-            android:id="@+id/email"
+            android:id="@+id/editText5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="@string/hint_email"
-            android:inputType="textEmailAddress" />
-
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/password" />
-
-        <EditText
-            android:id="@+id/password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/hint_password"
-            android:inputType="textVisiblePassword" />
-
-        <EditText
-            android:id="@+id/checkpassword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/hint_check_password"
-            android:inputType="textVisiblePassword" />
+            android:inputType="textPersonName"
+            tools:layout_editor_absoluteX="85dp"
+            tools:layout_editor_absoluteY="170dp" />
 
         <Button
-            android:id="@+id/btn_register"
+            android:id="@+id/button2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/registered" />
+            android:text="Войти"
+            tools:layout_editor_absoluteX="148dp"
+            tools:layout_editor_absoluteY="226dp" />
+
+        <TextView
+            android:id="@+id/textView13"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Если не регистрировался"
+            tools:layout_editor_absoluteX="163dp"
+            tools:layout_editor_absoluteY="304dp" />
+
+        <Button
+            android:id="@+id/button4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Регистрация"
+            tools:layout_editor_absoluteX="131dp"
+            tools:layout_editor_absoluteY="346dp" />
+
     </LinearLayout>
 
-</FrameLayout>
+</android.support.constraint.ConstraintLayout>

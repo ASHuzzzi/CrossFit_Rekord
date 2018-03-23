@@ -14,70 +14,78 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.widget.Toast;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
-import ru.profit_group.scorocode_sdk.Callbacks.CallbackLoginUser;
-import ru.profit_group.scorocode_sdk.Responses.user.ResponseLogin;
-import ru.profit_group.scorocode_sdk.ScorocodeSdk;
-import ru.profit_group.scorocode_sdk.scorocode_objects.User;
+import com.backendless.Backendless;
+
+import ru.lizzzi.crossfit_rekord.draft.wod_result_fragment.Result_Fragment;
+import ru.lizzzi.crossfit_rekord.fragments.AboutMe_Fragment;
+import ru.lizzzi.crossfit_rekord.fragments.Calendar_wod_Fragment;
+import ru.lizzzi.crossfit_rekord.fragments.Character_Fragment;
+import ru.lizzzi.crossfit_rekord.fragments.Login_Fragment;
+import ru.lizzzi.crossfit_rekord.fragments.RecordForTraining_Fragment;
+import ru.lizzzi.crossfit_rekord.fragments.StartScreen_Fragment;
+import ru.lizzzi.crossfit_rekord.fragments.Table_Fragment;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    public static final String APPLICATION_ID = "24accf90596a4630a107e14d03a6a3a7";
-    public static final String CLIENT_KEY = "f539a69f0d5940a38e0ca0e83a394d00";
-    public static final String FILE_KEY = "c785108f61304a2680a53e1a44ae15b2";
-    private static final String MESSAGE_KEY = "e812ec1547b84b62bc9a5c145d442f77";
-    private static final String SCRIPT_KEY = "6920f997815244f2bc77949974e4b215";
-
-    public static final String APP_PREFERENCES = "audata";
-    public static final String APP_PREFERENCES_USERNAME = "Username";
-    public static final String APP_PREFERENCES_EMAIL = "Email";
-    public static final String APP_PREFERENCES_PASSWORD = "Password";
     SharedPreferences mSettings;
-    private int counter;
+    public static final String APP_PREFERENCES = "audata";
+    public static final String APP_PREFERENCES_OBJECTID = "ObjectId";
+
+
+    public static final String APPLICATION_IDB = "215CF2B1-C44E-E365-FFB6-9C35DD6A9300";
+    public static final String API_KEYB = "8764616E-C5FE-CE43-FF54-17B4A8026F00";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close){
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                // Code here will be triggered once the drawer closes as we dont want anything to happen so we leave this blank
+                super.onDrawerClosed(drawerView);
+                InputMethodManager inputMethodManager = (InputMethodManager)
+                        getSystemService(Context.INPUT_METHOD_SERVICE);
+                assert inputMethodManager != null;
+                inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                // Code here will be triggered once the drawer open as we dont want anything to happen so we leave this blank
+                super.onDrawerOpened(drawerView);
+                InputMethodManager inputMethodManager = (InputMethodManager)
+                        getSystemService(Context.INPUT_METHOD_SERVICE);
+                assert inputMethodManager != null;
+                inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+            }
+        };
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        ScorocodeSdk.initWith(APPLICATION_ID, CLIENT_KEY, null, FILE_KEY, MESSAGE_KEY, SCRIPT_KEY, null);
+        Backendless.initApp(this, APPLICATION_IDB, API_KEYB);
 
-
-        Fragment fragment = null;
-        Class fragmentClass;
-        fragmentClass = StartScreen_Fragment.class;
-        try {
-            fragment = (Fragment) fragmentClass.newInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction ft = fragmentManager.beginTransaction();
-        ft.replace(R.id.container, fragment);
-        ft.commit();
+        OpenFragment(StartScreen_Fragment.class);
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-
-        mSettings = this.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-
-        Fragment fragment = null;
         Class fragmentClass = null;
 
         int id = item.getItemId();
@@ -85,56 +93,51 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.shedule) {
             fragmentClass = Table_Fragment.class;
 
-        }else if (id == R.id.record_training) {
+        } else if (id == R.id.record_training) {
 
-            boolean containtsusername = mSettings.contains(APP_PREFERENCES_USERNAME);
-            boolean containtemail = mSettings.contains(APP_PREFERENCES_EMAIL);
-            boolean containtpassword = mSettings.contains(APP_PREFERENCES_PASSWORD);
-            if (containtsusername && containtpassword && containtemail) {
-
-                User user = new User();
-                user.login(mSettings.getString(APP_PREFERENCES_EMAIL, ""), mSettings.getString(APP_PREFERENCES_PASSWORD, ""), new CallbackLoginUser() {
-                    @Override
-                    public void onLoginSucceed(ResponseLogin responseLogin) {
-                        //Toast.makeText(getContext(), "Авторизация успешно", Toast.LENGTH_SHORT).show();
-                        counter = 1;
-
-                    }
-
-                    @Override
-                    public void onLoginFailed(String errorCode, String errorMessage) {
-                        counter = 2;
-
-                    }
-                });
-
-            }else {
-                counter = 3;
-
-            }
-
-            if (counter == 1){
+            mSettings = this.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+            boolean containtobjectid = mSettings.contains(APP_PREFERENCES_OBJECTID);
+            if (containtobjectid) {
                 fragmentClass = RecordForTraining_Fragment.class;
-            }else if (counter == 2){
-                Toast.makeText(this, "Авторизация не прошла. Попробуйте снова.", Toast.LENGTH_SHORT).show();
-            }else {
+
+            } else {
                 fragmentClass = Login_Fragment.class;
             }
-        }else if (id == R.id.result){
+        } else if (id == R.id.result) {
             fragmentClass = Result_Fragment.class;
 
-        }else if (id == R.id.definition){
+        } else if (id == R.id.definition) {
             fragmentClass = Character_Fragment.class;
 
-        }/*else if (id == R.id.contacts){
-            Toast.makeText(this, "В разработке", Toast.LENGTH_SHORT).show();
+        } else if (id == R.id.contacts) {
 
-        }else if (id == R.id.profile){
-            Toast.makeText(this, "В разработке", Toast.LENGTH_SHORT).show();
-        }*/
+
+        } else if (id == R.id.profile) {
+            fragmentClass = AboutMe_Fragment.class;
+
+        } else if (id == R.id.calendar_wod){
+            fragmentClass = Calendar_wod_Fragment.class;
+        }
+
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+
+
+        OpenFragment(fragmentClass);
+
+        return true;
+    }
+
+    public Context getContext() {
+        return this;
+    }
+
+    public void OpenFragment(Class fragmentClass){
+
+        Fragment fragment = null;
 
         try {
-            fragment = (Fragment) fragmentClass.newInstance();
+            fragment = (Fragment) (fragmentClass != null ? fragmentClass.newInstance() : null);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -145,10 +148,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ft.addToBackStack(null);
         ft.commit();
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+    }
 
-
-        return true;
+    @Override
+    public void onBackPressed(){
+        int count = getSupportFragmentManager().getBackStackEntryCount();
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        if(drawer.isDrawerOpen(GravityCompat.START)){
+            drawer.closeDrawer(GravityCompat.START);
+        }
+        else{
+            if (count == 1) {
+                finish();
+            } else {
+                getSupportFragmentManager().popBackStack();
+            }
+        }
     }
 }
