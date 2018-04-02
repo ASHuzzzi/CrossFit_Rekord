@@ -80,7 +80,7 @@ public class Registry_Fragment extends Fragment {
                             Toast.makeText(getContext(), "Новый пользователь зарегистрирован", Toast.LENGTH_SHORT).show();
                             Fragment fragment = null;
                             Class fragmentClass;
-                            fragmentClass = RecordForTraining_Fragment.class;
+                            fragmentClass = RecordForTrainingSelect_Fragment.class;
                             try {
                                 fragment = (Fragment) fragmentClass.newInstance();
                             } catch (Exception e) {

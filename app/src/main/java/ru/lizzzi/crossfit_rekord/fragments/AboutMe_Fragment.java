@@ -1,23 +1,16 @@
 package ru.lizzzi.crossfit_rekord.fragments;
 
 
-import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-
-import com.backendless.Backendless;
-import com.backendless.persistence.DataQueryBuilder;
-
-import java.util.List;
-import java.util.Map;
 
 import ru.lizzzi.crossfit_rekord.R;
 

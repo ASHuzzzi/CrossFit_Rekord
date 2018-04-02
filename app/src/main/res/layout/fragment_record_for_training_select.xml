@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ru.lizzzi.crossfit_rekord.fragments.RecordForTraining_Fragment">
+    tools:context="ru.lizzzi.crossfit_rekord.fragments.RecordForTrainingSelect_Fragment">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -53,6 +53,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/select_time" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rvTrainingTime"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -169,11 +174,11 @@
             android:id="@+id/lvRecord"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/btRecord"
+            android:layout_above="@+id/btRecord1"
             android:layout_below="@+id/linearLayout" />
 
         <Button
-            android:id="@+id/btRecord"
+            android:id="@+id/btRecord1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"

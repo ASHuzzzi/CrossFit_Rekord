@@ -16,9 +16,9 @@ import android.widget.Toast;
 import java.util.List;
 import java.util.Map;
 
-import ru.lizzzi.crossfit_rekord.loaders.Table_Fragment_Loader;
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapter_Table;
+import ru.lizzzi.crossfit_rekord.loaders.Table_Fragment_Loader;
 
 /*
   Created by Liza on 11.10.2017.

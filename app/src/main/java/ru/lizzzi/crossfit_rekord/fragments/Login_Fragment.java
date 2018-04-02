@@ -76,7 +76,7 @@ public class Login_Fragment extends Fragment {
                             editor.putString(APP_PREFERENCES_USERNAME, String.valueOf(user.getProperty("name")));
                             editor.apply();
 
-                            TransactionFragment(RecordForTraining_Fragment.class);
+                            TransactionFragment(RecordForTrainingSelect_Fragment.class);
                         }
 
                         @Override

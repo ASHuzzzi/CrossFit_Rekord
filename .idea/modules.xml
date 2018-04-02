@@ -3,9 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/CrossFit_Rekord.iml" filepath="$PROJECT_DIR$/CrossFit_Rekord.iml" />
-      <module fileurl="file://D:\ASHu\Work\Progs\Andorid\Project\CrossFit_Rekord\CrossFit_Rekord.iml" filepath="D:\ASHu\Work\Progs\Andorid\Project\CrossFit_Rekord\CrossFit_Rekord.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://D:\ASHu\Work\Progs\Andorid\Project\CrossFit_Rekord\app\app.iml" filepath="D:\ASHu\Work\Progs\Andorid\Project\CrossFit_Rekord\app\app.iml" />
     </modules>
   </component>
 </project>

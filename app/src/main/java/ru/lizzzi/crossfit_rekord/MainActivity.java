@@ -24,7 +24,7 @@ import ru.lizzzi.crossfit_rekord.fragments.AboutMe_Fragment;
 import ru.lizzzi.crossfit_rekord.fragments.Calendar_wod_Fragment;
 import ru.lizzzi.crossfit_rekord.fragments.Character_Fragment;
 import ru.lizzzi.crossfit_rekord.fragments.Login_Fragment;
-import ru.lizzzi.crossfit_rekord.fragments.RecordForTraining_Fragment;
+import ru.lizzzi.crossfit_rekord.fragments.RecordForTrainingSelect_Fragment;
 import ru.lizzzi.crossfit_rekord.fragments.StartScreen_Fragment;
 import ru.lizzzi.crossfit_rekord.fragments.Table_Fragment;
 
@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             mSettings = this.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
             boolean containtobjectid = mSettings.contains(APP_PREFERENCES_OBJECTID);
             if (containtobjectid) {
-                fragmentClass = RecordForTraining_Fragment.class;
+                fragmentClass = RecordForTrainingSelect_Fragment.class;
 
             } else {
                 fragmentClass = Login_Fragment.class;

@@ -104,4 +104,12 @@
     <string name="day_6">СБ</string>
     <string name="day_7">ВС</string>
 
+    <!-- Проверка спиннера. Можно удалять -->
+    <string-array name="animals">
+        <item>Кот</item>
+        <item>Кошка</item>
+        <item>Котёнок</item>
+        <item>Животное</item>
+    </string-array>
+
 </resources>

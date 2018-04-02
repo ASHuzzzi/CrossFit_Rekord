@@ -8,6 +8,12 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,9 +36,12 @@ import java.util.Map;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapter_Record;
+import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapter_RecordForTrainingSelect;
+import ru.lizzzi.crossfit_rekord.interfaces.Listener_RecordForTrainingSelect;
+import ru.lizzzi.crossfit_rekord.loaders.Table_Fragment_Loader;
 
 
-public class RecordForTraining_Fragment extends Fragment {
+public class RecordForTrainingSelect_Fragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Map>>{
 
     public static final String APP_PREFERENCES = "audata";
     public static final String APP_PREFERENCES_USERNAME = "Username";
@@ -49,14 +58,22 @@ public class RecordForTraining_Fragment extends Fragment {
     String userid;
 
     RecyclerAdapter_Record adapter;
+    RecyclerAdapter_RecordForTrainingSelect adapter2;
     ListView lvRecord;
     List<Map> results;
     List<Map> result2;
     List<String> list;
 
     Button btRegister;
+    RecyclerView rvTreningTime;
 
-    public RecordForTraining_Fragment() {
+    int iNumberOfDay;
+
+    public int LOADER_ID = 1;
+    Network_check network_check;
+
+
+    public RecordForTrainingSelect_Fragment() {
         // Required empty public constructor
     }
 
@@ -65,13 +82,15 @@ public class RecordForTraining_Fragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_record_for_training_, container, false);
+        View v = inflater.inflate(R.layout.fragment_record_for_training_select, container, false);
 
         mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
         Button btToday = v.findViewById(R.id.btToday);
         Button btTommorow = v.findViewById(R.id.btTommorow);
         Button btAftertommorow = v.findViewById(R.id.btAftertommorow);
+        rvTreningTime = v.findViewById(R.id.rvTrainingTime);
+
 
         lvRecord = v.findViewById(R.id.lvRecord);
 
@@ -89,7 +108,7 @@ public class RecordForTraining_Fragment extends Fragment {
         Button btt2000 = v.findViewById(R.id.t2000);
         Button btt2100 = v.findViewById(R.id.t2100);
 
-        btRegister = v.findViewById(R.id.btRecord);
+        btRegister = v.findViewById(R.id.btRecord1);
 
         @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("EEEE dd MMMM");
         @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM");
@@ -112,8 +131,16 @@ public class RecordForTraining_Fragment extends Fragment {
         time_select = getContext().getString(R.string.T900);
         username =  mSettings.getString(APP_PREFERENCES_USERNAME, "");
 
-        DownloadData downloadData = new DownloadData();
-        downloadData.execute();
+        network_check = new Network_check(getContext());
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        iNumberOfDay = c.get(Calendar.DAY_OF_WEEK)-1;
+        Bundle bundle = new Bundle();
+        bundle.putString(String.valueOf(Table_Fragment_Loader.ARG_WORD), String.valueOf(iNumberOfDay));
+        getLoaderManager().initLoader(LOADER_ID, bundle, this).forceLoad();
+
+        //DownloadData downloadData = new DownloadData();
+        //downloadData.execute();
 
         btToday.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -298,6 +325,49 @@ public class RecordForTraining_Fragment extends Fragment {
         downloadData.execute();
     }
 
+    @Override
+    public Loader<List<Map>> onCreateLoader(int id, Bundle args) {
+        if (network_check.checkInternet()) {
+            Loader<List<Map>> loader;
+            loader = new Table_Fragment_Loader(getContext(), args);
+            return loader;
+        }
+        return null;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<List<Map>> loader, List<Map> data) {
+        if (data != null){
+            adapter2 = new RecyclerAdapter_RecordForTrainingSelect(getContext(), data, new Listener_RecordForTrainingSelect(){
+                @Override
+                public void SelectTime(String start_time) {
+                    time_select = start_time;
+
+                    RecordForTrainingRecording_Fragment yfc =  new RecordForTrainingRecording_Fragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("time", time_select);
+                    bundle.putString("date", date_select);
+                    yfc.setArguments(bundle);
+                    FragmentManager fragmentManager = getFragmentManager();
+                    FragmentTransaction ft = fragmentManager.beginTransaction();
+                    ft.replace(R.id.container, yfc);
+                    ft.addToBackStack(null);
+                    ft.commit();
+                }
+
+            });
+            LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+            rvTreningTime.setLayoutManager(mLayoutManager);
+            rvTreningTime.setAdapter(adapter2);
+        }
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<List<Map>> loader) {
+
+    }
+
     @SuppressLint("StaticFieldLeak")
     private class DownloadData extends AsyncTask<Void,Void, Void>{
 
@@ -378,5 +448,4 @@ public class RecordForTraining_Fragment extends Fragment {
         return activeNetwork != null && activeNetwork.isConnected();
 
     }
-
 }

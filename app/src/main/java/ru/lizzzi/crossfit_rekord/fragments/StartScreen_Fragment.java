@@ -50,7 +50,7 @@ public class StartScreen_Fragment extends Fragment {
                 mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
                 boolean containtobjectid = mSettings.contains(APP_PREFERENCES_OBJECTID);
                 if (containtobjectid) {
-                    OpenFragment(RecordForTraining_Fragment.class);
+                    OpenFragment(RecordForTrainingSelect_Fragment.class);
 
                 }else {
                     OpenFragment(Login_Fragment.class);
