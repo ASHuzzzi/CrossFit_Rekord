@@ -91,7 +91,8 @@ public class RecyclerAdapter_RecordForTrainingSelect extends RecyclerView.Adapte
         ll_item_table.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mlistener.SelectTime((String) documentInfo.get(fields.get().getStartTimeField()));
+                mlistener.SelectTime((String) documentInfo.get(fields.get().getStartTimeField()),
+                        (String) documentInfo.get(fields.get().getTypeField()));
             }
         });
     }

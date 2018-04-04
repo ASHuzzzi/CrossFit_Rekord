@@ -36,24 +36,25 @@ public class RecordForTrainingRecording_LoadPeople_Loader extends AsyncTaskLoade
 
     @Override
     public List<Map> loadInBackground() {
-        if (iLoaderId == 2){
-            HashMap<String, String> record = new HashMap<>();
-            record.put( "data", date_select);
-            record.put( "time", time_select);
-            record.put( "username", username);
-            Backendless.Persistence.of("recording_on_training").save(record);
+        String table_name = "recording_on_training";
+        HashMap<String, String> record = new HashMap<>();
+        if (iLoaderId == 2) {
+            record.put("data", date_select);
+            record.put("time", time_select);
+            record.put("username", username);
+            Backendless.Persistence.of(table_name).save(record);
         }
 
-        if (iLoaderId == 3){
-            HashMap<String, String> record2 = new HashMap<>();
-            record2.put( "objectId", userid);
-            Backendless.Persistence.of("recording_on_training").remove(record2);
+
+        if (iLoaderId == 3) {
+            record.put("objectId", userid);
+            Backendless.Persistence.of(table_name).remove(record);
         }
 
         String whereClause = "data = '" + date_select + "' and time = '" + time_select + "'";
         DataQueryBuilder queryBuilder = DataQueryBuilder.create();
         queryBuilder.setWhereClause(whereClause);
         queryBuilder.setPageSize(20);
-        return Backendless.Data.of("recording_on_training").find(queryBuilder);
+        return Backendless.Data.of(table_name).find(queryBuilder);
     }
 }

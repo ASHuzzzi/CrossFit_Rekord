@@ -1,8 +1,11 @@
 package ru.lizzzi.crossfit_rekord.fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -10,10 +13,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapter_Record;
@@ -30,6 +39,9 @@ public class RecordForTrainingRecording_Fragment extends Fragment implements Loa
     public static final String Table_name = "recording_on_training";
 
     ListView lvRecord;
+    TextView tvSelectedDay;
+    TextView tvSelectedTime;
+    TextView tvSelectedType;
     String username;
     String userid;
 
@@ -47,24 +59,93 @@ public class RecordForTrainingRecording_Fragment extends Fragment implements Loa
 
     Network_check network_check;
 
+    LinearLayout llSelectedWorkout;
+    ListView lvRecord2;
+    Button btRecord;
+    ProgressBar progressBar2;
+    LinearLayout Layout_Error;
+    LinearLayout Layout_emptylist;
+    Date convarteDate;
+    String date_select_full;
+    String date_select_show;
+
+
+    @SuppressLint("ResourceAsColor")
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState){
         View v = inflater.inflate(R.layout.fragment_record_for_training_recording, container, false);
 
         lvRecord = v.findViewById(R.id.lvRecord);
-        lvRecord.setVisibility(View.INVISIBLE);
         btRegister = v.findViewById(R.id.btRecord);
+        tvSelectedDay = v.findViewById(R.id.tvSelectedDay);
+        tvSelectedTime = v.findViewById(R.id.tvSelectedTime);
+        tvSelectedType = v.findViewById(R.id.tvSelectedType);
+
+        llSelectedWorkout = v.findViewById(R.id.llSelectedWorkout);
+        progressBar2 = v.findViewById(R.id.progressBar2);
+        Layout_Error = v.findViewById(R.id.Layout_Error);
+        Layout_emptylist = v.findViewById(R.id.Layout_emptylist2);
+
+        lvRecord.setVisibility(View.INVISIBLE);
+        btRegister.setVisibility(View.INVISIBLE);
+        progressBar2.setVisibility(View.VISIBLE);
+        Layout_Error.setVisibility(View.INVISIBLE);
+        Layout_emptylist.setVisibility(View.INVISIBLE);
 
         mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         username =  mSettings.getString(APP_PREFERENCES_USERNAME, "");
 
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf2 = new SimpleDateFormat("EEEE, d MMMM");
         bundle = getArguments();
-        date_select = bundle.getString("date");
+        date_select_show = bundle.getString("dateshow");
+        date_select_full = bundle.getString("datefull");
+        /*try{
+            convarteDate = sdf.parse(tempDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }*/
+        //String dsda = sdf2.format(date_select_full);
+        date_select = date_select_show;
         time_select = bundle.getString("time");
         network_check = new Network_check(getContext());
 
+
+        tvSelectedDay.setText(date_select);
+        tvSelectedTime.setText(time_select);
+        tvSelectedType.setText(bundle.getString("type"));
+        if (Objects.equals(bundle.getString("type"), "CrossFit")){
+            tvSelectedType.setBackgroundColor(R.color.color_Table_CrossFit);
+        }
+        if (Objects.equals(bundle.getString("type"), "On-Ramp")){
+            tvSelectedType.setTextColor(R.color.color_Table_On_Ramp);
+        }
+        if (Objects.equals(bundle.getString("type"), "Open Gym")){
+            tvSelectedType.setTextColor(R.color.color_Table_Open_Gym);
+        }
+        if (Objects.equals(bundle.getString("type"), "Stretching")){
+            tvSelectedType.setTextColor(R.color.color_Table_Stretching);
+        }
+        if (Objects.equals(bundle.getString("type"), "CrossFit Kids")){
+            tvSelectedType.setTextColor(R.color.color_Table_Crossfit_Kids);
+        }
+        if (Objects.equals(bundle.getString("type"), "Weightlifting/Athleticism")){
+            tvSelectedType.setTextColor(R.color.color_Table_Weighlifting);
+        }
+        if (Objects.equals(bundle.getString("type"), "Gymnastics/Defence")){
+            tvSelectedType.setTextColor(R.drawable.table_item_gymnastics_and_defence);
+
+        }
+        if (Objects.equals(bundle.getString("type"), "Rowing/Lady class")){
+            tvSelectedType.setTextColor(R.drawable.table_item_rowing_and_ladyclass);
+        }
+        if (Objects.equals(bundle.getString("type"), "Weightlifting")){
+            tvSelectedType.setTextColor(R.color.color_Table_Weighlifting);
+        }
+
         bundle = new Bundle();
-        bundle.putString(String.valueOf(RecordForTrainingRecording_LoadPeople_Loader.ARG_DATE), date_select);
+        bundle.putString(String.valueOf(RecordForTrainingRecording_LoadPeople_Loader.ARG_DATE), date_select_full);
         bundle.putString(String.valueOf(RecordForTrainingRecording_LoadPeople_Loader.ARG_TIME), time_select);
         mLoader = getLoaderManager().initLoader(LOADER_SHOW_LIST, bundle, this);
         mLoader.forceLoad();
@@ -72,6 +153,12 @@ public class RecordForTrainingRecording_Fragment extends Fragment implements Loa
         btRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                lvRecord.setVisibility(View.INVISIBLE);
+                btRegister.setVisibility(View.INVISIBLE);
+                progressBar2.setVisibility(View.VISIBLE);
+                Layout_emptylist.setVisibility(View.INVISIBLE);
+
                 if (network_check.checkInternet()){
                     if (userid.equals("noId")){
                         lvRecord.setVisibility(View.INVISIBLE);
@@ -172,7 +259,18 @@ public class RecordForTrainingRecording_Fragment extends Fragment implements Loa
             adapter = new RecyclerAdapter_Record(getContext(), data, R.layout.item_lv_record);
             lvRecord.setAdapter(adapter);
             lvRecord.setVisibility(View.VISIBLE);
+            btRegister.setVisibility(View.VISIBLE);
+            progressBar2.setVisibility(View.INVISIBLE);
+        }else {
+            btRegister.setText(R.string.whrite_entry);
+            userid = "noId";
+            lvRecord.setVisibility(View.INVISIBLE);
+            btRegister.setVisibility(View.VISIBLE);
+            progressBar2.setVisibility(View.INVISIBLE);
+            Layout_emptylist.setVisibility(View.VISIBLE);
         }
+
+
     }
 
     @Override

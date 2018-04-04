@@ -1,6 +1,9 @@
 package ru.lizzzi.crossfit_rekord.fragments;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -39,11 +42,15 @@ public class Table_Fragment extends Fragment implements LoaderManager.LoaderCall
     Button button_friday;
     Button button_saturday;
     Button button_sunday;
+    Button button_error;
     Network_check network_check;
     public int LOADER_ID = 1;
 
+    private Loader<List<Map>> mLoader;
+    Handler handler;
 
 
+    @SuppressLint("HandlerLeak")
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -56,26 +63,57 @@ public class Table_Fragment extends Fragment implements LoaderManager.LoaderCall
         button_friday= v.findViewById(R.id.day_5);
         button_saturday= v.findViewById(R.id.day_6);
         button_sunday= v.findViewById(R.id.day_7);
+        button_error = v.findViewById(R.id.button5);
+        final LinearLayout layouterror = v.findViewById(R.id.Layout_Error);
+        final LinearLayout layoutbuttonDayOfWeek = v.findViewById(R.id.Layout_Button_Day_of_Week);
         mProgressBar = v.findViewById(R.id.progressBar);
         lvItemsInTable = v.findViewById(R.id.lvTable);
 
-        final LinearLayout layouterror = v.findViewById(R.id.Layout_Error);
-        final LinearLayout layoutbuttonDayOfWeek = v.findViewById(R.id.Layout_Button_Day_of_Week);
-        Button button_error = v.findViewById(R.id.button5);
+        layouterror.setVisibility(View.INVISIBLE);
+        layoutbuttonDayOfWeek.setVisibility(View.VISIBLE);
+        lvItemsInTable.setVisibility(View.INVISIBLE);
+        mProgressBar.setVisibility(View.VISIBLE);
 
-        network_check = new Network_check(getContext());
-        if (network_check.checkInternet()){
-            iNumberOfDay = 1;
-            Bundle bundle = new Bundle();
-            bundle.putString(String.valueOf(Table_Fragment_Loader.ARG_WORD), String.valueOf(iNumberOfDay));
-            getLoaderManager().initLoader(LOADER_ID, bundle, this).forceLoad();
-            layouterror.setVisibility(View.INVISIBLE);
-            layoutbuttonDayOfWeek.setVisibility(View.VISIBLE);
-        }else {
-            mProgressBar.setVisibility(View.INVISIBLE);
-            layouterror.setVisibility(View.VISIBLE);
-            layoutbuttonDayOfWeek.setVisibility(View.INVISIBLE);
-        }
+        iNumberOfDay = 1;
+        Bundle bundle = new Bundle();
+        bundle.putString(String.valueOf(Table_Fragment_Loader.ARG_WORD), String.valueOf(iNumberOfDay));
+        mLoader = getLoaderManager().initLoader(LOADER_ID, bundle, this);
+
+        handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                Bundle bundle = msg.getData();
+                String result_check = bundle.getString("result");
+                if (result_check != null){
+                    if (result_check.equals("false")){
+                        mProgressBar.setVisibility(View.INVISIBLE);
+                        layouterror.setVisibility(View.VISIBLE);
+                        layoutbuttonDayOfWeek.setVisibility(View.INVISIBLE);
+                        lvItemsInTable.setVisibility(View.INVISIBLE);
+                    }
+                }
+            }
+        };
+
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                network_check = new Network_check(getContext());
+                boolean result_check = network_check.checkInternet();
+                if (result_check){
+                    mLoader.forceLoad();
+
+                }else {
+                    Message msg = handler.obtainMessage();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("result", String.valueOf(false));
+                    msg.setData(bundle);
+                    handler.sendMessage(msg);
+                }
+            }
+        };
+        Thread thread = new Thread(runnable);
+        thread.start();
 
         button_error.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -153,8 +191,6 @@ public class Table_Fragment extends Fragment implements LoaderManager.LoaderCall
     }
 
     private void StartNewAsyncTaskLoader(int iNumberOfDay){
-        lvItemsInTable.setVisibility(View.INVISIBLE);
-        mProgressBar.setVisibility(View.VISIBLE);
         PreSelectionButtonDay(8);
         Bundle bundle = new Bundle();
         bundle.putString(String.valueOf(Table_Fragment_Loader.ARG_WORD), String.valueOf(iNumberOfDay));
@@ -163,12 +199,9 @@ public class Table_Fragment extends Fragment implements LoaderManager.LoaderCall
 
     @Override
     public Loader<List<Map>> onCreateLoader(int id, Bundle args) {
-        if (network_check.checkInternet()) {
-            Loader<List<Map>> loader;
-            loader = new Table_Fragment_Loader(getContext(), args);
-            return loader;
-        }
-        return null;
+        Loader<List<Map>> loader;
+        loader = new Table_Fragment_Loader(getContext(), args);
+        return loader;
     }
 
     @Override

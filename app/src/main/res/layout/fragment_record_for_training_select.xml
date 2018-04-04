@@ -1,191 +1,59 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.widget.RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="ru.lizzzi.crossfit_rekord.fragments.RecordForTrainingSelect_Fragment">
 
-    <RelativeLayout
+    <TextView
+        android:id="@+id/tvSelectDay"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:text="@string/select_day" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
-            android:orientation="vertical"
-            android:id="@+id/linearLayout">
-
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/select_day" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/btToday"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/empty" />
-
-                <Button
-                    android:id="@+id/btTommorow"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/empty" />
-
-                <Button
-                    android:id="@+id/btAftertommorow"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/empty" />
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/textView4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/select_time" />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rvTrainingTime"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <TableRow
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal">
-
-                    <Button
-                        android:id="@+id/t900"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/T900" />
-
-                    <Button
-                        android:id="@+id/t1000"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/T1000" />
-
-                    <Button
-                        android:id="@+id/t1100"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/T1100" />
-
-                    <Button
-                        android:id="@+id/t1200"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/T1200" />
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal">
-
-                    <Button
-                        android:id="@+id/t1300"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/T1300" />
-
-                    <Button
-                        android:id="@+id/t1400"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/T1400" />
-
-                    <Button
-                        android:id="@+id/t1500"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/T1500" />
-
-                    <Button
-                        android:id="@+id/t1600"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/T1600" />
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal">
-
-                    <Button
-                        android:id="@+id/t1700"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/T1700" />
-
-                    <Button
-                        android:id="@+id/t1800"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/T1800" />
-
-                    <Button
-                        android:id="@+id/t1900"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/T1900" />
-
-                    <Button
-                        android:id="@+id/t2000"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/T2000" />
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal">
-
-                    <Button
-                        android:id="@+id/t2100"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/T2100" />
-
-                </TableRow>
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <ListView
-            android:id="@+id/lvRecord"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/btRecord1"
-            android:layout_below="@+id/linearLayout" />
+    <LinearLayout
+        android:id="@+id/llSekectDay_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvSelectDay"
+        android:orientation="horizontal">
 
         <Button
-            android:id="@+id/btRecord1"
-            android:layout_width="match_parent"
+            android:id="@+id/btToday"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:text="Button" />
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:text="@string/empty" />
 
-    </RelativeLayout>
+        <Button
+            android:id="@+id/btTommorow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:text="@string/empty" />
 
-</FrameLayout>
+        <Button
+            android:id="@+id/btAftertommorow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:text="@string/empty" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvSelectTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/llSekectDay_buttons"
+        android:text="@string/select_time" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvTrainingTime"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tvSelectTime"
+        android:layout_marginTop="5dp" />
+
+</android.widget.RelativeLayout>
