@@ -32,7 +32,7 @@
 
     <!-- Значения для поля Table_Fragment -->
     <string name="select_day">Выберите день</string>
-    <string name="select_time">Ввидете время</string>
+    <string name="select_time">Выберите время</string>
     <string name="T900">9:00</string>
     <string name="T1000">10:00</string>
     <string name="T1100">11:00</string>
@@ -104,12 +104,8 @@
     <string name="day_6">СБ</string>
     <string name="day_7">ВС</string>
 
-    <!-- Проверка спиннера. Можно удалять -->
-    <string-array name="animals">
-        <item>Кот</item>
-        <item>Кошка</item>
-        <item>Котёнок</item>
-        <item>Животное</item>
-    </string-array>
+    <!-- Заголовки Экранов -->
+    <string name="title_Table_Fragment">Расписание</string>
+    <string name="title_RecordForTraining_Fragment">Записаться на тренировку</string>
 
 </resources>

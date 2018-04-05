@@ -42,18 +42,69 @@
             android:text="@string/empty" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/tvSelectTime"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/llSekectDay_buttons"
-        android:text="@string/select_time" />
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rvTrainingTime"
+    <LinearLayout
+        android:id="@+id/llListTime"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/tvSelectTime"
-        android:layout_marginTop="5dp" />
+        android:layout_below="@+id/llSekectDay_buttons"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvSelectTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/llSekectDay_buttons"
+            android:text="@string/select_time" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvTrainingTime"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/tvSelectTime"
+            android:layout_marginTop="5dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llEror_RfTS"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center_horizontal"
+            android:text="@string/error_connection1"
+            android:textColor="@color/colorPrimaryLight" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center_horizontal"
+            android:text="@string/error_connection2"
+            android:textColor="@color/colorPrimaryLight" />
+
+        <Button
+            android:id="@+id/button6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:text="@string/error_connection_button"
+            android:textColor="@color/colorPrimary" />
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/pbRfTS"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_centerVertical="false" />
 
 </android.widget.RelativeLayout>

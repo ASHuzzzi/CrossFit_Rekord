@@ -30,36 +30,35 @@ import ru.lizzzi.crossfit_rekord.loaders.Table_Fragment_Loader;
 public class Table_Fragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Map>> {
 
     private ProgressBar mProgressBar;
-    ListView lvItemsInTable;
-    View v;
-    RecyclerAdapter_Table adapter;
-    int iNumberOfDay; //выбранный пользователем день
-    int iPreviousOfDay; // в случае если надо будет вернуть данный предыдущего выбранного дня
-    Button button_monday;
-    Button button_tuesday;
-    Button button_wednesday;
-    Button button_thursday;
-    Button button_friday;
-    Button button_saturday;
-    Button button_sunday;
-    Button button_error;
-    Network_check network_check;
-    LinearLayout layouterror;
-    public int LOADER_ID = 1;
+    private ListView lvItemsInTable;
+    private Button button_monday;
+    private Button button_tuesday;
+    private Button button_wednesday;
+    private Button button_thursday;
+    private Button button_friday;
+    private Button button_saturday;
+    private Button button_sunday;
+    private Network_check network_check;
+    private LinearLayout layouterror;
 
-    Handler handler_open_fragment;
-    Thread thread_open_fragment;
+    private int iNumberOfDay; //выбранный пользователем день
+    private int iPreviousOfDay; // в случае если надо будет вернуть данный предыдущего выбранного дня
+    private int LOADER_ID = 1;
 
-    Handler handler_click_onbutton;
-    Thread thread_click_onbutton;
+    private Handler handler_open_fragment;
+    private Thread thread_open_fragment;
 
-    Toast toast;
+    private Handler handler_click_onbutton;
+    private Thread thread_click_onbutton;
+
+    private Toast toast;
 
     @SuppressLint("HandlerLeak")
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        v = inflater.inflate(R.layout.fragment_table, container, false);
+        View v = inflater.inflate(R.layout.fragment_table, container, false);
+        getActivity().setTitle(R.string.title_Table_Fragment);
 
         button_monday= v.findViewById(R.id.day_1);
         button_tuesday= v.findViewById(R.id.day_2);
@@ -68,7 +67,7 @@ public class Table_Fragment extends Fragment implements LoaderManager.LoaderCall
         button_friday= v.findViewById(R.id.day_5);
         button_saturday= v.findViewById(R.id.day_6);
         button_sunday= v.findViewById(R.id.day_7);
-        button_error = v.findViewById(R.id.button5);
+        Button button_error = v.findViewById(R.id.button5);
         layouterror = v.findViewById(R.id.Layout_Error);
         mProgressBar = v.findViewById(R.id.progressBar);
         lvItemsInTable = v.findViewById(R.id.lvTable);
@@ -254,7 +253,7 @@ public class Table_Fragment extends Fragment implements LoaderManager.LoaderCall
 
         mProgressBar.setVisibility(View.INVISIBLE);
         if (data != null){
-            adapter = new RecyclerAdapter_Table(getContext(), data, R.layout.item_lv_table);
+            RecyclerAdapter_Table adapter = new RecyclerAdapter_Table(getContext(), data, R.layout.item_lv_table);
             lvItemsInTable.setAdapter(adapter);
             lvItemsInTable.setVisibility(View.VISIBLE);
             PreSelectionButtonDay(iNumberOfDay); //ToDo разобраться почему эта функция работает только в этом месте

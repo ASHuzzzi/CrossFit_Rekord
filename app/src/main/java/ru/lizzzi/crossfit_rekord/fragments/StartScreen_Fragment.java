@@ -26,6 +26,7 @@ public class StartScreen_Fragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_start_screen, container, false);
+        getActivity().setTitle(R.string.app_name);
 
         Button schedule = v.findViewById(R.id.button_schedule);
         Button record_training = v.findViewById(R.id.button_record_training);
