@@ -23,7 +23,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:text="@string/empty" />
+            android:text="@string/empty"
+            tools:ignore="ButtonStyle" />
 
         <Button
             android:id="@+id/btTommorow"
@@ -31,7 +32,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:text="@string/empty" />
+            android:text="@string/empty"
+            tools:ignore="ButtonStyle" />
 
         <Button
             android:id="@+id/btAftertommorow"
@@ -39,7 +41,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:text="@string/empty" />
+            android:text="@string/empty"
+            tools:ignore="ButtonStyle" />
     </LinearLayout>
 
     <LinearLayout
@@ -53,14 +56,12 @@
             android:id="@+id/tvSelectTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/llSekectDay_buttons"
             android:text="@string/select_time" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rvTrainingTime"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/tvSelectTime"
             android:layout_marginTop="5dp" />
 
     </LinearLayout>

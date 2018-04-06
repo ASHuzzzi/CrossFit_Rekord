@@ -34,27 +34,24 @@ import ru.lizzzi.crossfit_rekord.loaders.Table_Fragment_Loader;
 
 public class RecordForTrainingSelect_Fragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Map>>{
 
-    Date date;
-    GregorianCalendar calendarday;
-    GregorianCalendar numberdayweek;
-    String date_select_full;
-    String date_select_show;
-    LinearLayout llEror_RfTS;
-    LinearLayout llListTime;
-    ProgressBar pbRfTS;
+    private LinearLayout llEror_RfTS;
+    private LinearLayout llListTime;
+    private RecyclerView rvTreningTime;
+    private ProgressBar pbRfTS;
 
-    RecyclerAdapter_RecordForTrainingSelect adapter;
+    private RecyclerAdapter_RecordForTrainingSelect adapter;
 
-    RecyclerView rvTreningTime;
-    Button btToday;
-    Button btTommorow;
-    Button btAftertommorow;
-    Button button_error;
+    private Date date; //показывает сегодняшний день
+    private GregorianCalendar calendarday; //нужна для формирования дат для кнопок
+    private GregorianCalendar numberdayweek; // для преобразования выбранного дня в int
 
-    int iNumberOfDay;
+    private String date_select_full; //передает значение по поторому потом идет запрос в базу в следующем фрагменте
+    private String date_select_show; //передает значение которое показывается в Textview следующего фрагмента
 
-    public int LOADER_ID = 1;
-    Network_check network_check;
+    private int iNumberOfDay; // выбранный пользователем день
+    private  int LOADER_ID = 1; //идентефикатор loader'а
+
+    private Network_check network_check;//переменная для проврки сети
 
     private Handler handler_open_fragment;
     private Thread thread_open_fragment;
@@ -69,10 +66,10 @@ public class RecordForTrainingSelect_Fragment extends Fragment implements Loader
         View v = inflater.inflate(R.layout.fragment_record_for_training_select, container, false);
         getActivity().setTitle(R.string.title_RecordForTraining_Fragment);
 
-        btToday = v.findViewById(R.id.btToday);
-        btTommorow = v.findViewById(R.id.btTommorow);
-        btAftertommorow = v.findViewById(R.id.btAftertommorow);
-        button_error = v.findViewById(R.id.button6);
+        Button btToday = v.findViewById(R.id.btToday);
+        Button btTommorow = v.findViewById(R.id.btTommorow);
+        Button btAftertommorow = v.findViewById(R.id.btAftertommorow);
+        Button button_error = v.findViewById(R.id.button6);
         rvTreningTime = v.findViewById(R.id.rvTrainingTime);
         llEror_RfTS= v.findViewById(R.id.llEror_RfTS);
         llListTime = v.findViewById(R.id.llListTime);
@@ -86,15 +83,16 @@ public class RecordForTrainingSelect_Fragment extends Fragment implements Loader
         @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("EEEE dd MMMM");
         @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM");
 
+        //хэндлер для обоих потоков. Какой именно поток вызвал хэндлер передается в key
         handler_open_fragment = new Handler() {
             @SuppressLint("ShowToast")
             @Override
             public void handleMessage(Message msg) {
                 Bundle bundle = msg.getData();
-                String switchs = bundle.getString("switch");
+                String switchs = bundle.getString("switch"); //показывает какой поток вызвал
                 String result_check;
                 if (switchs != null){
-                    if (switchs.equals("open")){
+                    if (switchs.equals("open")){ //поток при первом запуске экрана
                         result_check = bundle.getString("open");
                         if (result_check != null) {
                             if (result_check.equals("false")) {
@@ -103,7 +101,7 @@ public class RecordForTrainingSelect_Fragment extends Fragment implements Loader
                             }
                         }
                     }else{
-                        result_check = bundle.getString("onclick");
+                        result_check = bundle.getString("onclick"); //поток от нажатия кнопок
                         if (result_check != null) {
                             if (result_check.equals("false")) {
                                 if (llEror_RfTS.getVisibility() == View.INVISIBLE){
@@ -117,9 +115,9 @@ public class RecordForTrainingSelect_Fragment extends Fragment implements Loader
                     }
                 }
             }
-
         };
 
+        //поток запускаемый при создании экрана (запуск происходит из onResume)
         Runnable runnable_open_fragment = new Runnable() {
             @Override
             public void run() {
@@ -137,13 +135,12 @@ public class RecordForTrainingSelect_Fragment extends Fragment implements Loader
                     msg.setData(bundle);
                     handler_open_fragment.sendMessage(msg);
                 }
-
             }
         };
         thread_open_fragment = new Thread(runnable_open_fragment);
         thread_open_fragment.setDaemon(true);
-        thread_open_fragment.start();
 
+        //поток запускаемый кнопками выборающими дня недели
         Runnable runnable_click_onbutton = new Runnable() {
             @Override
             public void run() {
@@ -169,6 +166,7 @@ public class RecordForTrainingSelect_Fragment extends Fragment implements Loader
         thread_click_onbutton = new Thread(runnable_click_onbutton);
         thread_click_onbutton.setDaemon(true);
 
+        //получаю значения для кнопок
         date = new Date();
         calendarday = new GregorianCalendar();
         calendarday.add(Calendar.DAY_OF_YEAR, 1);
@@ -228,7 +226,6 @@ public class RecordForTrainingSelect_Fragment extends Fragment implements Loader
                 date_select_full = sdf2.format(aftertomorrow);
                 date_select_show = currentAftertommorow;
                 thread_click_onbutton.run();
-
             }
         });
 
@@ -236,14 +233,12 @@ public class RecordForTrainingSelect_Fragment extends Fragment implements Loader
     }
 
     private void FirstStartAsyncTaskLoader(int day_select){
-
         Bundle bundle = new Bundle();
         bundle.putString(String.valueOf(Table_Fragment_Loader.ARG_WORD), String.valueOf(day_select));
         getLoaderManager().initLoader(LOADER_ID, bundle, this).forceLoad();
     }
 
     private void RestartAsyncTaskLoader(int day_select){
-
         Bundle bundle = new Bundle();
         bundle.putString(String.valueOf(Table_Fragment_Loader.ARG_WORD), String.valueOf(day_select));
         getLoaderManager().restartLoader(LOADER_ID, bundle,this).onContentChanged();
@@ -264,7 +259,6 @@ public class RecordForTrainingSelect_Fragment extends Fragment implements Loader
             adapter = new RecyclerAdapter_RecordForTrainingSelect(getContext(), data, new Listener_RecordForTrainingSelect(){
                 @Override
                 public void SelectTime(String start_time, String types_item) {
-
                     RecordForTrainingRecording_Fragment yfc =  new RecordForTrainingRecording_Fragment();
                     Bundle bundle = new Bundle();
                     bundle.putString("time", start_time);
@@ -274,21 +268,19 @@ public class RecordForTrainingSelect_Fragment extends Fragment implements Loader
                     yfc.setArguments(bundle);
                     FragmentManager fragmentManager = getFragmentManager();
                     FragmentTransaction ft = fragmentManager.beginTransaction();
+                    ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                     ft.replace(R.id.container, yfc);
                     ft.addToBackStack(null);
                     ft.commit();
                 }
-
             });
             LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
-
-            pbRfTS.setVisibility(View.INVISIBLE);
-
             rvTreningTime.setLayoutManager(mLayoutManager);
             rvTreningTime.setAdapter(adapter);
+
+            pbRfTS.setVisibility(View.INVISIBLE);
             llListTime.setVisibility(View.VISIBLE);
         }
-
     }
 
     @Override
@@ -296,12 +288,15 @@ public class RecordForTrainingSelect_Fragment extends Fragment implements Loader
 
     }
 
+    //в onResume делаем проверку на наличие данных в адаптаре. При первом запуске адаптер пустой и
+    //будет запущен поток.
+    //при возврате через кнопку back адаптер будет не пустым поток не запуститься. что сохранит
+    //состояние адаптера в положении перед открытием нового фрагмента
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        thread_click_onbutton.interrupt();
-        thread_open_fragment.interrupt();
-
-
+    public void onResume() {
+        super.onResume();
+        if (adapter == null){
+            thread_open_fragment.start();
+        }
     }
 }

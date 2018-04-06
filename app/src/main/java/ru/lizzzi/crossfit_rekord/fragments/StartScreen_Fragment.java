@@ -95,6 +95,7 @@ public class StartScreen_Fragment extends Fragment {
         }
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction ft = fragmentManager.beginTransaction();
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         ft.replace(R.id.container, fragment);
         ft.addToBackStack(null);
         ft.commit();

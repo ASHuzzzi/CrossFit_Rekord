@@ -23,13 +23,9 @@ import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapter_Table;
 import ru.lizzzi.crossfit_rekord.loaders.Table_Fragment_Loader;
 
-/*
-  Created by Liza on 11.10.2017.
- */
-
 public class Table_Fragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Map>> {
 
-    private ProgressBar mProgressBar;
+    private ProgressBar pbProgressBar;
     private ListView lvItemsInTable;
     private Button button_monday;
     private Button button_tuesday;
@@ -38,12 +34,11 @@ public class Table_Fragment extends Fragment implements LoaderManager.LoaderCall
     private Button button_friday;
     private Button button_saturday;
     private Button button_sunday;
-    private Network_check network_check;
-    private LinearLayout layouterror;
+    private LinearLayout llLayoutError;
 
-    private int iNumberOfDay; //выбранный пользователем день
-    private int iPreviousOfDay; // в случае если надо будет вернуть данный предыдущего выбранного дня
-    private int LOADER_ID = 1;
+    private int iNumberOfDay; // выбранный пользователем день
+    private int iPreviousOfDay; // предыдущий выбранный день
+    private int LOADER_ID = 1; //идентефикатор loader'а
 
     private Handler handler_open_fragment;
     private Thread thread_open_fragment;
@@ -51,7 +46,10 @@ public class Table_Fragment extends Fragment implements LoaderManager.LoaderCall
     private Handler handler_click_onbutton;
     private Thread thread_click_onbutton;
 
-    private Toast toast;
+    private Network_check network_check; //переменная для проврки сети
+    private Toast toast; //toast для сообщений
+
+    RecyclerAdapter_Table adapter; //адаптер для списка тренировок
 
     @SuppressLint("HandlerLeak")
     @Override
@@ -68,17 +66,18 @@ public class Table_Fragment extends Fragment implements LoaderManager.LoaderCall
         button_saturday= v.findViewById(R.id.day_6);
         button_sunday= v.findViewById(R.id.day_7);
         Button button_error = v.findViewById(R.id.button5);
-        layouterror = v.findViewById(R.id.Layout_Error);
-        mProgressBar = v.findViewById(R.id.progressBar);
+        llLayoutError = v.findViewById(R.id.Layout_Error);
+        pbProgressBar = v.findViewById(R.id.progressBar);
         lvItemsInTable = v.findViewById(R.id.lvTable);
 
-        layouterror.setVisibility(View.INVISIBLE);
+        llLayoutError.setVisibility(View.INVISIBLE);
         lvItemsInTable.setVisibility(View.INVISIBLE);
-        mProgressBar.setVisibility(View.VISIBLE);
+        pbProgressBar.setVisibility(View.VISIBLE);
 
         iPreviousOfDay = 1;
         toast = Toast.makeText(getContext(), "Нет подключения", Toast.LENGTH_SHORT);
 
+        //хэндлер для потока runnable_open_fragment
         handler_open_fragment = new Handler() {
             @Override
             public void handleMessage(Message msg) {
@@ -86,13 +85,14 @@ public class Table_Fragment extends Fragment implements LoaderManager.LoaderCall
                 String result_check = bundle.getString("result");
                 if (result_check != null){
                     if (result_check.equals("false")){
-                        layouterror.setVisibility(View.VISIBLE);
-                        mProgressBar.setVisibility(View.INVISIBLE);
+                        llLayoutError.setVisibility(View.VISIBLE);
+                        pbProgressBar.setVisibility(View.INVISIBLE);
                     }
                 }
             }
         };
 
+        //поток запускаемый при создании экрана (запуск происходит из onResume)
         Runnable runnable_open_fragment = new Runnable() {
             @Override
             public void run() {
@@ -113,8 +113,8 @@ public class Table_Fragment extends Fragment implements LoaderManager.LoaderCall
         };
         thread_open_fragment = new Thread(runnable_open_fragment);
         thread_open_fragment.setDaemon(true);
-        thread_open_fragment.start();
 
+        //хэндлер для потока runnable_click_onbutton
         handler_click_onbutton = new Handler() {
             @Override
             public void handleMessage(Message msg) {
@@ -122,18 +122,19 @@ public class Table_Fragment extends Fragment implements LoaderManager.LoaderCall
                 String result_check = bundle.getString("result");
                 if (result_check != null){
                     if (result_check.equals("false")){
-                        if (layouterror.getVisibility() == View.INVISIBLE) {
+                        if (llLayoutError.getVisibility() == View.INVISIBLE) {
                             PreSelectionButtonDay(iPreviousOfDay);
                             toast.show();
                         }
                     }else {
                         lvItemsInTable.setVisibility(View.INVISIBLE);
-                        mProgressBar.setVisibility(View.VISIBLE);
+                        pbProgressBar.setVisibility(View.VISIBLE);
                     }
                 }
             }
         };
 
+        //поток запускаемыq кнопками выборающими дня недели
         Runnable runnable_click_onbutton = new Runnable() {
             @Override
             public void run() {
@@ -144,8 +145,8 @@ public class Table_Fragment extends Fragment implements LoaderManager.LoaderCall
                 boolean result_check = network_check.checkInternet();
                 if (result_check){
                     bundle.putString("result", String.valueOf(true));
-                    if (layouterror.getVisibility() == View.VISIBLE) {
-                        layouterror.setVisibility(View.INVISIBLE);
+                    if (llLayoutError.getVisibility() == View.VISIBLE) {
+                        llLayoutError.setVisibility(View.INVISIBLE);
                     }
                     RestartAsyncTaskLoader(iNumberOfDay);
 
@@ -162,8 +163,8 @@ public class Table_Fragment extends Fragment implements LoaderManager.LoaderCall
         button_error.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mProgressBar.setVisibility(View.VISIBLE);
-                layouterror.setVisibility(View.INVISIBLE);
+                pbProgressBar.setVisibility(View.VISIBLE);
+                llLayoutError.setVisibility(View.INVISIBLE);
                 thread_open_fragment.run();
             }
         });
@@ -227,15 +228,16 @@ public class Table_Fragment extends Fragment implements LoaderManager.LoaderCall
         return v;
     }
 
+
     private void FirstStartAsyncTaskLoader(int iNumberOfDay){
-        PreSelectionButtonDay(8);
+        PreSelectionButtonDay(8); //передаем 8, чтобы сбросить нажатие всех кнопок
         Bundle bundle = new Bundle();
         bundle.putString(String.valueOf(Table_Fragment_Loader.ARG_WORD), String.valueOf(iNumberOfDay));
         getLoaderManager().initLoader(LOADER_ID, bundle, this).forceLoad();
     }
 
     private void RestartAsyncTaskLoader(int iNumberOfDay){
-        PreSelectionButtonDay(8);
+        PreSelectionButtonDay(8); //передаем 8, чтобы сбросить нажатие всех кнопок
         Bundle bundle = new Bundle();
         bundle.putString(String.valueOf(Table_Fragment_Loader.ARG_WORD), String.valueOf(iNumberOfDay));
         getLoaderManager().restartLoader(LOADER_ID, bundle,this).onContentChanged();
@@ -250,14 +252,14 @@ public class Table_Fragment extends Fragment implements LoaderManager.LoaderCall
 
     @Override
     public void onLoadFinished(Loader<List<Map>> loader, List<Map> data) {
-
-        mProgressBar.setVisibility(View.INVISIBLE);
+        pbProgressBar.setVisibility(View.INVISIBLE);
         if (data != null){
-            RecyclerAdapter_Table adapter = new RecyclerAdapter_Table(getContext(), data, R.layout.item_lv_table);
+            adapter = new RecyclerAdapter_Table(getContext(), data, R.layout.item_lv_table);
             lvItemsInTable.setAdapter(adapter);
-            lvItemsInTable.setVisibility(View.VISIBLE);
-            PreSelectionButtonDay(iNumberOfDay); //ToDo разобраться почему эта функция работает только в этом месте
             iPreviousOfDay = iNumberOfDay;
+            PreSelectionButtonDay(iNumberOfDay);
+
+            lvItemsInTable.setVisibility(View.VISIBLE);
         }else {
             Toast.makeText(getContext(), "Нет данных", Toast.LENGTH_SHORT).show();
         }
@@ -267,6 +269,7 @@ public class Table_Fragment extends Fragment implements LoaderManager.LoaderCall
     public void onLoaderReset(Loader<List<Map>> loader) {
     }
 
+    //метод подготоавливающий состояние кнопок в зависимости от выбранного дня
     private void PreSelectionButtonDay(int iDayOfWeek){
         if (iDayOfWeek == 1 ){
             SelectButtonDay(true, false, false, false, false, false, false);
@@ -294,8 +297,8 @@ public class Table_Fragment extends Fragment implements LoaderManager.LoaderCall
         }
     }
 
+    //метод применяющий выбор кнопок
     private void SelectButtonDay(boolean m, boolean tu, boolean w, boolean th, boolean f, boolean sa, boolean su) {
-
         button_monday.setPressed(m);
         button_tuesday.setPressed(tu);
         button_wednesday.setPressed(w);
@@ -303,5 +306,17 @@ public class Table_Fragment extends Fragment implements LoaderManager.LoaderCall
         button_friday.setPressed(f);
         button_saturday.setPressed(sa);
         button_sunday.setPressed(su);
+    }
+
+    //в onResume делаем проверку на наличие данных в адаптаре. При первом запуске адаптер пустой и
+    //будет запущен поток.
+    //при возврате через кнопку back адаптер будет не пустым поток не запуститься. что сохранит
+    //состояние адаптера в положении перед открытием нового фрагмента
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (adapter == null){
+            thread_open_fragment.start();
+        }
     }
 }
