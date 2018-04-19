@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.widget.RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -9,6 +7,7 @@
         android:id="@+id/llSelectedWorkout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="10dp"
         android:orientation="vertical">
 
         <LinearLayout
@@ -20,8 +19,11 @@
                 android:id="@+id/textView26"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_marginRight="5dp"
                 android:layout_weight="1"
-                android:text="День"
+                android:text="Когда:"
+                android:textColor="@color/colorPrimary"
                 android:textSize="14sp" />
 
             <TextView
@@ -30,6 +32,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="TextView"
+                android:textColor="@color/colorPrimary"
                 android:textSize="14sp" />
 
         </LinearLayout>
@@ -43,7 +46,10 @@
                 android:id="@+id/textView27"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Время и тип тренировки"
+                android:layout_marginEnd="5dp"
+                android:layout_marginRight="5dp"
+                android:text="Время:"
+                android:textColor="@color/colorPrimary"
                 android:textSize="14sp" />
 
             <TextView
@@ -51,20 +57,37 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="TextView"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/tvSelectedType"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="TextView"
+                android:textColor="@color/colorPrimary"
                 android:textSize="14sp" />
 
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView18"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:text="Тип тренировки:"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tvSelectedType"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+        </LinearLayout>
+
     </LinearLayout>
 
-    <ListView
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/lvRecord"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -75,7 +98,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:text="Button" />
+        android:layout_margin="5dp" />
 
     <ProgressBar
         android:id="@+id/progressBar2"
@@ -90,7 +113,35 @@
         android:id="@+id/Layout_Error"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"></LinearLayout>
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView22"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center_horizontal"
+            android:text="@string/error_connection1"
+            android:textColor="@color/colorPrimaryLight" />
+
+        <TextView
+            android:id="@+id/textView28"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center_horizontal"
+            android:text="@string/error_connection2"
+            android:textColor="@color/colorPrimaryLight" />
+
+        <Button
+            android:id="@+id/button7"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:text="@string/error_connection_button"
+            android:textColor="@color/colorPrimary" />
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/Layout_emptylist2"

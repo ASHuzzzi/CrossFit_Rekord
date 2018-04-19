@@ -78,6 +78,10 @@ public class RecordForTrainingSelect_Fragment extends Fragment implements Loader
         llListTime.setVisibility(View.INVISIBLE);
         llEror_RfTS.setVisibility(View.INVISIBLE);
 
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+        rvTreningTime.setLayoutManager(mLayoutManager);
+        rvTreningTime.setAdapter(adapter);
+
         numberdayweek = new GregorianCalendar();
 
         @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("EEEE dd MMMM");

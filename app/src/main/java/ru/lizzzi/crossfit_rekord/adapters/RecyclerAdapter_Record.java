@@ -2,40 +2,57 @@ package ru.lizzzi.crossfit_rekord.adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.util.List;
 import java.util.Map;
 
-import ru.lizzzi.crossfit_rekord.documentfields.DocumentFields_Record;
 import ru.lizzzi.crossfit_rekord.R;
+import ru.lizzzi.crossfit_rekord.documentfields.DocumentFields_Record;
 
-public class RecyclerAdapter_Record extends BaseAdapter {
+public class RecyclerAdapter_Record extends RecyclerView.Adapter<RecyclerAdapter_Record.ViewHolder>  {
     private List<Map> storedItems;
-    private int layoutId;
-    private LayoutInflater inflater;
     private DocumentFields_Record fields;
     private int i = 1;
 
-    public RecyclerAdapter_Record(Context context, @NonNull List<Map> shediletems, int layoutId) {
+    public RecyclerAdapter_Record(Context context, @NonNull List<Map> shediletems) {
         this.storedItems = shediletems;
-        this.layoutId = layoutId;
-        inflater = LayoutInflater.from(context);
         fields = new DocumentFields_Record(context);
     }
 
-    @Override
-    public int getCount() {
-        return storedItems.size();
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        private TextView UsernameItem;
+        private TextView UserCountItem;
+
+        ViewHolder(View view) {
+            super(view);
+            UsernameItem = view.findViewById(R.id.username);
+            UserCountItem = view.findViewById(R.id.number);
+
+        }
     }
 
     @Override
-    public Object getItem(int position) {
-        return storedItems.get(position);
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_lv_record, parent, false);
+
+        return new ViewHolder(v);
+    }
+
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        final Map documentInfo = storedItems.get(position);
+        String username = (String) documentInfo.get(fields.getUsernameFields());
+        String number = String.valueOf(i);
+        i++;
+
+        holder.UsernameItem.setText(username);
+        holder.UserCountItem.setText(number);
+
     }
 
     @Override
@@ -44,47 +61,7 @@ public class RecyclerAdapter_Record extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View view, ViewGroup parent) {
-        ViewHolder holder;
-
-        if (view != null) {
-            holder = (ViewHolder) view.getTag();
-        } else {
-            view = inflater.inflate(layoutId, parent, false);
-            holder = new ViewHolder(view);
-            view.setTag(holder);
-        }
-
-        customizeView(view, holder, storedItems.get(position));
-
-        return view;
-    }
-
-    private void customizeView(View view, ViewHolder holder, final Map documentInfo) {
-
-        String username = (String) documentInfo.get(fields.getUsernameFields());
-        String number = String.valueOf(i);
-        i++;
-
-        holder.UsernameItem.setText(username);
-        holder.UserCountItem.setText(number);
-
-
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            }
-        });
-    }
-
-    static class ViewHolder {
-        private TextView UsernameItem;
-        private TextView UserCountItem;
-
-        ViewHolder(View view) {
-            UsernameItem = view.findViewById(R.id.username);
-            UserCountItem = view.findViewById(R.id.number);
-
-        }
+    public int getItemCount() {
+        return storedItems.size();
     }
 }

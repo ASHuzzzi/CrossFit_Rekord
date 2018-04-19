@@ -42,7 +42,7 @@ public class RecyclerAdapter_RecordForTrainingSelect extends RecyclerView.Adapte
     }
 
     @Override
-    public RecyclerAdapter_RecordForTrainingSelect.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_lv_table, parent, false);
 
         return new ViewHolder(v);
