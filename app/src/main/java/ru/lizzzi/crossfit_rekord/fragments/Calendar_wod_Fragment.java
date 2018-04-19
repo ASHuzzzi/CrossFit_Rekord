@@ -13,12 +13,14 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.backendless.Backendless;
 import com.backendless.persistence.DataQueryBuilder;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
+import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -31,7 +33,7 @@ import java.util.Map;
 import ru.lizzzi.crossfit_rekord.R;
 
 
-public class Calendar_wod_Fragment extends Fragment implements OnDateSelectedListener {
+public class Calendar_wod_Fragment extends Fragment implements OnDateSelectedListener, OnMonthChangedListener {
 
     List<Map> results;
     List<String> list;
@@ -45,6 +47,7 @@ public class Calendar_wod_Fragment extends Fragment implements OnDateSelectedLis
         mcv = v.findViewById(R.id.calendarView);
         //mcv.setSelectionMode(MaterialCalendarView.SELECTION_MODE_NONE);
         mcv.setOnDateChangedListener(this);
+        mcv.setOnMonthChangedListener(this);
 
         @SuppressLint("StaticFieldLeak")
         class DownloadData extends AsyncTask<Void,Void, Void> {
@@ -145,5 +148,10 @@ public class Calendar_wod_Fragment extends Fragment implements OnDateSelectedLis
 
         ft.commit();
         //Toast.makeText(getContext(), "Выбран" + date.getDay() + "/" + date.getMonth()+ "/" + date.getYear(), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onMonthChanged(MaterialCalendarView widget, CalendarDay date) {
+        Toast.makeText(getContext(), "Выбран" + date.getMonth(), Toast.LENGTH_SHORT).show();
     }
 }
