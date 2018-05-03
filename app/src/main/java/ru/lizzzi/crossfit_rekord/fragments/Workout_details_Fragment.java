@@ -83,13 +83,13 @@ public class Workout_details_Fragment extends Fragment {
                 if(adapter !=null){
                     lvItemsInWod.setAdapter(adapter);
                 }
-                if (list.size() > 0){
+                if (list != null && list.size() > 0){
                     tvWarmUp.setText(String.valueOf(list.get(0)));
-                    tvSkill.setText(String.valueOf(list.get(5)));
-                    tvWOD.setText(String.valueOf(list.get(8)));
+                    tvSkill.setText(String.valueOf(list.get(6)));
+                    tvWOD.setText(String.valueOf(list.get(9)));
                     tvLevelA.setText((String.valueOf(list.get(2))));
-                    tvLevelB.setText((String.valueOf(list.get(9))));
-                    tvLevelC.setText((String.valueOf(list.get(2))));
+                    tvLevelB.setText((String.valueOf(list.get(10))));
+                    tvLevelC.setText((String.valueOf(list.get(1))));
                 }
             }
 

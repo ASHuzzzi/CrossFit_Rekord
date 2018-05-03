@@ -303,4 +303,11 @@ public class RecordForTrainingSelect_Fragment extends Fragment implements Loader
             thread_open_fragment.start();
         }
     }
+
+    public void onStop() {
+        super.onStop();
+        if (getLoaderManager().hasRunningLoaders()) {
+            getLoaderManager().destroyLoader(LOADER_ID);
+        }
+    }
 }
