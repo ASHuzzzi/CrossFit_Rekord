@@ -23,22 +23,15 @@ import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.loaders.Calendar_wod_Loader;
 
 
-public class Calendar_wod_Fragment extends Fragment implements  OnDateSelectedListener, OnMonthChangedListener, LoaderManager.LoaderCallbacks<List<Map>> {
+public class Calendar_wod_Fragment extends Fragment implements  OnDateSelectedListener, OnMonthChangedListener, LoaderManager.LoaderCallbacks<List<Date>> {
 
-    Date date_from_db;
-    String date_from_db2;
     MaterialCalendarView mcv;
     ProgressBar pb_calendar_wod;
 
@@ -60,8 +53,8 @@ public class Calendar_wod_Fragment extends Fragment implements  OnDateSelectedLi
         pb_calendar_wod = v.findViewById(R.id.pb_calendar_wod);
 
         mcv.state().edit()
-                .setMaximumDate(CalendarDay.from(2017, 1, 1))
-                .setMaximumDate(CalendarDay.from(2019, 1, 31))
+                .setMaximumDate(CalendarDay.from(2018, 0, 1))
+                .setMaximumDate(CalendarDay.from(2019, 0, 31))
                 .commit();
         mcv.setOnDateChangedListener(this);
         mcv.setOnMonthChangedListener(this);
@@ -134,6 +127,7 @@ public class Calendar_wod_Fragment extends Fragment implements  OnDateSelectedLi
         String Day;
         String Month;
 
+        mcv.setDateSelected(date, false);
         if (date.getDay() <10){
             Day = "0" + date.getDay();
         }else{
@@ -158,7 +152,7 @@ public class Calendar_wod_Fragment extends Fragment implements  OnDateSelectedLi
         ft.addToBackStack(null);
 
         ft.commit();
-        mcv.setDateSelected(date, false);
+
     }
 
     @Override
@@ -167,40 +161,21 @@ public class Calendar_wod_Fragment extends Fragment implements  OnDateSelectedLi
     }
 
     @Override
-    public Loader<List<Map>> onCreateLoader(int id, Bundle args) {
-        Loader<List<Map>> loader;
+    public Loader<List<Date>> onCreateLoader(int id, Bundle args) {
+        Loader<List<Date>> loader;
         loader = new Calendar_wod_Loader(getContext(), args);
         return loader;
     }
 
     @Override
-    public void onLoadFinished(Loader<List<Map>> loader, List<Map> data) {
+    public void onLoadFinished(Loader<List<Date>> loader, List<Date> data) {
 
         if (data != null){
-            Collection map;
-
-            for (int i = 0; i < data.size(); i++){
-                map = data.get(i).values();
-                String sr = String.valueOf(map.toArray()[4]);
-                SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
-
-                try {
-                    date_from_db = sdf.parse(sr);
-
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-
-                @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf2 = new SimpleDateFormat("MM/dd/yyyy");
-                date_from_db2 = sdf2.format(date_from_db);
-
-                mcv.setDateSelected(CalendarDay.from(date_from_db), true);
-
-
+            for (int i = 0; i <data.size(); i++){
+                mcv.setDateSelected(CalendarDay.from(data.get(i)), true);
             }
             mcv.setVisibility(View.VISIBLE);
         }else{
-
             Toast.makeText(getContext(), "Нет данных", Toast.LENGTH_SHORT).show();
         }
 
@@ -209,7 +184,7 @@ public class Calendar_wod_Fragment extends Fragment implements  OnDateSelectedLi
     }
 
     @Override
-    public void onLoaderReset(Loader<List<Map>> loader) {
+    public void onLoaderReset(Loader<List<Date>> loader) {
 
     }
 

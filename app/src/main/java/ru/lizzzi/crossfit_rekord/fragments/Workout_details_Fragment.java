@@ -93,6 +93,7 @@ public class Workout_details_Fragment extends Fragment implements LoaderManager.
                 boolean result_check = network_check.checkInternet();
                 if (result_check){
                     LoadSessionAsyncTaskLoader();
+                    LoadExerciseAsyncTaskLoader();
 
                 }else {
                     Message msg = handler_fragment.obtainMessage();
@@ -108,13 +109,13 @@ public class Workout_details_Fragment extends Fragment implements LoaderManager.
         thread_open_fragment.start();
 
         //поток запускаемыq кнопками выборающими дня недели
-        Runnable runnable_click_onbutton = new Runnable() {
+        /*Runnable runnable_click_onbutton = new Runnable() {
             @Override
             public void run() {
                 network_check = new Network_check(getContext());
                 boolean result_check = network_check.checkInternet();
                 if (result_check){
-                    LoadExerciseAsyncTaskLoader();
+
 
                 }else {
                     Message msg = handler_fragment.obtainMessage();
@@ -127,7 +128,7 @@ public class Workout_details_Fragment extends Fragment implements LoaderManager.
         };
         thread_click_onbutton = new Thread(runnable_click_onbutton);
         thread_click_onbutton.setDaemon(true);
-        thread_click_onbutton.start();
+        thread_click_onbutton.start();*/
 
 
 
@@ -170,7 +171,7 @@ public class Workout_details_Fragment extends Fragment implements LoaderManager.
                 tvLevelC.setText((String.valueOf(list.get(1))));
             }
         }
-        if (adapter != null && tvWarmUp.getText().length() != 0 ){
+        if (adapter != null && list != null ){
             ll1.setVisibility(View.VISIBLE);
         }
 
