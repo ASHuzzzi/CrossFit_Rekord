@@ -140,6 +140,7 @@ public class Calendar_wod_Fragment extends Fragment implements  OnDateSelectedLi
             Month = String.valueOf((date.getMonth() + 1));
         }
 
+
         selectedDate = Month + "/" + Day + "/" + date.getYear();
         Workout_details_Fragment yfc = new Workout_details_Fragment();
         Bundle bundle = new Bundle();

@@ -15,7 +15,9 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -38,9 +40,7 @@ public class Workout_details_Fragment extends Fragment implements LoaderManager.
     TextView tvLevelA;
     TextView tvLevelB;
     TextView tvLevelC;
-    List<String> list;
-    private int LOADER_ID = 1; //идентефикатор loader'а
-    private int LOADER_ID2 = 2; //идентефикатор loader'а
+    private TextView tvSelectedDay;
     Bundle bundle;
     private LinearLayout ll1;
     private Network_check network_check; //переменная для проврки сети
@@ -48,18 +48,17 @@ public class Workout_details_Fragment extends Fragment implements LoaderManager.
     private Handler handler_fragment;
     private Thread thread_open_fragment;
 
-    private Thread thread_click_onbutton;
-
     @SuppressLint("HandlerLeak")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-       View v = inflater.inflate(R.layout.fragment_workout_details, container, false);
+        View v = inflater.inflate(R.layout.fragment_workout_details, container, false);
         getActivity().setTitle("Результаты тренировки");
 
         bundle = getArguments();
         final String ri = bundle.getString("tag");
         bundle.putString("Selected_day", ri);
+
         lvItemsInWod = v.findViewById(R.id.lvWodResult);
         tvWarmUp = v.findViewById(R.id.tvWarmUp);
         tvSkill = v.findViewById(R.id.tvSkill);
@@ -67,6 +66,7 @@ public class Workout_details_Fragment extends Fragment implements LoaderManager.
         tvLevelA = v.findViewById(R.id.tvLevelA);
         tvLevelB = v.findViewById(R.id.tvLevelB);
         tvLevelC = v.findViewById(R.id.tvLevelC);
+        tvSelectedDay = v.findViewById(R.id.tvSelectedDay);
         ll1 = v.findViewById(R.id.ll1);
         ll1.setVisibility(View.INVISIBLE);
 
@@ -85,7 +85,7 @@ public class Workout_details_Fragment extends Fragment implements LoaderManager.
             }
         };
 
-        //поток запускаемый при создании экрана (запуск происходит из onResume)
+        //поток запускаемый при создании экрана
         Runnable runnable_open_fragment = new Runnable() {
             @Override
             public void run() {
@@ -94,6 +94,16 @@ public class Workout_details_Fragment extends Fragment implements LoaderManager.
                 if (result_check){
                     LoadSessionAsyncTaskLoader();
                     LoadExerciseAsyncTaskLoader();
+                    try {
+                        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+                        Date ddd = sdf.parse(ri);
+
+                        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf2 = new SimpleDateFormat("EEEE dd MMMM");
+                        String sdsd = sdf2.format(ddd);
+                        tvSelectedDay.setText(sdsd);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
 
                 }else {
                     Message msg = handler_fragment.obtainMessage();
@@ -106,30 +116,6 @@ public class Workout_details_Fragment extends Fragment implements LoaderManager.
         };
         thread_open_fragment = new Thread(runnable_open_fragment);
         thread_open_fragment.setDaemon(true);
-        thread_open_fragment.start();
-
-        //поток запускаемыq кнопками выборающими дня недели
-        /*Runnable runnable_click_onbutton = new Runnable() {
-            @Override
-            public void run() {
-                network_check = new Network_check(getContext());
-                boolean result_check = network_check.checkInternet();
-                if (result_check){
-
-
-                }else {
-                    Message msg = handler_fragment.obtainMessage();
-                    Bundle bundle = new Bundle();
-                    bundle.putString("result", String.valueOf(false));
-                    msg.setData(bundle);
-                    handler_fragment.sendMessage(msg);
-                }
-            }
-        };
-        thread_click_onbutton = new Thread(runnable_click_onbutton);
-        thread_click_onbutton.setDaemon(true);
-        thread_click_onbutton.start();*/
-
 
 
         return v;
@@ -137,11 +123,13 @@ public class Workout_details_Fragment extends Fragment implements LoaderManager.
 
     private void LoadSessionAsyncTaskLoader(){
         bundle.putString("Table", "Training_sessions");
+        int LOADER_ID = 1;
         getLoaderManager().initLoader(LOADER_ID, bundle, this).forceLoad();
     }
 
     private void LoadExerciseAsyncTaskLoader(){
         bundle.putString("Table", "Exercise_assignment");
+        int LOADER_ID2 = 2;
         getLoaderManager().initLoader(LOADER_ID2, bundle, this).forceLoad();
     }
 
@@ -155,23 +143,20 @@ public class Workout_details_Fragment extends Fragment implements LoaderManager.
     @Override
     public void onLoadFinished(Loader<List<Map>> loader, List<Map> data) {
         int id = loader.getId();
-        if (id == LOADER_ID){
+        if (id == 1){
             adapter = new RecyclerAdapter_Workout_details(getContext(), data, R.layout.item_lv_workout_details);
             lvItemsInWod.setAdapter(adapter);
         }else {
-            for (int i = 0; i< data.size(); i++){
-                list = new ArrayList<String>(data.get(i).values());
-            }
-            if (list != null && list.size() > 0){
-                tvWarmUp.setText(String.valueOf(list.get(0)));
-                tvSkill.setText(String.valueOf(list.get(6)));
-                tvWOD.setText(String.valueOf(list.get(9)));
-                tvLevelA.setText((String.valueOf(list.get(2))));
-                tvLevelB.setText((String.valueOf(list.get(10))));
-                tvLevelC.setText((String.valueOf(list.get(1))));
+            if (data != null && data.size() > 0){
+                tvWarmUp.setText(String.valueOf(data.get(0).get("warmup")));
+                tvSkill.setText(String.valueOf(data.get(0).get("skill")));
+                tvWOD.setText(String.valueOf(data.get(0).get("wod")));
+                tvLevelA.setText(String.valueOf(data.get(0).get("A")));
+                tvLevelB.setText(String.valueOf(data.get(0).get("B")));
+                tvLevelC.setText(String.valueOf(data.get(0).get("C")));
             }
         }
-        if (adapter != null && list != null ){
+        if (adapter != null && data != null ){
             ll1.setVisibility(View.VISIBLE);
         }
 
@@ -182,9 +167,9 @@ public class Workout_details_Fragment extends Fragment implements LoaderManager.
 
     }
 
-    public void onStart() {
-        super.onStart();
-
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        thread_open_fragment.start();
     }
 }
