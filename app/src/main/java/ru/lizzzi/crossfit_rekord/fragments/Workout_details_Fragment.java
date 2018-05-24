@@ -59,6 +59,7 @@ public class Workout_details_Fragment extends Fragment implements LoaderManager.
         final String ri = bundle.getString("tag");
         bundle.putString("Selected_day", ri);
 
+
         lvItemsInWod = v.findViewById(R.id.lvWodResult);
         tvWarmUp = v.findViewById(R.id.tvWarmUp);
         tvSkill = v.findViewById(R.id.tvSkill);
@@ -96,6 +97,7 @@ public class Workout_details_Fragment extends Fragment implements LoaderManager.
                     LoadExerciseAsyncTaskLoader();
                     try {
                         @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+
                         Date ddd = sdf.parse(ri);
 
                         @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf2 = new SimpleDateFormat("EEEE dd MMMM");
@@ -170,6 +172,11 @@ public class Workout_details_Fragment extends Fragment implements LoaderManager.
     @Override
     public void onResume() {
         super.onResume();
+
+        //bundle = getArguments();
+        //final String ri = bundle.getString("tag");
+        //bundle.putString("Selected_day", ri);
+
         thread_open_fragment.start();
     }
 }
