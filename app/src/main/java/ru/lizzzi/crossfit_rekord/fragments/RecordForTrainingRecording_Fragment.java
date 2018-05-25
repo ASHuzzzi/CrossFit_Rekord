@@ -340,7 +340,7 @@ public class RecordForTrainingRecording_Fragment extends Fragment implements Loa
     @Override
     public void onResume() {
         super.onResume();
-        if (adapter == null){
+        if (adapter == null && Layout_emptylist.getVisibility() == View.INVISIBLE){
             thread_open_fragment.start();
         }
     }

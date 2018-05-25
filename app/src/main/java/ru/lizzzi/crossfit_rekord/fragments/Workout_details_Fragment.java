@@ -52,6 +52,7 @@ public class Workout_details_Fragment extends Fragment implements LoaderManager.
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        setRetainInstance(true);
         View v = inflater.inflate(R.layout.fragment_workout_details, container, false);
         getActivity().setTitle("Результаты тренировки");
 
@@ -176,7 +177,13 @@ public class Workout_details_Fragment extends Fragment implements LoaderManager.
         //bundle = getArguments();
         //final String ri = bundle.getString("tag");
         //bundle.putString("Selected_day", ri);
+        if (adapter == null){
+            thread_open_fragment.start();
+        }
 
-        thread_open_fragment.start();
+    }
+
+    public void onPause(){
+        super.onPause();
     }
 }
