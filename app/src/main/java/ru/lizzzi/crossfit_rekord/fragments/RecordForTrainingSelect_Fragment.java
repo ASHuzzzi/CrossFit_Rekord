@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapter_RecordForTrainingSelect;
+import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterRecordForTrainingSelect;
 import ru.lizzzi.crossfit_rekord.interfaces.Listener_RecordForTrainingSelect;
 import ru.lizzzi.crossfit_rekord.loaders.Table_Fragment_Loader;
 
@@ -39,7 +39,7 @@ public class RecordForTrainingSelect_Fragment extends Fragment implements Loader
     private RecyclerView rvTreningTime;
     private ProgressBar pbRfTS;
 
-    private RecyclerAdapter_RecordForTrainingSelect adapter;
+    private RecyclerAdapterRecordForTrainingSelect adapter;
 
     private Date date; //показывает сегодняшний день
     private GregorianCalendar calendarday; //нужна для формирования дат для кнопок
@@ -260,7 +260,7 @@ public class RecordForTrainingSelect_Fragment extends Fragment implements Loader
     @Override
     public void onLoadFinished(Loader<List<Map>> loader, List<Map> data) {
         if (data != null){
-            adapter = new RecyclerAdapter_RecordForTrainingSelect(getContext(), data, new Listener_RecordForTrainingSelect(){
+            adapter = new RecyclerAdapterRecordForTrainingSelect(getContext(), data, new Listener_RecordForTrainingSelect(){
                 @Override
                 public void SelectTime(String start_time, String types_item) {
                     RecordForTrainingRecording_Fragment yfc =  new RecordForTrainingRecording_Fragment();

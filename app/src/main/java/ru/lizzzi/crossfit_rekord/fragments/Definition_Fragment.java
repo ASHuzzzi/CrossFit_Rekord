@@ -13,7 +13,7 @@ import android.widget.ListView;
 import java.util.ArrayList;
 
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapter_Definition;
+import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterDefinition;
 import ru.lizzzi.crossfit_rekord.data.DefinitionDBHelper;
 import ru.lizzzi.crossfit_rekord.data.DefinitionDbContarct.DBdefinition;
 
@@ -91,7 +91,7 @@ public class Definition_Fragment extends Fragment {
         final Bundle bundle = getArguments();
         final String ri = bundle.getString("tag");
         CreateItemList(ri);
-        RecyclerAdapter_Definition adapter = new RecyclerAdapter_Definition(getContext(), Item_list_termin, Item_list_definition, R.layout.item_lv_description);
+        RecyclerAdapterDefinition adapter = new RecyclerAdapterDefinition(getContext(), Item_list_termin, Item_list_definition, R.layout.item_lv_description);
         lvdefinition1.setAdapter(adapter);
 
         return  v;

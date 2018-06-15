@@ -14,24 +14,24 @@ import java.util.Map;
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.documentfields.DocumentFields_Record;
 
-public class RecyclerAdapter_Record extends RecyclerView.Adapter<RecyclerAdapter_Record.ViewHolder>  {
+public class RecyclerAdapterRecord extends RecyclerView.Adapter<RecyclerAdapterRecord.ViewHolder>  {
     private List<Map> storedItems;
     private DocumentFields_Record fields;
     private int i = 1;
 
-    public RecyclerAdapter_Record(Context context, @NonNull List<Map> shediletems) {
+    public RecyclerAdapterRecord(Context context, @NonNull List<Map> shediletems) {
         this.storedItems = shediletems;
         fields = new DocumentFields_Record(context);
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView UsernameItem;
-        private TextView UserCountItem;
+        private TextView usernameItem;
+        private TextView userCountItem;
 
         ViewHolder(View view) {
             super(view);
-            UsernameItem = view.findViewById(R.id.username);
-            UserCountItem = view.findViewById(R.id.number);
+            usernameItem = view.findViewById(R.id.username);
+            userCountItem = view.findViewById(R.id.number);
 
         }
     }
@@ -46,12 +46,12 @@ public class RecyclerAdapter_Record extends RecyclerView.Adapter<RecyclerAdapter
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         final Map documentInfo = storedItems.get(position);
-        String username = (String) documentInfo.get(fields.getUsernameFields());
+        String userName = (String) documentInfo.get(fields.getUsernameFields());
         String number = String.valueOf(i);
         i++;
 
-        holder.UsernameItem.setText(username);
-        holder.UserCountItem.setText(number);
+        holder.usernameItem.setText(userName);
+        holder.userCountItem.setText(number);
 
     }
 

@@ -35,7 +35,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static final String APP_PREFERENCES = "audata";
     public static final String APP_PREFERENCES_OBJECTID = "ObjectId";
 
-
     public static final String APPLICATION_IDB = "215CF2B1-C44E-E365-FFB6-9C35DD6A9300";
     public static final String API_KEYB = "8764616E-C5FE-CE43-FF54-17B4A8026F00";
 
@@ -96,8 +95,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.record_training) {
 
             mSettings = this.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-            boolean containtobjectid = mSettings.contains(APP_PREFERENCES_OBJECTID);
-            if (containtobjectid) {
+            boolean containtObjectId = mSettings.contains(APP_PREFERENCES_OBJECTID);
+            if (containtObjectId) {
                 fragmentClass = RecordForTrainingSelect_Fragment.class;
 
             } else {

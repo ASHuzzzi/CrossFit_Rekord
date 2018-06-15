@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapter_Record;
+import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterRecord;
 import ru.lizzzi.crossfit_rekord.loaders.RecordForTrainingRecording_LoadPeople_Loader;
 
 
@@ -50,7 +50,7 @@ public class RecordForTrainingRecording_Fragment extends Fragment implements Loa
     public int LOADER_SHOW_LIST = 1;
     public int LOADER_WRITE_ITEM = 2;
     public int LOADER_DELETE_ITEM = 3;
-    RecyclerAdapter_Record adapter;
+    RecyclerAdapterRecord adapter;
     Button btRegister;
     Button btNetworkError;
     Bundle bundle;
@@ -298,7 +298,7 @@ public class RecordForTrainingRecording_Fragment extends Fragment implements Loa
             }
 
 
-            adapter = new RecyclerAdapter_Record(getContext(), data);
+            adapter = new RecyclerAdapterRecord(getContext(), data);
             LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
             lvRecord.setLayoutManager(mLayoutManager);
             lvRecord.setAdapter(adapter);

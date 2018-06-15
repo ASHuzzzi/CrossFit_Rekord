@@ -12,14 +12,14 @@ import java.util.ArrayList;
 import ru.lizzzi.crossfit_rekord.R;
 
 
-public class RecyclerAdapter_Definition extends BaseAdapter {
+public class RecyclerAdapterDefinition extends BaseAdapter {
 
     private ArrayList<String> mDataset;
     private ArrayList<String> mPriceset;
     private int layoutId;
     private LayoutInflater inflater;
 
-    public RecyclerAdapter_Definition(Context context, ArrayList<String> dataset, ArrayList<String> priceset, int layoutId) {
+    public RecyclerAdapterDefinition(Context context, ArrayList<String> dataset, ArrayList<String> priceset, int layoutId) {
         this.mDataset = dataset;
         this.mPriceset = priceset;
         this.layoutId = layoutId;
@@ -44,13 +44,13 @@ public class RecyclerAdapter_Definition extends BaseAdapter {
 
     @Override
     public View getView(int position, View view, ViewGroup parent) {
-        ViewHolder holder;
+        viewHolder holder;
 
         if (view != null) {
-            holder = (ViewHolder) view.getTag();
+            holder = (viewHolder) view.getTag();
         } else {
             view = inflater.inflate(layoutId, parent, false);
-            holder = new ViewHolder(view);
+            holder = new viewHolder(view);
             view.setTag(holder);
         }
 
@@ -59,10 +59,10 @@ public class RecyclerAdapter_Definition extends BaseAdapter {
         return view;
     }
 
-    private void customizeView(View view, ViewHolder holder, int position) {
+    private void customizeView(View view, viewHolder holder, int position) {
 
-        holder.StartTimeItem.setText(mDataset.get(position));
-        holder.TypesItem.setText(mPriceset.get(position));
+        holder.startTimeItem.setText(mDataset.get(position));
+        holder.typesItem.setText(mPriceset.get(position));
 
 
         view.setOnClickListener(new View.OnClickListener() {
@@ -72,13 +72,13 @@ public class RecyclerAdapter_Definition extends BaseAdapter {
         });
     }
 
-    static class ViewHolder {
-        private TextView StartTimeItem;
-        private TextView TypesItem;
+    static class viewHolder {
+        private TextView startTimeItem;
+        private TextView typesItem;
 
-        ViewHolder(View view) {
-            StartTimeItem = view.findViewById(R.id.termin);
-            TypesItem = view.findViewById(R.id.description);
+        viewHolder(View view) {
+            startTimeItem = view.findViewById(R.id.termin);
+            typesItem = view.findViewById(R.id.description);
 
         }
     }

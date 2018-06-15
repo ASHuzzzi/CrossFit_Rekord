@@ -15,19 +15,19 @@ import ru.lizzzi.crossfit_rekord.interfaces.ListenerActivity;
 import ru.lizzzi.crossfit_rekord.R;
 
 
-public class RecyclerAdapter_Exercises extends RecyclerView.Adapter<RecyclerAdapter_Exercises.ViewHolder>{
+public class RecyclerAdapterExercises extends RecyclerView.Adapter<RecyclerAdapterExercises.ViewHolder>{
 
-    private final ArrayList<Exercises> exercises;
+    private final ArrayList<Exercises> arrExercises;
     private ListenerActivity mlistener;
-    private Exercises e;
+    private Exercises eExercises;
 
 
-    public RecyclerAdapter_Exercises(ArrayList<Exercises> exercises, ListenerActivity listener){
-        this.exercises = exercises;
+    public RecyclerAdapterExercises(ArrayList<Exercises> exercises, ListenerActivity listener){
+        this.arrExercises = exercises;
         mlistener = listener;
     }
 
-    public RecyclerAdapter_Exercises.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_lv_new_record_f2, parent, false);
 
@@ -35,16 +35,16 @@ public class RecyclerAdapter_Exercises extends RecyclerView.Adapter<RecyclerAdap
     }
 
     public void onBindViewHolder(final ViewHolder holder, @SuppressLint("RecyclerView") final int position) {
-        holder.mEditText.setText(exercises.get(position).quantity);
-        holder.mEditText2.setText(exercises.get(position).exercise);
-        holder.mEditText3.setText(exercises.get(position).weight);
+        holder.mEditText.setText(arrExercises.get(position).quantity);
+        holder.mEditText2.setText(arrExercises.get(position).exercise);
+        holder.mEditText3.setText(arrExercises.get(position).weight);
 
         holder.mButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                e = exercises.get(position);
+                eExercises = arrExercises.get(position);
                 if (mlistener!=null){
-                    mlistener.Remove(e.exercise, position);
+                    mlistener.Remove(eExercises.exercise, position);
                 }
             }
         });
@@ -52,10 +52,10 @@ public class RecyclerAdapter_Exercises extends RecyclerView.Adapter<RecyclerAdap
 
     @Override
     public int getItemCount() {
-        return exercises.size();
+        return arrExercises.size();
     }
 
-    static class  ViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends RecyclerView.ViewHolder {
         private EditText mEditText;
         private EditText mEditText2;
         private EditText mEditText3;
