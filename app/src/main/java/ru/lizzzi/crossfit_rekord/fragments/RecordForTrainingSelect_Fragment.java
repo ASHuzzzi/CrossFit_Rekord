@@ -28,7 +28,7 @@ import java.util.Map;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterRecordForTrainingSelect;
-import ru.lizzzi.crossfit_rekord.interfaces.Listener_RecordForTrainingSelect;
+import ru.lizzzi.crossfit_rekord.interfaces.ListenerRecordForTrainingSelect;
 import ru.lizzzi.crossfit_rekord.loaders.Table_Fragment_Loader;
 
 
@@ -51,7 +51,7 @@ public class RecordForTrainingSelect_Fragment extends Fragment implements Loader
     private int iNumberOfDay; // выбранный пользователем день
     private  int LOADER_ID = 1; //идентефикатор loader'а
 
-    private Network_check network_check;//переменная для проврки сети
+    private NetworkCheck NetworkCheck;//переменная для проврки сети
 
     private Handler handler_open_fragment;
     private Thread thread_open_fragment;
@@ -125,8 +125,8 @@ public class RecordForTrainingSelect_Fragment extends Fragment implements Loader
         Runnable runnable_open_fragment = new Runnable() {
             @Override
             public void run() {
-                network_check = new Network_check(getContext());
-                boolean result_check = network_check.checkInternet();
+                NetworkCheck = new NetworkCheck(getContext());
+                boolean result_check = NetworkCheck.checkInternet();
                 if (result_check){
                     iNumberOfDay = numberdayweek.get(Calendar.DAY_OF_WEEK)-1;
                     FirstStartAsyncTaskLoader(iNumberOfDay);
@@ -150,8 +150,8 @@ public class RecordForTrainingSelect_Fragment extends Fragment implements Loader
             public void run() {
                 Message msg = handler_open_fragment.obtainMessage();
                 Bundle bundle = new Bundle();
-                network_check = new Network_check(getContext());
-                boolean result_check = network_check.checkInternet();
+                NetworkCheck = new NetworkCheck(getContext());
+                boolean result_check = NetworkCheck.checkInternet();
                 if (result_check){
                     bundle.putString("onclick", String.valueOf(true));
                     if (llEror_RfTS.getVisibility() == View.VISIBLE) {
@@ -249,7 +249,7 @@ public class RecordForTrainingSelect_Fragment extends Fragment implements Loader
     }
     @Override
     public Loader<List<Map>> onCreateLoader(int id, Bundle args) {
-        if (network_check.checkInternet()) {
+        if (NetworkCheck.checkInternet()) {
             Loader<List<Map>> loader;
             loader = new Table_Fragment_Loader(getContext(), args);
             return loader;
@@ -260,15 +260,15 @@ public class RecordForTrainingSelect_Fragment extends Fragment implements Loader
     @Override
     public void onLoadFinished(Loader<List<Map>> loader, List<Map> data) {
         if (data != null){
-            adapter = new RecyclerAdapterRecordForTrainingSelect(getContext(), data, new Listener_RecordForTrainingSelect(){
+            adapter = new RecyclerAdapterRecordForTrainingSelect(getContext(), data, new ListenerRecordForTrainingSelect(){
                 @Override
-                public void SelectTime(String start_time, String types_item) {
+                public void selectTime(String stStartTime, String stTypesItem) {
                     RecordForTrainingRecording_Fragment yfc =  new RecordForTrainingRecording_Fragment();
                     Bundle bundle = new Bundle();
-                    bundle.putString("time", start_time);
+                    bundle.putString("time", stStartTime);
                     bundle.putString("datefull", date_select_full);
                     bundle.putString("dateshow", date_select_show);
-                    bundle.putString("type", types_item);
+                    bundle.putString("type", stTypesItem);
                     yfc.setArguments(bundle);
                     FragmentManager fragmentManager = getFragmentManager();
                     FragmentTransaction ft = fragmentManager.beginTransaction();

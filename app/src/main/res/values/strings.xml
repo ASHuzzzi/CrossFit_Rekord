@@ -30,7 +30,7 @@
     <string name="hint_password">Введите пароль</string>
     <string name="hint_check_password">Введите пароль еще раз</string>
 
-    <!-- Значения для поля Table_Fragment -->
+    <!-- Значения для поля TableFragment -->
     <string name="select_day">Выберите день</string>
     <string name="select_time">Выберите время</string>
     <string name="T900">9:00</string>

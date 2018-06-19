@@ -6,10 +6,10 @@ import android.net.NetworkInfo;
 
 import java.io.IOException;
 
-public class Network_check {
+public class NetworkCheck {
     private Context context;
 
-    Network_check(Context context) {
+    NetworkCheck(Context context) {
         this.context = context;
     }
 

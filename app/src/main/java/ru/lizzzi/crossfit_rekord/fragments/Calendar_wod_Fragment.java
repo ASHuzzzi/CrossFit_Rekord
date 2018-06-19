@@ -38,7 +38,7 @@ public class Calendar_wod_Fragment extends Fragment implements  OnDateSelectedLi
     private Handler handler_open_fragment;
     private Thread thread_open_fragment;
 
-    private Network_check network_check;
+    private NetworkCheck NetworkCheck;
 
     private int LOADER_ID = 1; //идентефикатор loader'а
 
@@ -82,8 +82,8 @@ public class Calendar_wod_Fragment extends Fragment implements  OnDateSelectedLi
         Runnable runnable_open_fragment = new Runnable() {
             @Override
             public void run() {
-                network_check = new Network_check(getContext());
-                boolean result_check = network_check.checkInternet();
+                NetworkCheck = new NetworkCheck(getContext());
+                boolean result_check = NetworkCheck.checkInternet();
                 if (result_check){
                     FirstStartAsyncTaskLoader();
 
@@ -142,7 +142,7 @@ public class Calendar_wod_Fragment extends Fragment implements  OnDateSelectedLi
 
 
         selectedDate = Month + "/" + Day + "/" + date.getYear();
-        Workout_details_Fragment yfc = new Workout_details_Fragment();
+        WorkoutDetailsFragment yfc = new WorkoutDetailsFragment();
         Bundle bundle = new Bundle();
         bundle.putString("tag", selectedDate);
         yfc.setArguments(bundle);

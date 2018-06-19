@@ -14,15 +14,15 @@ import java.util.Map;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.documentfields.DocumentFields_Table;
-import ru.lizzzi.crossfit_rekord.interfaces.Listener_RecordForTrainingSelect;
+import ru.lizzzi.crossfit_rekord.interfaces.ListenerRecordForTrainingSelect;
 
 public class RecyclerAdapterRecordForTrainingSelect extends RecyclerView.Adapter<RecyclerAdapterRecordForTrainingSelect.ViewHolder> {
 
     private List<Map> shediletems;
     private final ThreadLocal<DocumentFields_Table> fields = new ThreadLocal<>();
-    private Listener_RecordForTrainingSelect mlistener;
+    private ListenerRecordForTrainingSelect mlistener;
 
-    public RecyclerAdapterRecordForTrainingSelect(Context context, @NonNull List<Map> shediletems, Listener_RecordForTrainingSelect listener) {
+    public RecyclerAdapterRecordForTrainingSelect(Context context, @NonNull List<Map> shediletems, ListenerRecordForTrainingSelect listener) {
         this.shediletems = shediletems;
         fields.set(new DocumentFields_Table(context));
         mlistener = listener;
@@ -91,7 +91,7 @@ public class RecyclerAdapterRecordForTrainingSelect extends RecyclerView.Adapter
         ll_item_table.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mlistener.SelectTime((String) documentInfo.get(fields.get().getStartTimeField()),
+                mlistener.selectTime((String) documentInfo.get(fields.get().getStartTimeField()),
                         (String) documentInfo.get(fields.get().getTypeField()));
             }
         });

@@ -37,7 +37,7 @@ public class Calendar_wod_Loader extends AsyncTaskLoader<List<Date>> {
 
         for (int i = 0; i < data.size(); i++){
             map = data.get(i).values();
-            String sr = String.valueOf(map.toArray()[4]);
+            String sr = String.valueOf(map.toArray()[7]);
 
             try {
                 date_from_db = sdf.parse(sr);

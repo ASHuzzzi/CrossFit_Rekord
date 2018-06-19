@@ -26,7 +26,7 @@ import ru.lizzzi.crossfit_rekord.fragments.Character_Fragment;
 import ru.lizzzi.crossfit_rekord.fragments.Login_Fragment;
 import ru.lizzzi.crossfit_rekord.fragments.RecordForTrainingSelect_Fragment;
 import ru.lizzzi.crossfit_rekord.fragments.StartScreen_Fragment;
-import ru.lizzzi.crossfit_rekord.fragments.Table_Fragment;
+import ru.lizzzi.crossfit_rekord.fragments.TableFragment;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         if (id == R.id.shedule) {
-            fragmentClass = Table_Fragment.class;
+            fragmentClass = TableFragment.class;
 
         } else if (id == R.id.record_training) {
 

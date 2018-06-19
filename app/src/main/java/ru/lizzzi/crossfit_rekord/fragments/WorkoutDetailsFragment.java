@@ -29,7 +29,7 @@ import ru.lizzzi.crossfit_rekord.loaders.Workout_details_Loaders;
  * Created by Liza on 13.03.2018.
  */
 
-public class Workout_details_Fragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Map>> {
+public class WorkoutDetailsFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Map>> {
 
 
     RecyclerAdapter_Workout_details adapter;
@@ -43,10 +43,10 @@ public class Workout_details_Fragment extends Fragment implements LoaderManager.
     private TextView tvSelectedDay;
     Bundle bundle;
     private LinearLayout ll1;
-    private Network_check network_check; //переменная для проврки сети
+    private NetworkCheck NetworkCheck; //переменная для проврки сети
 
-    private Handler handler_fragment;
-    private Thread thread_open_fragment;
+    private Handler handlerFragment;
+    private Thread threadOpenFragment;
 
     @SuppressLint("HandlerLeak")
     @Override
@@ -72,7 +72,7 @@ public class Workout_details_Fragment extends Fragment implements LoaderManager.
         ll1 = v.findViewById(R.id.ll1);
         ll1.setVisibility(View.INVISIBLE);
 
-        handler_fragment = new Handler() {
+        handlerFragment = new Handler() {
             @Override
             public void handleMessage(Message msg) {
                 Bundle bundle = msg.getData();
@@ -88,14 +88,14 @@ public class Workout_details_Fragment extends Fragment implements LoaderManager.
         };
 
         //поток запускаемый при создании экрана
-        Runnable runnable_open_fragment = new Runnable() {
+        Runnable runnableOpenFragment = new Runnable() {
             @Override
             public void run() {
-                network_check = new Network_check(getContext());
-                boolean result_check = network_check.checkInternet();
-                if (result_check){
-                    LoadSessionAsyncTaskLoader();
-                    LoadExerciseAsyncTaskLoader();
+                NetworkCheck = new NetworkCheck(getContext());
+                boolean resultCheck = NetworkCheck.checkInternet();
+                if (resultCheck){
+                    loadSessionAsyncTaskLoader();
+                    loadExerciseAsyncTaskLoader();
                     try {
                         @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
 
@@ -109,28 +109,28 @@ public class Workout_details_Fragment extends Fragment implements LoaderManager.
                     }
 
                 }else {
-                    Message msg = handler_fragment.obtainMessage();
+                    Message msg = handlerFragment.obtainMessage();
                     Bundle bundle = new Bundle();
                     bundle.putString("result", String.valueOf(false));
                     msg.setData(bundle);
-                    handler_fragment.sendMessage(msg);
+                    handlerFragment.sendMessage(msg);
                 }
             }
         };
-        thread_open_fragment = new Thread(runnable_open_fragment);
-        thread_open_fragment.setDaemon(true);
+        threadOpenFragment = new Thread(runnableOpenFragment);
+        threadOpenFragment.setDaemon(true);
 
 
         return v;
     }
 
-    private void LoadSessionAsyncTaskLoader(){
+    private void loadSessionAsyncTaskLoader(){
         bundle.putString("Table", "Training_sessions");
         int LOADER_ID = 1;
         getLoaderManager().initLoader(LOADER_ID, bundle, this).forceLoad();
     }
 
-    private void LoadExerciseAsyncTaskLoader(){
+    private void loadExerciseAsyncTaskLoader(){
         bundle.putString("Table", "Exercise_assignment");
         int LOADER_ID2 = 2;
         getLoaderManager().initLoader(LOADER_ID2, bundle, this).forceLoad();
@@ -178,7 +178,7 @@ public class Workout_details_Fragment extends Fragment implements LoaderManager.
         //final String ri = bundle.getString("tag");
         //bundle.putString("Selected_day", ri);
         if (adapter == null){
-            thread_open_fragment.start();
+            threadOpenFragment.start();
         }
 
     }

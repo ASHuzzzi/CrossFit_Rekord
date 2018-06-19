@@ -39,7 +39,7 @@ public class StartScreen_Fragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                OpenFragment(Table_Fragment.class);
+                OpenFragment(TableFragment.class);
             }
         });
 

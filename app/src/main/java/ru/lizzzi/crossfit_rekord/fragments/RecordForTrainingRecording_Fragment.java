@@ -57,7 +57,7 @@ public class RecordForTrainingRecording_Fragment extends Fragment implements Loa
 
     private Loader<List<Map>> mLoader;
 
-    Network_check network_check;
+    NetworkCheck NetworkCheck;
 
     LinearLayout llSelectedWorkout;
     ProgressBar progressBar2;
@@ -177,8 +177,8 @@ public class RecordForTrainingRecording_Fragment extends Fragment implements Loa
         Runnable runnable_open_fragment = new Runnable() {
             @Override
             public void run() {
-                network_check = new Network_check(getContext());
-                boolean result_check = network_check.checkInternet();
+                NetworkCheck = new NetworkCheck(getContext());
+                boolean result_check = NetworkCheck.checkInternet();
                 if (result_check){
                     FirstStartAsyncTaskLoader();
 
@@ -201,8 +201,8 @@ public class RecordForTrainingRecording_Fragment extends Fragment implements Loa
             public void run() {
                 Message msg = handler_open_fragment.obtainMessage();
                 Bundle bundle = new Bundle();
-                network_check = new Network_check(getContext());
-                boolean result_check = network_check.checkInternet();
+                NetworkCheck = new NetworkCheck(getContext());
+                boolean result_check = NetworkCheck.checkInternet();
                 if (result_check){
                     bundle.putString("onclick", String.valueOf(true));
                     if (Layout_Error.getVisibility() == View.VISIBLE) {
