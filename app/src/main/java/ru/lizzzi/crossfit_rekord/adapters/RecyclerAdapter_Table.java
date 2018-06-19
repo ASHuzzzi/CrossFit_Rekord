@@ -15,18 +15,21 @@ import java.util.Map;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.documentfields.DocumentFields_Table;
+import ru.lizzzi.crossfit_rekord.interfaces.Listener_RecordForTrainingSelect;
 
 public class RecyclerAdapter_Table extends BaseAdapter {
     private List<Map> shediletems;
     private int layoutId;
     private LayoutInflater inflater;
-    private DocumentFields_Table fields;
+    private final ThreadLocal<DocumentFields_Table> fields = new ThreadLocal<>();
+    private Listener_RecordForTrainingSelect mlistener;
 
-    public RecyclerAdapter_Table(Context context, @NonNull List<Map> shediletems, int layoutId) {
+    public RecyclerAdapter_Table(Context context, @NonNull List<Map> shediletems, int layoutId, Listener_RecordForTrainingSelect listener) {
         this.shediletems = shediletems;
         this.layoutId = layoutId;
         inflater = LayoutInflater.from(context);
-        fields = new DocumentFields_Table(context);
+        fields.set(new DocumentFields_Table(context));
+        mlistener = listener;
     }
 
     @Override
@@ -64,8 +67,8 @@ public class RecyclerAdapter_Table extends BaseAdapter {
     @SuppressLint("ResourceAsColor")
     private void customizeView(View view, ViewHolder holder, final Map documentInfo) {
 
-        String start_time = (String) documentInfo.get(fields.getStartTimeField());
-        String type = (String) documentInfo.get(fields.getTypeField());
+        String start_time = (String) documentInfo.get(fields.get().getStartTimeField());
+        String type = (String) documentInfo.get(fields.get().getTypeField());
 
         holder.StartTimeItem.setText(start_time);
         holder.TypesItem.setText(type);
@@ -103,9 +106,11 @@ public class RecyclerAdapter_Table extends BaseAdapter {
         }
 
 
-        view.setOnClickListener(new View.OnClickListener() {
+        ll_item_table.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
+                mlistener.SelectTime((String) documentInfo.get(fields.get().getStartTimeField()),
+                        (String) documentInfo.get(fields.get().getTypeField()));
             }
         });
     }

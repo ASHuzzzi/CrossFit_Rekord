@@ -5,8 +5,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,11 +19,16 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapter_Table;
+import ru.lizzzi.crossfit_rekord.interfaces.Listener_RecordForTrainingSelect;
 import ru.lizzzi.crossfit_rekord.loaders.Table_Fragment_Loader;
 
 public class Table_Fragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Map>> {
@@ -51,6 +59,11 @@ public class Table_Fragment extends Fragment implements LoaderManager.LoaderCall
 
     RecyclerAdapter_Table adapter; //адаптер для списка тренировок
 
+    private String date_select_full; //передает значение по поторому потом идет запрос в базу в следующем фрагменте
+    private String date_select_show; //передает значение которое показывается в Textview следующего фрагмента
+    private Date date; //показывает сегодняшний день
+    private GregorianCalendar calendarday; //нужна для формирования дат для кнопок
+
     @SuppressLint("HandlerLeak")
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
@@ -76,6 +89,8 @@ public class Table_Fragment extends Fragment implements LoaderManager.LoaderCall
 
         iPreviousOfDay = 1;
         toast = Toast.makeText(getContext(), "Нет подключения", Toast.LENGTH_SHORT);
+
+
 
         //хэндлер для потока runnable_open_fragment
         handler_open_fragment = new Handler() {
@@ -254,7 +269,48 @@ public class Table_Fragment extends Fragment implements LoaderManager.LoaderCall
     public void onLoadFinished(Loader<List<Map>> loader, List<Map> data) {
         pbProgressBar.setVisibility(View.INVISIBLE);
         if (data != null){
-            adapter = new RecyclerAdapter_Table(getContext(), data, R.layout.item_lv_table);
+            adapter = new RecyclerAdapter_Table(getContext(), data, R.layout.item_lv_table, new Listener_RecordForTrainingSelect() {
+                @Override
+                public void SelectTime(String start_time, String types_item) {
+
+                    //TODO почистить этот блок
+                    @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("EEEE dd MMMM");
+                    @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM");
+                    date = new Date();
+                    Calendar c = Calendar.getInstance();
+                    c.setTime(date);
+                    int dayOfWeek = c.get(Calendar.DAY_OF_WEEK) - iNumberOfDay - 1;
+                    if ((dayOfWeek >0) || (dayOfWeek < -2 )){ //переписать аргументы т.к. завтра и послезавтра это -1 и -2
+                        Toast toast = Toast.makeText(getContext(), "Запись возможна на сегодня и два дня вперед", Toast.LENGTH_LONG);
+                        toast.setGravity(Gravity.CENTER, 0, 0);
+                        toast.show();
+                    }else {
+                        calendarday = new GregorianCalendar();
+                        calendarday.add(Calendar.DAY_OF_YEAR, -dayOfWeek);
+                        final Date tomorrow = calendarday.getTime();
+                        final String currentTomorrow = sdf.format(tomorrow);
+                        date_select_full = sdf2.format(tomorrow);
+                        date_select_show = currentTomorrow;
+
+
+
+                        RecordForTrainingRecording_Fragment yfc =  new RecordForTrainingRecording_Fragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("time", start_time);
+                        bundle.putString("datefull", date_select_full);
+                        bundle.putString("dateshow", date_select_show);
+                        bundle.putString("type", types_item);
+                        yfc.setArguments(bundle);
+                        FragmentManager fragmentManager = getFragmentManager();
+                        FragmentTransaction ft = fragmentManager.beginTransaction();
+                        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                        ft.replace(R.id.container, yfc);
+                        ft.addToBackStack(null);
+                        ft.commit();
+                    }
+
+                }
+            });
             lvItemsInTable.setAdapter(adapter);
             iPreviousOfDay = iNumberOfDay;
             PreSelectionButtonDay(iNumberOfDay);
