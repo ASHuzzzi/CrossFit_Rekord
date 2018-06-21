@@ -26,21 +26,21 @@ import ru.lizzzi.crossfit_rekord.data.DefinitionDbContarct;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link Character_Fragment.OnFragmentInteractionListener} interface
+ * {@link CharacterFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link Character_Fragment#newInstance} factory method to
+ * Use the {@link CharacterFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Character_Fragment extends Fragment {
+public class CharacterFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
     private DefinitionDBHelper mDbHelper = new DefinitionDBHelper(getContext());
-    private ArrayList<String> Item_list_termin = new ArrayList<>();
-    private ArrayList<String> Item_list_character = new ArrayList<>();
-    private ArrayList<String> Item_list_definition = new ArrayList<>();
+    private ArrayList<String> itemListTermin = new ArrayList<>();
+    private ArrayList<String> itemListCharacter = new ArrayList<>();
+    private ArrayList<String> itemListDefinition = new ArrayList<>();
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -48,7 +48,7 @@ public class Character_Fragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public Character_Fragment() {
+    public CharacterFragment() {
         // Required empty public constructor
     }
 
@@ -58,11 +58,11 @@ public class Character_Fragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment Character_Fragment.
+     * @return A new instance of fragment CharacterFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static Character_Fragment newInstance(String param1, String param2) {
-        Character_Fragment fragment = new Character_Fragment();
+    public static CharacterFragment newInstance(String param1, String param2) {
+        CharacterFragment fragment = new CharacterFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -83,7 +83,7 @@ public class Character_Fragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_character, container, false);
-        ListView lvdefinition = (ListView) view.findViewById(R.id.lvdefinition);
+        ListView lvDefinition = (ListView) view.findViewById(R.id.lvdefinition);
 
 
         mDbHelper = new DefinitionDBHelper(getContext());
@@ -98,7 +98,7 @@ public class Character_Fragment extends Fragment {
         mDbHelper.openDataBase();
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
-        Item_list_character.clear();
+        itemListCharacter.clear();
 
         String[] columns = new  String[]{DefinitionDbContarct.DBdefinition.Column_character};
         Cursor cursor = db.query(true,
@@ -116,24 +116,24 @@ public class Character_Fragment extends Fragment {
                 for (String cn : cursor.getColumnNames()) {
                     name = cursor.getString(cursor.getColumnIndex(cn));
                 }
-                Item_list_character.add(name);
+                itemListCharacter.add(name);
             }while (cursor.moveToNext());
         }
         cursor.close();
 
         ArrayAdapter adapter = new ArrayAdapter(getContext(),
-                android.R.layout.simple_list_item_1, Item_list_character);
-        lvdefinition.setAdapter(adapter);
-        lvdefinition.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                android.R.layout.simple_list_item_1, itemListCharacter);
+        lvDefinition.setAdapter(adapter);
+        lvDefinition.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String selectedItem = Item_list_character.get(i);
+                String selectedItem = itemListCharacter.get(i);
                 Toast.makeText(getContext(), selectedItem, Toast.LENGTH_SHORT).show();
 
                 Fragment fragment = null;
                 Class fragmentClass;
-                fragmentClass = Definition_Fragment.class;
-                Definition_Fragment yfc = new Definition_Fragment();
+                fragmentClass = DefinitionFragment.class;
+                DefinitionFragment yfc = new DefinitionFragment();
                 Bundle bundle = new Bundle();
                 bundle.putString("tag", selectedItem);
                 yfc.setArguments(bundle);

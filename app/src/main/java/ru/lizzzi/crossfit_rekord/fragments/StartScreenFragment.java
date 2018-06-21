@@ -15,7 +15,7 @@ import android.widget.Button;
 
 import ru.lizzzi.crossfit_rekord.R;
 
-public class StartScreen_Fragment extends Fragment {
+public class StartScreenFragment extends Fragment {
 
     SharedPreferences mSettings;
     public static final String APP_PREFERENCES = "audata";
@@ -29,9 +29,9 @@ public class StartScreen_Fragment extends Fragment {
         getActivity().setTitle(R.string.app_name);
 
         Button schedule = v.findViewById(R.id.button_schedule);
-        Button record_training = v.findViewById(R.id.button_record_training);
+        Button recordTraining = v.findViewById(R.id.button_record_training);
         final Button description = v.findViewById(R.id.button_definition);
-        Button calendar_wod = v.findViewById(R.id.button_calendar_wod);
+        Button calendarWod = v.findViewById(R.id.button_calendar_wod);
         final Button contacts = v.findViewById(R.id.button_contacts);
 
         schedule.setOnClickListener(new View.OnClickListener() {
@@ -39,22 +39,22 @@ public class StartScreen_Fragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                OpenFragment(TableFragment.class);
+                openFragment(TableFragment.class);
             }
         });
 
-        record_training.setOnClickListener(new View.OnClickListener() {
+        recordTraining.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 getContext();
                 mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-                boolean containtobjectid = mSettings.contains(APP_PREFERENCES_OBJECTID);
-                if (containtobjectid) {
-                    OpenFragment(RecordForTrainingSelect_Fragment.class);
+                boolean containtObjectId = mSettings.contains(APP_PREFERENCES_OBJECTID);
+                if (containtObjectId) {
+                    openFragment(RecordForTrainingSelectFragment.class);
 
                 }else {
-                    OpenFragment(Login_Fragment.class);
+                    openFragment(LoginFragment.class);
                 }
 
             }
@@ -64,14 +64,14 @@ public class StartScreen_Fragment extends Fragment {
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onClick(View view) {
-                OpenFragment(Character_Fragment.class);
+                openFragment(CharacterFragment.class);
             }
         });
 
-        calendar_wod.setOnClickListener(new View.OnClickListener() {
+        calendarWod.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                OpenFragment(Calendar_wod_Fragment.class);
+                openFragment(CalendarWodFragment.class);
             }
         });
 
@@ -85,7 +85,7 @@ public class StartScreen_Fragment extends Fragment {
         return v;
     }
 
-    private void OpenFragment(Class fragmentClass) {
+    private void openFragment(Class fragmentClass) {
 
         Fragment fragment = null;
         try {

@@ -15,13 +15,13 @@ import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.documentfields.DocumentFields_Price;
 
 
-public class RecyclerAdapter_Price extends BaseAdapter {
+public class RecyclerAdapterPrice extends BaseAdapter {
     private List<Map> storedItems;
     private int layoutId;
     private LayoutInflater inflater;
     private DocumentFields_Price fields;
 
-    public RecyclerAdapter_Price(Context context, @NonNull List<Map> storedItems, int layoutId) {
+    public RecyclerAdapterPrice(Context context, @NonNull List<Map> storedItems, int layoutId) {
         this.storedItems = storedItems;
         this.layoutId = layoutId;
         inflater = LayoutInflater.from(context);

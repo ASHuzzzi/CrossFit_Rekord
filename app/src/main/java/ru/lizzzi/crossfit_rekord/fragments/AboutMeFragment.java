@@ -18,7 +18,7 @@ import ru.lizzzi.crossfit_rekord.R;
  * Created by basso on 07.03.2018.
  */
 //TODO см в хэлпе User properties. Сначала логин, от него юзер -> нужные параметры.
-public class AboutMe_Fragment extends Fragment {
+public class AboutMeFragment extends Fragment {
 
     public static final String APP_PREFERENCES = "audata";
     public static final String APP_PREFERENCES_OBJECTID = "ObjectId";
@@ -36,10 +36,10 @@ public class AboutMe_Fragment extends Fragment {
         EditText etName = v.findViewById(R.id.editText6);
         EditText etEmail = v.findViewById(R.id.editText7);
 
-        boolean containtemail = mSettings.contains(APP_PREFERENCES_EMAIL);
-        boolean containtpassword = mSettings.contains(APP_PREFERENCES_PASSWORD);
+        boolean containtEmail = mSettings.contains(APP_PREFERENCES_EMAIL);
+        boolean containtPassword = mSettings.contains(APP_PREFERENCES_PASSWORD);
 
-        if (containtemail && containtpassword){
+        if (containtEmail && containtPassword){
 
         }
         etName.setText(mSettings.getString(APP_PREFERENCES_USERNAME, ""));

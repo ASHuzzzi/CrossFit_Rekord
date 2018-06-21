@@ -21,21 +21,21 @@ import ru.lizzzi.crossfit_rekord.data.DefinitionDbContarct.DBdefinition;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link Definition_Fragment.OnFragmentInteractionListener} interface
+ * {@link DefinitionFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link Definition_Fragment#newInstance} factory method to
+ * Use the {@link DefinitionFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Definition_Fragment extends Fragment {
+public class DefinitionFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
     private DefinitionDBHelper mDbHelper = new DefinitionDBHelper(getContext());
-    private ArrayList<String> Item_list_termin = new ArrayList<>();
-    private ArrayList<String> Item_list_character = new ArrayList<>();
-    private ArrayList<String> Item_list_definition = new ArrayList<>();
+    private ArrayList<String> itemListTermin = new ArrayList<>();
+    private ArrayList<String> itemListCharacter = new ArrayList<>();
+    private ArrayList<String> itemListDefinition = new ArrayList<>();
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -43,7 +43,7 @@ public class Definition_Fragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public Definition_Fragment() {
+    public DefinitionFragment() {
         // Required empty public constructor
     }
 
@@ -53,11 +53,11 @@ public class Definition_Fragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment Definition_Fragment.
+     * @return A new instance of fragment DefinitionFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static Definition_Fragment newInstance(String param1, String param2) {
-        Definition_Fragment fragment = new Definition_Fragment();
+    public static DefinitionFragment newInstance(String param1, String param2) {
+        DefinitionFragment fragment = new DefinitionFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -91,7 +91,7 @@ public class Definition_Fragment extends Fragment {
         final Bundle bundle = getArguments();
         final String ri = bundle.getString("tag");
         CreateItemList(ri);
-        RecyclerAdapterDefinition adapter = new RecyclerAdapterDefinition(getContext(), Item_list_termin, Item_list_definition, R.layout.item_lv_description);
+        RecyclerAdapterDefinition adapter = new RecyclerAdapterDefinition(getContext(), itemListTermin, itemListDefinition, R.layout.item_lv_description);
         lvdefinition1.setAdapter(adapter);
 
         return  v;
@@ -130,8 +130,8 @@ public class Definition_Fragment extends Fragment {
         // Подумать на досуге о упрощении запроса до одного
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
-        Item_list_termin.clear();
-        Item_list_definition.clear();
+        itemListTermin.clear();
+        itemListDefinition.clear();
 
         String[] columns = new  String[]{DBdefinition.Column_termin};
         Cursor cursor = db.query(DBdefinition.TABLE_NAME,
@@ -147,7 +147,7 @@ public class Definition_Fragment extends Fragment {
                 for (String cn : cursor.getColumnNames()) {
                     name = cursor.getString(cursor.getColumnIndex(cn));
                 }
-                Item_list_termin.add(name);
+                itemListTermin.add(name);
             }while (cursor.moveToNext());
         }
         cursor.close();
@@ -166,7 +166,7 @@ public class Definition_Fragment extends Fragment {
                 for (String cn : cursor.getColumnNames()) {
                     name = cursor.getString(cursor.getColumnIndex(cn));
                 }
-                Item_list_definition.add(name);
+                itemListDefinition.add(name);
             }while (cursor.moveToNext());
         }
         cursor.close();

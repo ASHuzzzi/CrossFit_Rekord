@@ -24,7 +24,7 @@ import com.backendless.exceptions.BackendlessFault;
 import ru.lizzzi.crossfit_rekord.R;
 
 
-public class Registry_Fragment extends Fragment {
+public class RegistryFragment extends Fragment {
 
     public static final String APP_PREFERENCES = "audata";
     public static final String APP_PREFERENCES_USERNAME = "Username";
@@ -34,7 +34,7 @@ public class Registry_Fragment extends Fragment {
     SharedPreferences mSettings;
 
 
-    public Registry_Fragment() {
+    public RegistryFragment() {
         // Required empty public constructor
     }
 
@@ -45,9 +45,9 @@ public class Registry_Fragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_registry, container, false);
         Button register = v.findViewById(R.id.btn_register);
-        final EditText etusername = v.findViewById(R.id.username);
-        final EditText etpassword = v.findViewById(R.id.password);
-        final EditText etemail = v.findViewById(R.id.email);
+        final EditText etUserName = v.findViewById(R.id.username);
+        final EditText etPassword = v.findViewById(R.id.password);
+        final EditText etEmail = v.findViewById(R.id.email);
 
         getContext();
         mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
@@ -58,29 +58,29 @@ public class Registry_Fragment extends Fragment {
             public void onClick(View view) {
 
                 if (checkInternet()){
-                    final String susername = etusername.getText().toString();
-                    final String spassword = etpassword.getText().toString();
-                    final String semail = etemail.getText().toString();
+                    final String stUserName = etUserName.getText().toString();
+                    final String stPassword = etPassword.getText().toString();
+                    final String stEmail = etEmail.getText().toString();
 
                     BackendlessUser user = new BackendlessUser();
-                    user.setEmail( semail );
-                    user.setPassword( spassword );
-                    user.setProperty( "name", susername);
+                    user.setEmail( stEmail );
+                    user.setPassword( stPassword );
+                    user.setProperty( "name", stUserName);
 
 
                     Backendless.UserService.register(user, new AsyncCallback<BackendlessUser>() {
                         @Override
                         public void handleResponse(BackendlessUser response) {
 
-                            editor.putString(APP_PREFERENCES_USERNAME, susername);
-                            editor.putString(APP_PREFERENCES_EMAIL, semail);
-                            editor.putString(APP_PREFERENCES_PASSWORD, spassword);
+                            editor.putString(APP_PREFERENCES_USERNAME, stUserName);
+                            editor.putString(APP_PREFERENCES_EMAIL, stEmail);
+                            editor.putString(APP_PREFERENCES_PASSWORD, stPassword);
                             editor.putString(APP_PREFERENCES_OBJECTID, response.getObjectId());
                             editor.apply();
                             Toast.makeText(getContext(), "Новый пользователь зарегистрирован", Toast.LENGTH_SHORT).show();
                             Fragment fragment = null;
                             Class fragmentClass;
-                            fragmentClass = RecordForTrainingSelect_Fragment.class;
+                            fragmentClass = RecordForTrainingSelectFragment.class;
                             try {
                                 fragment = (Fragment) fragmentClass.newInstance();
                             } catch (Exception e) {

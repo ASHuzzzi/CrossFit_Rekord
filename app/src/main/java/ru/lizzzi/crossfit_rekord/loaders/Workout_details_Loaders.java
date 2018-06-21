@@ -7,12 +7,8 @@ import android.support.v4.content.AsyncTaskLoader;
 import com.backendless.Backendless;
 import com.backendless.persistence.DataQueryBuilder;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapter_Workout_details;
 
 public class Workout_details_Loaders extends AsyncTaskLoader<List<Map>> {
 

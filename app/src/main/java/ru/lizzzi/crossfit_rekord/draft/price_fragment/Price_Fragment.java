@@ -14,7 +14,6 @@ import java.util.List;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.documentfields.DocumentFields_Price;
-import ru.lizzzi.crossfit_rekord.views.FastScrollRecyclerView;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackCountDocument;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackFindDocument;
 import ru.profit_group.scorocode_sdk.Responses.data.ResponseCount;
@@ -35,7 +34,6 @@ public class Price_Fragment extends Fragment{
     private static final String SCRIPT_KEY = "6920f997815244f2bc77949974e4b215";
     private static final String WEBSOCKET_KEY = "6920f997815244f2bc77949974e4b215";
 
-    private FastScrollRecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerView.Adapter mAdapter;
     private List<DocumentInfo> documentInfos;
@@ -57,7 +55,7 @@ public class Price_Fragment extends Fragment{
             @Override
             public void onDocumentFound(List<DocumentInfo> documentInfos) {
                 if(documentInfos != null) {
-                    //RecyclerAdapter_Price adapter = new RecyclerAdapter_Price(getContext(), documentInfos, R.layout.item_lv_subscription);
+                    //RecyclerAdapterPrice adapter = new RecyclerAdapterPrice(getContext(), documentInfos, R.layout.item_lv_subscription);
                     //lvItemsInStorehouse.setAdapter(adapter);
                 }
             }

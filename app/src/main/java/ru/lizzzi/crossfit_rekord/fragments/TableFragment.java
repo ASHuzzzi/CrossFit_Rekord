@@ -292,7 +292,7 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
                         dateSelectShow = sdfDataShow.format(today);
                         dateSelectFull = sdfDataFull.format(today);
 
-                        RecordForTrainingRecording_Fragment yfc =  new RecordForTrainingRecording_Fragment();
+                        RecordForTrainingRecordingFragment yfc =  new RecordForTrainingRecordingFragment();
                         Bundle bundle = new Bundle();
                         bundle.putString("time", stStartTime);
                         bundle.putString("datefull", dateSelectFull);

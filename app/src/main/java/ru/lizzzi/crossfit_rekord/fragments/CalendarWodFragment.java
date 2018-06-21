@@ -30,13 +30,13 @@ import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.loaders.Calendar_wod_Loader;
 
 
-public class Calendar_wod_Fragment extends Fragment implements  OnDateSelectedListener, OnMonthChangedListener, LoaderManager.LoaderCallbacks<List<Date>> {
+public class CalendarWodFragment extends Fragment implements  OnDateSelectedListener, OnMonthChangedListener, LoaderManager.LoaderCallbacks<List<Date>> {
 
     MaterialCalendarView mcv;
-    ProgressBar pb_calendar_wod;
+    ProgressBar pbCalendarWod;
 
-    private Handler handler_open_fragment;
-    private Thread thread_open_fragment;
+    private Handler handlerOpenFragment;
+    private Thread threadOpenFragment;
 
     private NetworkCheck NetworkCheck;
 
@@ -48,9 +48,9 @@ public class Calendar_wod_Fragment extends Fragment implements  OnDateSelectedLi
         final View v = inflater.inflate(R.layout.fragment_calendar_wod, container, false);
 
         mcv = v.findViewById(R.id.calendarView);
-        final LinearLayout Layout_Error_Calendar_Wod = v.findViewById(R.id.Layout_Error_Calendar_Wod);
-        Button bt_error_calendar_wod = v.findViewById(R.id.bt_error_calendar_wod);
-        pb_calendar_wod = v.findViewById(R.id.pb_calendar_wod);
+        final LinearLayout layoutErrorCalendarWod = v.findViewById(R.id.Layout_Error_Calendar_Wod);
+        Button btErrorCalendarWod = v.findViewById(R.id.bt_error_calendar_wod);
+        pbCalendarWod = v.findViewById(R.id.pb_calendar_wod);
 
         mcv.state().edit()
                 .setMaximumDate(CalendarDay.from(2018, 0, 1))
@@ -60,59 +60,59 @@ public class Calendar_wod_Fragment extends Fragment implements  OnDateSelectedLi
         mcv.setOnMonthChangedListener(this);
 
         mcv.setVisibility(View.INVISIBLE);
-        Layout_Error_Calendar_Wod.setVisibility(View.INVISIBLE);
-        pb_calendar_wod.setVisibility(View.VISIBLE);
+        layoutErrorCalendarWod.setVisibility(View.INVISIBLE);
+        pbCalendarWod.setVisibility(View.VISIBLE);
 
-        //хэндлер для потока runnable_open_fragment
-        handler_open_fragment = new Handler() {
+        //хэндлер для потока runnableOpenFragment
+        handlerOpenFragment = new Handler() {
             @Override
             public void handleMessage(Message msg) {
                 Bundle bundle = msg.getData();
-                String result_check = bundle.getString("result");
-                if (result_check != null){
-                    if (result_check.equals("false")){
-                        Layout_Error_Calendar_Wod.setVisibility(View.VISIBLE);
-                        pb_calendar_wod.setVisibility(View.INVISIBLE);
+                String resultCheck = bundle.getString("result");
+                if (resultCheck != null){
+                    if (resultCheck.equals("false")){
+                        layoutErrorCalendarWod.setVisibility(View.VISIBLE);
+                        pbCalendarWod.setVisibility(View.INVISIBLE);
                     }
                 }
             }
         };
 
         //поток запускаемый при создании экрана (запуск происходит из onResume)
-        Runnable runnable_open_fragment = new Runnable() {
+        Runnable runnableOpenFragment = new Runnable() {
             @Override
             public void run() {
                 NetworkCheck = new NetworkCheck(getContext());
-                boolean result_check = NetworkCheck.checkInternet();
-                if (result_check){
-                    FirstStartAsyncTaskLoader();
+                boolean resultCheck = NetworkCheck.checkInternet();
+                if (resultCheck){
+                    firstStartAsyncTaskLoader();
 
                 }else {
-                    Message msg = handler_open_fragment.obtainMessage();
+                    Message msg = handlerOpenFragment.obtainMessage();
                     Bundle bundle = new Bundle();
                     bundle.putString("result", String.valueOf(false));
                     msg.setData(bundle);
-                    handler_open_fragment.sendMessage(msg);
+                    handlerOpenFragment.sendMessage(msg);
                 }
             }
         };
-        thread_open_fragment = new Thread(runnable_open_fragment);
-        thread_open_fragment.setDaemon(true);
+        threadOpenFragment = new Thread(runnableOpenFragment);
+        threadOpenFragment.setDaemon(true);
 
-        bt_error_calendar_wod.setOnClickListener(new View.OnClickListener() {
+        btErrorCalendarWod.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Layout_Error_Calendar_Wod.setVisibility(View.INVISIBLE);
-                pb_calendar_wod.setVisibility(View.VISIBLE);
-                thread_open_fragment.run();
+                layoutErrorCalendarWod.setVisibility(View.INVISIBLE);
+                pbCalendarWod.setVisibility(View.VISIBLE);
+                threadOpenFragment.run();
             }
         });
 
-        thread_open_fragment.start();
+        threadOpenFragment.start();
         return v;
     }
 
-    private void FirstStartAsyncTaskLoader(){
+    private void firstStartAsyncTaskLoader(){
         if(isAdded()){
             if (getLoaderManager().hasRunningLoaders()) {
                 getLoaderManager().destroyLoader(LOADER_ID);
@@ -180,7 +180,7 @@ public class Calendar_wod_Fragment extends Fragment implements  OnDateSelectedLi
             Toast.makeText(getContext(), "Нет данных", Toast.LENGTH_SHORT).show();
         }
 
-        pb_calendar_wod.setVisibility(View.INVISIBLE);
+        pbCalendarWod.setVisibility(View.INVISIBLE);
 
     }
 

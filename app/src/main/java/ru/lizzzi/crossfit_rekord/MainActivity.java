@@ -20,12 +20,12 @@ import android.view.inputmethod.InputMethodManager;
 import com.backendless.Backendless;
 
 import ru.lizzzi.crossfit_rekord.draft.wod_result_fragment.Result_Fragment;
-import ru.lizzzi.crossfit_rekord.fragments.AboutMe_Fragment;
-import ru.lizzzi.crossfit_rekord.fragments.Calendar_wod_Fragment;
-import ru.lizzzi.crossfit_rekord.fragments.Character_Fragment;
-import ru.lizzzi.crossfit_rekord.fragments.Login_Fragment;
-import ru.lizzzi.crossfit_rekord.fragments.RecordForTrainingSelect_Fragment;
-import ru.lizzzi.crossfit_rekord.fragments.StartScreen_Fragment;
+import ru.lizzzi.crossfit_rekord.fragments.AboutMeFragment;
+import ru.lizzzi.crossfit_rekord.fragments.CalendarWodFragment;
+import ru.lizzzi.crossfit_rekord.fragments.CharacterFragment;
+import ru.lizzzi.crossfit_rekord.fragments.LoginFragment;
+import ru.lizzzi.crossfit_rekord.fragments.RecordForTrainingSelectFragment;
+import ru.lizzzi.crossfit_rekord.fragments.StartScreenFragment;
 import ru.lizzzi.crossfit_rekord.fragments.TableFragment;
 
 
@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Backendless.initApp(this, APPLICATION_IDB, API_KEYB);
 
-        OpenFragment(StartScreen_Fragment.class);
+        OpenFragment(StartScreenFragment.class);
     }
 
     @Override
@@ -97,25 +97,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             mSettings = this.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
             boolean containtObjectId = mSettings.contains(APP_PREFERENCES_OBJECTID);
             if (containtObjectId) {
-                fragmentClass = RecordForTrainingSelect_Fragment.class;
+                fragmentClass = RecordForTrainingSelectFragment.class;
 
             } else {
-                fragmentClass = Login_Fragment.class;
+                fragmentClass = LoginFragment.class;
             }
         } else if (id == R.id.result) {
             fragmentClass = Result_Fragment.class;
 
         } else if (id == R.id.definition) {
-            fragmentClass = Character_Fragment.class;
+            fragmentClass = CharacterFragment.class;
 
         } else if (id == R.id.contacts) {
 
 
         } else if (id == R.id.profile) {
-            fragmentClass = AboutMe_Fragment.class;
+            fragmentClass = AboutMeFragment.class;
 
         } else if (id == R.id.calendar_wod){
-            fragmentClass = Calendar_wod_Fragment.class;
+            fragmentClass = CalendarWodFragment.class;
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

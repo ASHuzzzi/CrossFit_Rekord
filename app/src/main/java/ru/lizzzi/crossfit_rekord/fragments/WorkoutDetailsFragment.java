@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapter_Workout_details;
+import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterWorkoutDetails;
 import ru.lizzzi.crossfit_rekord.loaders.Workout_details_Loaders;
 
 /**
@@ -32,7 +32,7 @@ import ru.lizzzi.crossfit_rekord.loaders.Workout_details_Loaders;
 public class WorkoutDetailsFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Map>> {
 
 
-    RecyclerAdapter_Workout_details adapter;
+    RecyclerAdapterWorkoutDetails adapter;
     ListView lvItemsInWod;
     TextView tvWarmUp;
     TextView tvSkill;
@@ -147,7 +147,7 @@ public class WorkoutDetailsFragment extends Fragment implements LoaderManager.Lo
     public void onLoadFinished(Loader<List<Map>> loader, List<Map> data) {
         int id = loader.getId();
         if (id == 1){
-            adapter = new RecyclerAdapter_Workout_details(getContext(), data, R.layout.item_lv_workout_details);
+            adapter = new RecyclerAdapterWorkoutDetails(getContext(), data, R.layout.item_lv_workout_details);
             lvItemsInWod.setAdapter(adapter);
         }else {
             if (data != null && data.size() > 0){

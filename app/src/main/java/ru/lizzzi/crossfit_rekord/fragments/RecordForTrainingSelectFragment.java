@@ -32,9 +32,9 @@ import ru.lizzzi.crossfit_rekord.interfaces.ListenerRecordForTrainingSelect;
 import ru.lizzzi.crossfit_rekord.loaders.Table_Fragment_Loader;
 
 
-public class RecordForTrainingSelect_Fragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Map>>{
+public class RecordForTrainingSelectFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Map>>{
 
-    private LinearLayout llEror_RfTS;
+    private LinearLayout llErorRfTS;
     private LinearLayout llListTime;
     private RecyclerView rvTreningTime;
     private ProgressBar pbRfTS;
@@ -42,21 +42,21 @@ public class RecordForTrainingSelect_Fragment extends Fragment implements Loader
     private RecyclerAdapterRecordForTrainingSelect adapter;
 
     private Date date; //показывает сегодняшний день
-    private GregorianCalendar calendarday; //нужна для формирования дат для кнопок
-    private GregorianCalendar numberdayweek; // для преобразования выбранного дня в int
+    private GregorianCalendar gcCalendarDay; //нужна для формирования дат для кнопок
+    private GregorianCalendar gcNumberDayWeek; // для преобразования выбранного дня в int
 
-    private String date_select_full; //передает значение по поторому потом идет запрос в базу в следующем фрагменте
-    private String date_select_show; //передает значение которое показывается в Textview следующего фрагмента
+    private String stDateSelectFull; //передает значение по поторому потом идет запрос в базу в следующем фрагменте
+    private String stDateSelectShow; //передает значение которое показывается в Textview следующего фрагмента
 
     private int iNumberOfDay; // выбранный пользователем день
     private  int LOADER_ID = 1; //идентефикатор loader'а
 
-    private NetworkCheck NetworkCheck;//переменная для проврки сети
+    private NetworkCheck networkCheck;//переменная для проврки сети
 
-    private Handler handler_open_fragment;
-    private Thread thread_open_fragment;
+    private Handler handlerOpenFragment;
+    private Thread threadOpenFragment;
 
-    private Thread thread_click_onbutton;
+    private Thread threadClickOnbutton;
 
     @SuppressLint("HandlerLeak")
     @Override
@@ -69,46 +69,46 @@ public class RecordForTrainingSelect_Fragment extends Fragment implements Loader
         Button btToday = v.findViewById(R.id.btToday);
         Button btTommorow = v.findViewById(R.id.btTommorow);
         Button btAftertommorow = v.findViewById(R.id.btAftertommorow);
-        Button button_error = v.findViewById(R.id.button6);
+        Button buttonError = v.findViewById(R.id.button6);
         rvTreningTime = v.findViewById(R.id.rvTrainingTime);
-        llEror_RfTS= v.findViewById(R.id.llEror_RfTS);
+        llErorRfTS = v.findViewById(R.id.llEror_RfTS);
         llListTime = v.findViewById(R.id.llListTime);
         pbRfTS = v.findViewById(R.id.pbRfTS);
 
         llListTime.setVisibility(View.INVISIBLE);
-        llEror_RfTS.setVisibility(View.INVISIBLE);
+        llErorRfTS.setVisibility(View.INVISIBLE);
 
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         rvTreningTime.setLayoutManager(mLayoutManager);
         rvTreningTime.setAdapter(adapter);
 
-        numberdayweek = new GregorianCalendar();
+        gcNumberDayWeek = new GregorianCalendar();
 
         @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("EEEE dd MMMM");
         @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM");
 
         //хэндлер для обоих потоков. Какой именно поток вызвал хэндлер передается в key
-        handler_open_fragment = new Handler() {
+        handlerOpenFragment = new Handler() {
             @SuppressLint("ShowToast")
             @Override
             public void handleMessage(Message msg) {
                 Bundle bundle = msg.getData();
                 String switchs = bundle.getString("switch"); //показывает какой поток вызвал
-                String result_check;
+                String resultCheck;
                 if (switchs != null){
                     if (switchs.equals("open")){ //поток при первом запуске экрана
-                        result_check = bundle.getString("open");
-                        if (result_check != null) {
-                            if (result_check.equals("false")) {
-                                llEror_RfTS.setVisibility(View.VISIBLE);
+                        resultCheck = bundle.getString("open");
+                        if (resultCheck != null) {
+                            if (resultCheck.equals("false")) {
+                                llErorRfTS.setVisibility(View.VISIBLE);
                                 pbRfTS.setVisibility(View.INVISIBLE);
                             }
                         }
                     }else{
-                        result_check = bundle.getString("onclick"); //поток от нажатия кнопок
-                        if (result_check != null) {
-                            if (result_check.equals("false")) {
-                                if (llEror_RfTS.getVisibility() == View.INVISIBLE){
+                        resultCheck = bundle.getString("onclick"); //поток от нажатия кнопок
+                        if (resultCheck != null) {
+                            if (resultCheck.equals("false")) {
+                                if (llErorRfTS.getVisibility() == View.INVISIBLE){
                                     Toast.makeText(getContext(), "Нет подключения", Toast.LENGTH_SHORT).show();
                                 }
                             }else {
@@ -125,59 +125,59 @@ public class RecordForTrainingSelect_Fragment extends Fragment implements Loader
         Runnable runnable_open_fragment = new Runnable() {
             @Override
             public void run() {
-                NetworkCheck = new NetworkCheck(getContext());
-                boolean result_check = NetworkCheck.checkInternet();
-                if (result_check){
-                    iNumberOfDay = numberdayweek.get(Calendar.DAY_OF_WEEK)-1;
-                    FirstStartAsyncTaskLoader(iNumberOfDay);
+                networkCheck = new NetworkCheck(getContext());
+                boolean resultCheck = networkCheck.checkInternet();
+                if (resultCheck){
+                    iNumberOfDay = gcNumberDayWeek.get(Calendar.DAY_OF_WEEK)-1;
+                    firstStartAsyncTaskLoader(iNumberOfDay);
 
                 }else {
-                    Message msg = handler_open_fragment.obtainMessage();
+                    Message msg = handlerOpenFragment.obtainMessage();
                     Bundle bundle = new Bundle();
                     bundle.putString("open", String.valueOf(false));
                     bundle.putString("switch", "open");
                     msg.setData(bundle);
-                    handler_open_fragment.sendMessage(msg);
+                    handlerOpenFragment.sendMessage(msg);
                 }
             }
         };
-        thread_open_fragment = new Thread(runnable_open_fragment);
-        thread_open_fragment.setDaemon(true);
+        threadOpenFragment = new Thread(runnable_open_fragment);
+        threadOpenFragment.setDaemon(true);
 
         //поток запускаемый кнопками выборающими дня недели
-        Runnable runnable_click_onbutton = new Runnable() {
+        Runnable runnableClickOnbutton = new Runnable() {
             @Override
             public void run() {
-                Message msg = handler_open_fragment.obtainMessage();
+                Message msg = handlerOpenFragment.obtainMessage();
                 Bundle bundle = new Bundle();
-                NetworkCheck = new NetworkCheck(getContext());
-                boolean result_check = NetworkCheck.checkInternet();
-                if (result_check){
+                networkCheck = new NetworkCheck(getContext());
+                boolean resultCheck = networkCheck.checkInternet();
+                if (resultCheck){
                     bundle.putString("onclick", String.valueOf(true));
-                    if (llEror_RfTS.getVisibility() == View.VISIBLE) {
-                        llEror_RfTS.setVisibility(View.INVISIBLE);
+                    if (llErorRfTS.getVisibility() == View.VISIBLE) {
+                        llErorRfTS.setVisibility(View.INVISIBLE);
                     }
-                    RestartAsyncTaskLoader(iNumberOfDay);
+                    restartAsyncTaskLoader(iNumberOfDay);
 
                 }else {
                     bundle.putString("onclick", String.valueOf(false));
                 }
                 bundle.putString("switch", "onclick");
                 msg.setData(bundle);
-                handler_open_fragment.sendMessage(msg);
+                handlerOpenFragment.sendMessage(msg);
             }
         };
-        thread_click_onbutton = new Thread(runnable_click_onbutton);
-        thread_click_onbutton.setDaemon(true);
+        threadClickOnbutton = new Thread(runnableClickOnbutton);
+        threadClickOnbutton.setDaemon(true);
 
         //получаю значения для кнопок
         date = new Date();
-        calendarday = new GregorianCalendar();
-        calendarday.add(Calendar.DAY_OF_YEAR, 1);
-        final Date tomorrow = calendarday.getTime();
+        gcCalendarDay = new GregorianCalendar();
+        gcCalendarDay.add(Calendar.DAY_OF_YEAR, 1);
+        final Date tomorrow = gcCalendarDay.getTime();
 
-        calendarday.add(Calendar.DAY_OF_YEAR, 1);
-        final Date aftertomorrow = calendarday.getTime();
+        gcCalendarDay.add(Calendar.DAY_OF_YEAR, 1);
+        final Date aftertomorrow = gcCalendarDay.getTime();
 
         final String currentToday = sdf.format(date);
         final String currentTomorrow = sdf.format(tomorrow);
@@ -187,69 +187,69 @@ public class RecordForTrainingSelect_Fragment extends Fragment implements Loader
         btTommorow.setText(currentTomorrow);
         btAftertommorow.setText(currentAftertommorow);
 
-        calendarday.setTime(date);
-        date_select_full = sdf2.format(date);
-        date_select_show = currentToday;
+        gcCalendarDay.setTime(date);
+        stDateSelectFull = sdf2.format(date);
+        stDateSelectShow = currentToday;
 
-        button_error.setOnClickListener(new View.OnClickListener() {
+        buttonError.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                llEror_RfTS.setVisibility(View.INVISIBLE);
+                llErorRfTS.setVisibility(View.INVISIBLE);
                 pbRfTS.setVisibility(View.VISIBLE);
-                thread_open_fragment.run();
+                threadOpenFragment.run();
             }
         });
 
         btToday.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                calendarday.setTime(date);
-                iNumberOfDay = numberdayweek.get(Calendar.DAY_OF_WEEK)-1;
-                date_select_full = sdf2.format(date);
-                date_select_show = currentToday;
-                thread_click_onbutton.run();
+                gcCalendarDay.setTime(date);
+                iNumberOfDay = gcNumberDayWeek.get(Calendar.DAY_OF_WEEK)-1;
+                stDateSelectFull = sdf2.format(date);
+                stDateSelectShow = currentToday;
+                threadClickOnbutton.run();
             }
         });
 
         btTommorow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                calendarday.setTime(tomorrow);
-                iNumberOfDay = numberdayweek.get(Calendar.DAY_OF_WEEK);
-                date_select_full = sdf2.format(tomorrow);
-                date_select_show = currentTomorrow;
-                thread_click_onbutton.run();
+                gcCalendarDay.setTime(tomorrow);
+                iNumberOfDay = gcNumberDayWeek.get(Calendar.DAY_OF_WEEK);
+                stDateSelectFull = sdf2.format(tomorrow);
+                stDateSelectShow = currentTomorrow;
+                threadClickOnbutton.run();
             }
         });
 
         btAftertommorow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                calendarday.setTime(aftertomorrow);
-                iNumberOfDay = numberdayweek.get(Calendar.DAY_OF_WEEK)+1;
-                date_select_full = sdf2.format(aftertomorrow);
-                date_select_show = currentAftertommorow;
-                thread_click_onbutton.run();
+                gcCalendarDay.setTime(aftertomorrow);
+                iNumberOfDay = gcNumberDayWeek.get(Calendar.DAY_OF_WEEK)+1;
+                stDateSelectFull = sdf2.format(aftertomorrow);
+                stDateSelectShow = currentAftertommorow;
+                threadClickOnbutton.run();
             }
         });
 
         return v;
     }
 
-    private void FirstStartAsyncTaskLoader(int day_select){
+    private void firstStartAsyncTaskLoader(int day_select){
         Bundle bundle = new Bundle();
         bundle.putString(String.valueOf(Table_Fragment_Loader.ARG_WORD), String.valueOf(day_select));
         getLoaderManager().initLoader(LOADER_ID, bundle, this).forceLoad();
     }
 
-    private void RestartAsyncTaskLoader(int day_select){
+    private void restartAsyncTaskLoader(int day_select){
         Bundle bundle = new Bundle();
         bundle.putString(String.valueOf(Table_Fragment_Loader.ARG_WORD), String.valueOf(day_select));
         getLoaderManager().restartLoader(LOADER_ID, bundle,this).onContentChanged();
     }
     @Override
     public Loader<List<Map>> onCreateLoader(int id, Bundle args) {
-        if (NetworkCheck.checkInternet()) {
+        if (networkCheck.checkInternet()) {
             Loader<List<Map>> loader;
             loader = new Table_Fragment_Loader(getContext(), args);
             return loader;
@@ -263,11 +263,11 @@ public class RecordForTrainingSelect_Fragment extends Fragment implements Loader
             adapter = new RecyclerAdapterRecordForTrainingSelect(getContext(), data, new ListenerRecordForTrainingSelect(){
                 @Override
                 public void selectTime(String stStartTime, String stTypesItem) {
-                    RecordForTrainingRecording_Fragment yfc =  new RecordForTrainingRecording_Fragment();
+                    RecordForTrainingRecordingFragment yfc =  new RecordForTrainingRecordingFragment();
                     Bundle bundle = new Bundle();
                     bundle.putString("time", stStartTime);
-                    bundle.putString("datefull", date_select_full);
-                    bundle.putString("dateshow", date_select_show);
+                    bundle.putString("datefull", stDateSelectFull);
+                    bundle.putString("dateshow", stDateSelectShow);
                     bundle.putString("type", stTypesItem);
                     yfc.setArguments(bundle);
                     FragmentManager fragmentManager = getFragmentManager();
@@ -300,7 +300,7 @@ public class RecordForTrainingSelect_Fragment extends Fragment implements Loader
     public void onResume() {
         super.onResume();
         if (adapter == null){
-            thread_open_fragment.start();
+            threadOpenFragment.start();
         }
     }
 

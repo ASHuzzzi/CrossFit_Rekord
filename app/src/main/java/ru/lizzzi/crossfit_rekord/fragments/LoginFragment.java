@@ -26,7 +26,7 @@ import ru.lizzzi.crossfit_rekord.R;
 
 //* Created by basso on 07.03.2018.
 
-public class Login_Fragment extends Fragment {
+public class LoginFragment extends Fragment {
 
     public static final String APP_PREFERENCES = "audata";
     public static final String APP_PREFERENCES_OBJECTID = "ObjectId";
@@ -76,7 +76,7 @@ public class Login_Fragment extends Fragment {
                             editor.putString(APP_PREFERENCES_USERNAME, String.valueOf(user.getProperty("name")));
                             editor.apply();
 
-                            TransactionFragment(RecordForTrainingSelect_Fragment.class);
+                            TransactionFragment(RecordForTrainingSelectFragment.class);
                         }
 
                         @Override
@@ -93,7 +93,7 @@ public class Login_Fragment extends Fragment {
         btnRegisration.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TransactionFragment(Registry_Fragment.class);
+                TransactionFragment(RegistryFragment.class);
             }
         });
         return  v;
@@ -101,9 +101,9 @@ public class Login_Fragment extends Fragment {
 
     private void TransactionFragment(Class fragmentClass) {
 
-        android.support.v4.app.Fragment fragment = null;
+        Fragment fragment = null;
         try {
-            fragment = (android.support.v4.app.Fragment) fragmentClass.newInstance();
+            fragment = (Fragment) fragmentClass.newInstance();
         } catch (Exception e) {
             e.printStackTrace();
         }

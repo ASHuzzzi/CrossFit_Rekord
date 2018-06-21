@@ -15,15 +15,15 @@ import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.documentfields.DocumentFields_Workout_details;
 
 
-public class RecyclerAdapter_Workout_details  extends BaseAdapter{
+public class RecyclerAdapterWorkoutDetails extends BaseAdapter{
 
-    private List<Map> woditems;
+    private List<Map> mapWodItems;
     private int layoutId;
     private LayoutInflater inflater;
     private DocumentFields_Workout_details fields;
 
-    public RecyclerAdapter_Workout_details(Context context, @NonNull List<Map> woditems, int layoutId){
-        this.woditems = woditems;
+    public RecyclerAdapterWorkoutDetails(Context context, @NonNull List<Map> wodItems, int layoutId){
+        this.mapWodItems = wodItems;
         this.layoutId = layoutId;
         inflater = LayoutInflater.from(context);
         fields = new DocumentFields_Workout_details(context);
@@ -31,12 +31,12 @@ public class RecyclerAdapter_Workout_details  extends BaseAdapter{
 
     @Override
     public int getCount() {
-        return woditems.size();
+        return mapWodItems.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return woditems.get(position);
+        return mapWodItems.get(position);
     }
 
     @Override
@@ -56,7 +56,7 @@ public class RecyclerAdapter_Workout_details  extends BaseAdapter{
             view.setTag(holder);
         }
 
-        customizeView(view, holder, woditems.get(position));
+        customizeView(view, holder, mapWodItems.get(position));
 
         return  view;
     }
@@ -64,13 +64,13 @@ public class RecyclerAdapter_Workout_details  extends BaseAdapter{
     private void customizeView(View view, ViewHolder holder, final Map documentInfo) {
         String stName = (String) documentInfo.get(fields.getNameField());
         String stSkill = (String) documentInfo.get(fields.getSkillField());
-        String stWod_level = (String) documentInfo.get(fields.getWodLevelField());
-        String stWod_Result = (String) documentInfo.get(fields.getWodResultField());
+        String stWodLevel = (String) documentInfo.get(fields.getWodLevelField());
+        String stWodResult = (String) documentInfo.get(fields.getWodResultField());
 
         holder.Name.setText(stName);
         holder.Skill.setText(stSkill);
-        holder.Wod_level.setText(stWod_level);
-        holder.Wod_result.setText(stWod_Result);
+        holder.Wod_level.setText(stWodLevel);
+        holder.Wod_result.setText(stWodResult);
 
         view.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -17,9 +17,9 @@ import android.widget.Button;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import ru.lizzzi.crossfit_rekord.fragments.Listener_Result;
+import ru.lizzzi.crossfit_rekord.fragments.ListenerResult;
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapter_Result;
+import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterResult;
 import ru.lizzzi.crossfit_rekord.data.WodDBHelper;
 import ru.lizzzi.crossfit_rekord.data.WodDbContract;
 
@@ -87,7 +87,7 @@ public class Result_Fragment extends Fragment {
         mRecyclerView = (RecyclerView) view.findViewById(R.id.lv_caption_result);
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new RecyclerAdapter_Result(caption_wod, new Listener_Result());
+        mAdapter = new RecyclerAdapterResult(caption_wod, new ListenerResult());
         mRecyclerView.setAdapter(mAdapter);
 
         New_Result.setOnClickListener(new View.OnClickListener() {
