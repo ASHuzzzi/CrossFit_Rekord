@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.documentfields.DocumentFields_Workout_details;
+import ru.lizzzi.crossfit_rekord.documentfields.DocumentFieldsWorkoutDetails;
 
 
 public class RecyclerAdapterWorkoutDetails extends BaseAdapter{
@@ -20,13 +20,13 @@ public class RecyclerAdapterWorkoutDetails extends BaseAdapter{
     private List<Map> mapWodItems;
     private int layoutId;
     private LayoutInflater inflater;
-    private DocumentFields_Workout_details fields;
+    private DocumentFieldsWorkoutDetails fields;
 
     public RecyclerAdapterWorkoutDetails(Context context, @NonNull List<Map> wodItems, int layoutId){
         this.mapWodItems = wodItems;
         this.layoutId = layoutId;
         inflater = LayoutInflater.from(context);
-        fields = new DocumentFields_Workout_details(context);
+        fields = new DocumentFieldsWorkoutDetails(context);
     }
 
     @Override

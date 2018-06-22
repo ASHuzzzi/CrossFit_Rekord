@@ -27,7 +27,7 @@ import java.util.Date;
 import java.util.List;
 
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.loaders.Calendar_wod_Loader;
+import ru.lizzzi.crossfit_rekord.loaders.CalendarWodLoader;
 
 
 public class CalendarWodFragment extends Fragment implements  OnDateSelectedListener, OnMonthChangedListener, LoaderManager.LoaderCallbacks<List<Date>> {
@@ -164,7 +164,7 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
     @Override
     public Loader<List<Date>> onCreateLoader(int id, Bundle args) {
         Loader<List<Date>> loader;
-        loader = new Calendar_wod_Loader(getContext(), args);
+        loader = new CalendarWodLoader(getContext(), args);
         return loader;
     }
 

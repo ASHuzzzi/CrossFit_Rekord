@@ -29,7 +29,7 @@ import java.util.Map;
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterTable;
 import ru.lizzzi.crossfit_rekord.interfaces.ListenerRecordForTrainingSelect;
-import ru.lizzzi.crossfit_rekord.loaders.Table_Fragment_Loader;
+import ru.lizzzi.crossfit_rekord.loaders.TableFragmentLoader;
 
 public class TableFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Map>> {
 
@@ -246,21 +246,21 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
     private void firstStartAsyncTaskLoader(int iNumberOfDay){
         preSelectionButtonDay(8); //передаем 8, чтобы сбросить нажатие всех кнопок
         Bundle bundle = new Bundle();
-        bundle.putString(String.valueOf(Table_Fragment_Loader.ARG_WORD), String.valueOf(iNumberOfDay));
+        bundle.putString(String.valueOf(TableFragmentLoader.ARG_WORD), String.valueOf(iNumberOfDay));
         getLoaderManager().initLoader(LOADERID, bundle, this).forceLoad();
     }
 
     private void restartAsyncTaskLoader(int iNumberOfDay){
         preSelectionButtonDay(8); //передаем 8, чтобы сбросить нажатие всех кнопок
         Bundle bundle = new Bundle();
-        bundle.putString(String.valueOf(Table_Fragment_Loader.ARG_WORD), String.valueOf(iNumberOfDay));
+        bundle.putString(String.valueOf(TableFragmentLoader.ARG_WORD), String.valueOf(iNumberOfDay));
         getLoaderManager().restartLoader(LOADERID, bundle,this).onContentChanged();
     }
 
     @Override
     public Loader<List<Map>> onCreateLoader(int id, Bundle args) {
         Loader<List<Map>> loader;
-        loader = new Table_Fragment_Loader(getContext(), args);
+        loader = new TableFragmentLoader(getContext(), args);
         return loader;
     }
 

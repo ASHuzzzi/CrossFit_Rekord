@@ -12,16 +12,16 @@ import java.util.List;
 import java.util.Map;
 
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.documentfields.DocumentFields_Record;
+import ru.lizzzi.crossfit_rekord.documentfields.DocumentFieldsRecord;
 
 public class RecyclerAdapterRecord extends RecyclerView.Adapter<RecyclerAdapterRecord.ViewHolder>  {
     private List<Map> storedItems;
-    private DocumentFields_Record fields;
+    private DocumentFieldsRecord fields;
     private int i = 1;
 
     public RecyclerAdapterRecord(Context context, @NonNull List<Map> shediletems) {
         this.storedItems = shediletems;
-        fields = new DocumentFields_Record(context);
+        fields = new DocumentFieldsRecord(context);
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {

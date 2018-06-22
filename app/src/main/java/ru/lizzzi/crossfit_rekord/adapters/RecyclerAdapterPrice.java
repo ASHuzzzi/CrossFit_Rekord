@@ -12,20 +12,20 @@ import java.util.List;
 import java.util.Map;
 
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.documentfields.DocumentFields_Price;
+import ru.lizzzi.crossfit_rekord.documentfields.DocumentFieldsPrice;
 
 
 public class RecyclerAdapterPrice extends BaseAdapter {
     private List<Map> storedItems;
     private int layoutId;
     private LayoutInflater inflater;
-    private DocumentFields_Price fields;
+    private DocumentFieldsPrice fields;
 
     public RecyclerAdapterPrice(Context context, @NonNull List<Map> storedItems, int layoutId) {
         this.storedItems = storedItems;
         this.layoutId = layoutId;
         inflater = LayoutInflater.from(context);
-        fields = new DocumentFields_Price(context, null);
+        fields = new DocumentFieldsPrice(context, null);
     }
 
     @Override

@@ -10,11 +10,11 @@ import com.backendless.persistence.DataQueryBuilder;
 import java.util.List;
 import java.util.Map;
 
-public class Table_Fragment_Loader extends AsyncTaskLoader<List<Map>> {
+public class TableFragmentLoader extends AsyncTaskLoader<List<Map>> {
     public static final int ARG_WORD = 1;
     private int sNumberOfDay;
 
-    public Table_Fragment_Loader(Context context, Bundle args) {
+    public TableFragmentLoader(Context context, Bundle args) {
         super(context);
         if (args != null){
             sNumberOfDay = Integer.parseInt(args.getString(String.valueOf(ARG_WORD)));

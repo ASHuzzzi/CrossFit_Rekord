@@ -28,7 +28,7 @@ import java.util.Objects;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterRecord;
-import ru.lizzzi.crossfit_rekord.loaders.RecordForTrainingRecording_LoadPeople_Loader;
+import ru.lizzzi.crossfit_rekord.loaders.RecordForTrainingRecordingLoadPeopleLoader;
 
 
 public class RecordForTrainingRecordingFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Map>>{
@@ -256,8 +256,8 @@ public class RecordForTrainingRecordingFragment extends Fragment implements Load
 
     private void firstStartAsyncTaskLoader(){
         bundle = new Bundle();
-        bundle.putString(String.valueOf(RecordForTrainingRecording_LoadPeople_Loader.ARG_DATE), stDateSelectFull);
-        bundle.putString(String.valueOf(RecordForTrainingRecording_LoadPeople_Loader.ARG_TIME), stTimeSelect);
+        bundle.putString(String.valueOf(RecordForTrainingRecordingLoadPeopleLoader.ARG_DATE), stDateSelectFull);
+        bundle.putString(String.valueOf(RecordForTrainingRecordingLoadPeopleLoader.ARG_TIME), stTimeSelect);
         mLoader = getLoaderManager().initLoader(LOADER_SHOW_LIST, bundle, this);
         mLoader.forceLoad();
     }
@@ -265,12 +265,12 @@ public class RecordForTrainingRecordingFragment extends Fragment implements Load
     private void restartAsyncTaskLoader(int loader_id){
         switch (loader_id){
             case 2:
-                bundle.putString(String.valueOf(RecordForTrainingRecording_LoadPeople_Loader.ARG_USERNAME), stUserName);
+                bundle.putString(String.valueOf(RecordForTrainingRecordingLoadPeopleLoader.ARG_USERNAME), stUserName);
                 mLoader = getLoaderManager().restartLoader(LOADER_WRITE_ITEM,bundle, this);
                 mLoader.forceLoad();
                 break;
             case 3:
-                bundle.putString(String.valueOf(RecordForTrainingRecording_LoadPeople_Loader.ARG_USERID), stUserId);
+                bundle.putString(String.valueOf(RecordForTrainingRecordingLoadPeopleLoader.ARG_USERID), stUserId);
                 mLoader = getLoaderManager().restartLoader(LOADER_DELETE_ITEM,bundle, this);
                 mLoader.forceLoad();
                 break;
@@ -281,7 +281,7 @@ public class RecordForTrainingRecordingFragment extends Fragment implements Load
     @Override
     public Loader<List<Map>> onCreateLoader(int id, Bundle args) {
         Loader<List<Map>> loader;
-        loader = new RecordForTrainingRecording_LoadPeople_Loader(getContext(), args, id);
+        loader = new RecordForTrainingRecordingLoadPeopleLoader(getContext(), args, id);
         return loader;
     }
 

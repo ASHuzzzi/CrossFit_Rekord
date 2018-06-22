@@ -5,10 +5,10 @@ import android.content.Context;
 import ru.lizzzi.crossfit_rekord.R;
 
 
-public class DocumentFields_Record {
+public class DocumentFieldsRecord {
     private Context context;
 
-    public DocumentFields_Record(Context context) {
+    public DocumentFieldsRecord(Context context) {
         this.context = context;
     }
 

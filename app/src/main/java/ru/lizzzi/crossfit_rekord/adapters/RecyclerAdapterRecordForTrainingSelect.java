@@ -13,18 +13,18 @@ import java.util.List;
 import java.util.Map;
 
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.documentfields.DocumentFields_Table;
+import ru.lizzzi.crossfit_rekord.documentfields.DocumentFieldsTable;
 import ru.lizzzi.crossfit_rekord.interfaces.ListenerRecordForTrainingSelect;
 
 public class RecyclerAdapterRecordForTrainingSelect extends RecyclerView.Adapter<RecyclerAdapterRecordForTrainingSelect.ViewHolder> {
 
     private List<Map> shediletems;
-    private final ThreadLocal<DocumentFields_Table> fields = new ThreadLocal<>();
+    private final ThreadLocal<DocumentFieldsTable> fields = new ThreadLocal<>();
     private ListenerRecordForTrainingSelect mlistener;
 
     public RecyclerAdapterRecordForTrainingSelect(Context context, @NonNull List<Map> shediletems, ListenerRecordForTrainingSelect listener) {
         this.shediletems = shediletems;
-        fields.set(new DocumentFields_Table(context));
+        fields.set(new DocumentFieldsTable(context));
         mlistener = listener;
     }
 

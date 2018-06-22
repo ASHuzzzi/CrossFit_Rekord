@@ -23,7 +23,7 @@ import java.util.Map;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterWorkoutDetails;
-import ru.lizzzi.crossfit_rekord.loaders.Workout_details_Loaders;
+import ru.lizzzi.crossfit_rekord.loaders.WorkoutDetailsLoaders;
 
 /**
  * Created by Liza on 13.03.2018.
@@ -139,7 +139,7 @@ public class WorkoutDetailsFragment extends Fragment implements LoaderManager.Lo
     @Override
     public Loader<List<Map>> onCreateLoader(int id, Bundle args) {
         Loader<List<Map>> loader;
-        loader = new Workout_details_Loaders(getContext(), args);
+        loader = new WorkoutDetailsLoaders(getContext(), args);
         return loader;
     }
 

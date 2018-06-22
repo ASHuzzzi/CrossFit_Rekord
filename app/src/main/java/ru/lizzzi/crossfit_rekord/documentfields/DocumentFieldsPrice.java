@@ -12,15 +12,15 @@ import ru.profit_group.scorocode_sdk.scorocode_objects.DocumentInfo;
  * Created by Peter Staranchuk on 10/30/16
  */
 
-public class DocumentFields_Price {
+public class DocumentFieldsPrice {
     private Context context;
     private DocumentInfo documentInfo;
 
-    public DocumentFields_Price(Context context) {
+    public DocumentFieldsPrice(Context context) {
         this(context, null);
     }
 
-    public DocumentFields_Price(Context context, DocumentInfo documentInfo) {
+    public DocumentFieldsPrice(Context context, DocumentInfo documentInfo) {
         this.context = context;
         this.documentInfo = documentInfo;
     }

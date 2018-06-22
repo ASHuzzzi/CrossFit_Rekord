@@ -16,8 +16,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-public class Calendar_wod_Loader extends AsyncTaskLoader<List<Date>> {
-    public Calendar_wod_Loader(Context context, Bundle args) {
+public class CalendarWodLoader extends AsyncTaskLoader<List<Date>> {
+    public CalendarWodLoader(Context context, Bundle args) {
         super(context);
         /*if (args != null){
 
@@ -26,7 +26,7 @@ public class Calendar_wod_Loader extends AsyncTaskLoader<List<Date>> {
 
     @Override
     public List<Date> loadInBackground() {
-        Date date_from_db;
+        Date dateFromDb;
         List<Map> data;
         DataQueryBuilder queryBuilder = DataQueryBuilder.create();
         queryBuilder.setPageSize(100);
@@ -40,8 +40,8 @@ public class Calendar_wod_Loader extends AsyncTaskLoader<List<Date>> {
             String sr = String.valueOf(map.toArray()[7]);
 
             try {
-                date_from_db = sdf.parse(sr);
-                dates.add(date_from_db);
+                dateFromDb = sdf.parse(sr);
+                dates.add(dateFromDb);
 
             } catch (ParseException e) {
                 e.printStackTrace();

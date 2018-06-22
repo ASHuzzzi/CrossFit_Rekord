@@ -13,7 +13,7 @@ import android.widget.Toast;
 import java.util.List;
 
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.documentfields.DocumentFields_Price;
+import ru.lizzzi.crossfit_rekord.documentfields.DocumentFieldsPrice;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackCountDocument;
 import ru.profit_group.scorocode_sdk.Callbacks.CallbackFindDocument;
 import ru.profit_group.scorocode_sdk.Responses.data.ResponseCount;
@@ -37,7 +37,7 @@ public class Price_Fragment extends Fragment{
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerView.Adapter mAdapter;
     private List<DocumentInfo> documentInfos;
-    private DocumentFields_Price fields;
+    private DocumentFieldsPrice fields;
 
 
     @Override
@@ -46,7 +46,7 @@ public class Price_Fragment extends Fragment{
         View v = inflater.inflate(R.layout.fragment_price, container, false);
         ScorocodeSdk.initWith(APPLICATION_ID, CLIENT_KEY, MASTER_KEY, FILE_KEY, MESSAGE_KEY, SCRIPT_KEY, WEBSOCKET_KEY);
         final ListView lvItemsInStorehouse = (ListView) v.findViewById(R.id.lvItemsInStorehouse);
-        fields = new DocumentFields_Price(getContext());
+        fields = new DocumentFieldsPrice(getContext());
 
         ExpandableListView elvMain;
 

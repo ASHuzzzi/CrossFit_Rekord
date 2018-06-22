@@ -4,10 +4,10 @@ import android.content.Context;
 
 import ru.lizzzi.crossfit_rekord.R;
 
-public class DocumentFields_Table {
+public class DocumentFieldsTable {
     private Context context;
 
-    public DocumentFields_Table(Context context) {
+    public DocumentFieldsTable(Context context) {
         this.context = context;
     }
 

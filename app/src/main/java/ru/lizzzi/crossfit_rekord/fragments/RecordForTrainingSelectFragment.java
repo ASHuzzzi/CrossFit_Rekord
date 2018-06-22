@@ -29,7 +29,7 @@ import java.util.Map;
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterRecordForTrainingSelect;
 import ru.lizzzi.crossfit_rekord.interfaces.ListenerRecordForTrainingSelect;
-import ru.lizzzi.crossfit_rekord.loaders.Table_Fragment_Loader;
+import ru.lizzzi.crossfit_rekord.loaders.TableFragmentLoader;
 
 
 public class RecordForTrainingSelectFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Map>>{
@@ -238,20 +238,20 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
 
     private void firstStartAsyncTaskLoader(int day_select){
         Bundle bundle = new Bundle();
-        bundle.putString(String.valueOf(Table_Fragment_Loader.ARG_WORD), String.valueOf(day_select));
+        bundle.putString(String.valueOf(TableFragmentLoader.ARG_WORD), String.valueOf(day_select));
         getLoaderManager().initLoader(LOADER_ID, bundle, this).forceLoad();
     }
 
     private void restartAsyncTaskLoader(int day_select){
         Bundle bundle = new Bundle();
-        bundle.putString(String.valueOf(Table_Fragment_Loader.ARG_WORD), String.valueOf(day_select));
+        bundle.putString(String.valueOf(TableFragmentLoader.ARG_WORD), String.valueOf(day_select));
         getLoaderManager().restartLoader(LOADER_ID, bundle,this).onContentChanged();
     }
     @Override
     public Loader<List<Map>> onCreateLoader(int id, Bundle args) {
         if (networkCheck.checkInternet()) {
             Loader<List<Map>> loader;
-            loader = new Table_Fragment_Loader(getContext(), args);
+            loader = new TableFragmentLoader(getContext(), args);
             return loader;
         }
         return null;

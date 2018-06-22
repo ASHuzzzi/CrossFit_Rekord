@@ -10,26 +10,26 @@ import com.backendless.persistence.DataQueryBuilder;
 import java.util.List;
 import java.util.Map;
 
-public class Workout_details_Loaders extends AsyncTaskLoader<List<Map>> {
+public class WorkoutDetailsLoaders extends AsyncTaskLoader<List<Map>> {
 
-    private String Table_name;
-    private String Selected_day;
+    private String tableName;
+    private String selecteDay;
 
-    public Workout_details_Loaders(Context context, Bundle args) {
+    public WorkoutDetailsLoaders(Context context, Bundle args) {
         super(context);
         if (args != null){
-            Table_name = args.getString("Table");
-            Selected_day = args.getString("Selected_day");
+            tableName = args.getString("Table");
+            selecteDay = args.getString("Selected_day");
         };
 
     }
 
     @Override
     public List<Map> loadInBackground() {
-        String whereClause = "date_session = '" + Selected_day + "'";
+        String whereClause = "date_session = '" + selecteDay + "'";
         DataQueryBuilder queryBuilder = DataQueryBuilder.create();
         queryBuilder.setWhereClause(whereClause);
         queryBuilder.setPageSize(100);
-        return Backendless.Data.of(Table_name).find(queryBuilder);
+        return Backendless.Data.of(tableName).find(queryBuilder);
     }
 }
