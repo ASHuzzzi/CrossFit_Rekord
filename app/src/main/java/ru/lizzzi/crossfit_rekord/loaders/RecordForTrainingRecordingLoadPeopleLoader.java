@@ -36,7 +36,7 @@ public class RecordForTrainingRecordingLoadPeopleLoader extends AsyncTaskLoader<
 
     @Override
     public List<Map> loadInBackground() {
-        String table_name = "recording_on_training";
+        String table_name = "recording";
         HashMap<String, String> record = new HashMap<>();
         if (iLoaderId == 2) {
             record.put("data", dateSelect);

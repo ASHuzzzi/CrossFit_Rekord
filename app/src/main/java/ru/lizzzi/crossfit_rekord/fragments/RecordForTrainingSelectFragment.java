@@ -129,6 +129,9 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
                 boolean resultCheck = networkCheck.checkInternet();
                 if (resultCheck){
                     iNumberOfDay = gcNumberDayWeek.get(Calendar.DAY_OF_WEEK)-1;
+                    if (iNumberOfDay == 0){
+                        iNumberOfDay = 7;
+                    }
                     firstStartAsyncTaskLoader(iNumberOfDay);
 
                 }else {
@@ -205,6 +208,9 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
             public void onClick(View view) {
                 gcCalendarDay.setTime(date);
                 iNumberOfDay = gcNumberDayWeek.get(Calendar.DAY_OF_WEEK)-1;
+                if (iNumberOfDay == 0){
+                    iNumberOfDay = 7;
+                }
                 stDateSelectFull = sdf2.format(date);
                 stDateSelectShow = currentToday;
                 threadClickOnbutton.run();
@@ -227,6 +233,9 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
             public void onClick(View view) {
                 gcCalendarDay.setTime(aftertomorrow);
                 iNumberOfDay = gcNumberDayWeek.get(Calendar.DAY_OF_WEEK)+1;
+                if (iNumberOfDay == 8){
+                    iNumberOfDay = 1;
+                }
                 stDateSelectFull = sdf2.format(aftertomorrow);
                 stDateSelectShow = currentAftertommorow;
                 threadClickOnbutton.run();

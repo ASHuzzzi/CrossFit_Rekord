@@ -125,13 +125,13 @@ public class WorkoutDetailsFragment extends Fragment implements LoaderManager.Lo
     }
 
     private void loadSessionAsyncTaskLoader(){
-        bundle.putString("Table", "Training_sessions");
+        bundle.putString("Table", "results");
         int LOADER_ID = 1;
         getLoaderManager().initLoader(LOADER_ID, bundle, this).forceLoad();
     }
 
     private void loadExerciseAsyncTaskLoader(){
-        bundle.putString("Table", "Exercise_assignment");
+        bundle.putString("Table", "exercises");
         int LOADER_ID2 = 2;
         getLoaderManager().initLoader(LOADER_ID2, bundle, this).forceLoad();
     }

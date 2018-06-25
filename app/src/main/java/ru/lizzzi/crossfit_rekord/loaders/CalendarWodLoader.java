@@ -30,7 +30,7 @@ public class CalendarWodLoader extends AsyncTaskLoader<List<Date>> {
         List<Map> data;
         DataQueryBuilder queryBuilder = DataQueryBuilder.create();
         queryBuilder.setPageSize(100);
-        data = Backendless.Data.of("Exercise_assignment").find(queryBuilder);
+        data = Backendless.Data.of("exercises").find(queryBuilder);
         Collection map;
         ArrayList<Date> dates = new ArrayList<>();
         SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);

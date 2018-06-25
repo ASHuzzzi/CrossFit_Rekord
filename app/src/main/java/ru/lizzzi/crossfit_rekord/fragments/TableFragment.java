@@ -275,16 +275,14 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
                     Calendar c = Calendar.getInstance();
                     calendarday = new GregorianCalendar();
                     Date today;
-                    int dayOfWeek = iNumberOfDay - c.get(Calendar.DAY_OF_WEEK)  + 1;
-                    if ((dayOfWeek > 2 ) || (dayOfWeek < 0 )){
-                        @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdfToast = new SimpleDateFormat("EEEE");
-                        calendarday.add(Calendar.DAY_OF_YEAR, 0);
-                        today = calendarday.getTime();
-                        String toastToday = sdfToast.format(today);
-                        Toast toast = Toast.makeText(getContext(), "Запись возможна на сегодня (" + toastToday  + ") и два дня вперед", Toast.LENGTH_LONG);
-                        toast.setGravity(Gravity.CENTER, 0, 0);
-                        toast.show();
+                    int numberDayOfWeek;
+                    if (c.get(Calendar.DAY_OF_WEEK) == 1){
+                        numberDayOfWeek = 7;
                     }else {
+                        numberDayOfWeek = (c.get(Calendar.DAY_OF_WEEK)-1);
+                    }
+                    int dayOfWeek = iNumberOfDay-numberDayOfWeek;
+                    if ((dayOfWeek == 0) || (dayOfWeek == 1) || (dayOfWeek == 2) || (dayOfWeek == -5) || (dayOfWeek == -6)){
                         @SuppressLint("SimpleDateFormat") SimpleDateFormat sdfDataShow = new SimpleDateFormat("EEEE dd MMMM");
                         @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdfDataFull = new SimpleDateFormat("dd/MM");
                         calendarday.add(Calendar.DAY_OF_YEAR, dayOfWeek);
@@ -305,6 +303,15 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
                         ft.replace(R.id.container, yfc);
                         ft.addToBackStack(null);
                         ft.commit();
+
+                    }else {
+                        @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdfToast = new SimpleDateFormat("EEEE");
+                        calendarday.add(Calendar.DAY_OF_YEAR, 0);
+                        today = calendarday.getTime();
+                        String toastToday = sdfToast.format(today);
+                        Toast toast = Toast.makeText(getContext(), "Запись возможна на сегодня (" + toastToday  + ") и два дня вперед", Toast.LENGTH_LONG);
+                        toast.setGravity(Gravity.CENTER, 0, 0);
+                        toast.show();
                     }
 
                 }

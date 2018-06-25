@@ -29,6 +29,6 @@ public class TableFragmentLoader extends AsyncTaskLoader<List<Map>> {
         queryBuilder.setWhereClause(whereClause);
         queryBuilder.setSortBy("start_time");
         queryBuilder.setPageSize(20);
-        return Backendless.Data.of("Table").find(queryBuilder);
+        return Backendless.Data.of("schedule").find(queryBuilder);
     }
 }
