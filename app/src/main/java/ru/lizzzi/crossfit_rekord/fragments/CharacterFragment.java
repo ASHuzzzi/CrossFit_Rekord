@@ -100,7 +100,7 @@ public class CharacterFragment extends Fragment {
 
         itemListCharacter.clear();
 
-        String[] columns = new  String[]{DefinitionDbContarct.DBdefinition.Column_character};
+        /*String[] columns = new  String[]{DefinitionDbContarct.DBdefinition.Column_character};
         Cursor cursor = db.query(true,
                 DefinitionDbContarct.DBdefinition.TABLE_NAME,
                 columns,
@@ -119,7 +119,8 @@ public class CharacterFragment extends Fragment {
                 itemListCharacter.add(name);
             }while (cursor.moveToNext());
         }
-        cursor.close();
+        cursor.close();*/
+        itemListCharacter = mDbHelper.selectCharacter();
 
         ArrayAdapter adapter = new ArrayAdapter(getContext(),
                 android.R.layout.simple_list_item_1, itemListCharacter);

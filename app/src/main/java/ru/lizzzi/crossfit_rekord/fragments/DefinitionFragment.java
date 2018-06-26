@@ -133,43 +133,9 @@ public class DefinitionFragment extends Fragment {
         itemListTermin.clear();
         itemListDefinition.clear();
 
-        String[] columns = new  String[]{DBdefinition.Column_termin};
-        Cursor cursor = db.query(DBdefinition.TABLE_NAME,
-                columns,
-                DBdefinition.Column_character + "= '" + ri + "'",
-                null,
-                null,
-                null,
-                null);
-        if (cursor !=null && cursor.moveToFirst()){
-            do {
-                String name = "";
-                for (String cn : cursor.getColumnNames()) {
-                    name = cursor.getString(cursor.getColumnIndex(cn));
-                }
-                itemListTermin.add(name);
-            }while (cursor.moveToNext());
-        }
-        cursor.close();
+        itemListTermin = mDbHelper.selectTermin(ri);
+        itemListDefinition = mDbHelper.selectDescription(ri);
 
-        columns = new  String[]{DBdefinition.Column_description};
-        cursor = db.query(DBdefinition.TABLE_NAME,
-                columns,
-                DBdefinition.Column_character + "= '" + ri + "'",
-                null,
-                null,
-                null,
-                null);
-        if (cursor !=null && cursor.moveToFirst()){
-            do {
-                String name = "";
-                for (String cn : cursor.getColumnNames()) {
-                    name = cursor.getString(cursor.getColumnIndex(cn));
-                }
-                itemListDefinition.add(name);
-            }while (cursor.moveToNext());
-        }
-        cursor.close();
     }
 
 }

@@ -4,9 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.content.AsyncTaskLoader;
 
-import com.backendless.Backendless;
-import com.backendless.persistence.DataQueryBuilder;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -16,7 +13,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import ru.lizzzi.crossfit_rekord.backendless.BackendlessQueries;
+
 public class CalendarWodLoader extends AsyncTaskLoader<List<Date>> {
+
+    private BackendlessQueries queries = new BackendlessQueries();
+
     public CalendarWodLoader(Context context, Bundle args) {
         super(context);
         /*if (args != null){
@@ -28,9 +30,7 @@ public class CalendarWodLoader extends AsyncTaskLoader<List<Date>> {
     public List<Date> loadInBackground() {
         Date dateFromDb;
         List<Map> data;
-        DataQueryBuilder queryBuilder = DataQueryBuilder.create();
-        queryBuilder.setPageSize(100);
-        data = Backendless.Data.of("exercises").find(queryBuilder);
+        data = queries.loadCalendarWod();
         Collection map;
         ArrayList<Date> dates = new ArrayList<>();
         SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);

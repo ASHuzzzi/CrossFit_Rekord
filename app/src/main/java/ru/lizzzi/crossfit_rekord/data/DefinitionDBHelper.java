@@ -2,6 +2,7 @@ package ru.lizzzi.crossfit_rekord.data;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
@@ -11,6 +12,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 
 public class DefinitionDBHelper  extends SQLiteOpenHelper{
 
@@ -116,4 +118,87 @@ public class DefinitionDBHelper  extends SQLiteOpenHelper{
     // Здесь можно добавить вспомогательные методы для доступа и получения данных из БД
     // вы можете возвращать курсоры через "return myDataBase.query(....)", это облегчит их использование
     // в создании адаптеров для ваших view
+    public ArrayList<String> selectCharacter(){
+        myDataBase = this.getReadableDatabase();
+
+        ArrayList<String> arrListCharacter = new ArrayList<>();
+
+        String[] columns = new  String[]{DefinitionDbContarct.DBdefinition.Column_character};
+        Cursor cursor = myDataBase.query(true,
+                DefinitionDbContarct.DBdefinition.TABLE_NAME,
+                columns,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null);
+        if (cursor !=null && cursor.moveToFirst()){
+            do {
+                String name = "";
+                for (String cn : cursor.getColumnNames()) {
+                    name = cursor.getString(cursor.getColumnIndex(cn));
+                }
+                arrListCharacter.add(name);
+            }while (cursor.moveToNext());
+        }
+        if (cursor != null) {
+            cursor.close();
+        }
+        return arrListCharacter;
+    }
+
+    public ArrayList<String> selectTermin(String character){
+        myDataBase = this.getReadableDatabase();
+
+        ArrayList<String> arrListTermin = new ArrayList<>();
+        String[] columns = new  String[]{DefinitionDbContarct.DBdefinition.Column_termin};
+        Cursor cursor = myDataBase.query(DefinitionDbContarct.DBdefinition.TABLE_NAME,
+                columns,
+                DefinitionDbContarct.DBdefinition.Column_character + "= '" + character + "'",
+                null,
+                null,
+                null,
+                null);
+        if (cursor !=null && cursor.moveToFirst()){
+            do {
+                String name = "";
+                for (String cn : cursor.getColumnNames()) {
+                    name = cursor.getString(cursor.getColumnIndex(cn));
+                }
+                arrListTermin.add(name);
+            }while (cursor.moveToNext());
+        }
+        if (cursor != null) {
+            cursor.close();
+        }
+        return arrListTermin;
+    }
+
+    public ArrayList<String> selectDescription(String character){
+        myDataBase = this.getReadableDatabase();
+
+        ArrayList<String> arrListDefinition = new ArrayList<>();
+        String[]  columns = new  String[]{DefinitionDbContarct.DBdefinition.Column_description};
+        Cursor cursor = myDataBase.query(DefinitionDbContarct.DBdefinition.TABLE_NAME,
+                columns,
+                DefinitionDbContarct.DBdefinition.Column_character + "= '" + character + "'",
+                null,
+                null,
+                null,
+                null);
+        if (cursor !=null && cursor.moveToFirst()){
+            do {
+                String name = "";
+                for (String cn : cursor.getColumnNames()) {
+                    name = cursor.getString(cursor.getColumnIndex(cn));
+                }
+                arrListDefinition.add(name);
+            }while (cursor.moveToNext());
+        }
+        if (cursor != null) {
+            cursor.close();
+        }
+        return arrListDefinition;
+    }
 }

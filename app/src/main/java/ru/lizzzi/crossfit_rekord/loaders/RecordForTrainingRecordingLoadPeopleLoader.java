@@ -4,12 +4,10 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.content.AsyncTaskLoader;
 
-import com.backendless.Backendless;
-import com.backendless.persistence.DataQueryBuilder;
-
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import ru.lizzzi.crossfit_rekord.backendless.BackendlessQueries;
 
 public class RecordForTrainingRecordingLoadPeopleLoader extends AsyncTaskLoader<List<Map>> {
 
@@ -22,6 +20,7 @@ public class RecordForTrainingRecordingLoadPeopleLoader extends AsyncTaskLoader<
     private String timeSelect;
     private String userId;
     private String userName;
+    private BackendlessQueries queries = new BackendlessQueries();
 
     public RecordForTrainingRecordingLoadPeopleLoader(Context context, Bundle args, int id) {
         super(context);
@@ -36,25 +35,8 @@ public class RecordForTrainingRecordingLoadPeopleLoader extends AsyncTaskLoader<
 
     @Override
     public List<Map> loadInBackground() {
-        String table_name = "recording";
-        HashMap<String, String> record = new HashMap<>();
-        if (iLoaderId == 2) {
-            record.put("data", dateSelect);
-            record.put("time", timeSelect);
-            record.put("username", userName);
-            Backendless.Persistence.of(table_name).save(record);
-        }
-
-
-        if (iLoaderId == 3) {
-            record.put("objectId", userId);
-            Backendless.Persistence.of(table_name).remove(record);
-        }
-
-        String whereClause = "data = '" + dateSelect + "' and time = '" + timeSelect + "'";
-        DataQueryBuilder queryBuilder = DataQueryBuilder.create();
-        queryBuilder.setWhereClause(whereClause);
-        queryBuilder.setPageSize(20);
-        return Backendless.Data.of(table_name).find(queryBuilder);
+        List<Map> data;
+        data = queries.loadPeople(iLoaderId, dateSelect, timeSelect, userName, userId);
+        return data;
     }
 }

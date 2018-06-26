@@ -4,15 +4,15 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.content.AsyncTaskLoader;
 
-import com.backendless.Backendless;
-import com.backendless.persistence.DataQueryBuilder;
-
 import java.util.List;
 import java.util.Map;
+
+import ru.lizzzi.crossfit_rekord.backendless.BackendlessQueries;
 
 public class TableFragmentLoader extends AsyncTaskLoader<List<Map>> {
     public static final int ARG_WORD = 1;
     private int sNumberOfDay;
+    private BackendlessQueries queries = new BackendlessQueries();
 
     public TableFragmentLoader(Context context, Bundle args) {
         super(context);
@@ -23,12 +23,8 @@ public class TableFragmentLoader extends AsyncTaskLoader<List<Map>> {
 
     @Override
     public List<Map> loadInBackground() {
-        int dayofweek = sNumberOfDay;
-        String whereClause = "day_of_week = " + dayofweek;
-        DataQueryBuilder queryBuilder = DataQueryBuilder.create();
-        queryBuilder.setWhereClause(whereClause);
-        queryBuilder.setSortBy("start_time");
-        queryBuilder.setPageSize(20);
-        return Backendless.Data.of("schedule").find(queryBuilder);
+        List<Map> data;
+        data = queries.loadTable(sNumberOfDay);
+        return data;
     }
 }
