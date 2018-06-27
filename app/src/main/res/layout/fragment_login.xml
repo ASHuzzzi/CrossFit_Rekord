@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<android.widget.RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,13 +8,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:gravity="center"
+        android:isScrollContainer="true"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/textView10"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Введите почту"
+            android:gravity="center"
+            android:text="Введите номер карты"
+            android:textColor="?attr/colorPrimary"
             tools:layout_editor_absoluteX="163dp"
             tools:layout_editor_absoluteY="47dp" />
 
@@ -22,8 +26,11 @@
             android:id="@+id/editText4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
             android:ems="10"
-            android:inputType="textEmailAddress"
+            android:gravity="center"
+            android:hint="0000000000000"
+            android:inputType="number"
             tools:layout_editor_absoluteX="85dp"
             tools:layout_editor_absoluteY="74dp" />
 
@@ -31,7 +38,9 @@
             android:id="@+id/textView11"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:text="Введите пароль"
+            android:textColor="?attr/colorPrimary"
             tools:layout_editor_absoluteX="163dp"
             tools:layout_editor_absoluteY="132dp" />
 
@@ -39,8 +48,11 @@
             android:id="@+id/editText5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
             android:ems="10"
-            android:inputType="textPersonName"
+            android:gravity="center"
+            android:hint="******"
+            android:inputType="textPersonName|number"
             tools:layout_editor_absoluteX="85dp"
             tools:layout_editor_absoluteY="170dp" />
 
@@ -48,6 +60,8 @@
             android:id="@+id/button2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
             android:text="Войти"
             tools:layout_editor_absoluteX="148dp"
             tools:layout_editor_absoluteY="226dp" />
@@ -57,6 +71,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Если не регистрировался"
+            android:visibility="invisible"
             tools:layout_editor_absoluteX="163dp"
             tools:layout_editor_absoluteY="304dp" />
 
@@ -65,9 +80,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Регистрация"
+            android:visibility="invisible"
             tools:layout_editor_absoluteX="131dp"
             tools:layout_editor_absoluteY="346dp" />
 
+        <ProgressBar
+            android:id="@+id/pbLogin"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible" />
+
     </LinearLayout>
 
-</android.support.constraint.ConstraintLayout>
+</android.widget.RelativeLayout>
