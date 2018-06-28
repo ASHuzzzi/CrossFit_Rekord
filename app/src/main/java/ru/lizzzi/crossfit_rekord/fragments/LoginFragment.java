@@ -128,6 +128,7 @@ public class LoginFragment extends Fragment {
             e.printStackTrace();
         }
         FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.popBackStack();
         FragmentTransaction ft = fragmentManager.beginTransaction();
         ft.replace(R.id.container, fragment);
         ft.addToBackStack(null);

@@ -108,4 +108,14 @@
     <string name="title_Table_Fragment">Расписание</string>
     <string name="title_RecordForTraining_Fragment">Записаться на тренировку</string>
 
+    <!-- Значения для фрагмента AboutMe -->
+    <string name="strCardNumber">Номер карты</string>
+    <string name="strUserName">Имя</string>
+    <string name="strUserSurname">Фамилия</string>
+    <string name="strEmail">Почта</string>
+    <string name="strPhone">Телефон</string>
+    <string name="strBtnChange">Изменить</string>
+
+
+
 </resources>

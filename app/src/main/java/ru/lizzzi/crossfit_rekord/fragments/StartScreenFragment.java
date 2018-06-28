@@ -101,4 +101,9 @@ public class StartScreenFragment extends Fragment {
         ft.commit();
 
     }
+    public void onResume() {
+
+        super.onResume();
+
+    }
 }
