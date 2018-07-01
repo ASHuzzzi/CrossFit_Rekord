@@ -116,6 +116,13 @@
     <string name="strPhone">Телефон</string>
     <string name="strBtnChange">Изменить</string>
 
-
+    <!-- Значения для фрагмента Login -->
+    <string name="strEnterCardNumber">Введите номер карты</string>
+    <string name="strHintCardNumber">0 000000 000000</string>
+    <string name="strEnterPassword">Введите пароль</string>
+    <string name="strHintPassword">******</string>
+    <string name="strButtonEnter">Войти</string>
+    <string name="strRegistration">Если не регистрировался</string>
+    <string name="strButtonRegistration">Регистрация</string>
 
 </resources>

@@ -33,8 +33,8 @@ public class AboutMeFragment extends Fragment {
 
         mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
-        EditText etName = v.findViewById(R.id.editText6);
-        EditText etEmail = v.findViewById(R.id.editText7);
+        EditText etName = v.findViewById(R.id.etName);
+        EditText etEmail = v.findViewById(R.id.etEmail);
 
         boolean containtEmail = mSettings.contains(APP_PREFERENCES_EMAIL);
         boolean containtPassword = mSettings.contains(APP_PREFERENCES_PASSWORD);

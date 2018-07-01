@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.widget.RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -17,9 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Введите номер карты"
-            tools:layout_editor_absoluteX="163dp"
-            tools:layout_editor_absoluteY="47dp" />
+            android:text="@string/strEnterCardNumber"/>
 
         <EditText
             android:id="@+id/editText4"
@@ -28,19 +25,15 @@
             android:layout_marginBottom="10dp"
             android:ems="10"
             android:gravity="center"
-            android:hint="0000000000000"
-            android:inputType="number"
-            tools:layout_editor_absoluteX="85dp"
-            tools:layout_editor_absoluteY="74dp" />
+            android:hint="@string/strHintCardNumber"
+            android:inputType="number"/>
 
         <TextView
             android:id="@+id/textView11"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Введите пароль"
-            tools:layout_editor_absoluteX="163dp"
-            tools:layout_editor_absoluteY="132dp" />
+            android:text="@string/strEnterPassword"/>
 
         <EditText
             android:id="@+id/editText5"
@@ -49,10 +42,8 @@
             android:layout_marginBottom="10dp"
             android:ems="10"
             android:gravity="center"
-            android:hint="******"
-            android:inputType="textPersonName|number"
-            tools:layout_editor_absoluteX="85dp"
-            tools:layout_editor_absoluteY="170dp" />
+            android:hint="@string/strHintPassword"
+            android:inputType="number"/>
 
         <Button
             android:id="@+id/button2"
@@ -60,27 +51,21 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:text="Войти"
-            tools:layout_editor_absoluteX="148dp"
-            tools:layout_editor_absoluteY="226dp" />
+            android:text="@string/strButtonEnter"/>
 
         <TextView
             android:id="@+id/textView13"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Если не регистрировался"
-            android:visibility="invisible"
-            tools:layout_editor_absoluteX="163dp"
-            tools:layout_editor_absoluteY="304dp" />
+            android:text="@string/strRegistration"
+            android:visibility="invisible"/>
 
         <Button
             android:id="@+id/button4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Регистрация"
-            android:visibility="invisible"
-            tools:layout_editor_absoluteX="131dp"
-            tools:layout_editor_absoluteY="346dp" />
+            android:text="@string/strButtonRegistration"
+            android:visibility="invisible"/>
 
         <ProgressBar
             android:id="@+id/pbLogin"

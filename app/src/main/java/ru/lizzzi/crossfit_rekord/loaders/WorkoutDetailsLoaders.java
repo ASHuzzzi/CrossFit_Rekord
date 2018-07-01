@@ -20,7 +20,7 @@ public class WorkoutDetailsLoaders extends AsyncTaskLoader<List<Map>> {
         if (args != null){
             tableName = args.getString("Table");
             selecteDay = args.getString("Selected_day");
-        };
+        }
 
     }
 

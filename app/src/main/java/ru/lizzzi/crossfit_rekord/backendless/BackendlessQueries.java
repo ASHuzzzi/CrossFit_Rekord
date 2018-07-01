@@ -1,6 +1,7 @@
 package ru.lizzzi.crossfit_rekord.backendless;
 
 import com.backendless.Backendless;
+import com.backendless.BackendlessUser;
 import com.backendless.persistence.DataQueryBuilder;
 
 import java.util.HashMap;
@@ -54,5 +55,11 @@ public class BackendlessQueries {
         queryBuilder.setWhereClause(whereClause);
         queryBuilder.setPageSize(100);
         return Backendless.Data.of(tableName).find(queryBuilder);
+    }
+
+    public BackendlessUser authUser(String stcardNumber, String stPassword){
+        Backendless.UserService.login(stcardNumber, stPassword);
+        BackendlessUser user = Backendless.UserService.CurrentUser();
+        return Backendless.UserService.CurrentUser();
     }
 }
