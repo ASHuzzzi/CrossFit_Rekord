@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.widget.RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <LinearLayout
@@ -32,7 +34,8 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="@string/empty" />
+            android:text="@string/empty"
+            tools:ignore="LabelFor" />
 
         <TextView
             android:id="@+id/textView30"
@@ -46,7 +49,8 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="@string/empty" />
+            android:text="@string/empty"
+            tools:ignore="LabelFor" />
 
         <TextView
             android:id="@+id/textView15"
@@ -59,8 +63,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="textPersonName"
-            android:text="@string/empty" />
+            android:inputType="textEmailAddress"
+            android:text="@string/empty"
+            tools:ignore="LabelFor" />
 
         <TextView
             android:id="@+id/textView32"
@@ -74,7 +79,8 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="phone"
-            android:text="@string/empty" />
+            android:text="@string/empty"
+            tools:ignore="LabelFor" />
 
         <Button
             android:id="@+id/btnChangeUserData"
@@ -88,7 +94,8 @@
             android:id="@+id/pbAboutMe"
             style="?android:attr/progressBarStyle"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            tools:visibility="invisible" />
 
     </LinearLayout>
 </android.widget.RelativeLayout>

@@ -2,12 +2,12 @@ package ru.lizzzi.crossfit_rekord.fragments;
 
 
 import android.app.Activity;
-import android.app.LoaderManager;
+import android.support.v4.app.LoaderManager;
 import android.content.Context;
-import android.content.Loader;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,12 +19,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import ru.lizzzi.crossfit_rekord.R;
+import ru.lizzzi.crossfit_rekord.loaders.AboutMeLoader;
 
 /**
  * Created by basso on 07.03.2018.
  */
 //TODO см в хэлпе User properties. Сначала логин, от него юзер -> нужные параметры.
-public class AboutMeFragment extends Fragment implements LoaderManager.LoaderCallbacks<Void> {
+public class AboutMeFragment extends Fragment implements LoaderManager.LoaderCallbacks<Boolean> {
 
     private static final String APP_PREFERENCES = "audata";
     private static final String APP_PREFERENCES_OBJECTID = "ObjectId";
@@ -73,6 +74,14 @@ public class AboutMeFragment extends Fragment implements LoaderManager.LoaderCal
                 boolean resultCheck = NetworkCheck.checkInternet();
                 if (resultCheck){
                     ChangeUIElements(1);
+                    startAsyncTaskLoader(
+                            mSettings.getString(APP_PREFERENCES_OBJECTID, ""),
+                            tvCardNumber.getText().toString(),
+                            etName.getText().toString(),
+                            etSurname.getText().toString(),
+                            etEmail.getText().toString(),
+                            etPhone.getText().toString()
+                    );
 
                 }else {
                     ChangeUIElements(0);
@@ -88,6 +97,7 @@ public class AboutMeFragment extends Fragment implements LoaderManager.LoaderCal
     public void onResume() {
         super.onResume();
 
+        pbAboutMe.setVisibility(View.INVISIBLE);
         tvCardNumber.setText(mSettings.getString(APP_PREFERENCES_CARDNUMBER, ""));
         etName.setText(mSettings.getString(APP_PREFERENCES_USERNAME, ""));
         etSurname.setText(mSettings.getString(APP_PREFERENCES_USERSURNAME, ""));
@@ -105,18 +115,46 @@ public class AboutMeFragment extends Fragment implements LoaderManager.LoaderCal
         }
     }
 
+    private void startAsyncTaskLoader(String objectid, String carNumber, String name,
+                                      String surname, String email, String phone) {
+        Bundle bundle = new Bundle();
+        bundle.putString("objectid", objectid);
+        bundle.putString("cardNumber", carNumber);
+        bundle.putString("name", name);
+        bundle.putString("surname", surname);
+        bundle.putString("email", email);
+        bundle.putString("phone", phone);
+        int LOADERID = 1;
+        getLoaderManager().initLoader(LOADERID, bundle, this).forceLoad();
+    }
+
+
     @Override
-    public Loader<Void> onCreateLoader(int i, Bundle bundle) {
-        return null;
+    public Loader<Boolean> onCreateLoader(int id, Bundle args) {
+        AboutMeLoader loader;
+        loader = new AboutMeLoader(getContext(), args);
+        return loader;
     }
 
     @Override
-    public void onLoadFinished(Loader<Void> loader, Void aVoid) {
+    public void onLoadFinished(Loader<Boolean> loader, Boolean data) {
+        if (data){
+            SharedPreferences.Editor editor = mSettings.edit();
+            editor.putString(APP_PREFERENCES_USERNAME, etName.getText().toString());
+            editor.putString(APP_PREFERENCES_USERSURNAME, etSurname.getText().toString());
+            editor.putString(APP_PREFERENCES_EMAIL, etEmail.getText().toString());
+            editor.putString(APP_PREFERENCES_PHONE, etPhone.getText().toString());
+            editor.apply();
+            Toast.makeText(getContext(), "Данные обновлены", Toast.LENGTH_SHORT).show();
+        }else {
+            Toast.makeText(getContext(), "Повторите сохранение", Toast.LENGTH_SHORT).show();
+        }
+        ChangeUIElements(0);
 
     }
 
     @Override
-    public void onLoaderReset(Loader<Void> loader) {
+    public void onLoaderReset(Loader<Boolean> loader) {
 
     }
 }

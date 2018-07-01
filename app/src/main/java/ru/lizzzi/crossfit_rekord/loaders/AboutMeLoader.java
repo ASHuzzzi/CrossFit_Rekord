@@ -1,16 +1,36 @@
 package ru.lizzzi.crossfit_rekord.loaders;
 
-import android.content.AsyncTaskLoader;
 import android.content.Context;
+import android.os.Bundle;
+import android.support.v4.content.AsyncTaskLoader;
 
-public class AboutMeLoader extends AsyncTaskLoader<Void> {
+import ru.lizzzi.crossfit_rekord.backendless.BackendlessQueries;
 
-    public AboutMeLoader(Context context) {
+public class AboutMeLoader extends AsyncTaskLoader<Boolean> {
+
+    private BackendlessQueries user = new BackendlessQueries();
+
+    private String stObjectId;
+    private String stCardNumber;
+    private String stName;
+    private String stSurname;
+    private String stEmail;
+    private String stPhone;
+
+    public AboutMeLoader(Context context, Bundle arg) {
         super(context);
+        if (arg != null){
+            stObjectId = arg.getString("objectid");
+            stCardNumber = arg.getString("cardNumber");
+            stName = arg.getString("name");
+            stSurname = arg.getString("surname");
+            stEmail = arg.getString("email");
+            stPhone = arg.getString("phone");
+        }
     }
 
     @Override
-    public Void loadInBackground() {
-        return null;
+    public Boolean loadInBackground() {
+        return user.saveUserData(stObjectId, stCardNumber, stName, stSurname, stEmail, stPhone);
     }
 }
