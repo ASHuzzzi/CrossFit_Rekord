@@ -19,6 +19,7 @@ public class LoginLoader extends AsyncTaskLoader<Void> {
     private static final String APP_PREFERENCES = "audata";
     private static final String APP_PREFERENCES_OBJECTID = "ObjectId";
     private static final String APP_PREFERENCES_USERNAME = "Username";
+    private static final String APP_PREFERENCES_USERSURNAME = "Usersurname";
     private static final String APP_PREFERENCES_CARDNUMBER = "cardNumber";
     //private static final String APP_PREFERENCES_EMAIL = "Email";
 
@@ -38,7 +39,7 @@ public class LoginLoader extends AsyncTaskLoader<Void> {
         editor.putString(APP_PREFERENCES_OBJECTID, data.getObjectId());
         editor.putString(APP_PREFERENCES_CARDNUMBER, String.valueOf(data.getProperty("cardNumber")));
         editor.putString(APP_PREFERENCES_USERNAME, String.valueOf(data.getProperty("name")));
-        editor.putString(APP_PREFERENCES_USERNAME, String.valueOf(data.getProperty("suname")));
+        editor.putString(APP_PREFERENCES_USERSURNAME, String.valueOf(data.getProperty("surname")));
         //editor.putString(APP_PREFERENCES_EMAIL, user.getEmail());
         editor.apply();
         return null;

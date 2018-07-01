@@ -15,7 +15,7 @@
             android:text="@string/strCardNumber" />
 
         <TextView
-            android:id="@+id/etCardNumber"
+            android:id="@+id/tvCardNumber"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/empty" />
@@ -83,6 +83,12 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:text="@string/strBtnChange" />
+
+        <ProgressBar
+            android:id="@+id/pbAboutMe"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 </android.widget.RelativeLayout>
