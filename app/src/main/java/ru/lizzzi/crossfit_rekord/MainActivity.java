@@ -23,6 +23,7 @@ import ru.lizzzi.crossfit_rekord.draft.wod_result_fragment.Result_Fragment;
 import ru.lizzzi.crossfit_rekord.fragments.AboutMeFragment;
 import ru.lizzzi.crossfit_rekord.fragments.CalendarWodFragment;
 import ru.lizzzi.crossfit_rekord.fragments.CharacterFragment;
+import ru.lizzzi.crossfit_rekord.fragments.CheckAuthData;
 import ru.lizzzi.crossfit_rekord.fragments.LoginFragment;
 import ru.lizzzi.crossfit_rekord.fragments.RecordForTrainingSelectFragment;
 import ru.lizzzi.crossfit_rekord.fragments.StartScreenFragment;
@@ -31,9 +32,7 @@ import ru.lizzzi.crossfit_rekord.fragments.TableFragment;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    SharedPreferences mSettings;
-    public static final String APP_PREFERENCES = "audata";
-    public static final String APP_PREFERENCES_OBJECTID = "ObjectId";
+    private CheckAuthData checkAuthData = new CheckAuthData();
 
     public static final String APPLICATION_IDB = "215CF2B1-C44E-E365-FFB6-9C35DD6A9300";
     public static final String API_KEYB = "8764616E-C5FE-CE43-FF54-17B4A8026F00";
@@ -94,14 +93,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         } else if (id == R.id.record_training) {
 
-            mSettings = this.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-            boolean containtObjectId = mSettings.contains(APP_PREFERENCES_OBJECTID);
-            if (containtObjectId) {
+            if (checkAuthData.checkAuthData(getContext())){
                 fragmentClass = RecordForTrainingSelectFragment.class;
-
-            } else {
+            }else {
                 fragmentClass = LoginFragment.class;
             }
+
         } else if (id == R.id.result) {
             fragmentClass = Result_Fragment.class;
 
@@ -112,7 +109,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         } else if (id == R.id.profile) {
-            fragmentClass = AboutMeFragment.class;
+            if (checkAuthData.checkAuthData(getContext())){
+                fragmentClass = AboutMeFragment.class;
+            }else {
+                fragmentClass = LoginFragment.class;
+            }
 
         } else if (id == R.id.calendar_wod){
             fragmentClass = CalendarWodFragment.class;

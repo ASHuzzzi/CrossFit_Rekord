@@ -1,7 +1,5 @@
 package ru.lizzzi.crossfit_rekord.fragments;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -17,10 +15,7 @@ import ru.lizzzi.crossfit_rekord.R;
 
 public class StartScreenFragment extends Fragment {
 
-    SharedPreferences mSettings;
-    public static final String APP_PREFERENCES = "audata";
-    public static final String APP_PREFERENCES_OBJECTID = "ObjectId";
-
+    private CheckAuthData checkAuthData = new CheckAuthData();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -47,16 +42,11 @@ public class StartScreenFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                getContext();
-                mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-                boolean containtObjectId = mSettings.contains(APP_PREFERENCES_OBJECTID);
-                if (containtObjectId) {
+                if (checkAuthData.checkAuthData(getContext())){
                     openFragment(RecordForTrainingSelectFragment.class);
-
                 }else {
                     openFragment(LoginFragment.class);
                 }
-
             }
         });
 
