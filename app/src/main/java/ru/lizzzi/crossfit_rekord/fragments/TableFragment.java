@@ -290,19 +290,35 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
                         dateSelectShow = sdfDataShow.format(today);
                         dateSelectFull = sdfDataFull.format(today);
 
-                        RecordForTrainingRecordingFragment yfc =  new RecordForTrainingRecordingFragment();
                         Bundle bundle = new Bundle();
                         bundle.putString("time", stStartTime);
                         bundle.putString("datefull", dateSelectFull);
                         bundle.putString("dateshow", dateSelectShow);
                         bundle.putString("type", stTypesItem);
-                        yfc.setArguments(bundle);
-                        FragmentManager fragmentManager = getFragmentManager();
-                        FragmentTransaction ft = fragmentManager.beginTransaction();
-                        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                        ft.replace(R.id.container, yfc);
-                        ft.addToBackStack(null);
-                        ft.commit();
+
+                        CheckAuthData checkAuthData = new CheckAuthData();
+                        if (checkAuthData.checkAuthData(getContext())){
+                            RecordForTrainingRecordingFragment yfc =  new RecordForTrainingRecordingFragment();
+                            yfc.setArguments(bundle);
+                            FragmentManager fragmentManager = getFragmentManager();
+                            FragmentTransaction ft = fragmentManager.beginTransaction();
+                            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                            ft.replace(R.id.container, yfc);
+                            ft.addToBackStack(null);
+                            ft.commit();
+                        }else {
+                            bundle.putString("fragment", String.valueOf(R.string.strRecordForTrainingRecordingFragment));
+                            LoginFragment yfc = new LoginFragment();
+                            yfc.setArguments(bundle);
+                            FragmentManager fragmentManager = getFragmentManager();
+                            FragmentTransaction ft = fragmentManager.beginTransaction();
+                            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                            ft.replace(R.id.container, yfc);
+                            ft.addToBackStack(null);
+                            ft.commit();
+                        }
+
+
 
                     }else {
                         @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdfToast = new SimpleDateFormat("EEEE");

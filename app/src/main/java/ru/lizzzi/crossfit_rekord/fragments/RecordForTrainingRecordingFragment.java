@@ -77,6 +77,8 @@ public class RecordForTrainingRecordingFragment extends Fragment implements Load
                              Bundle savedInstanceState){
         View v = inflater.inflate(R.layout.fragment_record_for_training_recording, container, false);
 
+        getActivity().setTitle(R.string.title_RecordForTraining_Fragment);
+
         llSelectedWorkout = v.findViewById(R.id.llSelectedWorkout);
         tvSelectedDay = v.findViewById(R.id.tvSelectedDay);
         tvSelectedTime = v.findViewById(R.id.tvSelectedTime);

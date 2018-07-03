@@ -36,6 +36,10 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
     private EditText tvCardNumber;
     private EditText tvPassword;
 
+    Bundle bundle;
+
+    private String stOpenableFragment;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -48,6 +52,8 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
         pbLogin = v.findViewById(R.id.pbLogin);
 
         getActivity().setTitle("Авторизация");
+        bundle = getArguments();
+        stOpenableFragment = bundle.getString("fragment");
 
         btnComeIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -151,7 +157,29 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
         @Override
         public void handleMessage(Message msg){
             if(msg.what == MSG_SHOW_DIALOG) {
-                TransactionFragment(RecordForTrainingSelectFragment.class);
+                if (stOpenableFragment.equals(String.valueOf(R.string.strRecordFragment))){
+                    TransactionFragment(RecordForTrainingSelectFragment.class);
+                }
+
+                if (stOpenableFragment.equals(String.valueOf(R.string.strAboutMeFragment))){
+                    TransactionFragment(AboutMeFragment.class);
+                }
+                if (stOpenableFragment.equals(String.valueOf(R.string.strRecordForTrainingRecordingFragment))){
+                    bundle.putString("time", bundle.getString("time"));
+                    bundle.putString("datefull", bundle.getString("datefull"));
+                    bundle.putString("dateshow", bundle.getString("dateshow"));
+                    bundle.putString("type", bundle.getString("type"));
+                    RecordForTrainingRecordingFragment yfc =  new RecordForTrainingRecordingFragment();
+                    yfc.setArguments(bundle);
+                    FragmentManager fragmentManager = getFragmentManager();
+                    FragmentTransaction ft = fragmentManager.beginTransaction();
+                    ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                    ft.replace(R.id.container, yfc);
+                    ft.addToBackStack(null);
+                    ft.commit();
+                }
+
+
             }
         }
     };

@@ -45,7 +45,16 @@ public class StartScreenFragment extends Fragment {
                 if (checkAuthData.checkAuthData(getContext())){
                     openFragment(RecordForTrainingSelectFragment.class);
                 }else {
-                    openFragment(LoginFragment.class);
+                    LoginFragment yfc = new LoginFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("fragment", String.valueOf(R.string.strRecordFragment));
+                    yfc.setArguments(bundle);
+                    FragmentManager fragmentManager = getFragmentManager();
+                    FragmentTransaction ft = fragmentManager.beginTransaction();
+                    ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                    ft.replace(R.id.container, yfc);
+                    ft.addToBackStack(null);
+                    ft.commit();
                 }
             }
         });

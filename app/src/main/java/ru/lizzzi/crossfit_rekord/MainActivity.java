@@ -28,6 +28,7 @@ import ru.lizzzi.crossfit_rekord.fragments.LoginFragment;
 import ru.lizzzi.crossfit_rekord.fragments.RecordForTrainingSelectFragment;
 import ru.lizzzi.crossfit_rekord.fragments.StartScreenFragment;
 import ru.lizzzi.crossfit_rekord.fragments.TableFragment;
+import ru.lizzzi.crossfit_rekord.loaders.AboutMeLoader;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -85,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
         Class fragmentClass = null;
+        Class nextFragmentClass = null;
 
         int id = item.getItemId();
 
@@ -97,6 +99,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 fragmentClass = RecordForTrainingSelectFragment.class;
             }else {
                 fragmentClass = LoginFragment.class;
+                nextFragmentClass = RecordForTrainingSelectFragment.class;
+
             }
 
         } else if (id == R.id.result) {
@@ -113,6 +117,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 fragmentClass = AboutMeFragment.class;
             }else {
                 fragmentClass = LoginFragment.class;
+                nextFragmentClass = AboutMeFragment.class;
             }
 
         } else if (id == R.id.calendar_wod){
@@ -122,8 +127,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
 
-
-        OpenFragment(fragmentClass);
+        if (fragmentClass != null && fragmentClass.equals(LoginFragment.class)){
+            if (nextFragmentClass != null) {
+                LoginFragment(nextFragmentClass);
+            }
+        }else {
+            OpenFragment(fragmentClass);
+        }
 
         return true;
     }
@@ -142,10 +152,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             e.printStackTrace();
         }
 
+
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction ft = fragmentManager.beginTransaction();
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         ft.replace(R.id.container, fragment);
+        ft.addToBackStack(null);
+        ft.commit();
+
+    }
+
+    private void LoginFragment(Class fragmentClass){
+        LoginFragment yfc = new LoginFragment();
+        Bundle bundle = new Bundle();
+
+        if(fragmentClass.equals(RecordForTrainingSelectFragment.class)){
+            bundle.putString("fragment", String.valueOf(R.string.strRecordFragment));
+        }
+        if(fragmentClass.equals(AboutMeFragment.class)){
+            bundle.putString("fragment", String.valueOf(R.string.strAboutMeFragment));
+        }
+
+        yfc.setArguments(bundle);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        ft.replace(R.id.container, yfc);
         ft.addToBackStack(null);
         ft.commit();
 

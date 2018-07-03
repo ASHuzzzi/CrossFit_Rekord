@@ -125,4 +125,10 @@
     <string name="strRegistration">Если не регистрировался</string>
     <string name="strButtonRegistration">Регистрация</string>
 
+    <!-- Значения для аргументов для фрагмента Login -->
+    <string name="strRecordFragment">RecordForTrainingSelectFragment</string>
+    <string name="strAboutMeFragment">AboutMeFragment</string>
+    <string name="strRecordForTrainingRecordingFragment">RecordForTrainingRecordingFragment</string>
+
+
 </resources>
