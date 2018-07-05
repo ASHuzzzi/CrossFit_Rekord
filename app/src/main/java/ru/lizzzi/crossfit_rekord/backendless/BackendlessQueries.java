@@ -11,11 +11,13 @@ import java.util.Map;
 
 public class BackendlessQueries {
 
-    public List<Map> loadCalendarWod(){
+    public List<Map> loadCalendarWod(String objectID){
         List<Map> data;
+        String whereClause = "userID = '" + objectID + "'";
         DataQueryBuilder queryBuilder = DataQueryBuilder.create();
+        queryBuilder.setWhereClause(whereClause);
         queryBuilder.setPageSize(100);
-        data = Backendless.Data.of("exercises").find(queryBuilder);
+        data = Backendless.Data.of("results").find(queryBuilder);
 
         return data;
     }
@@ -60,7 +62,6 @@ public class BackendlessQueries {
 
     public BackendlessUser authUser(String stcardNumber, String stPassword){
         Backendless.UserService.login(stcardNumber, stPassword);
-        BackendlessUser user = Backendless.UserService.CurrentUser();
         return Backendless.UserService.CurrentUser();
     }
 

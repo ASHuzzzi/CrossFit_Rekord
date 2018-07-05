@@ -1,6 +1,7 @@
 package ru.lizzzi.crossfit_rekord.loaders;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.content.AsyncTaskLoader;
 
@@ -18,6 +19,8 @@ import ru.lizzzi.crossfit_rekord.backendless.BackendlessQueries;
 public class CalendarWodLoader extends AsyncTaskLoader<List<Date>> {
 
     private BackendlessQueries queries = new BackendlessQueries();
+    private static final String APP_PREFERENCES = "audata";
+    private static final String APP_PREFERENCES_OBJECTID = "ObjectId";
 
     public CalendarWodLoader(Context context, Bundle args) {
         super(context);
@@ -28,16 +31,18 @@ public class CalendarWodLoader extends AsyncTaskLoader<List<Date>> {
 
     @Override
     public List<Date> loadInBackground() {
+        SharedPreferences mSettings =  getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        String objectID = mSettings.getString(APP_PREFERENCES_OBJECTID, "");
         Date dateFromDb;
         List<Map> data;
-        data = queries.loadCalendarWod();
+        data = queries.loadCalendarWod(objectID);
         Collection map;
         ArrayList<Date> dates = new ArrayList<>();
         SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
 
         for (int i = 0; i < data.size(); i++){
             map = data.get(i).values();
-            String sr = String.valueOf(map.toArray()[7]);
+            String sr = String.valueOf(map.toArray()[4]);
 
             try {
                 dateFromDb = sdf.parse(sr);
