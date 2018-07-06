@@ -1,6 +1,8 @@
 package ru.lizzzi.crossfit_rekord.fragments;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -23,10 +25,13 @@ import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
 import ru.lizzzi.crossfit_rekord.R;
+import ru.lizzzi.crossfit_rekord.data.CalendarWodDBContract;
+import ru.lizzzi.crossfit_rekord.data.CalendarWodDBHelper;
 import ru.lizzzi.crossfit_rekord.loaders.CalendarWodLoader;
 
 
@@ -42,6 +47,12 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
 
     private int LOADER_ID = 1; //идентефикатор loader'а
 
+    private CalendarWodDBHelper mDBHelper;
+
+    private static final String APP_PREFERENCES = "audata";
+    private static final String APP_PREFERENCES_OBJECTID = "ObjectId";
+    SharedPreferences mSettings;
+
     @SuppressLint("HandlerLeak")
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState){
@@ -51,6 +62,14 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
         final LinearLayout layoutErrorCalendarWod = v.findViewById(R.id.Layout_Error_Calendar_Wod);
         Button btErrorCalendarWod = v.findViewById(R.id.bt_error_calendar_wod);
         pbCalendarWod = v.findViewById(R.id.pb_calendar_wod);
+
+        mDBHelper = new CalendarWodDBHelper(getContext());
+
+        try {
+            mDBHelper.createDataBase();
+        } catch (IOException ioe) {
+            throw new Error("Unable to create database");
+        }
 
         mcv.state().edit()
                 .setMaximumDate(CalendarDay.from(2018, 0, 1))
@@ -85,7 +104,15 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
                 NetworkCheck = new NetworkCheck(getContext());
                 boolean resultCheck = NetworkCheck.checkInternet();
                 if (resultCheck){
-                    firstStartAsyncTaskLoader();
+                    List<Date> dates;
+                    mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+                    dates = mDBHelper.selectDates(mSettings.getString(APP_PREFERENCES_OBJECTID, ""));
+                    if (dates.size() > 0) {
+
+                    }else {
+                        firstStartAsyncTaskLoader();
+                    }
+
 
                 }else {
                     Message msg = handlerOpenFragment.obtainMessage();
