@@ -26,13 +26,17 @@ import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.data.CalendarWodDBContract;
 import ru.lizzzi.crossfit_rekord.data.CalendarWodDBHelper;
 import ru.lizzzi.crossfit_rekord.loaders.CalendarWodLoader;
+import ru.lizzzi.crossfit_rekord.loaders.TableFragmentLoader;
 
 
 public class CalendarWodFragment extends Fragment implements  OnDateSelectedListener, OnMonthChangedListener, LoaderManager.LoaderCallbacks<List<Date>> {
@@ -52,6 +56,15 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
     private static final String APP_PREFERENCES = "audata";
     private static final String APP_PREFERENCES_OBJECTID = "ObjectId";
     SharedPreferences mSettings;
+
+    private Date date; //показывает сегодняшний день
+    private GregorianCalendar gcCalendarDay; //нужна для формирования дат для кнопок
+    private GregorianCalendar gcNumberDayWeek; // для преобразования выбранного дня в int
+    private String stDateSelectFull; //передает значение по поторому потом идет запрос в базу в следующем фрагменте
+    int month;
+
+    @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf2 = new SimpleDateFormat("MM.dd.yyyy");
+    @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf3 = new SimpleDateFormat("MM");
 
     @SuppressLint("HandlerLeak")
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -104,9 +117,32 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
                 NetworkCheck = new NetworkCheck(getContext());
                 boolean resultCheck = NetworkCheck.checkInternet();
                 if (resultCheck){
+
+                    @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("EEEE dd MMMM");
+
+
+                    date = new Date();
+                    gcCalendarDay = new GregorianCalendar();
+
+                    gcCalendarDay.add(Calendar.DAY_OF_YEAR, 1);
+                    gcCalendarDay.setTime(date);
+                    stDateSelectFull = sdf2.format(date);
+                    month = Integer.parseInt(sdf3.format(date));
+
+                    Calendar cal = Calendar.getInstance();
+                    long timenow = cal.getTimeInMillis();
+                    long interval = 7776000000L;
+                    long timeStart = timenow - interval;
+
+                    String stStartDate = sdf2.format(timeStart);
+
+
                     List<Date> dates;
                     mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-                    dates = mDBHelper.selectDates(mSettings.getString(APP_PREFERENCES_OBJECTID, ""));
+                    dates = mDBHelper.selectDates(
+                            mSettings.getString(APP_PREFERENCES_OBJECTID, ""),
+                            timeStart,
+                            timenow);
                     if (dates.size() > 0) {
 
                     }else {
@@ -144,7 +180,19 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
             if (getLoaderManager().hasRunningLoaders()) {
                 getLoaderManager().destroyLoader(LOADER_ID);
             }
-            getLoaderManager().initLoader(LOADER_ID, null,this).forceLoad();
+
+            Calendar cal = Calendar.getInstance();
+            long timenow = cal.getTimeInMillis();
+            long interval = 7776000000L;
+            long timeStart = timenow - interval;
+
+            String stNowDate = sdf2.format(timenow);
+            String stStartDate = sdf2.format(timeStart);
+
+            Bundle bundle = new Bundle();
+            bundle.putString("startDay", stStartDate);
+            bundle.putString("nowDay", stNowDate);
+            getLoaderManager().initLoader(LOADER_ID, bundle,this).forceLoad();
         }
     }
 
@@ -185,7 +233,41 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
 
     @Override
     public void onMonthChanged(MaterialCalendarView widget, CalendarDay date) {
-        Toast.makeText(getContext(), "Выбран" + date.getMonth(), Toast.LENGTH_SHORT).show();
+
+        //TODO Проверить запись в базу и получении из нее уже загруженных данных
+
+        Toast.makeText(getContext(), "Выбран" + (date.getMonth() + 1), Toast.LENGTH_SHORT).show();
+        int checkMonth = month - (date.getMonth() + 1);
+        if ((checkMonth == 2) || (checkMonth == -2) || (checkMonth == -10) || (checkMonth == 10)){
+            long timeStart = date.getDate().getTime() - 2592000000L ;
+            long interval = 2592000000L + 2592000000L;
+            long timenow = date.getDate().getTime() + interval;
+
+
+
+
+            List<Date> dates;
+            mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+            dates = mDBHelper.selectDates(
+                    mSettings.getString(APP_PREFERENCES_OBJECTID, ""),
+                    timeStart,
+                    timenow);
+            if (dates.size() > 0) {
+
+            }else {
+                String stNowDate = sdf2.format(timenow);
+                String stStartDate = sdf2.format(timeStart);
+
+                Bundle bundle = new Bundle();
+                bundle.putString("startDay", stStartDate);
+                bundle.putString("nowDay", stNowDate);
+                getLoaderManager().restartLoader(LOADER_ID, bundle,this).forceLoad();
+            }
+
+            month = date.getMonth() + 1;
+        }
+        //long timenow = cal.getTimeInMillis();
+
     }
 
     @Override
@@ -200,6 +282,10 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
 
         if (data != null){
             for (int i = 0; i <data.size(); i++){
+                //String stStartDate = sdf2.format(data.get(i));
+                long lDate = data.get(i).getTime();
+                mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+                mDBHelper.saveDates(mSettings.getString(APP_PREFERENCES_OBJECTID, ""), lDate);
                 mcv.setDateSelected(CalendarDay.from(data.get(i)), true);
             }
             mcv.setVisibility(View.VISIBLE);

@@ -11,9 +11,10 @@ import java.util.Map;
 
 public class BackendlessQueries {
 
-    public List<Map> loadCalendarWod(String objectID){
+    public List<Map> loadCalendarWod(String objectID, String startDay, String nowDay){
         List<Map> data;
-        String whereClause = "userID = '" + objectID + "'";
+        String whereClause = "userID = '" + objectID + "' and date_session >= '" +
+                startDay + "' and date_session <= '" + nowDay + "'";
         DataQueryBuilder queryBuilder = DataQueryBuilder.create();
         queryBuilder.setWhereClause(whereClause);
         queryBuilder.setPageSize(100);

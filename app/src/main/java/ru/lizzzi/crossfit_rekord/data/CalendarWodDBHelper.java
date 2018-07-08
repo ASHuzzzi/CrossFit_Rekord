@@ -1,6 +1,7 @@
 package ru.lizzzi.crossfit_rekord.data;
 
 import android.annotation.SuppressLint;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -19,6 +20,8 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+import ru.lizzzi.crossfit_rekord.data.CalendarWodDBContract.dbCaleendarWod;
 
 public class CalendarWodDBHelper extends SQLiteOpenHelper {
 
@@ -121,14 +124,18 @@ public class CalendarWodDBHelper extends SQLiteOpenHelper {
 
     }
 
-    public List<Date> selectDates(String objectId){
+    public List<Date> selectDates(String objectId, long timestart, long timenow){
         myDataBase = this.getReadableDatabase();
 
         ArrayList<Date> arrListDates = new ArrayList<>();
-        String[] columns = new String[]{CalendarWodDBContract.dbCaleendarWod.columnDateSession};
-        Cursor cursor = myDataBase.query(CalendarWodDBContract.dbCaleendarWod.TABLE_NAME,
+        String[] columns = new String[]{dbCaleendarWod.columnDateSession};
+        String selection = dbCaleendarWod.columnObjectId + "= '" + objectId + "' AND "
+                + dbCaleendarWod.columnDateSession + " BETWEEN " + timestart + " AND "
+                + timenow;
+        Cursor cursor = myDataBase.query(
+                dbCaleendarWod.TABLE_NAME,
                 columns,
-                CalendarWodDBContract.dbCaleendarWod.columnObjectId + "= '" + objectId + "'",
+                selection,
                 null,
                 null,
                 null,
@@ -155,5 +162,14 @@ public class CalendarWodDBHelper extends SQLiteOpenHelper {
             cursor.close();
         }
         return arrListDates;
+    }
+
+    public void saveDates(String stObjectId, long lDate){
+        myDataBase = this.getWritableDatabase();
+        ContentValues newValues = new ContentValues();
+
+        newValues.put(dbCaleendarWod.columnObjectId, stObjectId);
+        newValues.put(dbCaleendarWod.columnDateSession, lDate);
+        myDataBase.insert(dbCaleendarWod.TABLE_NAME, null, newValues);
     }
 }
