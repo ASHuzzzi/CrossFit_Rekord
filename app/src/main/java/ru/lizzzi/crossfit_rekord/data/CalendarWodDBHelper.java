@@ -18,6 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -142,20 +143,25 @@ public class CalendarWodDBHelper extends SQLiteOpenHelper {
                 null);
         if (cursor !=null && cursor.moveToFirst()){
             do {
-                Date dateFromDb;
-                SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
-                String sDates = "";
+                GregorianCalendar gcCalendarDay; //нужна для формирования дат для кнопок
+                Date dateFromDb = null;
+                @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+                @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf2 = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
+                long sDates = 0;
+                String ssDate = null;
+                gcCalendarDay = new GregorianCalendar();
 
                 for (String cn : cursor.getColumnNames()) {
-                    sDates = cursor.getString(cursor.getColumnIndex(cn));
-                }
-                try {
-                    dateFromDb = sdf.parse(sDates);
+                    sDates = Long.parseLong(cursor.getString(cursor.getColumnIndex(cn)));
+                    ssDate = sdf.format(sDates);
+                    try {
+                        dateFromDb = sdf.parse(ssDate);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
                     arrListDates.add(dateFromDb);
-
-                } catch (ParseException e) {
-                    e.printStackTrace();
                 }
+
             }while (cursor.moveToNext());
         }
         if (cursor != null) {
