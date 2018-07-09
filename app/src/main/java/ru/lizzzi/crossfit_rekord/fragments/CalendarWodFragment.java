@@ -144,7 +144,10 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
                             timeStart,
                             timenow);
                     if (dates.size() > 0) {
+                        for (int i = 0; i <dates.size(); i++){
 
+                            mcv.setDateSelected(CalendarDay.from(dates.get(i)), true);
+                        }
                     }else {
                         firstStartAsyncTaskLoader();
                     }
@@ -253,7 +256,10 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
                     timeStart,
                     timenow);
             if (dates.size() > 0) {
+                for (int i = 0; i <dates.size(); i++){
 
+                    mcv.setDateSelected(CalendarDay.from(dates.get(i)), true);
+                }
             }else {
                 String stNowDate = sdf2.format(timenow);
                 String stStartDate = sdf2.format(timeStart);
