@@ -33,10 +33,8 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.data.CalendarWodDBContract;
 import ru.lizzzi.crossfit_rekord.data.CalendarWodDBHelper;
 import ru.lizzzi.crossfit_rekord.loaders.CalendarWodLoader;
-import ru.lizzzi.crossfit_rekord.loaders.TableFragmentLoader;
 
 
 public class CalendarWodFragment extends Fragment implements  OnDateSelectedListener, OnMonthChangedListener, LoaderManager.LoaderCallbacks<List<Date>> {
@@ -59,8 +57,6 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
 
     private Date date; //показывает сегодняшний день
     private GregorianCalendar gcCalendarDay; //нужна для формирования дат для кнопок
-    private GregorianCalendar gcNumberDayWeek; // для преобразования выбранного дня в int
-    private String stDateSelectFull; //передает значение по поторому потом идет запрос в базу в следующем фрагменте
     int month;
 
     @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf2 = new SimpleDateFormat("MM.dd.yyyy");
@@ -85,7 +81,7 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
         }
 
         mcv.state().edit()
-                .setMaximumDate(CalendarDay.from(2018, 0, 1))
+                .setMinimumDate(CalendarDay.from(2018, 0, 1))
                 .setMaximumDate(CalendarDay.from(2019, 0, 31))
                 .commit();
         mcv.setOnDateChangedListener(this);
@@ -94,6 +90,8 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
         mcv.setVisibility(View.INVISIBLE);
         layoutErrorCalendarWod.setVisibility(View.INVISIBLE);
         pbCalendarWod.setVisibility(View.VISIBLE);
+
+        getLoaderManager().initLoader(LOADER_ID, null,this);
 
         //хэндлер для потока runnableOpenFragment
         handlerOpenFragment = new Handler() {
@@ -118,15 +116,11 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
                 boolean resultCheck = NetworkCheck.checkInternet();
                 if (resultCheck){
 
-                    @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("EEEE dd MMMM");
-
-
                     date = new Date();
                     gcCalendarDay = new GregorianCalendar();
 
                     gcCalendarDay.add(Calendar.DAY_OF_YEAR, 1);
                     gcCalendarDay.setTime(date);
-                    stDateSelectFull = sdf2.format(date);
                     month = Integer.parseInt(sdf3.format(date));
 
                     Calendar cal = Calendar.getInstance();
@@ -134,24 +128,8 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
                     long interval = 7776000000L;
                     long timeStart = timenow - interval;
 
-                    String stStartDate = sdf2.format(timeStart);
 
-
-                    List<Date> dates;
-                    mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-                    dates = mDBHelper.selectDates(
-                            mSettings.getString(APP_PREFERENCES_OBJECTID, ""),
-                            timeStart,
-                            timenow);
-                    if (dates.size() > 0) {
-                        for (int i = 0; i <dates.size(); i++){
-
-                            mcv.setDateSelected(CalendarDay.from(dates.get(i)), true);
-                        }
-                    }else {
-                        firstStartAsyncTaskLoader();
-                    }
-
+                    loadDates(timeStart, timenow);
 
                 }else {
                     Message msg = handlerOpenFragment.obtainMessage();
@@ -174,20 +152,15 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
             }
         });
 
-        threadOpenFragment.start();
+
         return v;
     }
 
-    private void firstStartAsyncTaskLoader(){
+    private void startAsyncTaskLoader(long timeStart, long timenow){
         if(isAdded()){
             if (getLoaderManager().hasRunningLoaders()) {
                 getLoaderManager().destroyLoader(LOADER_ID);
             }
-
-            Calendar cal = Calendar.getInstance();
-            long timenow = cal.getTimeInMillis();
-            long interval = 7776000000L;
-            long timeStart = timenow - interval;
 
             String stNowDate = sdf2.format(timenow);
             String stStartDate = sdf2.format(timeStart);
@@ -195,7 +168,7 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
             Bundle bundle = new Bundle();
             bundle.putString("startDay", stStartDate);
             bundle.putString("nowDay", stNowDate);
-            getLoaderManager().initLoader(LOADER_ID, bundle,this).forceLoad();
+            getLoaderManager().restartLoader(LOADER_ID, bundle,this).forceLoad();
         }
     }
 
@@ -239,40 +212,16 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
 
         //TODO Проверить запись в базу и получении из нее уже загруженных данных
 
-        Toast.makeText(getContext(), "Выбран" + (date.getMonth() + 1), Toast.LENGTH_SHORT).show();
         int checkMonth = month - (date.getMonth() + 1);
         if ((checkMonth == 2) || (checkMonth == -2) || (checkMonth == -10) || (checkMonth == 10)){
             long timeStart = date.getDate().getTime() - 2592000000L ;
             long interval = 2592000000L + 2592000000L;
             long timenow = date.getDate().getTime() + interval;
 
-
-
-
-            List<Date> dates;
-            mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-            dates = mDBHelper.selectDates(
-                    mSettings.getString(APP_PREFERENCES_OBJECTID, ""),
-                    timeStart,
-                    timenow);
-            if (dates.size() > 0) {
-                for (int i = 0; i <dates.size(); i++){
-
-                    mcv.setDateSelected(CalendarDay.from(dates.get(i)), true);
-                }
-            }else {
-                String stNowDate = sdf2.format(timenow);
-                String stStartDate = sdf2.format(timeStart);
-
-                Bundle bundle = new Bundle();
-                bundle.putString("startDay", stStartDate);
-                bundle.putString("nowDay", stNowDate);
-                getLoaderManager().restartLoader(LOADER_ID, bundle,this).forceLoad();
-            }
+            loadDates(timeStart, timenow);
 
             month = date.getMonth() + 1;
         }
-        //long timenow = cal.getTimeInMillis();
 
     }
 
@@ -288,7 +237,6 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
 
         if (data != null){
             for (int i = 0; i <data.size(); i++){
-                //String stStartDate = sdf2.format(data.get(i));
                 long lDate = data.get(i).getTime();
                 mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
                 mDBHelper.saveDates(mSettings.getString(APP_PREFERENCES_OBJECTID, ""), lDate);
@@ -308,10 +256,32 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
 
     }
 
+    public void onResume(){
+        super.onResume();
+        threadOpenFragment.start();
+    }
+
     public void onStop() {
         super.onStop();
         if (getLoaderManager().hasRunningLoaders()) {
             getLoaderManager().destroyLoader(LOADER_ID);
+        }
+    }
+
+    public void loadDates(long ltimeStart, long ltimenow){
+        List<Date> dates;
+        mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        dates = mDBHelper.selectDates(
+                mSettings.getString(APP_PREFERENCES_OBJECTID, ""),
+                ltimeStart,
+                ltimenow);
+        if (dates.size() > 0) {
+            for (int i = 0; i <dates.size(); i++){
+
+                mcv.setDateSelected(CalendarDay.from(dates.get(i)), true);
+            }
+        }else {
+            startAsyncTaskLoader(ltimeStart, ltimenow);
         }
     }
 }
