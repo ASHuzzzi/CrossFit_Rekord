@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,10 +38,8 @@ import ru.lizzzi.crossfit_rekord.data.CalendarWodDBHelper;
 import ru.lizzzi.crossfit_rekord.loaders.CalendarWodLoader;
 
 
-public class CalendarWodFragment extends Fragment implements  OnDateSelectedListener, OnMonthChangedListener, LoaderManager.LoaderCallbacks<List<Date>> {
-
-    MaterialCalendarView mcv;
-    ProgressBar pbCalendarWod;
+public class CalendarWodFragment extends Fragment implements  OnDateSelectedListener,
+        OnMonthChangedListener, LoaderManager.LoaderCallbacks<List<Date>> {
 
     private Handler handlerOpenFragment;
     private Thread threadOpenFragment;
@@ -53,11 +52,13 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
 
     private static final String APP_PREFERENCES = "audata";
     private static final String APP_PREFERENCES_OBJECTID = "ObjectId";
-    SharedPreferences mSettings;
+    private SharedPreferences mSettings;
 
-    private Date date; //показывает сегодняшний день
-    private GregorianCalendar gcCalendarDay; //нужна для формирования дат для кнопок
-    int month;
+    private int month;
+
+    private LinearLayout layoutErrorCalendarWod;
+    private MaterialCalendarView mcv;
+    private ProgressBar pbCalendarWod;
 
     @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf2 = new SimpleDateFormat("MM.dd.yyyy");
     @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf3 = new SimpleDateFormat("MM");
@@ -65,15 +66,14 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
     @SuppressLint("HandlerLeak")
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState){
-        final View v = inflater.inflate(R.layout.fragment_calendar_wod, container, false);
+        View v = inflater.inflate(R.layout.fragment_calendar_wod, container, false);
 
         mcv = v.findViewById(R.id.calendarView);
-        final LinearLayout layoutErrorCalendarWod = v.findViewById(R.id.Layout_Error_Calendar_Wod);
+        layoutErrorCalendarWod = v.findViewById(R.id.Layout_Error_Calendar_Wod);
         Button btErrorCalendarWod = v.findViewById(R.id.bt_error_calendar_wod);
         pbCalendarWod = v.findViewById(R.id.pb_calendar_wod);
 
         mDBHelper = new CalendarWodDBHelper(getContext());
-
         try {
             mDBHelper.createDataBase();
         } catch (IOException ioe) {
@@ -87,11 +87,15 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
         mcv.setOnDateChangedListener(this);
         mcv.setOnMonthChangedListener(this);
 
-        mcv.setVisibility(View.INVISIBLE);
-        layoutErrorCalendarWod.setVisibility(View.INVISIBLE);
-        pbCalendarWod.setVisibility(View.VISIBLE);
-
         getLoaderManager().initLoader(LOADER_ID, null,this);
+
+
+        Date date = new Date();
+        GregorianCalendar gcCalendarDay = new GregorianCalendar();
+
+        gcCalendarDay.add(Calendar.DAY_OF_YEAR, 1);
+        gcCalendarDay.setTime(date);
+        month = Integer.parseInt(sdf3.format(date));
 
         //хэндлер для потока runnableOpenFragment
         handlerOpenFragment = new Handler() {
@@ -99,11 +103,24 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
             public void handleMessage(Message msg) {
                 Bundle bundle = msg.getData();
                 String resultCheck = bundle.getString("result");
+                String status = bundle.getString("status");
                 if (resultCheck != null){
                     if (resultCheck.equals("false")){
                         layoutErrorCalendarWod.setVisibility(View.VISIBLE);
                         pbCalendarWod.setVisibility(View.INVISIBLE);
-                    }
+                    }else
+                        if (status != null){
+                            if (status.equals("load")){
+                                mcv.setVisibility(View.INVISIBLE);
+                                layoutErrorCalendarWod.setVisibility(View.INVISIBLE);
+                                pbCalendarWod.setVisibility(View.VISIBLE);
+                            }else {
+                                mcv.setVisibility(View.VISIBLE);
+                                layoutErrorCalendarWod.setVisibility(View.INVISIBLE);
+                                pbCalendarWod.setVisibility(View.INVISIBLE);
+                            }
+                        }
+
                 }
             }
         };
@@ -115,19 +132,17 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
                 NetworkCheck = new NetworkCheck(getContext());
                 boolean resultCheck = NetworkCheck.checkInternet();
                 if (resultCheck){
-
-                    date = new Date();
-                    gcCalendarDay = new GregorianCalendar();
-
-                    gcCalendarDay.add(Calendar.DAY_OF_YEAR, 1);
-                    gcCalendarDay.setTime(date);
-                    month = Integer.parseInt(sdf3.format(date));
+                    Message msg = handlerOpenFragment.obtainMessage();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("result", String.valueOf(true));
+                    bundle.putString("status", "load");
+                    msg.setData(bundle);
+                    handlerOpenFragment.sendMessage(msg);
 
                     Calendar cal = Calendar.getInstance();
                     long timenow = cal.getTimeInMillis();
                     long interval = 7776000000L;
                     long timeStart = timenow - interval;
-
 
                     loadDates(timeStart, timenow);
 
@@ -151,7 +166,6 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
                 threadOpenFragment.run();
             }
         });
-
 
         return v;
     }
@@ -240,15 +254,12 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
                 long lDate = data.get(i).getTime();
                 mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
                 mDBHelper.saveDates(mSettings.getString(APP_PREFERENCES_OBJECTID, ""), lDate);
-                mcv.setDateSelected(CalendarDay.from(data.get(i)), true);
             }
-            mcv.setVisibility(View.VISIBLE);
+            showDates(data);
+
         }else{
             Toast.makeText(getContext(), "Нет данных", Toast.LENGTH_SHORT).show();
         }
-
-        pbCalendarWod.setVisibility(View.INVISIBLE);
-
     }
 
     @Override
@@ -269,19 +280,28 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
     }
 
     public void loadDates(long ltimeStart, long ltimenow){
-        List<Date> dates;
         mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-        dates = mDBHelper.selectDates(
+        List<Date> dates = mDBHelper.selectDates(
                 mSettings.getString(APP_PREFERENCES_OBJECTID, ""),
                 ltimeStart,
                 ltimenow);
         if (dates.size() > 0) {
-            for (int i = 0; i <dates.size(); i++){
-
-                mcv.setDateSelected(CalendarDay.from(dates.get(i)), true);
-            }
+            showDates(dates);
         }else {
             startAsyncTaskLoader(ltimeStart, ltimenow);
         }
+    }
+
+    public void showDates(List<Date> dates){
+        for (int i = 0; i <dates.size(); i++){
+            mcv.setDateSelected(CalendarDay.from(dates.get(i)), true);
+        }
+
+        Message msg = handlerOpenFragment.obtainMessage();
+        Bundle bundle = new Bundle();
+        bundle.putString("result", String.valueOf(true));
+        bundle.putString("status", "finish");
+        msg.setData(bundle);
+        handlerOpenFragment.sendMessage(msg);
     }
 }
