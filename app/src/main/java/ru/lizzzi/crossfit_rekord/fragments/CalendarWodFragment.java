@@ -86,6 +86,7 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
                 .commit();
         mcv.setOnDateChangedListener(this);
         mcv.setOnMonthChangedListener(this);
+        mcv.setSaveEnabled(true);
 
         getLoaderManager().initLoader(LOADER_ID, null,this);
 
@@ -269,7 +270,14 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
 
     public void onResume(){
         super.onResume();
-        threadOpenFragment.start();
+        if (threadOpenFragment.getState() == Thread.State.NEW){
+            threadOpenFragment.start();
+        }
+
+
+    }
+    public void onPause(){
+        super.onPause();
     }
 
     public void onStop() {
