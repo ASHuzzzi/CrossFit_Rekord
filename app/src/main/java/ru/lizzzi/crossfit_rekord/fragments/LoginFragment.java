@@ -107,6 +107,16 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        if(fragmentClass.equals(RecordForTrainingRecordingFragment.class)){
+            bundle.putString("time", bundle.getString("time"));
+            bundle.putString("datefull", bundle.getString("datefull"));
+            bundle.putString("dateshow", bundle.getString("dateshow"));
+            bundle.putString("type", bundle.getString("type"));
+            if (fragment != null) {
+                fragment.setArguments(bundle);
+            }
+        }
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.popBackStack();
         FragmentTransaction ft = fragmentManager.beginTransaction();
@@ -165,21 +175,8 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
                     TransactionFragment(AboutMeFragment.class);
                 }
                 if (stOpenableFragment.equals(String.valueOf(R.string.strRecordForTrainingRecordingFragment))){
-                    bundle.putString("time", bundle.getString("time"));
-                    bundle.putString("datefull", bundle.getString("datefull"));
-                    bundle.putString("dateshow", bundle.getString("dateshow"));
-                    bundle.putString("type", bundle.getString("type"));
-                    RecordForTrainingRecordingFragment yfc =  new RecordForTrainingRecordingFragment();
-                    yfc.setArguments(bundle);
-                    FragmentManager fragmentManager = getFragmentManager();
-                    FragmentTransaction ft = fragmentManager.beginTransaction();
-                    ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                    ft.replace(R.id.container, yfc);
-                    ft.addToBackStack(null);
-                    ft.commit();
+                    TransactionFragment(RecordForTrainingRecordingFragment.class);
                 }
-
-
             }
         }
     };

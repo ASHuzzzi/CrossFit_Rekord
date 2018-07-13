@@ -63,6 +63,10 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
     @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf2 = new SimpleDateFormat("MM.dd.yyyy");
     @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf3 = new SimpleDateFormat("MM");
 
+    long timenow;
+    long interval;
+    long timeStart;
+
     @SuppressLint("HandlerLeak")
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState){
@@ -89,7 +93,6 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
         mcv.setSaveEnabled(true);
 
         getLoaderManager().initLoader(LOADER_ID, null,this);
-
 
         Date date = new Date();
         GregorianCalendar gcCalendarDay = new GregorianCalendar();
@@ -127,29 +130,23 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
         };
 
         //поток запускаемый при создании экрана (запуск происходит из onResume)
-        Runnable runnableOpenFragment = new Runnable() {
+         Runnable runnableOpenFragment = new Runnable() {
+
             @Override
             public void run() {
+                Message msg = handlerOpenFragment.obtainMessage();
+                Bundle bundle = new Bundle();
                 NetworkCheck = new NetworkCheck(getContext());
                 boolean resultCheck = NetworkCheck.checkInternet();
                 if (resultCheck){
-                    Message msg = handlerOpenFragment.obtainMessage();
-                    Bundle bundle = new Bundle();
                     bundle.putString("result", String.valueOf(true));
                     bundle.putString("status", "load");
                     msg.setData(bundle);
                     handlerOpenFragment.sendMessage(msg);
 
-                    Calendar cal = Calendar.getInstance();
-                    long timenow = cal.getTimeInMillis();
-                    long interval = 7776000000L;
-                    long timeStart = timenow - interval;
-
                     loadDates(timeStart, timenow);
 
                 }else {
-                    Message msg = handlerOpenFragment.obtainMessage();
-                    Bundle bundle = new Bundle();
                     bundle.putString("result", String.valueOf(false));
                     msg.setData(bundle);
                     handlerOpenFragment.sendMessage(msg);
@@ -225,15 +222,13 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
     @Override
     public void onMonthChanged(MaterialCalendarView widget, CalendarDay date) {
 
-        //TODO Проверить запись в базу и получении из нее уже загруженных данных
-
         int checkMonth = month - (date.getMonth() + 1);
         if ((checkMonth == 2) || (checkMonth == -2) || (checkMonth == -10) || (checkMonth == 10)){
-            long timeStart = date.getDate().getTime() - 2592000000L ;
-            long interval = 2592000000L + 2592000000L;
-            long timenow = date.getDate().getTime() + interval;
+            timeStart = date.getDate().getTime() - 2592000000L ;
+            interval = 2592000000L + 2592000000L;
+            timenow = date.getDate().getTime() + interval;
 
-            loadDates(timeStart, timenow);
+            threadOpenFragment.run();
 
             month = date.getMonth() + 1;
         }
@@ -271,6 +266,10 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
     public void onResume(){
         super.onResume();
         if (threadOpenFragment.getState() == Thread.State.NEW){
+            Calendar cal = Calendar.getInstance();
+            timenow = cal.getTimeInMillis();
+            interval = 7776000000L;
+            timeStart = timenow - interval;
             threadOpenFragment.start();
         }
 

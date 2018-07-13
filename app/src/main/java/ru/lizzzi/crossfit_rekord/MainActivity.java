@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Backendless.initApp(this, APPLICATION_IDB, API_KEYB);
 
-        OpenFragment(StartScreenFragment.class);
+        OpenFragment(StartScreenFragment.class, StartScreenFragment.class);
     }
 
     @Override
@@ -127,13 +127,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
 
-        if (fragmentClass != null && fragmentClass.equals(LoginFragment.class)){
-            if (nextFragmentClass != null) {
-                LoginFragment(nextFragmentClass);
-            }
-        }else {
-            OpenFragment(fragmentClass);
-        }
+        OpenFragment(fragmentClass, nextFragmentClass);
 
         return true;
     }
@@ -142,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return this;
     }
 
-    public void OpenFragment(Class fragmentClass){
+    public void OpenFragment(Class fragmentClass, Class nextFragmentClass){
 
         Fragment fragment = null;
 
@@ -152,32 +146,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             e.printStackTrace();
         }
 
+        if (fragmentClass != null && fragmentClass.equals(LoginFragment.class)) {
+            Bundle bundle = new Bundle();
+
+            if (nextFragmentClass.equals(RecordForTrainingSelectFragment.class)) {
+                bundle.putString("fragment", String.valueOf(R.string.strRecordFragment));
+            }
+            if (nextFragmentClass.equals(AboutMeFragment.class)) {
+                bundle.putString("fragment", String.valueOf(R.string.strAboutMeFragment));
+            }
+
+            if (fragment != null) {
+                fragment.setArguments(bundle);
+            }
+        }
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction ft = fragmentManager.beginTransaction();
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         ft.replace(R.id.container, fragment);
-        ft.addToBackStack(null);
-        ft.commit();
-
-    }
-
-    private void LoginFragment(Class fragmentClass){
-        LoginFragment yfc = new LoginFragment();
-        Bundle bundle = new Bundle();
-
-        if(fragmentClass.equals(RecordForTrainingSelectFragment.class)){
-            bundle.putString("fragment", String.valueOf(R.string.strRecordFragment));
-        }
-        if(fragmentClass.equals(AboutMeFragment.class)){
-            bundle.putString("fragment", String.valueOf(R.string.strAboutMeFragment));
-        }
-
-        yfc.setArguments(bundle);
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction ft = fragmentManager.beginTransaction();
-        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        ft.replace(R.id.container, yfc);
         ft.addToBackStack(null);
         ft.commit();
 
