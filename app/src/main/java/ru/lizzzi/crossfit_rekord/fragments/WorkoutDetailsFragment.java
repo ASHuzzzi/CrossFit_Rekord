@@ -5,9 +5,11 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +25,7 @@ import java.util.Map;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterWorkoutDetails;
+import ru.lizzzi.crossfit_rekord.adapters.SimpleFragmentPagerAdapter;
 import ru.lizzzi.crossfit_rekord.loaders.WorkoutDetailsLoaders;
 
 /**
@@ -34,12 +37,7 @@ public class WorkoutDetailsFragment extends Fragment implements LoaderManager.Lo
 
     RecyclerAdapterWorkoutDetails adapter;
     ListView lvItemsInWod;
-    TextView tvWarmUp;
-    TextView tvSkill;
-    TextView tvWOD;
-    TextView tvLevelA;
-    TextView tvLevelB;
-    TextView tvLevelC;
+
     private TextView tvSelectedDay;
     Bundle bundle;
     private LinearLayout ll1;
@@ -60,14 +58,22 @@ public class WorkoutDetailsFragment extends Fragment implements LoaderManager.Lo
         final String ri = bundle.getString("tag");
         bundle.putString("Selected_day", ri);
 
+        // Find the view pager that will allow the user to swipe between fragments
+        ViewPager viewPager = (ViewPager) v.findViewById(R.id.vp_1);
+
+        // Create an adapter that knows which fragment should be shown on each page
+        SimpleFragmentPagerAdapter adapter2 = new SimpleFragmentPagerAdapter(this, getChildFragmentManager());
+
+        // Set the adapter onto the view pager
+        viewPager.setAdapter(adapter2);
+
+        // Give the TabLayout the ViewPager
+        TabLayout tabLayout = (TabLayout) v.findViewById(R.id.sliding_tabs);
+        tabLayout.setupWithViewPager(viewPager);
+
 
         lvItemsInWod = v.findViewById(R.id.lvWodResult);
-        tvWarmUp = v.findViewById(R.id.tvWarmUp);
-        tvSkill = v.findViewById(R.id.tvSkill);
-        tvWOD = v.findViewById(R.id.tvWOD);
-        tvLevelA = v.findViewById(R.id.tvLevelA);
-        tvLevelB = v.findViewById(R.id.tvLevelB);
-        tvLevelC = v.findViewById(R.id.tvLevelC);
+
         tvSelectedDay = v.findViewById(R.id.tvSelectedDay);
         ll1 = v.findViewById(R.id.ll1);
         ll1.setVisibility(View.INVISIBLE);
@@ -150,13 +156,13 @@ public class WorkoutDetailsFragment extends Fragment implements LoaderManager.Lo
             adapter = new RecyclerAdapterWorkoutDetails(getContext(), data, R.layout.item_lv_workout_details);
             lvItemsInWod.setAdapter(adapter);
         }else {
-            if (data != null && data.size() > 0){
+            if (data != null && data.size() > 0){/*
                 tvWarmUp.setText(String.valueOf(data.get(0).get("warmup")));
                 tvSkill.setText(String.valueOf(data.get(0).get("skill")));
                 tvWOD.setText(String.valueOf(data.get(0).get("wod")));
                 tvLevelA.setText(String.valueOf(data.get(0).get("A")));
                 tvLevelB.setText(String.valueOf(data.get(0).get("B")));
-                tvLevelC.setText(String.valueOf(data.get(0).get("C")));
+                tvLevelC.setText(String.valueOf(data.get(0).get("C")));*/
             }
         }
         if (adapter != null && data != null ){
@@ -177,9 +183,9 @@ public class WorkoutDetailsFragment extends Fragment implements LoaderManager.Lo
         //bundle = getArguments();
         //final String ri = bundle.getString("tag");
         //bundle.putString("Selected_day", ri);
-        if (adapter == null){
+        /*if (adapter == null){
             threadOpenFragment.start();
-        }
+        }*/
 
     }
 

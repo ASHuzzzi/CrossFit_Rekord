@@ -12,13 +12,14 @@
         android:layout_height="wrap_content"
         android:visibility="visible"
         app:mcv_allowClickDaysOutsideCurrentMonth="false"
+        app:mcv_arrowColor="@color/colorRedPrimary"
         app:mcv_calendarMode="month"
-        app:mcv_headerTextAppearance="@style/CalendarStyle"
         app:mcv_dateTextAppearance="@style/CalendarStyle"
-        app:mcv_weekDayTextAppearance="@style/CalendarStyle"
+        app:mcv_headerTextAppearance="@style/calendarHeaderStyle"
         app:mcv_selectionColor="@color/colorRedPrimary"
         app:mcv_showOtherDates="defaults"
-        app:mcv_tileSize="match_parent" />
+        app:mcv_tileSize="match_parent"
+        app:mcv_weekDayTextAppearance="@style/calendarweekDayStyle" />
 
     <LinearLayout
         android:id="@+id/Layout_Error_Calendar_Wod"

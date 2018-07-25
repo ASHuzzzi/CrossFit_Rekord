@@ -9,11 +9,11 @@ import java.io.IOException;
 public class NetworkCheck {
     private Context context;
 
-    NetworkCheck(Context context) {
+    public NetworkCheck(Context context) {
         this.context = context;
     }
 
-    boolean checkInternet() {
+    public boolean checkInternet() {
 
         ConnectivityManager cm = (ConnectivityManager)context.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 
