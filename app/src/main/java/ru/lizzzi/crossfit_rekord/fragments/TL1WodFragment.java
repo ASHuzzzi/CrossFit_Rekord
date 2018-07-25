@@ -1,40 +1,33 @@
-package ru.lizzzi.crossfit_rekord;
+package ru.lizzzi.crossfit_rekord.fragments;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterWorkoutDetails;
-import ru.lizzzi.crossfit_rekord.fragments.NetworkCheck;
+import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.loaders.WorkoutDetailsLoaders;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link TL_1_Fragment.OnFragmentInteractionListener} interface
+ * {@link TL1WodFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link TL_1_Fragment#newInstance} factory method to
+ * Use the {@link TL1WodFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TL_1_Fragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Map>>{
+public class TL1WodFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Map>>{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -50,9 +43,6 @@ public class TL_1_Fragment extends Fragment implements LoaderManager.LoaderCallb
     TextView tvLevelB;
     TextView tvLevelC;
 
-    private TextView tvSelectedDay;
-    Bundle bundle;
-    private LinearLayout ll1;
     private NetworkCheck NetworkCheck; //переменная для проврки сети
 
     private Handler handlerFragment;
@@ -60,24 +50,20 @@ public class TL_1_Fragment extends Fragment implements LoaderManager.LoaderCallb
 
     private OnFragmentInteractionListener mListener;
 
-    public TL_1_Fragment() {
+    public TL1WodFragment() {
         // Required empty public constructor
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_tl_1_, container, false);
+        View v = inflater.inflate(R.layout.fragment_tl1wod, container, false);
         tvWarmUp = v.findViewById(R.id.tvWarmUp);
         tvSkill = v.findViewById(R.id.tvSkill);
         tvWOD = v.findViewById(R.id.tvWOD);
         tvLevelA = v.findViewById(R.id.tvLevelA);
         tvLevelB = v.findViewById(R.id.tvLevelB);
         tvLevelC = v.findViewById(R.id.tvLevelC);
-        //
-        bundle = getArguments();
-        //final String ri = bundle.getString("tag");
-
 
         Runnable runnableOpenFragment = new Runnable() {
             @Override
@@ -116,7 +102,6 @@ public class TL_1_Fragment extends Fragment implements LoaderManager.LoaderCallb
 
     @Override
     public void onLoadFinished(Loader<List<Map>> loader, List<Map> data) {
-        int id = loader.getId();
         if (data != null && data.size() > 0){
                 tvWarmUp.setText(String.valueOf(data.get(0).get("warmup")));
                 tvSkill.setText(String.valueOf(data.get(0).get("skill")));
@@ -140,7 +125,7 @@ public class TL_1_Fragment extends Fragment implements LoaderManager.LoaderCallb
         //bundle = getArguments();
         //final String ri = bundle.getString("tag");
         //bundle.putString("Selected_day", ri);
-        if (tvWarmUp.length() > 1){
+        if (tvWarmUp.length() < 1){
             threadOpenFragment.start();
         }
 
