@@ -2,6 +2,8 @@ package ru.lizzzi.crossfit_rekord.fragments;
 
 import android.annotation.SuppressLint;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -24,12 +26,10 @@ import ru.lizzzi.crossfit_rekord.adapters.PagerAdapterWorkoutDetails;
 
 public class WorkoutDetailsFragment extends Fragment{
 
-
-
-
+    private static final String APP_PREFERENCES = "audata";
+    private static final String APP_PREFERENCES_SELECTEDDAY = "SelectedDay";
 
     private TextView tvSelectedDay;
-    Bundle bundle;
 
 
     @SuppressLint("HandlerLeak")
@@ -42,10 +42,8 @@ public class WorkoutDetailsFragment extends Fragment{
         getActivity().setTitle("Результаты тренировки");
         tvSelectedDay = v.findViewById(R.id.tvSelectedDay);
 
-
-
         // Find the view pager that will allow the user to swipe between fragments
-        ViewPager viewPager = (ViewPager) v.findViewById(R.id.vp_1);
+        ViewPager viewPager = v.findViewById(R.id.vp_1);
 
         // Create an adapter that knows which fragment should be shown on each page
         PagerAdapterWorkoutDetails adapter2 = new PagerAdapterWorkoutDetails(this, getChildFragmentManager());
@@ -54,7 +52,7 @@ public class WorkoutDetailsFragment extends Fragment{
         viewPager.setAdapter(adapter2);
 
         // Give the TabLayout the ViewPager
-        TabLayout tabLayout = (TabLayout) v.findViewById(R.id.sliding_tabs);
+        TabLayout tabLayout = v.findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
 
         return v;
@@ -72,9 +70,8 @@ public class WorkoutDetailsFragment extends Fragment{
             threadOpenFragment.start();
         }*/
 
-        bundle = getArguments();
-        final String ri = "07/09/2018";
-        bundle.putString("Selected_day", ri);
+        SharedPreferences mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        final String ri =  mSettings.getString(APP_PREFERENCES_SELECTEDDAY, "");
         @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
 
         Date ddd = null;
@@ -87,7 +84,6 @@ public class WorkoutDetailsFragment extends Fragment{
         @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf2 = new SimpleDateFormat("EEEE dd MMMM");
         String sdsd = sdf2.format(ddd);
         tvSelectedDay.setText(sdsd);
-
     }
 
     public void onPause(){

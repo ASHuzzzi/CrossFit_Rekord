@@ -1,6 +1,7 @@
 package ru.lizzzi.crossfit_rekord.fragments;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -50,6 +51,9 @@ public class TL1WodFragment extends Fragment implements LoaderManager.LoaderCall
 
     private OnFragmentInteractionListener mListener;
 
+    private static final String APP_PREFERENCES = "audata";
+    private static final String APP_PREFERENCES_SELECTEDDAY = "SelectedDay";
+
     public TL1WodFragment() {
         // Required empty public constructor
     }
@@ -86,8 +90,12 @@ public class TL1WodFragment extends Fragment implements LoaderManager.LoaderCall
     }
 
     private void loadExerciseAsyncTaskLoader(){
+
+        SharedPreferences mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        String selectedDay =  mSettings.getString(APP_PREFERENCES_SELECTEDDAY, "");
+
         Bundle bundle = new Bundle();
-        bundle.putString("Selected_day", "07/09/2018");
+        bundle.putString("Selected_day", selectedDay);
         bundle.putString("Table", "exercises");
         int LOADER_ID2 = 2;
         getLoaderManager().initLoader(LOADER_ID2, bundle, this).forceLoad();

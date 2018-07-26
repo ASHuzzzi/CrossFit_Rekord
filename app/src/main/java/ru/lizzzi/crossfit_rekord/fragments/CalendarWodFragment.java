@@ -51,6 +51,7 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
 
     private static final String APP_PREFERENCES = "audata";
     private static final String APP_PREFERENCES_OBJECTID = "ObjectId";
+    private static final String APP_PREFERENCES_SELECTEDDAY = "SelectedDay";
     private SharedPreferences mSettings;
 
     private int month;
@@ -65,6 +66,7 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
     long timenow;
     long interval;
     long timeStart;
+
 
     @SuppressLint("HandlerLeak")
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -204,6 +206,12 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
 
 
         selectedDate = Month + "/" + Day + "/" + date.getYear();
+
+        SharedPreferences mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = mSettings.edit();
+        editor.putString(APP_PREFERENCES_SELECTEDDAY, selectedDate);
+        editor.apply();
+
         WorkoutDetailsFragment yfc = new WorkoutDetailsFragment();
         Bundle bundle = new Bundle();
         bundle.putString("tag", selectedDate);
