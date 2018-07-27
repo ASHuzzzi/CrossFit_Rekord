@@ -78,6 +78,10 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
         Button btErrorCalendarWod = v.findViewById(R.id.bt_error_calendar_wod);
         pbCalendarWod = v.findViewById(R.id.pb_calendar_wod);
 
+        mcv.setVisibility(View.INVISIBLE);
+        layoutErrorCalendarWod.setVisibility(View.INVISIBLE);
+        pbCalendarWod.setVisibility(View.VISIBLE);
+
         mDBHelper = new CalendarWodDBHelper(getContext());
         try {
             mDBHelper.createDataBase();

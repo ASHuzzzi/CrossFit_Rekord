@@ -1,16 +1,21 @@
 package ru.lizzzi.crossfit_rekord.fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.List;
@@ -44,9 +49,13 @@ public class TL1WodFragment extends Fragment implements LoaderManager.LoaderCall
     TextView tvLevelB;
     TextView tvLevelC;
 
+    private LinearLayout llMain;
+    private LinearLayout llLayoutError;
+    private ProgressBar pbProgressBar;
+
     private NetworkCheck NetworkCheck; //переменная для проврки сети
 
-    private Handler handlerFragment;
+    private Handler handlerOpenFragment;
     private Thread threadOpenFragment;
 
     private OnFragmentInteractionListener mListener;
@@ -58,6 +67,7 @@ public class TL1WodFragment extends Fragment implements LoaderManager.LoaderCall
         // Required empty public constructor
     }
 
+    @SuppressLint("HandlerLeak")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -69,6 +79,31 @@ public class TL1WodFragment extends Fragment implements LoaderManager.LoaderCall
         tvLevelB = v.findViewById(R.id.tvLevelB);
         tvLevelC = v.findViewById(R.id.tvLevelC);
 
+        llMain = v.findViewById(R.id.llMain);
+        Button buttonError = v.findViewById(R.id.button5);
+        llLayoutError = v.findViewById(R.id.Layout_Error);
+        pbProgressBar = v.findViewById(R.id.progressBar3);
+
+        llLayoutError.setVisibility(View.INVISIBLE);
+        llMain.setVisibility(View.INVISIBLE);
+        pbProgressBar.setVisibility(View.VISIBLE);
+
+
+        //хэндлер для потока runnableOpenFragment
+        handlerOpenFragment = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                Bundle bundle = msg.getData();
+                String result_check = bundle.getString("result");
+                if (result_check != null){
+                    if (result_check.equals("false")){
+                        llLayoutError.setVisibility(View.VISIBLE);
+                        pbProgressBar.setVisibility(View.INVISIBLE);
+                    }
+                }
+            }
+        };
+
         Runnable runnableOpenFragment = new Runnable() {
             @Override
             public void run() {
@@ -78,13 +113,25 @@ public class TL1WodFragment extends Fragment implements LoaderManager.LoaderCall
                     loadExerciseAsyncTaskLoader();
 
                 }else {
-
+                    Message msg = handlerOpenFragment.obtainMessage();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("result", String.valueOf(false));
+                    msg.setData(bundle);
+                    handlerOpenFragment.sendMessage(msg);
                 }
             }
         };
         threadOpenFragment = new Thread(runnableOpenFragment);
         threadOpenFragment.setDaemon(true);
 
+        buttonError.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pbProgressBar.setVisibility(View.VISIBLE);
+                llLayoutError.setVisibility(View.INVISIBLE);
+                threadOpenFragment.run();
+            }
+        });
 
         return v;
     }
@@ -110,6 +157,7 @@ public class TL1WodFragment extends Fragment implements LoaderManager.LoaderCall
 
     @Override
     public void onLoadFinished(Loader<List<Map>> loader, List<Map> data) {
+        pbProgressBar.setVisibility(View.INVISIBLE);
         if (data != null && data.size() > 0){
                 tvWarmUp.setText(String.valueOf(data.get(0).get("warmup")));
                 tvSkill.setText(String.valueOf(data.get(0).get("skill")));
@@ -118,7 +166,7 @@ public class TL1WodFragment extends Fragment implements LoaderManager.LoaderCall
                 tvLevelB.setText(String.valueOf(data.get(0).get("B")));
                 tvLevelC.setText(String.valueOf(data.get(0).get("C")));
         }
-
+        llMain.setVisibility(View.VISIBLE);
     }
 
     @Override

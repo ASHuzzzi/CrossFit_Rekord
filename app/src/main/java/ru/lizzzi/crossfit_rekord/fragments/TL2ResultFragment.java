@@ -13,8 +13,10 @@ import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import java.util.List;
 import java.util.Map;
@@ -32,11 +34,15 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
 
     private NetworkCheck NetworkCheck; //переменная для проврки сети
 
-    private Handler handlerFragment;
+    private Handler handlerOpenFragment;
     private Thread threadOpenFragment2;
 
     private static final String APP_PREFERENCES = "audata";
     private static final String APP_PREFERENCES_SELECTEDDAY = "SelectedDay";
+
+    private LinearLayout llMain;
+    private LinearLayout llLayoutError;
+    private ProgressBar pbProgressBar;
 
     public TL2ResultFragment() {
         // Required empty public constructor
@@ -52,16 +58,23 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
         ll1.setVisibility(View.INVISIBLE);
         lvItemsInWod = v.findViewById(R.id.lvWodResult);
 
-        handlerFragment = new Handler() {
+        Button buttonError = v.findViewById(R.id.button5);
+        llLayoutError = v.findViewById(R.id.Layout_Error);
+        pbProgressBar = v.findViewById(R.id.progressBar4);
+
+        llLayoutError.setVisibility(View.INVISIBLE);
+        ll1.setVisibility(View.INVISIBLE);
+        pbProgressBar.setVisibility(View.VISIBLE);
+
+        handlerOpenFragment = new Handler() {
             @Override
             public void handleMessage(Message msg) {
                 Bundle bundle = msg.getData();
                 String result_check = bundle.getString("result");
                 if (result_check != null){
                     if (result_check.equals("false")){
-                        ll1.setVisibility(View.INVISIBLE);
-                    }else {
-                        ll1.setVisibility(View.VISIBLE);
+                        llLayoutError.setVisibility(View.VISIBLE);
+                        pbProgressBar.setVisibility(View.INVISIBLE);
                     }
                 }
             }
@@ -77,16 +90,25 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
                     loadSessionAsyncTaskLoader();
 
                 }else {
-                    Message msg = handlerFragment.obtainMessage();
+                    Message msg = handlerOpenFragment.obtainMessage();
                     Bundle bundle = new Bundle();
                     bundle.putString("result", String.valueOf(false));
                     msg.setData(bundle);
-                    handlerFragment.sendMessage(msg);
+                    handlerOpenFragment.sendMessage(msg);
                 }
             }
         };
         threadOpenFragment2 = new Thread(runnableOpenFragment);
         threadOpenFragment2.setDaemon(true);
+
+        buttonError.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pbProgressBar.setVisibility(View.VISIBLE);
+                llLayoutError.setVisibility(View.INVISIBLE);
+                threadOpenFragment2.run();
+            }
+        });
 
         return v;
     }
@@ -112,6 +134,7 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
 
     @Override
     public void onLoadFinished(Loader<List<Map>> loader, List<Map> data) {
+        pbProgressBar.setVisibility(View.INVISIBLE);
         if (data != null && data.size() > 0){
             adapter = new RecyclerAdapterWorkoutDetails(getContext(), data, R.layout.item_lv_workout_details);
             lvItemsInWod.setAdapter(adapter);
