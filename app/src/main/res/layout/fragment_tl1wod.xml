@@ -11,52 +11,80 @@
         android:id="@+id/llMain"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_margin="5dp"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/textView19"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="?attr/colorAccent"
+            android:gravity="center"
             android:text="Warm-Up"
+            android:textColor="?attr/colorPrimary"
+            android:textSize="16sp"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tvWarmUp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:singleLine="false" />
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:singleLine="false"
+            android:textColor="?attr/colorPrimary"
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/textView20"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:background="?attr/colorAccent"
+            android:gravity="center"
             android:text="Skill"
+            android:textColor="?attr/colorPrimary"
+            android:textSize="16sp"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tvSkill"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="TextView"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
             android:singleLine="false"
-            android:text="TextView" />
+            android:textColor="?attr/colorPrimary"
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/textView21"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:background="?attr/colorAccent"
+            android:gravity="center"
             android:text="WOD"
+            android:textColor="?attr/colorPrimary"
+            android:textSize="16sp"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tvWOD"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:singleLine="false" />
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:singleLine="false"
+            android:textColor="?attr/colorPrimary"
+            android:textSize="14sp" />
 
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="5dp">
+            android:layout_marginTop="15dp">
 
             <TableRow
                 android:layout_width="match_parent"
@@ -72,27 +100,42 @@
                         android:id="@+id/textView23"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginRight="2dp"
                         android:layout_weight="1"
+                        android:background="?attr/colorAccent"
                         android:gravity="center"
                         android:text="A"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/textView24"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginRight="2dp"
                         android:layout_weight="1"
+                        android:background="?attr/colorAccent"
                         android:gravity="center"
                         android:text="B"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/textView25"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginRight="2dp"
                         android:layout_weight="1"
+                        android:background="?attr/colorAccent"
                         android:gravity="center"
                         android:text="C"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="16sp"
                         android:textStyle="bold" />
                 </LinearLayout>
 
@@ -105,6 +148,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_gravity="center"
                     android:layout_weight="1"
                     android:orientation="horizontal">
 
@@ -112,19 +156,37 @@
                         android:id="@+id/tvLevelA"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:singleLine="false"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/tvLevelB"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:singleLine="false"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/tvLevelC"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:singleLine="false"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="14sp" />
                 </LinearLayout>
             </TableRow>
 
