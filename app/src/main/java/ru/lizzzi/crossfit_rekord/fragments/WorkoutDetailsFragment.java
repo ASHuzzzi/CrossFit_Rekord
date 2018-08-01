@@ -7,10 +7,13 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.text.ParseException;
@@ -42,8 +45,10 @@ public class WorkoutDetailsFragment extends Fragment{
         getActivity().setTitle("Результаты тренировки");
         tvSelectedDay = v.findViewById(R.id.tvSelectedDay);
 
+
+
         // Find the view pager that will allow the user to swipe between fragments
-        ViewPager viewPager = v.findViewById(R.id.vp_1);
+        final ViewPager viewPager = v.findViewById(R.id.vp_1);
 
         // Create an adapter that knows which fragment should be shown on each page
         PagerAdapterWorkoutDetails adapter2 = new PagerAdapterWorkoutDetails(this, getChildFragmentManager());
@@ -54,6 +59,29 @@ public class WorkoutDetailsFragment extends Fragment{
         // Give the TabLayout the ViewPager
         TabLayout tabLayout = v.findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                if (tab.getPosition() == 1) {
+                    //buttonEnterReult.setVisibility(View.VISIBLE);
+                }else{
+                    //buttonEnterReult.setVisibility(View.INVISIBLE);
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
+
+
 
         return v;
     }
@@ -88,5 +116,21 @@ public class WorkoutDetailsFragment extends Fragment{
 
     public void onPause(){
         super.onPause();
+    }
+
+    public void Test(){
+        Fragment fragment = null;
+        Class fragmentClass = EnterResultFragment.class;
+        try {
+            fragment = (Fragment) fragmentClass.newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        ft.replace(R.id.container, fragment);
+        ft.addToBackStack(null);
+        ft.commit();
     }
 }

@@ -3,11 +3,14 @@ package ru.lizzzi.crossfit_rekord.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
@@ -21,6 +24,7 @@ import android.widget.ProgressBar;
 import java.util.List;
 import java.util.Map;
 
+import ru.lizzzi.crossfit_rekord.EnterResultActivity;
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterWorkoutDetails;
 import ru.lizzzi.crossfit_rekord.loaders.WorkoutDetailsLoaders;
@@ -39,10 +43,13 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
 
     private static final String APP_PREFERENCES = "audata";
     private static final String APP_PREFERENCES_SELECTEDDAY = "SelectedDay";
+    private static final String APP_PREFERENCES_OBJECTID = "ObjectId";
+    SharedPreferences mSettings;
 
     private LinearLayout llMain;
     private LinearLayout llLayoutError;
     private ProgressBar pbProgressBar;
+    private Button buttonEnterReult;
 
     public TL2ResultFragment() {
         // Required empty public constructor
@@ -53,10 +60,13 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_tl2result, container, false);
+        final View v = inflater.inflate(R.layout.fragment_tl2result, container, false);
         ll1 = v.findViewById(R.id.ll1);
         ll1.setVisibility(View.INVISIBLE);
         lvItemsInWod = v.findViewById(R.id.lvWodResult);
+
+        buttonEnterReult = v.findViewById(R.id.btnOpenEnterResult);
+        //buttonEnterReult.setVisibility(View.INVISIBLE);
 
         Button buttonError = v.findViewById(R.id.button5);
         llLayoutError = v.findViewById(R.id.Layout_Error);
@@ -110,6 +120,15 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
             }
         });
 
+        buttonEnterReult.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(v.getContext(), EnterResultActivity.class);
+                v.getContext().startActivity(intent);
+
+            }
+        });
+
         return v;
     }
 
@@ -134,8 +153,25 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
 
     @Override
     public void onLoadFinished(Loader<List<Map>> loader, List<Map> data) {
+
+        mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        String stObjectId =  mSettings.getString(APP_PREFERENCES_OBJECTID, "");
+        boolean flag = false;
+         for (int i = 0; i < data.size(); i++){
+             if(data.get(i).containsValue(stObjectId)){
+                 flag = true;
+             }
+         }
+
+         if (flag){
+             buttonEnterReult.setText(R.string.strEditDeleteResult);
+         }else {
+             buttonEnterReult.setText(R.string.strEnterResult);
+         }
+
+
         pbProgressBar.setVisibility(View.INVISIBLE);
-        if (data != null && data.size() > 0){
+        if (data.size() > 0){
             adapter = new RecyclerAdapterWorkoutDetails(getContext(), data, R.layout.item_lv_workout_details);
             lvItemsInWod.setAdapter(adapter);
             ll1.setVisibility(View.VISIBLE);

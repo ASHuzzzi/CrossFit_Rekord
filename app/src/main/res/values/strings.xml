@@ -130,5 +130,8 @@
     <string name="strAboutMeFragment">AboutMeFragment</string>
     <string name="strRecordForTrainingRecordingFragment">RecordForTrainingRecordingFragment</string>
 
+    <!-- Значения для фрагмента TL2ResultFragment -->
+    <string name="strEnterResult">Внести результаты</string>
+    <string name="strEditDeleteResult">Редактировать</string>
 
 </resources>
