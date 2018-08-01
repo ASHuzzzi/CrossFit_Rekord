@@ -1,4 +1,4 @@
-package ru.lizzzi.crossfit_rekord;
+package ru.lizzzi.crossfit_rekord.activity;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -21,6 +21,7 @@ import com.backendless.Backendless;
 
 import java.util.ArrayList;
 
+import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.draft.wod_result_fragment.Result_Fragment;
 import ru.lizzzi.crossfit_rekord.fragments.AboutMeFragment;
 import ru.lizzzi.crossfit_rekord.fragments.CalendarWodFragment;

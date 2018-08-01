@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".EnterResultActivity">
+    tools:context=".activity.EnterResultActivity">
 
     <android.support.design.widget.CoordinatorLayout
         android:id="@+id/clEnterResult"
@@ -47,7 +47,7 @@
             android:id="@+id/textView39"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/editText10"
+            android:layout_below="@+id/etResultLevel"
             android:layout_marginTop="10dp"
             android:background="?attr/colorAccent"
             android:gravity="center"
@@ -57,7 +57,7 @@
             android:textStyle="bold" />
 
         <EditText
-            android:id="@+id/editText9"
+            android:id="@+id/etResultSkill"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/textView37"
@@ -69,7 +69,7 @@
             android:id="@+id/textView38"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/editText9"
+            android:layout_below="@+id/etResultSkill"
             android:layout_marginTop="10dp"
             android:background="?attr/colorAccent"
             android:gravity="center"
@@ -79,7 +79,7 @@
             android:textStyle="bold" />
 
         <EditText
-            android:id="@+id/editText10"
+            android:id="@+id/etResultLevel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/textView38"
@@ -100,7 +100,7 @@
             android:textStyle="bold" />
 
         <EditText
-            android:id="@+id/editText11"
+            android:id="@+id/etResultWoD"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/textView39"

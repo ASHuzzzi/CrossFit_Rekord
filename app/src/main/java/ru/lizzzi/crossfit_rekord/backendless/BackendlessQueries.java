@@ -96,4 +96,36 @@ public class BackendlessQueries {
         }
         return result;
     }
+
+    public List<Map> saveEditWorkoutDetails(int iLoaderId, String dateSession, String userId,
+                                            String userName, String userSkill, String userWoDLevel,
+                                            String userWodResult){
+
+        /*String whereClause = "date_session = '" + selecteDay + "'";
+        DataQueryBuilder queryBuilder = DataQueryBuilder.create();
+        queryBuilder.setWhereClause(whereClause);
+        queryBuilder.setPageSize(100);
+        return Backendless.Data.of(tableName).find(queryBuilder);*/
+
+        String table_name = "results";
+        HashMap<String, String> record = new HashMap<>();
+        if (iLoaderId == 1) {
+            record.put("date_session", dateSession);
+            record.put("userID", userId);
+            record.put("Name", userName);
+            record.put("skill", userSkill);
+            record.put("wod_level", userWoDLevel);
+            record.put("wod_result", userWodResult);
+            Backendless.Persistence.of(table_name).save(record);
+        }
+
+        if (iLoaderId == 2) {
+            record.put("date_session", dateSession);
+            record.put("userID", userId);
+            Backendless.Persistence.of(table_name).remove(record);
+        }
+        return null;
+    }
 }
+
+//TODO Перевести все название полей таблиц в  строковые ресурсы.

@@ -9,8 +9,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
@@ -24,7 +22,7 @@ import android.widget.ProgressBar;
 import java.util.List;
 import java.util.Map;
 
-import ru.lizzzi.crossfit_rekord.EnterResultActivity;
+import ru.lizzzi.crossfit_rekord.activity.EnterResultActivity;
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterWorkoutDetails;
 import ru.lizzzi.crossfit_rekord.loaders.WorkoutDetailsLoaders;
