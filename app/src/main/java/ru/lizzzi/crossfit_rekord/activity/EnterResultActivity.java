@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 import android.content.Context;
 
@@ -31,6 +32,10 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
 
     private Thread threadClickOnbutton;
 
+    private EditText etResultSkill;
+    private EditText etResultLevel;
+    private EditText etResultWoD;
+
     Context context;
 
     public int LOADER_SHOW_LIST = 1;
@@ -47,6 +52,10 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
         setContentView(R.layout.activity_enter_result);
         Toolbar toolbar = findViewById(R.id.toolbarER);
         setSupportActionBar(toolbar);
+
+        etResultSkill = findViewById(R.id.etResultSkill);
+        etResultLevel = findViewById(R.id.etResultLevel);
+        etResultWoD = findViewById(R.id.etResultWoD);
 
         Button btn = findViewById(R.id.button9);
         btn.setOnClickListener(new View.OnClickListener() {
@@ -188,7 +197,14 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
 
     @Override
     public void onLoadFinished(Loader<List<Map>> loader, List<Map> data) {
-        Toast.makeText(EnterResultActivity.this, "Есть!", Toast.LENGTH_SHORT).show();
+        if (data.size() >0){
+            etResultSkill.setText(String.valueOf(data.get(0).get("skill")));
+            etResultLevel.setText(String.valueOf(data.get(0).get("wod_level")));
+            etResultWoD.setText(String.valueOf(data.get(0).get("wod_result")));
+        }else{
+            Toast.makeText(EnterResultActivity.this, "Есть!", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     @Override

@@ -52,7 +52,13 @@ public class SaveLoadResultLoader extends AsyncTaskLoader<List<Map>> {
         dateSession =  mSettings.getString(APP_PREFERENCES_SELECTEDDAY, "");
         userId = mSettings.getString(APP_PREFERENCES_OBJECTID, "");
 
-        return queries.saveEditWorkoutDetails(iLoaderId, dateSession, userId,
-                userName, userSkill, userWoDLevel, userWodResult);
+        if (iLoaderId == 1){
+            String typeQuery = "single";
+            return queries.loadWorkoutDetails(typeQuery,"results", dateSession, userId);
+        }else {
+            return queries.saveEditWorkoutDetails(iLoaderId, dateSession, userId,
+                    userName, userSkill, userWoDLevel, userWodResult);
+        }
+
     }
 }

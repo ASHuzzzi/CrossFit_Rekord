@@ -11,6 +11,7 @@ import java.util.Map;
 
 public class BackendlessQueries {
 
+
     public List<Map> loadCalendarWod(String objectID, String startDay, String nowDay){
         List<Map> data;
         String whereClause = "userID = '" + objectID + "' and date_session >= '" +
@@ -53,8 +54,14 @@ public class BackendlessQueries {
         return Backendless.Data.of("schedule").find(queryBuilder);
     }
 
-    public List<Map> loadWorkoutDetails(String tableName, String selecteDay){
-        String whereClause = "date_session = '" + selecteDay + "'";
+    public List<Map> loadWorkoutDetails(String typeQuery, String tableName, String selecteDay, String userId){
+        String whereClause;
+        if (typeQuery.equals("all")){
+            whereClause = "date_session = '" + selecteDay + "'" ;
+        }else {
+            whereClause = "date_session = '" + selecteDay + "' and userID = '" + userId + "'" ;
+        }
+
         DataQueryBuilder queryBuilder = DataQueryBuilder.create();
         queryBuilder.setWhereClause(whereClause);
         queryBuilder.setPageSize(100);

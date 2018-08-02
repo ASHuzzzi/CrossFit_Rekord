@@ -26,8 +26,9 @@ public class WorkoutDetailsLoaders extends AsyncTaskLoader<List<Map>> {
 
     @Override
     public List<Map> loadInBackground() {
+        String typeQuery = "all";
         List<Map> data;
-        data = queries.loadWorkoutDetails(tableName, selecteDay);
+        data = queries.loadWorkoutDetails(typeQuery, tableName, selecteDay, null);
         return data;
     }
 }

@@ -117,20 +117,4 @@ public class WorkoutDetailsFragment extends Fragment{
     public void onPause(){
         super.onPause();
     }
-
-    public void Test(){
-        Fragment fragment = null;
-        Class fragmentClass = EnterResultFragment.class;
-        try {
-            fragment = (Fragment) fragmentClass.newInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction ft = fragmentManager.beginTransaction();
-        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        ft.replace(R.id.container, fragment);
-        ft.addToBackStack(null);
-        ft.commit();
-    }
 }
