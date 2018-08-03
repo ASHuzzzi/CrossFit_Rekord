@@ -36,11 +36,16 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
     private EditText etResultLevel;
     private EditText etResultWoD;
 
+    private Button btnSave;
+
     Context context;
 
     public int LOADER_SHOW_LIST = 1;
-    public int LOADER_WRITE_ITEM = 2;
+    public int LOADER_SAVE_ITEM = 2;
     public int LOADER_DELETE_ITEM = 3;
+    public int LOADER_UPLOAD_ITEM = 4;
+
+    private NetworkCheck NetworkCheck; //переменная для проврки сети
 
     Bundle bundle;
     private Loader<List<Map>> mLoader;
@@ -56,6 +61,21 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
         etResultSkill = findViewById(R.id.etResultSkill);
         etResultLevel = findViewById(R.id.etResultLevel);
         etResultWoD = findViewById(R.id.etResultWoD);
+
+        btnSave = findViewById(R.id.btnSave);
+
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NetworkCheck = new NetworkCheck(EnterResultActivity.this);
+                boolean resultCheck = NetworkCheck.checkInternet();
+                if (resultCheck){
+                    threadClickOnbutton.run();
+                }else {
+                    Toast.makeText(EnterResultActivity.this, "Нет подключения", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
         Button btn = findViewById(R.id.button9);
         btn.setOnClickListener(new View.OnClickListener() {
@@ -122,7 +142,7 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
         threadOpenFragment.setDaemon(true);
 
         //поток запускаемый кнопкой удалить/записаться
-        /*Runnable runnableClickOnbutton = new Runnable() {
+        Runnable runnableClickOnbutton = new Runnable() {
             @Override
             public void run() {
                 Message msg = handlerOpenFragment.obtainMessage();
@@ -130,20 +150,12 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
                 networkCheck = new NetworkCheck(EnterResultActivity.this);
                 boolean resultCheck = networkCheck.checkInternet();
                 if (resultCheck){
-                    bundle.putString("onclick", String.valueOf(true));
-                    if (layoutError.getVisibility() == View.VISIBLE) {
-                        layoutError.setVisibility(View.INVISIBLE);
-                    }
-                    if (stUserId.equals("noId")){
-                        lvRecord.setVisibility(View.INVISIBLE);
-                        restartAsyncTaskLoader(2);
-
-                    }else {
-                        lvRecord.setVisibility(View.INVISIBLE);
+                    if(etResultSkill.getText().length() == 0 & etResultLevel.getText().length() == 0
+                            & etResultWoD.getText().length() == 0){
                         restartAsyncTaskLoader(3);
-
+                    }else {
+                        restartAsyncTaskLoader(4);
                     }
-
                 }else {
                     bundle.putString("onclick", String.valueOf(false));
                 }
@@ -153,7 +165,7 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
             }
         };
         threadClickOnbutton = new Thread(runnableClickOnbutton);
-        threadClickOnbutton.setDaemon(true);*/
+        threadClickOnbutton.setDaemon(true);
 
 
     }
@@ -172,21 +184,29 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
         mLoader.forceLoad();
     }
 
-    /*private void restartAsyncTaskLoader(int loader_id){
+    private void restartAsyncTaskLoader(int loader_id){
         switch (loader_id){
             case 2:
-                bundle.putString(String.valueOf(RecordForTrainingRecordingLoadPeopleLoader.ARG_USERNAME), stUserName);
-                mLoader = getSupportLoaderManager().restartLoader(LOADER_WRITE_ITEM,bundle, this);
+
+                break;
+
+            case 3:
+
+                mLoader = getSupportLoaderManager().restartLoader(LOADER_DELETE_ITEM,null, this);
                 mLoader.forceLoad();
                 break;
-            case 3:
-                bundle.putString(String.valueOf(RecordForTrainingRecordingLoadPeopleLoader.ARG_USERID), stUserId);
-                mLoader = getSupportLoaderManager().restartLoader(LOADER_DELETE_ITEM,bundle, this);
+
+            case 4:
+                Bundle bundle = new Bundle();
+                bundle.putString(String.valueOf(SaveLoadResultLoader.ARG_USERSKIL), String.valueOf(etResultSkill.getText()));
+                bundle.putString(String.valueOf(SaveLoadResultLoader.ARG_USERWODLEVEL), String.valueOf(etResultLevel.getText()));
+                bundle.putString(String.valueOf(SaveLoadResultLoader.ARG_USERWODRESULT), String.valueOf(etResultWoD.getText()));
+                mLoader = getSupportLoaderManager().restartLoader(LOADER_UPLOAD_ITEM, bundle, this);
                 mLoader.forceLoad();
                 break;
         }
 
-    }*/
+    }
 
     @Override
     public Loader<List<Map>> onCreateLoader(int id, Bundle args) {
@@ -197,7 +217,8 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
 
     @Override
     public void onLoadFinished(Loader<List<Map>> loader, List<Map> data) {
-        if (data.size() >0){
+
+        if (data != null && data.size() > 0){
             etResultSkill.setText(String.valueOf(data.get(0).get("skill")));
             etResultLevel.setText(String.valueOf(data.get(0).get("wod_level")));
             etResultWoD.setText(String.valueOf(data.get(0).get("wod_result")));

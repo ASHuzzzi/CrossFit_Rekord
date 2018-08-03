@@ -13,11 +13,11 @@ import ru.lizzzi.crossfit_rekord.backendless.BackendlessQueries;
 public class SaveLoadResultLoader extends AsyncTaskLoader<List<Map>> {
 
     //private static final int ARG_DATE = 1;
-    private static final int ARG_USERID = 2;
-    private static final int ARG_USERNAME = 3;
-    private static final int ARG_USERSKIL = 4;
-    private static final int ARG_USERWODLEVEL = 5;
-    private static final int ARG_USERWODRESULT = 6;
+    public static final int ARG_USERID = 2;
+    public static final int ARG_USERNAME = 3;
+    public static final int ARG_USERSKIL = 4;
+    public static final int ARG_USERWODLEVEL = 5;
+    public static final int ARG_USERWODRESULT = 6;
 
     private int iLoaderId;
     private String dateSession;
@@ -31,6 +31,7 @@ public class SaveLoadResultLoader extends AsyncTaskLoader<List<Map>> {
     private static final String APP_PREFERENCES = "audata";
     private static final String APP_PREFERENCES_SELECTEDDAY = "SelectedDay";
     private static final String APP_PREFERENCES_OBJECTID = "ObjectId";
+    private static final String APP_PREFERENCES_USERNAME = "Username";
 
     public SaveLoadResultLoader(Context context, Bundle args, int id) {
         super(context);
@@ -56,6 +57,7 @@ public class SaveLoadResultLoader extends AsyncTaskLoader<List<Map>> {
             String typeQuery = "single";
             return queries.loadWorkoutDetails(typeQuery,"results", dateSession, userId);
         }else {
+            userName = mSettings.getString(APP_PREFERENCES_USERNAME, "");
             return queries.saveEditWorkoutDetails(iLoaderId, dateSession, userId,
                     userName, userSkill, userWoDLevel, userWodResult);
         }

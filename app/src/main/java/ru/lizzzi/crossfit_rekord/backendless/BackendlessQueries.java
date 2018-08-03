@@ -116,7 +116,7 @@ public class BackendlessQueries {
 
         String table_name = "results";
         HashMap<String, String> record = new HashMap<>();
-        if (iLoaderId == 1) {
+        if (iLoaderId == 2) {
             record.put("date_session", dateSession);
             record.put("userID", userId);
             record.put("Name", userName);
@@ -126,10 +126,23 @@ public class BackendlessQueries {
             Backendless.Persistence.of(table_name).save(record);
         }
 
-        if (iLoaderId == 2) {
-            record.put("date_session", dateSession);
-            record.put("userID", userId);
-            Backendless.Persistence.of(table_name).remove(record);
+        if (iLoaderId == 3) {
+            /*record.put("date_session", dateSession);
+            record.put("userID", userId);*/
+            String whereClause = "date_session = '" + dateSession + "' and userID = '" + userId + "'";
+            Backendless.Persistence.of(table_name).remove(whereClause);
+        }
+
+        if (iLoaderId == 4 ){
+            Map<String, Object> record2 = new HashMap<>();
+            /*record.put("date_session", dateSession);
+            record.put("userID", userId);*/
+            record2.put("Name", userName);
+            record2.put("skill", userSkill);
+            record2.put("wod_level", userWoDLevel);
+            record2.put("wod_result", userWodResult);
+            String whereClause = "date_session = '" + dateSession + "' and userID = '" + userId + "'";
+            Backendless.Persistence.of(table_name).update(whereClause, record2);
         }
         return null;
     }
