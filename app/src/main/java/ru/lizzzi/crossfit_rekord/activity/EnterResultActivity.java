@@ -1,6 +1,7 @@
 package ru.lizzzi.crossfit_rekord.activity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.LoaderManager;
@@ -46,6 +47,9 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
     public int LOADER_UPLOAD_ITEM = 4;
 
     private NetworkCheck NetworkCheck; //переменная для проврки сети
+
+
+    public final static String THIEF = "THIEF";
 
     Bundle bundle;
     private Loader<List<Map>> mLoader;
@@ -217,6 +221,12 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
 
     @Override
     public void onLoadFinished(Loader<List<Map>> loader, List<Map> data) {
+
+        if (loader.getId() != 1){
+            Intent answerIntent = new Intent();
+            setResult(RESULT_OK, answerIntent);
+            finish();
+        }
 
         if (data != null && data.size() > 0){
             etResultSkill.setText(String.valueOf(data.get(0).get("skill")));

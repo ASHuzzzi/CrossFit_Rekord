@@ -30,6 +30,7 @@ import ru.lizzzi.crossfit_rekord.loaders.WorkoutDetailsLoaders;
 public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Map>>{
 
 
+    private static final int RESULT_OK = -1;
     RecyclerAdapterWorkoutDetails adapter;
     private LinearLayout ll1;
     ListView lvItemsInWod;
@@ -48,6 +49,8 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
     private LinearLayout llLayoutError;
     private ProgressBar pbProgressBar;
     private Button buttonEnterReult;
+
+    static final private int CHOOSE_THIEF = 0;
 
     public TL2ResultFragment() {
         // Required empty public constructor
@@ -122,7 +125,8 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(v.getContext(), EnterResultActivity.class);
-                v.getContext().startActivity(intent);
+                //v.getContext().startActivity(intent);
+                startActivityForResult(intent, CHOOSE_THIEF);
 
             }
         });
@@ -191,6 +195,18 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
             threadOpenFragment2.start();
         }
 
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+
+        if (requestCode == CHOOSE_THIEF) {
+            if (resultCode == RESULT_OK) {
+                threadOpenFragment2.run();
+            }
+        }
     }
 
 }
