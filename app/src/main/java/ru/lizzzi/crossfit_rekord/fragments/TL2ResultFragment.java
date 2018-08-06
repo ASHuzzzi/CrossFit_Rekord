@@ -52,6 +52,11 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
 
     static final private int CHOOSE_THIEF = 0;
 
+    private String stSkill;
+    private String stWoDLevel;
+    private String stWoDResults;
+    private boolean flag;
+
     public TL2ResultFragment() {
         // Required empty public constructor
     }
@@ -125,6 +130,14 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(v.getContext(), EnterResultActivity.class);
+                if (flag){
+                    intent.putExtra("flag", true);
+                    intent.putExtra("skill", stSkill);
+                    intent.putExtra("level", stWoDLevel);
+                    intent.putExtra("results", stWoDResults);
+                }else {
+                    intent.putExtra("flag", false);
+                }
                 //v.getContext().startActivity(intent);
                 startActivityForResult(intent, CHOOSE_THIEF);
 
@@ -158,10 +171,13 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
 
         mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         String stObjectId =  mSettings.getString(APP_PREFERENCES_OBJECTID, "");
-        boolean flag = false;
+        flag = false;
          for (int i = 0; i < data.size(); i++){
              if(data.get(i).containsValue(stObjectId)){
-                 flag = true;
+                stSkill = String.valueOf(data.get(i).get("skill"));
+                stWoDLevel = String.valueOf(data.get(i).get("wod_level"));
+                stWoDResults = String.valueOf(data.get(i).get("wod_result"));
+                flag = true;
              }
          }
 

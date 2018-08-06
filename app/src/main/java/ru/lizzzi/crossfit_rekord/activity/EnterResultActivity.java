@@ -1,11 +1,13 @@
 package ru.lizzzi.crossfit_rekord.activity;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -13,6 +15,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 import android.content.Context;
 
@@ -21,7 +24,6 @@ import java.util.Map;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.fragments.NetworkCheck;
-import ru.lizzzi.crossfit_rekord.loaders.RecordForTrainingRecordingLoadPeopleLoader;
 import ru.lizzzi.crossfit_rekord.loaders.SaveLoadResultLoader;
 
 public class EnterResultActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Map>> {
@@ -48,6 +50,9 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
 
     private NetworkCheck NetworkCheck; //переменная для проврки сети
 
+    private boolean flag;
+
+    private ImageButton imbDelete;
 
     public final static String THIEF = "THIEF";
 
@@ -65,6 +70,40 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
         etResultSkill = findViewById(R.id.etResultSkill);
         etResultLevel = findViewById(R.id.etResultLevel);
         etResultWoD = findViewById(R.id.etResultWoD);
+
+        imbDelete = findViewById(R.id.imbDelete);
+
+        imbDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(flag){
+                    AlertDialog.Builder builder = new AlertDialog.Builder(EnterResultActivity.this);
+                    builder.setTitle("Внимание!")
+                            .setMessage("Удалить результаты?")
+                            //.setIcon(R.drawable.ic_android_cat)
+                            .setCancelable(false)
+                            .setPositiveButton("Да",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            restartAsyncTaskLoader(3);
+                                        }
+                                    })
+                            .setNegativeButton("Нет",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.cancel();
+                                        }
+                                    });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                }else {
+                    Toast.makeText(EnterResultActivity.this, "Нет данных для удаления", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+
 
         btnSave = findViewById(R.id.btnSave);
 
@@ -154,12 +193,17 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
                 networkCheck = new NetworkCheck(EnterResultActivity.this);
                 boolean resultCheck = networkCheck.checkInternet();
                 if (resultCheck){
-                    if(etResultSkill.getText().length() == 0 & etResultLevel.getText().length() == 0
+                    if(flag){
+                        restartAsyncTaskLoader(4);
+                    }else {
+                        restartAsyncTaskLoader(2);
+                    }
+                    /*if(etResultSkill.getText().length() == 0 & etResultLevel.getText().length() == 0
                             & etResultWoD.getText().length() == 0){
                         restartAsyncTaskLoader(3);
                     }else {
                         restartAsyncTaskLoader(4);
-                    }
+                    }*/
                 }else {
                     bundle.putString("onclick", String.valueOf(false));
                 }
@@ -175,11 +219,34 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+
+        getSupportActionBar().setTitle("Мои результаты тренировки");
+
+        Intent intent = getIntent();
+        flag = intent.getBooleanExtra("flag", false);
+        if (flag){
+            etResultSkill.setText(intent.getStringExtra("skill"));
+            etResultLevel.setText(intent.getStringExtra("level"));
+            etResultWoD.setText(intent.getStringExtra("results"));
+
+        }else{
+            etResultSkill.setText("");
+            etResultLevel.setText("");
+            etResultWoD.setText("");
+
+        }
+        btnSave.setText("Сохранить");
+
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
-        getSupportActionBar().setTitle("Мои результаты тренировки");
+
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        threadOpenFragment.start();
+        //threadOpenFragment.start();
     }
 
 
