@@ -5,24 +5,15 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.content.AsyncTaskLoader;
 
-import java.util.List;
-import java.util.Map;
-
 import ru.lizzzi.crossfit_rekord.backendless.BackendlessQueries;
 
-public class SaveLoadResultLoader extends AsyncTaskLoader<List<Map>> {
+public class SaveLoadResultLoader extends AsyncTaskLoader<Boolean> {
 
-    //private static final int ARG_DATE = 1;
-    public static final int ARG_USERID = 2;
-    public static final int ARG_USERNAME = 3;
     public static final int ARG_USERSKIL = 4;
     public static final int ARG_USERWODLEVEL = 5;
     public static final int ARG_USERWODRESULT = 6;
 
     private int iLoaderId;
-    private String dateSession;
-    private String userId;
-    private String userName;
     private String userSkill;
     private String userWoDLevel;
     private String userWodResult;
@@ -37,9 +28,6 @@ public class SaveLoadResultLoader extends AsyncTaskLoader<List<Map>> {
         super(context);
         iLoaderId = id;
         if (args != null){
-            //dateSession = args.getString(String.valueOf(ARG_DATE));
-            userId = args.getString(String.valueOf(ARG_USERID));
-            userName = args.getString(String.valueOf(ARG_USERNAME));
             userSkill = args.getString(String.valueOf(ARG_USERSKIL));
             userWoDLevel= args.getString(String.valueOf(ARG_USERWODLEVEL));
             userWodResult = args.getString(String.valueOf(ARG_USERWODRESULT));
@@ -47,20 +35,14 @@ public class SaveLoadResultLoader extends AsyncTaskLoader<List<Map>> {
     }
 
     @Override
-    public List<Map> loadInBackground() {
+    public Boolean loadInBackground() {
 
         SharedPreferences mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-        dateSession =  mSettings.getString(APP_PREFERENCES_SELECTEDDAY, "");
-        userId = mSettings.getString(APP_PREFERENCES_OBJECTID, "");
-
-        if (iLoaderId == 1){
-            String typeQuery = "single";
-            return queries.loadWorkoutDetails(typeQuery,"results", dateSession, userId);
-        }else {
-            userName = mSettings.getString(APP_PREFERENCES_USERNAME, "");
-            return queries.saveEditWorkoutDetails(iLoaderId, dateSession, userId,
-                    userName, userSkill, userWoDLevel, userWodResult);
-        }
+        String dateSession = mSettings.getString(APP_PREFERENCES_SELECTEDDAY, "");
+        String userId = mSettings.getString(APP_PREFERENCES_OBJECTID, "");
+        String userName = mSettings.getString(APP_PREFERENCES_USERNAME, "");
+        return queries.saveEditWorkoutDetails(iLoaderId, dateSession, userId,
+                userName, userSkill, userWoDLevel, userWodResult);
 
     }
 }

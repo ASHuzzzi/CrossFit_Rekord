@@ -188,14 +188,18 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
          }
 
 
-        pbProgressBar.setVisibility(View.INVISIBLE);
+
         if (data.size() > 0){
             adapter = new RecyclerAdapterWorkoutDetails(getContext(), data, R.layout.item_lv_workout_details);
+            adapter.notifyDataSetChanged();
             lvItemsInWod.setAdapter(adapter);
-            ll1.setVisibility(View.VISIBLE);
+
         }else {
-            ll1.setVisibility(View.INVISIBLE);
+            lvItemsInWod.setAdapter(null);
+            //ll1.setVisibility(View.INVISIBLE);
         }
+        ll1.setVisibility(View.VISIBLE);
+        pbProgressBar.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -207,7 +211,7 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
     public void onResume() {
         super.onResume();
 
-        if (adapter == null){
+        if (threadOpenFragment2.getState() == Thread.State.NEW){
             threadOpenFragment2.start();
         }
 

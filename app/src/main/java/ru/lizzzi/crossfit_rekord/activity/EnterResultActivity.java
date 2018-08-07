@@ -1,8 +1,11 @@
 package ru.lizzzi.crossfit_rekord.activity;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.LoaderManager;
@@ -16,48 +19,47 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.Toast;
-import android.content.Context;
 
-import java.util.List;
-import java.util.Map;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Objects;
 
 import ru.lizzzi.crossfit_rekord.R;
+import ru.lizzzi.crossfit_rekord.data.CalendarWodDBHelper;
 import ru.lizzzi.crossfit_rekord.fragments.NetworkCheck;
 import ru.lizzzi.crossfit_rekord.loaders.SaveLoadResultLoader;
 
-public class EnterResultActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Map>> {
+public class EnterResultActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Boolean> {
 
-    NetworkCheck networkCheck;
+    private NetworkCheck networkCheck; //переменная для проврки сети
 
     private Handler handlerOpenFragment;
-    private Thread threadOpenFragment;
-
-    private Thread threadClickOnbutton;
+    private Thread runnableClickOnbuttonSave;
 
     private EditText etResultSkill;
     private EditText etResultLevel;
     private EditText etResultWoD;
-
+    private ProgressBar pbSaveUpload;
     private Button btnSave;
 
-    Context context;
-
-    public int LOADER_SHOW_LIST = 1;
     public int LOADER_SAVE_ITEM = 2;
     public int LOADER_DELETE_ITEM = 3;
     public int LOADER_UPLOAD_ITEM = 4;
 
-    private NetworkCheck NetworkCheck; //переменная для проврки сети
+    private boolean flag; //флаг показывает есть ли данные о тренировки от фрагмента
+    private boolean flagDelete =  false; //флаг показывает, что нажата кнопка удалить
 
-    private boolean flag;
+    private static final String APP_PREFERENCES = "audata";
+    private static final String APP_PREFERENCES_OBJECTID = "ObjectId";
+    private static final String APP_PREFERENCES_SELECTEDDAY = "SelectedDay";
+    private SharedPreferences mSettings;
 
-    private ImageButton imbDelete;
+    private CalendarWodDBHelper mDBHelper;
 
-    public final static String THIEF = "THIEF";
-
-    Bundle bundle;
-    private Loader<List<Map>> mLoader;
+    @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf2 = new SimpleDateFormat("MM.dd.yyyy");
 
     @SuppressLint("HandlerLeak")
     @Override
@@ -71,8 +73,11 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
         etResultLevel = findViewById(R.id.etResultLevel);
         etResultWoD = findViewById(R.id.etResultWoD);
 
-        imbDelete = findViewById(R.id.imbDelete);
+        pbSaveUpload = findViewById(R.id.pbSaveUpload);
 
+
+        ImageButton imbDelete = findViewById(R.id.imbDelete);
+        //mLoader = getSupportLoaderManager().initLoader(LOADER_SHOW_LIST, null, this);
         imbDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -80,13 +85,13 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
                     AlertDialog.Builder builder = new AlertDialog.Builder(EnterResultActivity.this);
                     builder.setTitle("Внимание!")
                             .setMessage("Удалить результаты?")
-                            //.setIcon(R.drawable.ic_android_cat)
                             .setCancelable(false)
                             .setPositiveButton("Да",
                                     new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialogInterface, int i) {
-                                            restartAsyncTaskLoader(3);
+                                            flagDelete =  true;
+                                            runnableClickOnbuttonSave.run();
                                         }
                                     })
                             .setNegativeButton("Нет",
@@ -105,18 +110,12 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
         });
 
 
-        btnSave = findViewById(R.id.btnSave);
+        btnSave = findViewById(R.id.btnSaveUpload);
 
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NetworkCheck = new NetworkCheck(EnterResultActivity.this);
-                boolean resultCheck = NetworkCheck.checkInternet();
-                if (resultCheck){
-                    threadClickOnbutton.run();
-                }else {
-                    Toast.makeText(EnterResultActivity.this, "Нет подключения", Toast.LENGTH_SHORT).show();
-                }
+                runnableClickOnbuttonSave.run();
             }
         });
 
@@ -128,92 +127,53 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
             }
         });
 
-        //хэндлер для обоих потоков. Какой именно поток вызвал хэндлер передается в key
+        //хэндлер для показа progress bar'a
         handlerOpenFragment = new Handler() {
             @SuppressLint("ShowToast")
             @Override
             public void handleMessage(Message msg) {
                 Bundle bundle = msg.getData();
-                String switchs = bundle.getString("switch"); //показывает какой поток вызвал
-                String resultCheck;
+                String switchs = bundle.getString("status");
                 if (switchs != null){
-                    if (switchs.equals("open")){ //поток при первом запуске экрана
-                        resultCheck = bundle.getString("open");
-                        if (resultCheck != null) {
-                            if (resultCheck.equals("false")) {
-                                /*layoutError.setVisibility(View.VISIBLE);
-                                progressBar2.setVisibility(View.INVISIBLE);*/
-                            }
-                        }
+                    if (switchs.equals("start")){
+                        pbSaveUpload.setVisibility(View.VISIBLE);
                     }else{
-                        resultCheck = bundle.getString("onclick"); //поток от нажатия кнопок
-                        if (resultCheck != null) {
-                            if (resultCheck.equals("false")) {/*
-                                if (layoutError.getVisibility() == View.INVISIBLE){
-                                    Toast.makeText(EnterResultActivity.this, "Нет подключения", Toast.LENGTH_SHORT).show();
-                                }
-                            }else {
-                                lvRecord.setVisibility(View.INVISIBLE);
-                                progressBar2.setVisibility(View.VISIBLE);*/
-                            }
-                        }
+                        pbSaveUpload.setVisibility(View.INVISIBLE);
                     }
                 }
             }
         };
 
-        //поток запускаемый при создании экрана (запуск происходит из onResume)
-        Runnable runnableOpenFragment = new Runnable() {
-            @Override
-            public void run() {
-                networkCheck = new NetworkCheck(EnterResultActivity.this);
-                boolean resultCheck = networkCheck.checkInternet();
-                if (resultCheck){
-                    firstStartAsyncTaskLoader();
-
-                }else {
-                    Message msg = handlerOpenFragment.obtainMessage();
-                    Bundle bundle = new Bundle();
-                    bundle.putString("open", String.valueOf(false));
-                    bundle.putString("switch", "open");
-                    msg.setData(bundle);
-                    handlerOpenFragment.sendMessage(msg);
-                }
-            }
-        };
-        threadOpenFragment = new Thread(runnableOpenFragment);
-        threadOpenFragment.setDaemon(true);
-
-        //поток запускаемый кнопкой удалить/записаться
-        Runnable runnableClickOnbutton = new Runnable() {
+        //поток запускаемый кнопкой сохранить/записать
+        Runnable runnableClickOnbuttonSave = new Runnable() {
             @Override
             public void run() {
                 Message msg = handlerOpenFragment.obtainMessage();
                 Bundle bundle = new Bundle();
+                bundle.putString("status", "start");
+                msg.setData(bundle);
+                handlerOpenFragment.sendMessage(msg);
                 networkCheck = new NetworkCheck(EnterResultActivity.this);
                 boolean resultCheck = networkCheck.checkInternet();
                 if (resultCheck){
-                    if(flag){
-                        restartAsyncTaskLoader(4);
-                    }else {
-                        restartAsyncTaskLoader(2);
+                    if(flagDelete){
+                        restartAsyncTaskLoader(3); //удалить
+                    }else{
+                        if(flag){
+                            restartAsyncTaskLoader(4); //обновить
+                        }else {
+                            restartAsyncTaskLoader(2); //сохранить
+                        }
                     }
-                    /*if(etResultSkill.getText().length() == 0 & etResultLevel.getText().length() == 0
-                            & etResultWoD.getText().length() == 0){
-                        restartAsyncTaskLoader(3);
-                    }else {
-                        restartAsyncTaskLoader(4);
-                    }*/
+
                 }else {
-                    bundle.putString("onclick", String.valueOf(false));
+                    bundle.putString("status", "stop");
+
                 }
-                bundle.putString("switch", "onclick");
-                msg.setData(bundle);
-                handlerOpenFragment.sendMessage(msg);
             }
         };
-        threadClickOnbutton = new Thread(runnableClickOnbutton);
-        threadClickOnbutton.setDaemon(true);
+        this.runnableClickOnbuttonSave = new Thread(runnableClickOnbuttonSave);
+        this.runnableClickOnbuttonSave.setDaemon(true);
 
 
     }
@@ -222,7 +182,11 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
     protected void onStart() {
         super.onStart();
 
-        getSupportActionBar().setTitle("Мои результаты тренировки");
+        pbSaveUpload.setVisibility(View.INVISIBLE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            Objects.requireNonNull(getSupportActionBar()).setTitle("Мои результаты тренировки");
+        }
+        btnSave.setText("Сохранить");
 
         Intent intent = getIntent();
         flag = intent.getBooleanExtra("flag", false);
@@ -237,8 +201,6 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
             etResultWoD.setText("");
 
         }
-        btnSave.setText("Сохранить");
-
     }
 
     @Override
@@ -246,29 +208,26 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
         super.onResume();
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        //threadOpenFragment.start();
-    }
-
-
-    private void firstStartAsyncTaskLoader(){
-        mLoader = getSupportLoaderManager().initLoader(LOADER_SHOW_LIST, null, this);
-        mLoader.forceLoad();
     }
 
     private void restartAsyncTaskLoader(int loader_id){
+        Loader<Boolean> mLoader;
+        Bundle bundle = new Bundle();
         switch (loader_id){
             case 2:
-
+                bundle.putString(String.valueOf(SaveLoadResultLoader.ARG_USERSKIL), String.valueOf(etResultSkill.getText()));
+                bundle.putString(String.valueOf(SaveLoadResultLoader.ARG_USERWODLEVEL), String.valueOf(etResultLevel.getText()));
+                bundle.putString(String.valueOf(SaveLoadResultLoader.ARG_USERWODRESULT), String.valueOf(etResultWoD.getText()));
+                mLoader = getSupportLoaderManager().restartLoader(LOADER_SAVE_ITEM, bundle, this);
+                mLoader.forceLoad();
                 break;
 
             case 3:
-
                 mLoader = getSupportLoaderManager().restartLoader(LOADER_DELETE_ITEM,null, this);
                 mLoader.forceLoad();
                 break;
 
             case 4:
-                Bundle bundle = new Bundle();
                 bundle.putString(String.valueOf(SaveLoadResultLoader.ARG_USERSKIL), String.valueOf(etResultSkill.getText()));
                 bundle.putString(String.valueOf(SaveLoadResultLoader.ARG_USERWODLEVEL), String.valueOf(etResultLevel.getText()));
                 bundle.putString(String.valueOf(SaveLoadResultLoader.ARG_USERWODRESULT), String.valueOf(etResultWoD.getText()));
@@ -280,33 +239,43 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
     }
 
     @Override
-    public Loader<List<Map>> onCreateLoader(int id, Bundle args) {
-        Loader<List<Map>> loader;
+    public Loader<Boolean> onCreateLoader(int id, Bundle args) {
+        Loader<Boolean> loader;
         loader = new SaveLoadResultLoader(this, args, id);
         return loader;
     }
 
     @Override
-    public void onLoadFinished(Loader<List<Map>> loader, List<Map> data) {
+    public void onLoadFinished(Loader<Boolean> loader, Boolean result) {
+        if (result){
+            if(loader.getId() == 2){
+                mDBHelper = new CalendarWodDBHelper(this);
+                mSettings = this.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+                String stDay = mSettings.getString(APP_PREFERENCES_SELECTEDDAY, "");
+                Date date;
+                long lDate;
+                try {
+                    date = sdf2.parse(stDay);
+                    lDate = date.getTime();
+                    mDBHelper.saveDates(mSettings.getString(APP_PREFERENCES_OBJECTID, ""), lDate);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
 
-        if (loader.getId() != 1){
+
+            }else if (loader.getId() == 3){
+
+            }
             Intent answerIntent = new Intent();
             setResult(RESULT_OK, answerIntent);
             finish();
+        }else {
+            Toast.makeText(EnterResultActivity.this, "Не удалось! Повторите попытку", Toast.LENGTH_SHORT).show();
         }
-
-        if (data != null && data.size() > 0){
-            etResultSkill.setText(String.valueOf(data.get(0).get("skill")));
-            etResultLevel.setText(String.valueOf(data.get(0).get("wod_level")));
-            etResultWoD.setText(String.valueOf(data.get(0).get("wod_result")));
-        }else{
-            Toast.makeText(EnterResultActivity.this, "Есть!", Toast.LENGTH_SHORT).show();
-        }
-
     }
 
     @Override
-    public void onLoaderReset(Loader<List<Map>> loader) {
+    public void onLoaderReset(Loader<Boolean> loader) {
 
     }
 }

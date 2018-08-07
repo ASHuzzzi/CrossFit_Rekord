@@ -104,16 +104,11 @@ public class BackendlessQueries {
         return result;
     }
 
-    public List<Map> saveEditWorkoutDetails(int iLoaderId, String dateSession, String userId,
+    public boolean saveEditWorkoutDetails(int iLoaderId, String dateSession, String userId,
                                             String userName, String userSkill, String userWoDLevel,
                                             String userWodResult){
 
-        /*String whereClause = "date_session = '" + selecteDay + "'";
-        DataQueryBuilder queryBuilder = DataQueryBuilder.create();
-        queryBuilder.setWhereClause(whereClause);
-        queryBuilder.setPageSize(100);
-        return Backendless.Data.of(tableName).find(queryBuilder);*/
-
+        boolean resultQueries = false;
         String table_name = "results";
         HashMap<String, String> record = new HashMap<>();
         if (iLoaderId == 2) {
@@ -123,28 +118,51 @@ public class BackendlessQueries {
             record.put("skill", userSkill);
             record.put("wod_level", userWoDLevel);
             record.put("wod_result", userWodResult);
-            Backendless.Persistence.of(table_name).save(record);
+
+            try
+            {
+                Backendless.Persistence.of(table_name).save(record);
+                resultQueries = true;
+            }
+            catch( BackendlessException exception )
+            {
+                // failed, to get the error code, call exception.getFault().getCode()
+            }
         }
 
         if (iLoaderId == 3) {
-            /*record.put("date_session", dateSession);
-            record.put("userID", userId);*/
             String whereClause = "date_session = '" + dateSession + "' and userID = '" + userId + "'";
-            Backendless.Persistence.of(table_name).remove(whereClause);
+
+            try
+            {
+                Backendless.Persistence.of(table_name).remove(whereClause);
+                resultQueries = true;
+            }
+            catch( BackendlessException exception )
+            {
+                // failed, to get the error code, call exception.getFault().getCode()
+            }
         }
 
         if (iLoaderId == 4 ){
             Map<String, Object> record2 = new HashMap<>();
-            /*record.put("date_session", dateSession);
-            record.put("userID", userId);*/
             record2.put("Name", userName);
             record2.put("skill", userSkill);
             record2.put("wod_level", userWoDLevel);
             record2.put("wod_result", userWodResult);
             String whereClause = "date_session = '" + dateSession + "' and userID = '" + userId + "'";
-            Backendless.Persistence.of(table_name).update(whereClause, record2);
+
+            try
+            {
+                Backendless.Persistence.of(table_name).update(whereClause, record2);
+                resultQueries = true;
+            }
+            catch( BackendlessException exception )
+            {
+                // failed, to get the error code, call exception.getFault().getCode()
+            }
         }
-        return null;
+        return resultQueries;
     }
 }
 

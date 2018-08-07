@@ -282,6 +282,8 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
             interval = 7776000000L;
             timeStart = timenow - interval;
             threadOpenFragment.start();
+        }else {
+            threadOpenFragment.run();
         }
 
 
