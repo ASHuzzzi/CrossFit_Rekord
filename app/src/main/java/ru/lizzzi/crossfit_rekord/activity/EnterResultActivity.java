@@ -55,11 +55,8 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
     private static final String APP_PREFERENCES = "audata";
     private static final String APP_PREFERENCES_OBJECTID = "ObjectId";
     private static final String APP_PREFERENCES_SELECTEDDAY = "SelectedDay";
-    private SharedPreferences mSettings;
 
-    private CalendarWodDBHelper mDBHelper;
-
-    @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf2 = new SimpleDateFormat("MM.dd.yyyy");
+    @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf2 = new SimpleDateFormat("MM/dd/yyyy");
 
     @SuppressLint("HandlerLeak")
     @Override
@@ -248,23 +245,28 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
     @Override
     public void onLoadFinished(Loader<Boolean> loader, Boolean result) {
         if (result){
-            if(loader.getId() == 2){
-                mDBHelper = new CalendarWodDBHelper(this);
-                mSettings = this.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+            if (loader.getId() != 4){
+                CalendarWodDBHelper mDBHelper = new CalendarWodDBHelper(this);
+                SharedPreferences mSettings = this.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
                 String stDay = mSettings.getString(APP_PREFERENCES_SELECTEDDAY, "");
                 Date date;
-                long lDate;
+                long lDate = 0;
                 try {
                     date = sdf2.parse(stDay);
                     lDate = date.getTime();
-                    mDBHelper.saveDates(mSettings.getString(APP_PREFERENCES_OBJECTID, ""), lDate);
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
 
+                switch (loader.getId()) {
+                    case 2:
+                        mDBHelper.saveDates(mSettings.getString(APP_PREFERENCES_OBJECTID, ""), lDate);
+                        break;
 
-            }else if (loader.getId() == 3){
-
+                    case 3:
+                        mDBHelper.deleteDate(mSettings.getString(APP_PREFERENCES_OBJECTID, ""), lDate);
+                        break;
+                }
             }
             Intent answerIntent = new Intent();
             setResult(RESULT_OK, answerIntent);

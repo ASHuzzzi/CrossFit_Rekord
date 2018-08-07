@@ -178,4 +178,19 @@ public class CalendarWodDBHelper extends SQLiteOpenHelper {
         newValues.put(dbCaleendarWod.columnDateSession, lDate);
         myDataBase.insert(dbCaleendarWod.TABLE_NAME, null, newValues);
     }
+
+    public void deleteDate(String stObjectId, long lDate){
+        myDataBase = this.getWritableDatabase();
+
+        String selection = dbCaleendarWod.columnObjectId + "= '" + stObjectId + "' AND "
+                + dbCaleendarWod.columnDateSession + "= '" + lDate + "'";
+
+        //String[] columns = new String[]{dbCaleendarWod.columnDateSession};
+
+        myDataBase.delete(
+                dbCaleendarWod.TABLE_NAME,
+                selection,
+                null
+        );
+    }
 }
