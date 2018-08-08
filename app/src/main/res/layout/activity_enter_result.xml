@@ -24,8 +24,12 @@
                 <Button
                     android:id="@+id/button9"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:background="?attr/actionModeCloseDrawable" />
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/mcv_action_previous"
+                    android:scaleX="2"
+                    android:scaleY="2"
+                    android:translationX="5dp" />
 
                 <android.support.v7.widget.Toolbar
                     android:id="@+id/toolbarER"

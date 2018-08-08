@@ -26,6 +26,7 @@ import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -67,6 +68,15 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
     long interval;
     long timeStart;
 
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        SharedPreferences mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = mSettings.edit();
+        editor.putString(APP_PREFERENCES_SELECTEDDAY, "0");
+        editor.apply();
+    }
 
     @SuppressLint("HandlerLeak")
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -276,11 +286,30 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
 
     public void onResume(){
         super.onResume();
-        if (threadOpenFragment.getState() == Thread.State.NEW){
+
+        SharedPreferences mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        String stDay = mSettings.getString(APP_PREFERENCES_SELECTEDDAY, "");
+
+        if(stDay.equals("0")){
             Calendar cal = Calendar.getInstance();
             timenow = cal.getTimeInMillis();
             interval = 7776000000L;
             timeStart = timenow - interval;
+        }else {
+            Date date;
+            try {
+                @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf3 = new SimpleDateFormat("MM/dd/yyyy");
+                date = sdf3.parse(stDay);
+                timenow = date.getTime();
+                interval = 2592000000L;
+                timeStart = timenow - interval;
+                timenow = timenow + interval;
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (threadOpenFragment.getState() == Thread.State.NEW){
             threadOpenFragment.start();
         }else {
             threadOpenFragment.run();
