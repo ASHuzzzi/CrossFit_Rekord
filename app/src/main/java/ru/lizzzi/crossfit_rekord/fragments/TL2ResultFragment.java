@@ -31,21 +31,19 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
 
 
     private static final int RESULT_OK = -1;
-    RecyclerAdapterWorkoutDetails adapter;
     private LinearLayout ll1;
-    ListView lvItemsInWod;
+    private ListView lvItemsInWod;
 
     private NetworkCheck NetworkCheck; //переменная для проврки сети
 
     private Handler handlerOpenFragment;
-    private Thread threadOpenFragment2;
+    private Thread threadUpdateFragment;
 
     private static final String APP_PREFERENCES = "audata";
     private static final String APP_PREFERENCES_SELECTEDDAY = "SelectedDay";
     private static final String APP_PREFERENCES_OBJECTID = "ObjectId";
-    SharedPreferences mSettings;
+    private SharedPreferences mSettings;
 
-    private LinearLayout llMain;
     private LinearLayout llLayoutError;
     private ProgressBar pbProgressBar;
     private Button buttonEnterReult;
@@ -67,20 +65,15 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View v = inflater.inflate(R.layout.fragment_tl2result, container, false);
+
         ll1 = v.findViewById(R.id.ll1);
-        ll1.setVisibility(View.INVISIBLE);
         lvItemsInWod = v.findViewById(R.id.lvWodResult);
-
         buttonEnterReult = v.findViewById(R.id.btnOpenEnterResult);
-        //buttonEnterReult.setVisibility(View.INVISIBLE);
-
-        Button buttonError = v.findViewById(R.id.button5);
         llLayoutError = v.findViewById(R.id.Layout_Error);
         pbProgressBar = v.findViewById(R.id.progressBar4);
+        Button buttonError = v.findViewById(R.id.button5);
 
-        llLayoutError.setVisibility(View.INVISIBLE);
-        ll1.setVisibility(View.INVISIBLE);
-        pbProgressBar.setVisibility(View.VISIBLE);
+        mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
         handlerOpenFragment = new Handler() {
             @Override
@@ -91,6 +84,17 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
                     if (result_check.equals("false")){
                         llLayoutError.setVisibility(View.VISIBLE);
                         pbProgressBar.setVisibility(View.INVISIBLE);
+                    }else {
+                        String status = bundle.getString("status");
+                        if(status != null && status.equals("start")){
+                            llLayoutError.setVisibility(View.INVISIBLE);
+                            ll1.setVisibility(View.INVISIBLE);
+                            pbProgressBar.setVisibility(View.VISIBLE);
+                        }else {
+                            llLayoutError.setVisibility(View.INVISIBLE);
+                            ll1.setVisibility(View.VISIBLE);
+                            pbProgressBar.setVisibility(View.INVISIBLE);
+                        }
                     }
                 }
             }
@@ -100,29 +104,33 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
         Runnable runnableOpenFragment = new Runnable() {
             @Override
             public void run() {
+                Message msg = handlerOpenFragment.obtainMessage();
+                Bundle bundle = new Bundle();
+                bundle.putString("result", String.valueOf(true));
+                bundle.putString("status", String.valueOf("start"));
+                msg.setData(bundle);
+                handlerOpenFragment.sendMessage(msg);
+
                 NetworkCheck = new NetworkCheck(getContext());
                 boolean resultCheck = NetworkCheck.checkInternet();
                 if (resultCheck){
                     loadSessionAsyncTaskLoader();
 
                 }else {
-                    Message msg = handlerOpenFragment.obtainMessage();
-                    Bundle bundle = new Bundle();
                     bundle.putString("result", String.valueOf(false));
                     msg.setData(bundle);
                     handlerOpenFragment.sendMessage(msg);
                 }
+
             }
         };
-        threadOpenFragment2 = new Thread(runnableOpenFragment);
-        threadOpenFragment2.setDaemon(true);
+        threadUpdateFragment = new Thread(runnableOpenFragment);
+        threadUpdateFragment.setDaemon(true);
 
         buttonError.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                pbProgressBar.setVisibility(View.VISIBLE);
-                llLayoutError.setVisibility(View.INVISIBLE);
-                threadOpenFragment2.run();
+                threadUpdateFragment.run();
             }
         });
 
@@ -138,7 +146,6 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
                 }else {
                     intent.putExtra("flag", false);
                 }
-                //v.getContext().startActivity(intent);
                 startActivityForResult(intent, CHOOSE_THIEF);
 
             }
@@ -149,7 +156,6 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
 
     private void loadSessionAsyncTaskLoader(){
 
-        SharedPreferences mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         String selectedDay =  mSettings.getString(APP_PREFERENCES_SELECTEDDAY, "");
 
         Bundle bundle = new Bundle();
@@ -169,10 +175,11 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
     @Override
     public void onLoadFinished(Loader<List<Map>> loader, List<Map> data) {
 
-        mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-        String stObjectId =  mSettings.getString(APP_PREFERENCES_OBJECTID, "");
         flag = false;
          for (int i = 0; i < data.size(); i++){
+             //mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+             String stObjectId =  mSettings.getString(APP_PREFERENCES_OBJECTID, "");
+
              if(data.get(i).containsValue(stObjectId)){
                 stSkill = String.valueOf(data.get(i).get("skill"));
                 stWoDLevel = String.valueOf(data.get(i).get("wod_level"));
@@ -187,23 +194,35 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
              buttonEnterReult.setText(R.string.strEnterResult);
          }
 
-
-
         if (data.size() > 0){
-            adapter = new RecyclerAdapterWorkoutDetails(getContext(), data, R.layout.item_lv_workout_details);
+            RecyclerAdapterWorkoutDetails adapter = new RecyclerAdapterWorkoutDetails(getContext(), data, R.layout.item_lv_workout_details);
             adapter.notifyDataSetChanged();
             lvItemsInWod.setAdapter(adapter);
-
         }else {
             lvItemsInWod.setAdapter(null);
-            //ll1.setVisibility(View.INVISIBLE);
         }
-        ll1.setVisibility(View.VISIBLE);
-        pbProgressBar.setVisibility(View.INVISIBLE);
+
+        Message msg = handlerOpenFragment.obtainMessage();
+        Bundle bundle = new Bundle();
+        bundle.putString("result", String.valueOf(true));
+        bundle.putString("status", String.valueOf("finish"));
+        msg.setData(bundle);
+        handlerOpenFragment.sendMessage(msg);
+
     }
 
     @Override
     public void onLoaderReset(Loader<List<Map>> loader) {
+    }
+
+    @Override
+    public  void onStart() {
+        super.onStart();
+        if (threadUpdateFragment.getState() == Thread.State.NEW){
+            llLayoutError.setVisibility(View.INVISIBLE);
+            ll1.setVisibility(View.INVISIBLE);
+            pbProgressBar.setVisibility(View.VISIBLE);
+        }
 
     }
 
@@ -211,20 +230,18 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
     public void onResume() {
         super.onResume();
 
-        if (threadOpenFragment2.getState() == Thread.State.NEW){
-            threadOpenFragment2.start();
+        if (threadUpdateFragment.getState() == Thread.State.NEW){
+            threadUpdateFragment.start();
         }
-
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-
         if (requestCode == CHOOSE_THIEF) {
             if (resultCode == RESULT_OK) {
-                threadOpenFragment2.run();
+                threadUpdateFragment.run();
             }
         }
     }
