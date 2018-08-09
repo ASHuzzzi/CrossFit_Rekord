@@ -177,7 +177,6 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
 
         flag = false;
          for (int i = 0; i < data.size(); i++){
-             //mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
              String stObjectId =  mSettings.getString(APP_PREFERENCES_OBJECTID, "");
 
              if(data.get(i).containsValue(stObjectId)){

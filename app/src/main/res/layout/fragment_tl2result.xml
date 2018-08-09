@@ -15,7 +15,8 @@
         android:layout_centerInParent="false"
         android:layout_centerVertical="true"
         android:gravity="center"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="invisible">
 
         <TextView
             android:id="@+id/textView16"
@@ -60,7 +61,8 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="5dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="invisible">
 
         <LinearLayout
             android:layout_width="match_parent"

@@ -42,13 +42,13 @@ public class TL1WodFragment extends Fragment implements LoaderManager.LoaderCall
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    TextView tvWarmUp;
-    TextView tvSkill;
-    TextView tvWOD;
-    TextView tvLevelA;
-    TextView tvLevelB;
-    TextView tvLevelC;
 
+    private TextView tvWarmUp;
+    private TextView tvSkill;
+    private TextView tvWOD;
+    private TextView tvLevelSc;
+    private TextView tvLevelRx;
+    private TextView tvLevelRxPlus;
     private LinearLayout llMain;
     private LinearLayout llLayoutError;
     private ProgressBar pbProgressBar;
@@ -75,9 +75,9 @@ public class TL1WodFragment extends Fragment implements LoaderManager.LoaderCall
         tvWarmUp = v.findViewById(R.id.tvWarmUp);
         tvSkill = v.findViewById(R.id.tvSkill);
         tvWOD = v.findViewById(R.id.tvWOD);
-        tvLevelA = v.findViewById(R.id.tvLevelA);
-        tvLevelB = v.findViewById(R.id.tvLevelB);
-        tvLevelC = v.findViewById(R.id.tvLevelC);
+        tvLevelSc = v.findViewById(R.id.tvLevelSc);
+        tvLevelRx = v.findViewById(R.id.tvLevelRx);
+        tvLevelRxPlus = v.findViewById(R.id.tvLevelRxplus);
 
         llMain = v.findViewById(R.id.llMain);
         Button buttonError = v.findViewById(R.id.button5);
@@ -159,12 +159,36 @@ public class TL1WodFragment extends Fragment implements LoaderManager.LoaderCall
     public void onLoadFinished(Loader<List<Map>> loader, List<Map> data) {
         pbProgressBar.setVisibility(View.INVISIBLE);
         if (data != null && data.size() > 0){
+            if(!String.valueOf(data.get(0).get("warmup")).equals("null")){
                 tvWarmUp.setText(String.valueOf(data.get(0).get("warmup")));
+            }else {
+                tvWarmUp.setText("—");
+            }
+            if(!String.valueOf(data.get(0).get("skill")).equals("null")){
                 tvSkill.setText(String.valueOf(data.get(0).get("skill")));
+            }else {
+                tvSkill.setText("—");
+            }
+            if(!String.valueOf(data.get(0).get("wod")).equals("null")){
                 tvWOD.setText(String.valueOf(data.get(0).get("wod")));
-                tvLevelA.setText(String.valueOf(data.get(0).get("A")));
-                tvLevelB.setText(String.valueOf(data.get(0).get("B")));
-                tvLevelC.setText(String.valueOf(data.get(0).get("C")));
+            }else {
+                tvWOD.setText("—");
+            }
+            if(!String.valueOf(data.get(0).get("Sc")).equals("null")){
+                tvLevelSc.setText(String.valueOf(data.get(0).get("Sc")));
+            }else {
+                tvLevelSc.setText("—");
+            }
+            if(!String.valueOf(data.get(0).get("Rx")).equals("null")){
+                tvLevelRx.setText(String.valueOf(data.get(0).get("Rx")));
+            }else {
+                tvLevelRx.setText("—");
+            }
+            if(!String.valueOf(data.get(0).get("Rxplus")).equals("null")){
+                tvLevelRxPlus.setText(String.valueOf(data.get(0).get("Rxplus")));;
+            }else {
+                tvLevelRxPlus.setText("—");
+            }
         }
         llMain.setVisibility(View.VISIBLE);
     }
@@ -178,9 +202,6 @@ public class TL1WodFragment extends Fragment implements LoaderManager.LoaderCall
     public void onResume() {
         super.onResume();
 
-        //bundle = getArguments();
-        //final String ri = bundle.getString("tag");
-        //bundle.putString("Selected_day", ri);
         if (tvWarmUp.length() < 1){
             threadOpenFragment.start();
         }
