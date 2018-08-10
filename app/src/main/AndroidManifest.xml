@@ -22,7 +22,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.EnterResultActivity"></activity>
+        <activity android:name=".activity.EnterResultActivity" />
+
+        <service
+            android:name=".services.LoadNotificationsService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>

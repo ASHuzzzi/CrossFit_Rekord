@@ -1,7 +1,9 @@
 package ru.lizzzi.crossfit_rekord.activity;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.SharedPreferences;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -13,13 +15,14 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
 import com.backendless.Backendless;
-
-import java.util.ArrayList;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.draft.wod_result_fragment.Result_Fragment;
@@ -31,12 +34,27 @@ import ru.lizzzi.crossfit_rekord.fragments.LoginFragment;
 import ru.lizzzi.crossfit_rekord.fragments.RecordForTrainingSelectFragment;
 import ru.lizzzi.crossfit_rekord.fragments.StartScreenFragment;
 import ru.lizzzi.crossfit_rekord.fragments.TableFragment;
-import ru.lizzzi.crossfit_rekord.loaders.AboutMeLoader;
+import ru.lizzzi.crossfit_rekord.services.LoadNotificationsService;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private CheckAuthData checkAuthData = new CheckAuthData();
+
+    BroadcastReceiver br;
+    final String LOG_TAG = "myLogs";
+    final int TASK1_CODE = 1;
+    final int TASK2_CODE = 2;
+    final int TASK3_CODE = 3;
+
+    public final static int STATUS_START = 100;
+    public final static int STATUS_FINISH = 200;
+
+    public final static String PARAM_TIME = "time";
+    public final static String PARAM_TASK = "task";
+    public final static String PARAM_RESULT = "result";
+    public final static String PARAM_STATUS = "status";
+    public final static String BROADCAST_ACTION = "ru.startandroid.develop.p0961servicebackbroadcast";
 
     public static final String APPLICATION_IDB = "215CF2B1-C44E-E365-FFB6-9C35DD6A9300";
     public static final String API_KEYB = "8764616E-C5FE-CE43-FF54-17B4A8026F00";
@@ -82,6 +100,53 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Backendless.initApp(this, APPLICATION_IDB, API_KEYB);
 
+        // создаем BroadcastReceiver
+        br = new BroadcastReceiver() {
+            // действия при получении сообщений
+            public void onReceive(Context context, Intent intent) {
+                int task = intent.getIntExtra(PARAM_TASK, 0);
+                int status = intent.getIntExtra(PARAM_STATUS, 0);
+                Log.d(LOG_TAG, "onReceive: task = " + task + ", status = " + status);
+
+                // Ловим сообщения о старте задач
+                if (status  == STATUS_START) {
+                    switch (task) {
+                        case TASK1_CODE:
+                            Toast toast = Toast.makeText(getContext(), "Task1 start", Toast.LENGTH_LONG);
+                            toast.setGravity(Gravity.CENTER, 0, 0);
+                            toast.show();
+                            break;
+                    }
+                }
+
+                // Ловим сообщения об окончании задач
+                if (status == STATUS_FINISH) {
+                    int result = intent.getIntExtra(PARAM_RESULT, 0);
+                    switch (task) {
+                        case TASK1_CODE:
+                            Toast toast = Toast.makeText(getContext(), "Task1 finish, result = " + result, Toast.LENGTH_LONG);
+                            toast.setGravity(Gravity.CENTER, 0, 0);
+                            toast.show();
+                            break;
+                    }
+                }
+            }
+        };
+        // создаем фильтр для BroadcastReceiver
+        IntentFilter intFilt = new IntentFilter(BROADCAST_ACTION);
+        // регистрируем (включаем) BroadcastReceiver
+        registerReceiver(br, intFilt);
+
+
+        Intent intent;
+
+        // Создаем Intent для вызова сервиса,
+        // кладем туда параметр времени и код задачи
+        intent = new Intent(this, LoadNotificationsService.class).putExtra(PARAM_TIME, 7)
+                .putExtra(PARAM_TASK, TASK1_CODE);
+        // стартуем сервис
+        startService(intent);
+
         OpenFragment(StartScreenFragment.class, StartScreenFragment.class);
     }
 
@@ -94,6 +159,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         if (id == R.id.shedule) {
+            stopService(new Intent(this, LoadNotificationsService.class));
             fragmentClass = TableFragment.class;
 
         } else if (id == R.id.record_training) {
@@ -187,5 +253,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 getSupportFragmentManager().popBackStack();
             }
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // дерегистрируем (выключаем) BroadcastReceiver
+        unregisterReceiver(br);
     }
 }
