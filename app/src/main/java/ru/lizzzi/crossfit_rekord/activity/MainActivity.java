@@ -24,7 +24,10 @@ import android.widget.Toast;
 
 import com.backendless.Backendless;
 
+import java.io.IOException;
+
 import ru.lizzzi.crossfit_rekord.R;
+import ru.lizzzi.crossfit_rekord.data.NotificationDBHelper;
 import ru.lizzzi.crossfit_rekord.draft.wod_result_fragment.Result_Fragment;
 import ru.lizzzi.crossfit_rekord.fragments.AboutMeFragment;
 import ru.lizzzi.crossfit_rekord.fragments.CalendarWodFragment;
@@ -44,8 +47,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     BroadcastReceiver br;
     final String LOG_TAG = "myLogs";
     final int TASK1_CODE = 1;
-    final int TASK2_CODE = 2;
-    final int TASK3_CODE = 3;
 
     public final static int STATUS_START = 100;
     public final static int STATUS_FINISH = 200;
@@ -58,6 +59,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public static final String APPLICATION_IDB = "215CF2B1-C44E-E365-FFB6-9C35DD6A9300";
     public static final String API_KEYB = "8764616E-C5FE-CE43-FF54-17B4A8026F00";
+
+    private NotificationDBHelper mDBHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +101,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+
+        mDBHelper = new NotificationDBHelper(getContext());
+        try {
+            mDBHelper.createDataBase();
+        } catch (IOException ioe) {
+            throw new Error("Unable to create database");
+        }
+        mDBHelper.openDataBase();
+        mDBHelper.close();
+
         Backendless.initApp(this, APPLICATION_IDB, API_KEYB);
 
         // создаем BroadcastReceiver
@@ -124,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     int result = intent.getIntExtra(PARAM_RESULT, 0);
                     switch (task) {
                         case TASK1_CODE:
-                            Toast toast = Toast.makeText(getContext(), "Task1 finish, result = " + result, Toast.LENGTH_LONG);
+                            Toast toast = Toast.makeText(getContext(), "Загрузка окончена, Количество  = " + result, Toast.LENGTH_LONG);
                             toast.setGravity(Gravity.CENTER, 0, 0);
                             toast.show();
                             break;
@@ -159,7 +172,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         if (id == R.id.shedule) {
-            stopService(new Intent(this, LoadNotificationsService.class));
             fragmentClass = TableFragment.class;
 
         } else if (id == R.id.record_training) {

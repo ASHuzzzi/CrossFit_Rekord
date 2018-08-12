@@ -164,6 +164,17 @@ public class BackendlessQueries {
         }
         return resultQueries;
     }
+
+    public List<Map> loadNotification (String datelastcheck){
+        List<Map> data;
+        String whereClause = "dateNote >= '" + datelastcheck + "'";
+        DataQueryBuilder queryBuilder = DataQueryBuilder.create();
+        queryBuilder.setWhereClause(whereClause);
+        queryBuilder.setPageSize(100);
+        data = Backendless.Data.of("notification").find(queryBuilder);
+
+        return data;
+    }
 }
 
 //TODO Перевести все название полей таблиц в  строковые ресурсы.
