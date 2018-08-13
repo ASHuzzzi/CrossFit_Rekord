@@ -1,6 +1,7 @@
 package ru.lizzzi.crossfit_rekord.data;
 
 import android.annotation.SuppressLint;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -117,7 +118,7 @@ public class NotificationDBHelper extends SQLiteOpenHelper {
 
     public String datelastcheck(){
         myDataBase = this.getReadableDatabase();
-
+        String stLastDateCheck = "";
         String[] columns = new  String[]{"MAX(" +
                 NotificationDBContract.Notification.columnDateNote + ")"};
         Cursor cursor = myDataBase.query(true,
@@ -131,16 +132,28 @@ public class NotificationDBHelper extends SQLiteOpenHelper {
                 null);
         if (cursor !=null && cursor.moveToFirst()){
             do {
-                String name = "";
+
                 for (String cn : cursor.getColumnNames()) {
-                    name = cursor.getString(cursor.getColumnIndex(cn));
+                    stLastDateCheck = cursor.getString(cursor.getColumnIndex(cn));
                 }
             }while (cursor.moveToNext());
         }
         if (cursor != null) {
             cursor.close();
         }
-        return null;
+        return stLastDateCheck;
+    }
+
+    public void saveNotification(String dateNote, String header, String text, String codeNote, int viewed){
+        myDataBase = this.getWritableDatabase();
+        ContentValues newValues = new ContentValues();
+
+        newValues.put(NotificationDBContract.Notification.columnDateNote, dateNote);
+        newValues.put(NotificationDBContract.Notification.columnHeader, header);
+        newValues.put(NotificationDBContract.Notification.columnText, text);
+        newValues.put(NotificationDBContract.Notification.columnCodeNote, codeNote);
+        newValues.put(NotificationDBContract.Notification.columnViewed, viewed);
+        myDataBase.insert(NotificationDBContract.Notification.TABLE_NAME, null, newValues);
     }
 
 }

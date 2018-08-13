@@ -167,7 +167,7 @@ public class BackendlessQueries {
 
     public List<Map> loadNotification (String datelastcheck){
         List<Map> data;
-        String whereClause = "dateNote >= '" + datelastcheck + "'";
+        String whereClause = "dateNote > '" + datelastcheck + "'";
         DataQueryBuilder queryBuilder = DataQueryBuilder.create();
         queryBuilder.setWhereClause(whereClause);
         queryBuilder.setPageSize(100);

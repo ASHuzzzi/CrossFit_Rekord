@@ -25,7 +25,7 @@ public class LoadNotificationsService extends Service {
     int time;
     int task;
     private BackendlessQueries queries = new BackendlessQueries();
-    @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf2 = new SimpleDateFormat("MM/dd/yyyy");
+    @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf2 = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
     private NotificationDBHelper mDBHelper = new  NotificationDBHelper(this);
 
     public LoadNotificationsService() {
@@ -76,15 +76,30 @@ public class LoadNotificationsService extends Service {
 
 
                 if (stLastDateCheck == null){
-                    Calendar c = Calendar.getInstance();
                     calendarday = new GregorianCalendar();
                     Date today = calendarday.getTime();
-                    //stLastDateCheck = sdf2.format(today);
-                    stLastDateCheck = "06/25/2018";
+                    long startPeriod = today.getTime() - 2592000000L;
+                    stLastDateCheck = sdf2.format(startPeriod);
                 }
-                // начинаем выполнение задачи
+
                 List<Map> data;
                 data = queries.loadNotification(stLastDateCheck);
+                if (data.size()>0){
+                    String dateNote;
+                    String header;
+                    String text;
+                    String codeNote;
+                    int viewed;
+                    for(int i = 0; i < data.size(); i++){
+                        dateNote = String.valueOf(data.get(i).get("dateNote"));
+                        header = String.valueOf(data.get(i).get("header"));
+                        text = String.valueOf(data.get(i).get("text"));
+                        codeNote = String.valueOf(data.get(i).get("codeNote"));
+                        viewed = 0;
+                        mDBHelper.saveNotification(dateNote, header, text, codeNote, viewed);
+                    }
+                }
+
 
 
                 // сообщаем об окончании задачи

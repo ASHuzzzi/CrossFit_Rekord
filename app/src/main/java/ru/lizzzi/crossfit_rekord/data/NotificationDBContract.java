@@ -16,6 +16,7 @@ public class NotificationDBContract {
         public final static String columnHeader = "header";
         public final static String columnNumberNote = "numberNote";
         public final static String columnText = "text";
+        public final static String columnViewed = "viewed";
 
     }
 }

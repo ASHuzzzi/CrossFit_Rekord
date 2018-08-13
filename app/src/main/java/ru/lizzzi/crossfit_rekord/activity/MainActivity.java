@@ -1,9 +1,11 @@
 package ru.lizzzi.crossfit_rekord.activity;
 
+import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -25,6 +27,7 @@ import android.widget.Toast;
 import com.backendless.Backendless;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.data.NotificationDBHelper;
@@ -151,14 +154,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         registerReceiver(br, intFilt);
 
 
-        Intent intent;
 
-        // Создаем Intent для вызова сервиса,
-        // кладем туда параметр времени и код задачи
-        intent = new Intent(this, LoadNotificationsService.class).putExtra(PARAM_TIME, 7)
-                .putExtra(PARAM_TASK, TASK1_CODE);
-        // стартуем сервис
-        startService(intent);
 
         OpenFragment(StartScreenFragment.class, StartScreenFragment.class);
     }
@@ -264,6 +260,34 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             } else {
                 getSupportFragmentManager().popBackStack();
             }
+        }
+    }
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            for (ActivityManager.RunningServiceInfo service : Objects.requireNonNull(manager).getRunningServices(Integer.MAX_VALUE)) {
+                if (serviceClass.getName().equals(service.service.getClassName())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!isMyServiceRunning(LoadNotificationsService.class)){
+            //startService(new Intent(this, LoadNotificationsService.class));
+            Intent intent;
+
+            // Создаем Intent для вызова сервиса,
+            // кладем туда параметр времени и код задачи
+            intent = new Intent(this, LoadNotificationsService.class).putExtra(PARAM_TIME, 7)
+                    .putExtra(PARAM_TASK, TASK1_CODE);
+            // стартуем сервис
+            startService(intent);
         }
     }
 
