@@ -68,6 +68,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <!-- Значения для шторки-->
+    <string name="notification">Уведомления</string>
     <string name="schedule">Расписание</string>
     <string name="record_training">Записаться на тренировку</string>
     <string name="contacts">Контакты</string>
