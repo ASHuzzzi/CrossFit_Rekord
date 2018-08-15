@@ -180,9 +180,10 @@ public class NotificationDBHelper extends SQLiteOpenHelper {
             String stHeader;
             String stText;
             String stViewed;
-            Map<String, Object> mapNotification = new HashMap<>();
+
 
             do {
+                Map<String, Object> mapNotification = new HashMap<>();
                 stDateNote = cursor.getString(cursor.getColumnIndex(Notification.columnDateNote));
                 stHeader = cursor.getString(cursor.getColumnIndex(Notification.columnHeader));
                 stText = cursor.getString(cursor.getColumnIndex(Notification.columnText));
