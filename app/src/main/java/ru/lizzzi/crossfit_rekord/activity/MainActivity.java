@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (status  == STATUS_START) {
                     switch (task) {
                         case TASK1_CODE:
-                            Toast toast = Toast.makeText(getContext(), "Task1 start", Toast.LENGTH_LONG);
+                            Toast toast = Toast.makeText(getContext(), "Task1 start", Toast.LENGTH_SHORT);
                             toast.setGravity(Gravity.CENTER, 0, 0);
                             toast.show();
                             break;
@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     int result = intent.getIntExtra(PARAM_RESULT, 0);
                     switch (task) {
                         case TASK1_CODE:
-                            Toast toast = Toast.makeText(getContext(), "Загрузка окончена, Количество  = " + result, Toast.LENGTH_LONG);
+                            Toast toast = Toast.makeText(getContext(), "Загрузка окончена, Количество  = " + result, Toast.LENGTH_SHORT);
                             toast.setGravity(Gravity.CENTER, 0, 0);
                             toast.show();
                             break;

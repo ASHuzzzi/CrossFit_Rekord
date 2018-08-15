@@ -14,6 +14,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import ru.lizzzi.crossfit_rekord.data.NotificationDBContract.Notification;
 
 public class NotificationDBHelper extends SQLiteOpenHelper {
 
@@ -148,12 +153,51 @@ public class NotificationDBHelper extends SQLiteOpenHelper {
         myDataBase = this.getWritableDatabase();
         ContentValues newValues = new ContentValues();
 
-        newValues.put(NotificationDBContract.Notification.columnDateNote, dateNote);
-        newValues.put(NotificationDBContract.Notification.columnHeader, header);
-        newValues.put(NotificationDBContract.Notification.columnText, text);
-        newValues.put(NotificationDBContract.Notification.columnCodeNote, codeNote);
-        newValues.put(NotificationDBContract.Notification.columnViewed, viewed);
-        myDataBase.insert(NotificationDBContract.Notification.TABLE_NAME, null, newValues);
+        newValues.put(Notification.columnDateNote, dateNote);
+        newValues.put(Notification.columnHeader, header);
+        newValues.put(Notification.columnText, text);
+        newValues.put(Notification.columnCodeNote, codeNote);
+        newValues.put(Notification.columnViewed, viewed);
+        myDataBase.insert(Notification.TABLE_NAME, null, newValues);
+    }
+
+    public List<Map<String, Object>> loadNotification() {
+        myDataBase = this.getReadableDatabase();
+        List<Map<String, Object>> listNotification = new ArrayList<>();
+
+        Cursor cursor = myDataBase.query(true,
+                Notification.TABLE_NAME,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null);
+        if (cursor != null && cursor.moveToFirst()) {
+
+            String stDateNote;
+            String stHeader;
+            String stText;
+            String stViewed;
+            Map<String, Object> mapNotification = new HashMap<>();
+
+            do {
+                stDateNote = cursor.getString(cursor.getColumnIndex(Notification.columnDateNote));
+                stHeader = cursor.getString(cursor.getColumnIndex(Notification.columnHeader));
+                stText = cursor.getString(cursor.getColumnIndex(Notification.columnText));
+                stViewed = cursor.getString(cursor.getColumnIndex(Notification.columnViewed));
+
+                mapNotification.put("dateNote", stDateNote);
+                mapNotification.put("header", stHeader);
+                mapNotification.put("text", stText);
+                mapNotification.put("viewed", stViewed);
+                listNotification.add(mapNotification);
+            } while (cursor.moveToNext());
+            cursor.close();
+        }
+
+        return listNotification;
     }
 
 }

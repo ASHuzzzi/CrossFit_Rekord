@@ -135,4 +135,12 @@
     <string name="strEnterResult">Внести результаты</string>
     <string name="strEditDeleteResult">Редактировать</string>
 
+    <!-- Поля для составления уведомлений -->
+    <string name="codeNote">codeNote</string>
+    <string name="dateNote">dateNote</string>
+    <string name="numberNote">numberNote</string>
+    <string name="header">header</string>
+    <string name="text">text</string>
+    <string name="viewed">viewed</string>
+
 </resources>

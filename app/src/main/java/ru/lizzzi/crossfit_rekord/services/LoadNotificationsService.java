@@ -18,6 +18,7 @@ import java.util.concurrent.TimeUnit;
 import ru.lizzzi.crossfit_rekord.activity.MainActivity;
 import ru.lizzzi.crossfit_rekord.backendless.BackendlessQueries;
 import ru.lizzzi.crossfit_rekord.data.NotificationDBHelper;
+import ru.lizzzi.crossfit_rekord.fragments.NetworkCheck;
 
 public class LoadNotificationsService extends Service {
 
@@ -27,6 +28,7 @@ public class LoadNotificationsService extends Service {
     private BackendlessQueries queries = new BackendlessQueries();
     @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf2 = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
     private NotificationDBHelper mDBHelper = new  NotificationDBHelper(this);
+    private ru.lizzzi.crossfit_rekord.fragments.NetworkCheck NetworkCheck; //переменная для проврки сети
 
     public LoadNotificationsService() {
     }
@@ -73,8 +75,6 @@ public class LoadNotificationsService extends Service {
 
                 mDBHelper.openDataBase();
                 String stLastDateCheck = mDBHelper.datelastcheck();
-
-
                 if (stLastDateCheck == null){
                     calendarday = new GregorianCalendar();
                     Date today = calendarday.getTime();
@@ -82,32 +82,50 @@ public class LoadNotificationsService extends Service {
                     stLastDateCheck = sdf2.format(startPeriod);
                 }
 
-                List<Map> data;
-                data = queries.loadNotification(stLastDateCheck);
-                if (data.size()>0){
-                    String dateNote;
-                    String header;
-                    String text;
-                    String codeNote;
-                    int viewed;
-                    for(int i = 0; i < data.size(); i++){
-                        dateNote = String.valueOf(data.get(i).get("dateNote"));
-                        header = String.valueOf(data.get(i).get("header"));
-                        text = String.valueOf(data.get(i).get("text"));
-                        codeNote = String.valueOf(data.get(i).get("codeNote"));
-                        viewed = 0;
-                        mDBHelper.saveNotification(dateNote, header, text, codeNote, viewed);
+                for (int j = 0; j < 5; j++){
+
+                    NetworkCheck = new NetworkCheck(LoadNotificationsService.this);
+                    boolean resultCheck = NetworkCheck.checkInternet();
+
+                    if (resultCheck){
+                        List<Map> data;
+                        data = queries.loadNotification(stLastDateCheck);
+                        if (data.size()>0){
+                            String dateNote;
+                            String header;
+                            String text;
+                            String codeNote;
+                            int viewed;
+                            for(int i = 0; i < data.size(); i++){
+                                dateNote = String.valueOf(data.get(i).get("dateNote"));
+                                header = String.valueOf(data.get(i).get("header"));
+                                text = String.valueOf(data.get(i).get("text"));
+                                codeNote = String.valueOf(data.get(i).get("codeNote"));
+                                viewed = 0;
+                                mDBHelper.saveNotification(dateNote, header, text, codeNote, viewed);
+                            }
+                        }
+
+
+
+                        // сообщаем об окончании задачи
+                        intent.putExtra(MainActivity.PARAM_STATUS, MainActivity.STATUS_FINISH);
+                        intent.putExtra(MainActivity.PARAM_RESULT, data.size());
+                        sendBroadcast(intent);
+                        Log.d(LOG_TAG, "MyRun#" + startId + " end, stopSelfResult("
+                                + startId + ") = " + stopSelfResult(startId));
+                        break;
+                    }else {
+                        try {
+                            TimeUnit.SECONDS.sleep(30);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
 
 
 
-                // сообщаем об окончании задачи
-                intent.putExtra(MainActivity.PARAM_STATUS, MainActivity.STATUS_FINISH);
-                intent.putExtra(MainActivity.PARAM_RESULT, data.size());
-                sendBroadcast(intent);
-                Log.d(LOG_TAG, "MyRun#" + startId + " end, stopSelfResult("
-                        + startId + ") = " + stopSelfResult(startId));
                 stopSelf();
             }
         }).start();

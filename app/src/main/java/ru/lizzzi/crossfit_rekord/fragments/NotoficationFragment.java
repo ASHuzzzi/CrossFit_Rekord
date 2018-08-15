@@ -1,27 +1,35 @@
 package ru.lizzzi.crossfit_rekord.fragments;
 
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import java.util.List;
 import java.util.Map;
 
 import ru.lizzzi.crossfit_rekord.R;
+import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterNotification;
 import ru.lizzzi.crossfit_rekord.loaders.NotificationLoader;
 
-public class NotoficationFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Map>>{
+public class NotoficationFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Map<String, Object>>> {
 
-    private RecyclerView rvNotoficationList;
+    private ListView rvNotoficationList;
 
     private Handler handlerOpenFragment;
     private Thread threadOpenFragment;
@@ -29,6 +37,22 @@ public class NotoficationFragment extends Fragment implements LoaderManager.Load
     private NetworkCheck NetworkCheck; //переменная для проврки сети
 
     private ProgressBar pbNotification;
+
+    private RecyclerAdapterNotification adapterNotification;
+
+    BroadcastReceiver br2;
+    public final static String PARAM_TIME = "time";
+    public final static String PARAM_TASK = "task";
+    public final static String PARAM_RESULT = "result";
+    public final static String PARAM_STATUS = "status";
+    public final static String BROADCAST_ACTION = "ru.startandroid.develop.p0961servicebackbroadcast";
+
+    final String LOG_TAG = "myLogs";
+    final int TASK1_CODE = 1;
+
+    public final static int STATUS_START = 100;
+    public final static int STATUS_FINISH = 200;
+    IntentFilter intFilt;
 
     @SuppressLint("HandlerLeak")
     @Override
@@ -86,6 +110,42 @@ public class NotoficationFragment extends Fragment implements LoaderManager.Load
         threadOpenFragment = new Thread(runnableOpenFragment);
         threadOpenFragment.setDaemon(true);
 
+        br2 = new BroadcastReceiver() {
+            // действия при получении сообщений
+            public void onReceive(Context context, Intent intent) {
+                int task = intent.getIntExtra(PARAM_TASK, 0);
+                int status = intent.getIntExtra(PARAM_STATUS, 0);
+                Log.d(LOG_TAG, "onReceive: task = " + task + ", status = " + status);
+
+                // Ловим сообщения о старте задач
+                if (status  == STATUS_START) {
+                    switch (task) {
+                        case TASK1_CODE:
+                            Toast toast = Toast.makeText(getContext(), "Task1 start", Toast.LENGTH_LONG);
+                            toast.setGravity(Gravity.CENTER, 0, 0);
+                            toast.show();
+                            break;
+                    }
+                }
+
+                // Ловим сообщения об окончании задач
+                if (status == STATUS_FINISH) {
+                    int result = intent.getIntExtra(PARAM_RESULT, 0);
+                    switch (task) {
+                        case TASK1_CODE:
+                            Toast toast = Toast.makeText(getContext(), "Обновить список", Toast.LENGTH_LONG);
+                            toast.setGravity(Gravity.CENTER, 0, 0);
+                            toast.show();
+                            break;
+                    }
+                }
+            }
+        };
+        // создаем фильтр для BroadcastReceiver
+        intFilt = new IntentFilter(BROADCAST_ACTION);
+        // регистрируем (включаем) BroadcastReceiver
+
+
         return  v;
     }
 
@@ -96,16 +156,19 @@ public class NotoficationFragment extends Fragment implements LoaderManager.Load
     }
 
     @Override
-    public Loader<List<Map>> onCreateLoader(int id, Bundle args) {
-        Loader<List<Map>> loader;
+    public Loader<List<Map<String, Object>>> onCreateLoader(int id, Bundle args) {
+        NotificationLoader loader;
         loader = new NotificationLoader(getContext(), args);
         return loader;
     }
 
     @Override
-    public void onLoadFinished(Loader<List<Map>> loader, List<Map> data) {
+    public void onLoadFinished(Loader<List<Map<String, Object>>> loader, List<Map<String, Object>> data) {
 
-
+        if (data != null){
+            adapterNotification = new RecyclerAdapterNotification(getContext(), R.layout.item_rv_notification, data, null);
+        }
+        rvNotoficationList.setAdapter(adapterNotification);
         Message msg = handlerOpenFragment.obtainMessage();
         Bundle bundle = new Bundle();
         bundle.putString("result", String.valueOf(true));
@@ -115,7 +178,7 @@ public class NotoficationFragment extends Fragment implements LoaderManager.Load
     }
 
     @Override
-    public void onLoaderReset(Loader<List<Map>> loader) {
+    public void onLoaderReset(Loader<List<Map<String, Object>>> loader) {
 
     }
 
@@ -133,9 +196,16 @@ public class NotoficationFragment extends Fragment implements LoaderManager.Load
     public void onResume() {
         super.onResume();
 
+        getActivity().registerReceiver(br2, intFilt);
         if (threadOpenFragment.getState() == Thread.State.NEW){
             threadOpenFragment.start();
         }
+    }
+
+    public void onPause() {
+
+        super.onPause();
+        getActivity().unregisterReceiver(br2);
     }
 
 }
