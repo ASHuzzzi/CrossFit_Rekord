@@ -121,9 +121,9 @@ public class NotificationDBHelper extends SQLiteOpenHelper {
 
     }
 
-    public String datelastcheck(){
+    public long datelastcheck(){
         myDataBase = this.getReadableDatabase();
-        String stLastDateCheck = "";
+        long stLastDateCheck = 0;
         String[] columns = new  String[]{"MAX(" +
                 NotificationDBContract.Notification.columnDateNote + ")"};
         Cursor cursor = myDataBase.query(true,
@@ -139,7 +139,7 @@ public class NotificationDBHelper extends SQLiteOpenHelper {
             do {
 
                 for (String cn : cursor.getColumnNames()) {
-                    stLastDateCheck = cursor.getString(cursor.getColumnIndex(cn));
+                    stLastDateCheck = cursor.getLong(cursor.getColumnIndex(cn));
                 }
             }while (cursor.moveToNext());
         }
@@ -149,7 +149,7 @@ public class NotificationDBHelper extends SQLiteOpenHelper {
         return stLastDateCheck;
     }
 
-    public void saveNotification(String dateNote, String header, String text, String codeNote, int viewed){
+    public void saveNotification(long dateNote, String header, String text, String codeNote, int viewed){
         myDataBase = this.getWritableDatabase();
         ContentValues newValues = new ContentValues();
 

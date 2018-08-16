@@ -26,8 +26,9 @@ import java.util.Map;
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterNotification;
 import ru.lizzzi.crossfit_rekord.loaders.NotificationLoader;
+import ru.lizzzi.crossfit_rekord.interfaces.ListernerNotification;
 
-public class NotoficationFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Map<String, Object>>> {
+public class NotificationFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Map<String, Object>>> {
 
     private ListView rvNotoficationList;
 
@@ -166,7 +167,14 @@ public class NotoficationFragment extends Fragment implements LoaderManager.Load
     public void onLoadFinished(Loader<List<Map<String, Object>>> loader, List<Map<String, Object>> data) {
 
         if (data != null){
-            adapterNotification = new RecyclerAdapterNotification(getContext(), R.layout.item_rv_notification, data, null);
+            adapterNotification = new RecyclerAdapterNotification(getContext(), R.layout.item_rv_notification, data, new ListernerNotification() {
+                @Override
+                public void selectNotificationInList(String stdateNote, String stheader) {
+                    Toast toast = Toast.makeText(getContext(), "Ты выбрал" +  stdateNote + " " + stheader , Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.CENTER, 0, 0);
+                    toast.show();
+                }
+            });
         }
         rvNotoficationList.setAdapter(adapterNotification);
         Message msg = handlerOpenFragment.obtainMessage();

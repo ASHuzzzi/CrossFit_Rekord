@@ -11,27 +11,24 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.documentfields.DocumentFieldsNotification;
-import ru.lizzzi.crossfit_rekord.fragments.NotoficationFragment;
+import ru.lizzzi.crossfit_rekord.fragments.NotificationFragment;
+import ru.lizzzi.crossfit_rekord.interfaces.ListernerNotification;
 
 public class RecyclerAdapterNotification extends BaseAdapter {
 
-    private NotoficationFragment mListener;
+    private ListernerNotification mListener;
     private List<Map<String, Object>> notifications;
     private LayoutInflater inflater;
     private int layoutId;
     private final ThreadLocal<DocumentFieldsNotification> fields = new ThreadLocal<>();
 
 
-    public RecyclerAdapterNotification(Context context, int layoutId, @NonNull List<Map<String, Object>> notifications, NotoficationFragment listener) {
+    public RecyclerAdapterNotification(Context context, int layoutId, @NonNull List<Map<String, Object>> notifications, ListernerNotification listener) {
         this.notifications = notifications;
         inflater = LayoutInflater.from(context);
         listener = mListener;
@@ -74,17 +71,9 @@ public class RecyclerAdapterNotification extends BaseAdapter {
     @SuppressLint({"ResourceAsColor", "SimpleDateFormat"})
     private void customizeView(View view, RecyclerAdapterNotification.ViewHolder holder, final Map documentInfo) {
 
-        String stdateNote = (String) documentInfo.get(fields.get().getDateField());
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf2 = new SimpleDateFormat("EEE MMM dd hh:mm:ss z yyyy", Locale.US);
-        try {
-            Date newDate = sdf2.parse(stdateNote);
-            sdf2 = new SimpleDateFormat("dd MMM HH:mm");
-            stdateNote = sdf2.format(newDate);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        final String stdateNote = (String) documentInfo.get(fields.get().getDateField());
 
-            String stheader = (String) documentInfo.get(fields.get().getHeaderField());
+        final String stheader = (String) documentInfo.get(fields.get().getHeaderField());
         int stviewed = Integer.valueOf((String) documentInfo.get(fields.get().getViewedField())) ;
 
         holder.stDateNote.setText(stdateNote);
@@ -95,17 +84,16 @@ public class RecyclerAdapterNotification extends BaseAdapter {
             holder.stHeader.setTypeface(null, Typeface.BOLD);
         }
 
-        //LinearLayout ll_item_table = view.findViewById(R.id.ll_item_table);
+        LinearLayout llNotification = view.findViewById(R.id.llNotification);
 
 
 
-        /*ll_item_table.setOnClickListener(new View.OnClickListener() {
+        llNotification.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mListener.selectTime((String) documentInfo.get(fields.get().getDateField()),
-                        (String) documentInfo.get(fields.get().getHeaderField());
+                mListener.selectNotificationInList(stdateNote, stheader);
             }
-        });*/
+        });
     }
 
     static class ViewHolder {

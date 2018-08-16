@@ -7,11 +7,13 @@ import android.os.IBinder;
 import android.util.Log;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -72,14 +74,26 @@ public class LoadNotificationsService extends Service {
                 intent.putExtra(MainActivity.PARAM_STATUS, MainActivity.STATUS_START);
                 sendBroadcast(intent);
 
-
+                @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf3 = new SimpleDateFormat("EEE MMM dd hh:mm:ss z yyyy", Locale.US);
                 mDBHelper.openDataBase();
-                String stLastDateCheck = mDBHelper.datelastcheck();
-                if (stLastDateCheck == null){
+                long lLastDateCheck = mDBHelper.datelastcheck();
+                String stLastDateCheck;
+                if (lLastDateCheck == 0){
+
                     calendarday = new GregorianCalendar();
                     Date today = calendarday.getTime();
                     long startPeriod = today.getTime() - 2592000000L;
                     stLastDateCheck = sdf2.format(startPeriod);
+                }else {
+                    stLastDateCheck = sdf2.format(lLastDateCheck);
+                    //SimpleDateFormat("EEE MMM dd hh:mm:ss z yyyy", Locale.US);
+                    /*try {
+
+                        //Date newDate = sdf3.parse(stLastDateCheck);
+                        //stLastDateCheck = sdf2.format(newDate);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }*/
                 }
 
                 for (int j = 0; j < 5; j++){
@@ -96,13 +110,24 @@ public class LoadNotificationsService extends Service {
                             String text;
                             String codeNote;
                             int viewed;
+                            long mils = 0;
                             for(int i = 0; i < data.size(); i++){
                                 dateNote = String.valueOf(data.get(i).get("dateNote"));
+                                @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf2 = new SimpleDateFormat("EEE MMM dd hh:mm:ss z yyyy", Locale.US);
+                                try {
+                                    Date newDate = sdf2.parse(dateNote);
+                                    mils = newDate.getTime();
+
+                                    //sdf2 = new SimpleDateFormat("dd MMM yyyy HH:mm");
+                                    //dateNote = sdf2.format(newDate);
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
                                 header = String.valueOf(data.get(i).get("header"));
                                 text = String.valueOf(data.get(i).get("text"));
                                 codeNote = String.valueOf(data.get(i).get("codeNote"));
                                 viewed = 0;
-                                mDBHelper.saveNotification(dateNote, header, text, codeNote, viewed);
+                                mDBHelper.saveNotification(mils, header, text, codeNote, viewed);
                             }
                         }
 

@@ -41,7 +41,7 @@ import ru.lizzzi.crossfit_rekord.fragments.RecordForTrainingSelectFragment;
 import ru.lizzzi.crossfit_rekord.fragments.StartScreenFragment;
 import ru.lizzzi.crossfit_rekord.fragments.TableFragment;
 import ru.lizzzi.crossfit_rekord.services.LoadNotificationsService;
-import ru.lizzzi.crossfit_rekord.fragments.NotoficationFragment;
+import ru.lizzzi.crossfit_rekord.fragments.NotificationFragment;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -201,7 +201,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.calendar_wod){
             fragmentClass = CalendarWodFragment.class;
         }else if (id == R.id.notification){
-            fragmentClass = NotoficationFragment.class;
+            fragmentClass = NotificationFragment.class;
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
