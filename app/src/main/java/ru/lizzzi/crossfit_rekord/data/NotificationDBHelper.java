@@ -201,4 +201,56 @@ public class NotificationDBHelper extends SQLiteOpenHelper {
         return listNotification;
     }
 
+    public String selectTextNotification(long date){
+        myDataBase = this.getReadableDatabase();
+
+        String stText = null;
+        ArrayList<String> arrListDefinition = new ArrayList<>();
+        String[]  columns = new  String[]{Notification.columnText};
+        Cursor cursor = myDataBase.query(Notification.TABLE_NAME,
+                columns,
+                Notification.columnDateNote + "= '" + date + "'",
+                null,
+                null,
+                null,
+                null);
+        if (cursor !=null && cursor.moveToFirst()){
+            do {
+                String name = "";
+                for (String cn : cursor.getColumnNames()) {
+                    stText = cursor.getString(cursor.getColumnIndex(cn));
+                }
+                //arrListDefinition.add(name);
+            }while (cursor.moveToNext());
+        }
+        if (cursor != null) {
+            cursor.close();
+        }
+        return stText;
+    }
+
+    public void updateStatusNotification(long date){
+        myDataBase = this.getWritableDatabase();
+
+        String stText = null;
+        ArrayList<String> arrListDefinition = new ArrayList<>();
+        ContentValues statusNotification = new ContentValues();
+        statusNotification.put("viewed", "1");
+        String[]  columns = new  String[]{Notification.columnText};
+        myDataBase.update(Notification.TABLE_NAME,
+                statusNotification,
+                Notification.columnDateNote + "= '" + date + "'",
+                null);
+        /*if (cursor !=null && cursor.moveToFirst()){
+            do {
+                String name = "";
+                for (String cn : cursor.getColumnNames()) {
+                    stText = cursor.getString(cursor.getColumnIndex(cn));
+                }
+                //arrListDefinition.add(name);
+            }while (cursor.moveToNext());
+        }*/
+    }
+
+
 }

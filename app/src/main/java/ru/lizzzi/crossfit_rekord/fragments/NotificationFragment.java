@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.util.Log;
@@ -137,6 +139,9 @@ public class NotificationFragment extends Fragment implements LoaderManager.Load
                             Toast toast = Toast.makeText(getContext(), "Обновить список", Toast.LENGTH_LONG);
                             toast.setGravity(Gravity.CENTER, 0, 0);
                             toast.show();
+                            if (threadOpenFragment.getState() == Thread.State.NEW){
+                                threadOpenFragment.run();
+                            }
                             break;
                     }
                 }
@@ -173,6 +178,18 @@ public class NotificationFragment extends Fragment implements LoaderManager.Load
                     Toast toast = Toast.makeText(getContext(), "Ты выбрал" +  stdateNote + " " + stheader , Toast.LENGTH_LONG);
                     toast.setGravity(Gravity.CENTER, 0, 0);
                     toast.show();
+
+                    Bundle bundle = new Bundle();
+                    bundle.putString("dateNote", stdateNote);
+                    bundle.putString("headerNote", stheader);
+                    NotificationDataFragment yfc =  new NotificationDataFragment();
+                    yfc.setArguments(bundle);
+                    FragmentManager fragmentManager = getFragmentManager();
+                    FragmentTransaction ft = fragmentManager.beginTransaction();
+                    ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                    ft.replace(R.id.container, yfc);
+                    ft.addToBackStack(null);
+                    ft.commit();
                 }
             });
         }
@@ -206,7 +223,7 @@ public class NotificationFragment extends Fragment implements LoaderManager.Load
 
         getActivity().registerReceiver(br2, intFilt);
         if (threadOpenFragment.getState() == Thread.State.NEW){
-            threadOpenFragment.start();
+            threadOpenFragment.run();
         }
     }
 

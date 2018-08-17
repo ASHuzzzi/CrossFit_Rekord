@@ -30,6 +30,12 @@
             android:paddingStart="25dp"
             android:paddingTop="5dp"
             android:text="TextView" />
+
+        <TextView
+            android:id="@+id/tvForLong"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text="TextView" />
     </LinearLayout>
 
 </android.support.v7.widget.CardView>

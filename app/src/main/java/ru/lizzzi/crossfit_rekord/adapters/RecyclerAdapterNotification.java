@@ -11,6 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -26,12 +27,13 @@ public class RecyclerAdapterNotification extends BaseAdapter {
     private LayoutInflater inflater;
     private int layoutId;
     private final ThreadLocal<DocumentFieldsNotification> fields = new ThreadLocal<>();
+    @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf2 = new SimpleDateFormat("dd MMM yyyy HH:mm");
 
 
     public RecyclerAdapterNotification(Context context, int layoutId, @NonNull List<Map<String, Object>> notifications, ListernerNotification listener) {
         this.notifications = notifications;
         inflater = LayoutInflater.from(context);
-        listener = mListener;
+        mListener =listener;
         fields.set(new DocumentFieldsNotification(context));
         this.layoutId = layoutId;
     }
@@ -69,9 +71,16 @@ public class RecyclerAdapterNotification extends BaseAdapter {
     }
 
     @SuppressLint({"ResourceAsColor", "SimpleDateFormat"})
-    private void customizeView(View view, RecyclerAdapterNotification.ViewHolder holder, final Map documentInfo) {
+    private void customizeView(View view, final RecyclerAdapterNotification.ViewHolder holder, final Map documentInfo) {
 
-        final String stdateNote = (String) documentInfo.get(fields.get().getDateField());
+        //final Map documentInfo = shediletems.get(position);
+        String stdateNote = (String) documentInfo.get(fields.get().getDateField());
+        final long ldateNote;
+        ldateNote = Long.valueOf(stdateNote);
+        String stLongToString = String.valueOf(ldateNote);
+        holder.tvForLong.setText(stLongToString);
+        stdateNote = sdf2.format(ldateNote);
+
 
         final String stheader = (String) documentInfo.get(fields.get().getHeaderField());
         int stviewed = Integer.valueOf((String) documentInfo.get(fields.get().getViewedField())) ;
@@ -91,7 +100,9 @@ public class RecyclerAdapterNotification extends BaseAdapter {
         llNotification.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mListener.selectNotificationInList(stdateNote, stheader);
+                mListener.selectNotificationInList(
+                        (String) documentInfo.get(fields.get().getDateField()),
+                        (String) documentInfo.get(fields.get().getHeaderField()));
             }
         });
     }
@@ -102,10 +113,12 @@ public class RecyclerAdapterNotification extends BaseAdapter {
         private TextView stHeader;
         private TextView stText;
         private TextView stViewed;
+        private TextView tvForLong;
 
         ViewHolder(View view) {
             stDateNote = view.findViewById(R.id.tvTimeNotification);
             stHeader = view.findViewById(R.id.tvHeaderNotification);
+            tvForLong = view.findViewById(R.id.tvForLong);
 
         }
     }
