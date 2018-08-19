@@ -41,7 +41,7 @@ public class NotificationFragment extends Fragment implements LoaderManager.Load
 
     private ProgressBar pbNotification;
 
-    private RecyclerAdapterNotification adapterNotification;
+    private
 
     BroadcastReceiver br2;
     public final static String PARAM_TIME = "time";
@@ -139,6 +139,7 @@ public class NotificationFragment extends Fragment implements LoaderManager.Load
                             Toast toast = Toast.makeText(getContext(), "Обновить список", Toast.LENGTH_LONG);
                             toast.setGravity(Gravity.CENTER, 0, 0);
                             toast.show();
+
                             if (threadOpenFragment.getState() == Thread.State.NEW){
                                 threadOpenFragment.run();
                             }
@@ -171,8 +172,10 @@ public class NotificationFragment extends Fragment implements LoaderManager.Load
     @Override
     public void onLoadFinished(Loader<List<Map<String, Object>>> loader, List<Map<String, Object>> data) {
 
+
         if (data != null){
-            adapterNotification = new RecyclerAdapterNotification(getContext(), R.layout.item_rv_notification, data, new ListernerNotification() {
+
+            RecyclerAdapterNotification adapterNotification = new RecyclerAdapterNotification(getContext(), R.layout.item_rv_notification, data, new ListernerNotification() {
                 @Override
                 public void selectNotificationInList(String stdateNote, String stheader) {
                     Toast toast = Toast.makeText(getContext(), "Ты выбрал" +  stdateNote + " " + stheader , Toast.LENGTH_LONG);
@@ -192,14 +195,18 @@ public class NotificationFragment extends Fragment implements LoaderManager.Load
                     ft.commit();
                 }
             });
+
+            rvNotoficationList.setAdapter(adapterNotification);
+
+            Message msg = handlerOpenFragment.obtainMessage();
+            Bundle bundle = new Bundle();
+            bundle.putString("result", String.valueOf(true));
+            bundle.putString("status", String.valueOf("finish"));
+            msg.setData(bundle);
+            handlerOpenFragment.sendMessage(msg);
         }
-        rvNotoficationList.setAdapter(adapterNotification);
-        Message msg = handlerOpenFragment.obtainMessage();
-        Bundle bundle = new Bundle();
-        bundle.putString("result", String.valueOf(true));
-        bundle.putString("status", String.valueOf("finish"));
-        msg.setData(bundle);
-        handlerOpenFragment.sendMessage(msg);
+
+
     }
 
     @Override

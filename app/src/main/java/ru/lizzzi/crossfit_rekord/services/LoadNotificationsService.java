@@ -15,6 +15,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 import ru.lizzzi.crossfit_rekord.activity.MainActivity;
@@ -28,7 +29,7 @@ public class LoadNotificationsService extends Service {
     int time;
     int task;
     private BackendlessQueries queries = new BackendlessQueries();
-    @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf2 = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+    @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf2 = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.UK);
     private NotificationDBHelper mDBHelper = new  NotificationDBHelper(this);
     private ru.lizzzi.crossfit_rekord.fragments.NetworkCheck NetworkCheck; //переменная для проврки сети
 
@@ -74,10 +75,11 @@ public class LoadNotificationsService extends Service {
                 intent.putExtra(MainActivity.PARAM_STATUS, MainActivity.STATUS_START);
                 sendBroadcast(intent);
 
-                @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf3 = new SimpleDateFormat("EEE MMM dd hh:mm:ss z yyyy", Locale.US);
+                @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf3 = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.UK);
                 mDBHelper.openDataBase();
                 long lLastDateCheck = mDBHelper.datelastcheck();
                 String stLastDateCheck;
+                sdf2.setTimeZone(TimeZone.getTimeZone("UTC"));
                 if (lLastDateCheck == 0){
 
                     calendarday = new GregorianCalendar();
@@ -113,7 +115,7 @@ public class LoadNotificationsService extends Service {
                             long mils = 0;
                             for(int i = 0; i < data.size(); i++){
                                 dateNote = String.valueOf(data.get(i).get("dateNote"));
-                                @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf2 = new SimpleDateFormat("EEE MMM dd hh:mm:ss z yyyy", Locale.US);
+                                @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf2 = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.UK);
                                 try {
                                     Date newDate = sdf2.parse(dateNote);
                                     mils = newDate.getTime();

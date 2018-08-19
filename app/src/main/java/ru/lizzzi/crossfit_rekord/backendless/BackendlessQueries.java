@@ -171,6 +171,7 @@ public class BackendlessQueries {
         DataQueryBuilder queryBuilder = DataQueryBuilder.create();
         queryBuilder.setWhereClause(whereClause);
         queryBuilder.setPageSize(100);
+        queryBuilder.setSortBy("dateNote");
         data = Backendless.Data.of("notification").find(queryBuilder);
 
         return data;
