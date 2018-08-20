@@ -252,5 +252,33 @@ public class NotificationDBHelper extends SQLiteOpenHelper {
         }*/
     }
 
+    public int countNotification() {
+        myDataBase = this.getReadableDatabase();
+        int stLastDateCheck = 0;
+        String[] columns = new String[]{"COUNT(" +
+                Notification.columnViewed + ")"};
+        Cursor cursor = myDataBase.query(true,
+                NotificationDBContract.Notification.TABLE_NAME,
+                columns,
+                Notification.columnViewed + "= '0'",
+                null,
+                null,
+                null,
+                null,
+                null);
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+
+                for (String cn : cursor.getColumnNames()) {
+                    stLastDateCheck = cursor.getInt(cursor.getColumnIndex(cn));
+                }
+            } while (cursor.moveToNext());
+        }
+        if (cursor != null) {
+            cursor.close();
+        }
+        return stLastDateCheck;
+    }
+
 
 }

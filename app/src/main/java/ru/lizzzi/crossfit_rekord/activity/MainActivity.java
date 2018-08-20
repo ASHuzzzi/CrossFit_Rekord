@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,6 +14,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -22,6 +24,7 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.backendless.Backendless;
@@ -66,6 +69,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private NotificationDBHelper mDBHelper;
 
+    private TextView tvNotificationCounter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,6 +109,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        tvNotificationCounter = (TextView) MenuItemCompat.getActionView(navigationView.getMenu().findItem(R.id.notification));
+
 
 
         mDBHelper = new NotificationDBHelper(getContext());
@@ -281,6 +289,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onResume() {
         super.onResume();
+
+        initializeCountDrawer();
         if (!isMyServiceRunning(LoadNotificationsService.class)){
             //startService(new Intent(this, LoadNotificationsService.class));
             Intent intent;
@@ -299,5 +309,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onDestroy();
         // дерегистрируем (выключаем) BroadcastReceiver
         unregisterReceiver(br);
+    }
+
+    private void initializeCountDrawer() {
+        int i = mDBHelper.countNotification();
+        tvNotificationCounter.setGravity(Gravity.CENTER_VERTICAL);
+        tvNotificationCounter.setTypeface(null, Typeface.BOLD);
+        tvNotificationCounter.setTextColor(getResources().getColor(R.color.colorAccent));
+        tvNotificationCounter.setText(String.valueOf(i));
     }
 }
