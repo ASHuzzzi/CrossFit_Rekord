@@ -201,12 +201,11 @@ public class NotificationDBHelper extends SQLiteOpenHelper {
         return listNotification;
     }
 
-    public String selectTextNotification(long date){
+    public ArrayList<String> selectTextNotification(long date){
         myDataBase = this.getReadableDatabase();
 
-        String stText = null;
-        ArrayList<String> arrListDefinition = new ArrayList<>();
-        String[]  columns = new  String[]{Notification.columnText};
+        ArrayList<String> arrListNotification = new ArrayList<>();
+        String[]  columns = new  String[]{Notification.columnText, Notification.columnViewed};
         Cursor cursor = myDataBase.query(Notification.TABLE_NAME,
                 columns,
                 Notification.columnDateNote + "= '" + date + "'",
@@ -216,40 +215,30 @@ public class NotificationDBHelper extends SQLiteOpenHelper {
                 null);
         if (cursor !=null && cursor.moveToFirst()){
             do {
-                String name = "";
                 for (String cn : cursor.getColumnNames()) {
-                    stText = cursor.getString(cursor.getColumnIndex(cn));
+
+                    String stText = cursor.getString(cursor.getColumnIndex(cn));
+                    arrListNotification.add(stText);
+
                 }
-                //arrListDefinition.add(name);
+
             }while (cursor.moveToNext());
         }
         if (cursor != null) {
             cursor.close();
         }
-        return stText;
+        return arrListNotification;
     }
 
-    public void updateStatusNotification(long date){
+    public void updateStatusNotification(long date, int status){
         myDataBase = this.getWritableDatabase();
 
-        String stText = null;
-        ArrayList<String> arrListDefinition = new ArrayList<>();
         ContentValues statusNotification = new ContentValues();
-        statusNotification.put("viewed", "1");
-        String[]  columns = new  String[]{Notification.columnText};
+        statusNotification.put("viewed", status);
         myDataBase.update(Notification.TABLE_NAME,
                 statusNotification,
                 Notification.columnDateNote + "= '" + date + "'",
                 null);
-        /*if (cursor !=null && cursor.moveToFirst()){
-            do {
-                String name = "";
-                for (String cn : cursor.getColumnNames()) {
-                    stText = cursor.getString(cursor.getColumnIndex(cn));
-                }
-                //arrListDefinition.add(name);
-            }while (cursor.moveToNext());
-        }*/
     }
 
     public int countNotification() {

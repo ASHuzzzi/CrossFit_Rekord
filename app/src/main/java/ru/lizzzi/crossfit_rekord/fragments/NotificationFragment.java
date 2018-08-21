@@ -13,14 +13,11 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import java.util.List;
 import java.util.Map;
@@ -41,18 +38,14 @@ public class NotificationFragment extends Fragment implements LoaderManager.Load
 
     private ProgressBar pbNotification;
 
-
     BroadcastReceiver br2;
-    public final static String PARAM_TIME = "time";
     public final static String PARAM_TASK = "task";
     public final static String PARAM_RESULT = "result";
     public final static String PARAM_STATUS = "status";
     public final static String BROADCAST_ACTION = "ru.startandroid.develop.p0961servicebackbroadcast";
 
-    final String LOG_TAG = "myLogs";
     final int TASK1_CODE = 1;
 
-    public final static int STATUS_START = 100;
     public final static int STATUS_FINISH = 200;
     IntentFilter intFilt;
 
@@ -117,18 +110,6 @@ public class NotificationFragment extends Fragment implements LoaderManager.Load
             public void onReceive(Context context, Intent intent) {
                 int task = intent.getIntExtra(PARAM_TASK, 0);
                 int status = intent.getIntExtra(PARAM_STATUS, 0);
-                Log.d(LOG_TAG, "onReceive: task = " + task + ", status = " + status);
-
-                // Ловим сообщения о старте задач
-                if (status  == STATUS_START) {
-                    switch (task) {
-                        case TASK1_CODE:
-                            Toast toast = Toast.makeText(getContext(), "Task1 start", Toast.LENGTH_LONG);
-                            toast.setGravity(Gravity.CENTER, 0, 0);
-                            toast.show();
-                            break;
-                    }
-                }
 
                 // Ловим сообщения об окончании задач
                 if (status == STATUS_FINISH) {
@@ -136,9 +117,6 @@ public class NotificationFragment extends Fragment implements LoaderManager.Load
                     switch (task) {
                         case TASK1_CODE:
                             if (result > 0){
-                                Toast toast = Toast.makeText(getContext(), "Обновить список", Toast.LENGTH_LONG);
-                                toast.setGravity(Gravity.CENTER, 0, 0);
-                                toast.show();
 
                                 if (threadOpenFragment.getState() == Thread.State.NEW){
                                     threadOpenFragment.run();
@@ -174,15 +152,10 @@ public class NotificationFragment extends Fragment implements LoaderManager.Load
     @Override
     public void onLoadFinished(Loader<List<Map<String, Object>>> loader, List<Map<String, Object>> data) {
 
-
         if (data != null){
-
             RecyclerAdapterNotification adapterNotification = new RecyclerAdapterNotification(getContext(), R.layout.item_rv_notification, data, new ListernerNotification() {
                 @Override
                 public void selectNotificationInList(String stdateNote, String stheader) {
-                    Toast toast = Toast.makeText(getContext(), "Ты выбрал" +  stdateNote + " " + stheader , Toast.LENGTH_LONG);
-                    toast.setGravity(Gravity.CENTER, 0, 0);
-                    toast.show();
 
                     Bundle bundle = new Bundle();
                     bundle.putString("dateNote", stdateNote);
@@ -207,8 +180,6 @@ public class NotificationFragment extends Fragment implements LoaderManager.Load
             msg.setData(bundle);
             handlerOpenFragment.sendMessage(msg);
         }
-
-
     }
 
     @Override

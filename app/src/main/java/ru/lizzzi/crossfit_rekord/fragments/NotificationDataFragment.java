@@ -1,14 +1,17 @@
 package ru.lizzzi.crossfit_rekord.fragments;
 
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import java.text.SimpleDateFormat;
+import java.util.List;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.activity.MainActivity;
@@ -20,43 +23,45 @@ public class NotificationDataFragment extends Fragment {
     private TextView tvHeader;
     private TextView tvText;
 
-    private String stTime;
     private String stHeader;
     private String stText;
 
     private Long convertTime;
+    List <String> listDetailNotification;
 
-    Bundle bundle;
-
-    int time;
-    int task;
-
-    final int TASK1_CODE = 1;
-    public final static String PARAM_TIME = "time";
-    public final static String PARAM_TASK = "task";
-    public final static String PARAM_RESULT = "result";
-    public final static String PARAM_STATUS = "status";
-    public final static int STATUS_START = 100;
-    public final static int STATUS_FINISH = 200;
-    IntentFilter intFilt;
-    Intent intent;
-    private NotificationDBHelper mDBHelper;
+    @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf2 = new SimpleDateFormat("dd MMM yyyy HH:mm");
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_notificationdata, container, false);
 
-        tvTime = v.findViewById(R.id.tvTimeNotification2);
-        tvHeader = v.findViewById(R.id.tvHeaderNotification2);
-        tvText = v.findViewById(R.id.tvTextNotification);
+        tvTime = v.findViewById(R.id.tvTimeNotificationND);
+        tvHeader = v.findViewById(R.id.tvHeaderNotificationND);
+        tvText = v.findViewById(R.id.tvTextNotificationND);
 
-        mDBHelper = new NotificationDBHelper(getContext());
-        intent = new Intent(MainActivity.BROADCAST_ACTION);
-        time = intent.getIntExtra(PARAM_TIME, 1);
-        task = intent.getIntExtra(PARAM_TASK, 0);
+        Bundle bundle = getArguments();
+        String stTime = bundle.getString("dateNote");
+        stHeader = bundle.getString("headerNote");
+        convertTime = Long.valueOf(stTime);
 
+        NotificationDBHelper mDBHelper = new NotificationDBHelper(getContext());
+        listDetailNotification = mDBHelper.selectTextNotification(convertTime);
+        if (listDetailNotification.size() > 0){
+            stText = listDetailNotification.get(0);
+            String stVewed = listDetailNotification.get(1);
+            if (stVewed.equals("0")){
+                mDBHelper.updateStatusNotification(convertTime, 1);
 
-
+                Intent intent = new Intent(MainActivity.BROADCAST_ACTION);
+                String PARAM_TASK = "task";
+                String PARAM_RESULT = "result";
+                String PARAM_STATUS = "status";
+                intent.putExtra(PARAM_TASK, 1);
+                intent.putExtra(PARAM_STATUS, MainActivity.STATUS_FINISH);
+                intent.putExtra(PARAM_RESULT, "1");
+                getActivity().sendBroadcast(intent);
+            }
+        }
 
         return v;
     }
@@ -64,18 +69,8 @@ public class NotificationDataFragment extends Fragment {
     public void onResume() {
 
         super.onResume();
-        bundle = getArguments();
-        stText = bundle.getString("dateNote");
-        stHeader = bundle.getString("headerNote");
-
-        convertTime = Long.valueOf(stText);
-        String ttt = mDBHelper.selectTextNotification(convertTime);
-        tvText.setText(ttt);
-        mDBHelper.updateStatusNotification(convertTime);
-
-        intent.putExtra(PARAM_TASK, 1);
-        intent.putExtra(PARAM_STATUS, MainActivity.STATUS_FINISH);
-        intent.putExtra(PARAM_RESULT, "1");
-        getActivity().sendBroadcast(intent);
+        tvHeader.setText(stHeader);
+        tvTime.setText(sdf2.format(convertTime));
+        tvText.setText(stText);
     }
 }

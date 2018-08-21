@@ -17,7 +17,6 @@ import java.util.Map;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.documentfields.DocumentFieldsNotification;
-import ru.lizzzi.crossfit_rekord.fragments.NotificationFragment;
 import ru.lizzzi.crossfit_rekord.interfaces.ListernerNotification;
 
 public class RecyclerAdapterNotification extends BaseAdapter {
@@ -27,7 +26,8 @@ public class RecyclerAdapterNotification extends BaseAdapter {
     private LayoutInflater inflater;
     private int layoutId;
     private final ThreadLocal<DocumentFieldsNotification> fields = new ThreadLocal<>();
-    @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf2 = new SimpleDateFormat("dd MMM yyyy HH:mm");
+    @SuppressLint("SimpleDateFormat")
+    private final SimpleDateFormat sdf2 = new SimpleDateFormat("dd MMM yyyy HH:mm");
 
 
     public RecyclerAdapterNotification(Context context, int layoutId, @NonNull List<Map<String, Object>> notifications, ListernerNotification listener) {
@@ -73,20 +73,18 @@ public class RecyclerAdapterNotification extends BaseAdapter {
     @SuppressLint({"ResourceAsColor", "SimpleDateFormat"})
     private void customizeView(View view, final RecyclerAdapterNotification.ViewHolder holder, final Map documentInfo) {
 
-        //final Map documentInfo = shediletems.get(position);
         String stdateNote = (String) documentInfo.get(fields.get().getDateField());
-        final long ldateNote;
+        String stheader = (String) documentInfo.get(fields.get().getHeaderField());
+        int stviewed = Integer.valueOf((String) documentInfo.get(fields.get().getViewedField()));
+
+        long ldateNote;
         ldateNote = Long.valueOf(stdateNote);
         String stLongToString = String.valueOf(ldateNote);
-        holder.tvForLong.setText(stLongToString);
         stdateNote = sdf2.format(ldateNote);
-
-
-        final String stheader = (String) documentInfo.get(fields.get().getHeaderField());
-        int stviewed = Integer.valueOf((String) documentInfo.get(fields.get().getViewedField())) ;
 
         holder.stDateNote.setText(stdateNote);
         holder.stHeader.setText(stheader);
+        holder.tvForLong.setText(stLongToString);
 
         if(stviewed == 0){
             holder.stDateNote.setTypeface(null, Typeface.BOLD);
@@ -97,8 +95,6 @@ public class RecyclerAdapterNotification extends BaseAdapter {
         }
 
         LinearLayout llNotification = view.findViewById(R.id.llNotification);
-
-
 
         llNotification.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,8 +110,6 @@ public class RecyclerAdapterNotification extends BaseAdapter {
 
         private TextView stDateNote;
         private TextView stHeader;
-        private TextView stText;
-        private TextView stViewed;
         private TextView tvForLong;
 
         ViewHolder(View view) {

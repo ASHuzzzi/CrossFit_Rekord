@@ -1,20 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.widget.RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<android.widget.RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="10dp">
 
     <TextView
-        android:id="@+id/tvTimeNotification2"
+        android:id="@+id/tvTimeNotificationND"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="right"
         android:padding="5dp"
         android:text="TextView" />
 
     <TextView
-        android:id="@+id/tvHeaderNotification2"
+        android:id="@+id/tvHeaderNotificationND"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tvTimeNotification2"
+        android:layout_below="@+id/tvTimeNotificationND"
+        android:gravity="center"
         android:paddingBottom="5dp"
         android:paddingEnd="5dp"
         android:paddingLeft="25dp"
@@ -24,9 +27,11 @@
         android:text="TextView" />
 
     <TextView
-        android:id="@+id/tvTextNotification"
+        android:id="@+id/tvTextNotificationND"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tvHeaderNotification2"
+        android:layout_below="@+id/tvHeaderNotificationND"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:text="TextView" />
 </android.widget.RelativeLayout>
