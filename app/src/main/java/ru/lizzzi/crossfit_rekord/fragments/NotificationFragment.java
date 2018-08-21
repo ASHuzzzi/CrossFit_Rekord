@@ -41,7 +41,6 @@ public class NotificationFragment extends Fragment implements LoaderManager.Load
 
     private ProgressBar pbNotification;
 
-    private
 
     BroadcastReceiver br2;
     public final static String PARAM_TIME = "time";
@@ -136,13 +135,16 @@ public class NotificationFragment extends Fragment implements LoaderManager.Load
                     int result = intent.getIntExtra(PARAM_RESULT, 0);
                     switch (task) {
                         case TASK1_CODE:
-                            Toast toast = Toast.makeText(getContext(), "Обновить список", Toast.LENGTH_LONG);
-                            toast.setGravity(Gravity.CENTER, 0, 0);
-                            toast.show();
+                            if (result > 0){
+                                Toast toast = Toast.makeText(getContext(), "Обновить список", Toast.LENGTH_LONG);
+                                toast.setGravity(Gravity.CENTER, 0, 0);
+                                toast.show();
 
-                            if (threadOpenFragment.getState() == Thread.State.NEW){
-                                threadOpenFragment.run();
+                                if (threadOpenFragment.getState() == Thread.State.NEW){
+                                    threadOpenFragment.run();
+                                }
                             }
+
                             break;
                     }
                 }

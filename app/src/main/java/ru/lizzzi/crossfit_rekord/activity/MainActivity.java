@@ -8,6 +8,8 @@ import android.content.IntentFilter;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -70,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private NotificationDBHelper mDBHelper;
 
     private TextView tvNotificationCounter;
+    private Handler handlerOpenFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +106,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 assert inputMethodManager != null;
                 inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
             }
+
+
+
         };
         drawer.addDrawerListener(toggle);
         toggle.syncState();
@@ -149,6 +155,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     int result = intent.getIntExtra(PARAM_RESULT, 0);
                     switch (task) {
                         case TASK1_CODE:
+                            initializeCountDrawer();
                             Toast toast = Toast.makeText(getContext(), "Загрузка окончена, Количество  = " + result, Toast.LENGTH_SHORT);
                             toast.setGravity(Gravity.CENTER, 0, 0);
                             toast.show();
@@ -312,10 +319,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void initializeCountDrawer() {
-        int i = mDBHelper.countNotification();
-        tvNotificationCounter.setGravity(Gravity.CENTER_VERTICAL);
-        tvNotificationCounter.setTypeface(null, Typeface.BOLD);
-        tvNotificationCounter.setTextColor(getResources().getColor(R.color.colorAccent));
-        tvNotificationCounter.setText(String.valueOf(i));
+        new Thread(new Runnable() {
+            public void run() {
+                int i = mDBHelper.countNotification();
+                tvNotificationCounter.setGravity(Gravity.CENTER_VERTICAL);
+                tvNotificationCounter.setTypeface(null, Typeface.BOLD);
+                tvNotificationCounter.setTextColor(getResources().getColor(R.color.colorAccent));
+                tvNotificationCounter.setText(String.valueOf(i));
+            }
+        }).run();
+
     }
-}
+
+
+
+    }

@@ -91,6 +91,9 @@ public class RecyclerAdapterNotification extends BaseAdapter {
         if(stviewed == 0){
             holder.stDateNote.setTypeface(null, Typeface.BOLD);
             holder.stHeader.setTypeface(null, Typeface.BOLD);
+        }else {
+            holder.stDateNote.setTypeface(null, Typeface.NORMAL);
+            holder.stHeader.setTypeface(null, Typeface.NORMAL);
         }
 
         LinearLayout llNotification = view.findViewById(R.id.llNotification);
