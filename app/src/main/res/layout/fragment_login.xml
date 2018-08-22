@@ -20,13 +20,13 @@
 
         <EditText
             android:id="@+id/editText4"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:ems="10"
             android:gravity="center"
             android:hint="@string/strHintCardNumber"
-            android:inputType="number"/>
+            android:inputType="number" />
 
         <TextView
             android:id="@+id/textView11"
@@ -37,13 +37,13 @@
 
         <EditText
             android:id="@+id/editText5"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:ems="10"
             android:gravity="center"
             android:hint="@string/strHintPassword"
-            android:inputType="number"/>
+            android:inputType="number" />
 
         <Button
             android:id="@+id/button2"

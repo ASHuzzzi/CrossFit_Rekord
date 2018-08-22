@@ -56,9 +56,9 @@ public class NotificationDataFragment extends Fragment {
                 String PARAM_TASK = "task";
                 String PARAM_RESULT = "result";
                 String PARAM_STATUS = "status";
-                intent.putExtra(PARAM_TASK, 1);
+                intent.putExtra(PARAM_TASK, 2);
                 intent.putExtra(PARAM_STATUS, MainActivity.STATUS_FINISH);
-                intent.putExtra(PARAM_RESULT, "1");
+                intent.putExtra(PARAM_RESULT, 1);
                 getActivity().sendBroadcast(intent);
             }
         }

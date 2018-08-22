@@ -8,8 +8,6 @@ import android.content.IntentFilter;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -21,7 +19,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -53,18 +50,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private CheckAuthData checkAuthData = new CheckAuthData();
 
-    BroadcastReceiver br;
-    final String LOG_TAG = "myLogs";
-    final int TASK1_CODE = 1;
+    private BroadcastReceiver br;
+    private final int LOAD_NOTIFICATION = 1;
+    private final int UPDATE_NOTIFICATION = 2;
 
-    public final static int STATUS_START = 100;
     public final static int STATUS_FINISH = 200;
 
     public final static String PARAM_TIME = "time";
     public final static String PARAM_TASK = "task";
     public final static String PARAM_RESULT = "result";
     public final static String PARAM_STATUS = "status";
-    public final static String BROADCAST_ACTION = "ru.startandroid.develop.p0961servicebackbroadcast";
+    public final static String BROADCAST_ACTION = "ru.lizzzi.crossfit_rekord.activity";
 
     public static final String APPLICATION_IDB = "215CF2B1-C44E-E365-FFB6-9C35DD6A9300";
     public static final String API_KEYB = "8764616E-C5FE-CE43-FF54-17B4A8026F00";
@@ -72,7 +68,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private NotificationDBHelper mDBHelper;
 
     private TextView tvNotificationCounter;
-    private Handler handlerOpenFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,9 +77,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        final DrawerLayout drawer = findViewById(R.id.drawer_layout);
 
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+        final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close){
 
             @Override
@@ -135,30 +130,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         br = new BroadcastReceiver() {
             // действия при получении сообщений
             public void onReceive(Context context, Intent intent) {
-                int task = intent.getIntExtra(PARAM_TASK, 0);
                 int status = intent.getIntExtra(PARAM_STATUS, 0);
-                Log.d(LOG_TAG, "onReceive: task = " + task + ", status = " + status);
+                int task = intent.getIntExtra(PARAM_TASK, 0);
 
-                // Ловим сообщения о старте задач
-                if (status  == STATUS_START) {
-                    switch (task) {
-                        case TASK1_CODE:
-                            Toast toast = Toast.makeText(getContext(), "Task1 start", Toast.LENGTH_SHORT);
-                            toast.setGravity(Gravity.CENTER, 0, 0);
-                            toast.show();
-                            break;
-                    }
-                }
-
-                // Ловим сообщения об окончании задач
+                // Ловим сообщения об окончании задачи
                 if (status == STATUS_FINISH) {
-                    int result = intent.getIntExtra(PARAM_RESULT, 0);
                     switch (task) {
-                        case TASK1_CODE:
+                        case LOAD_NOTIFICATION:
+                            int result = intent.getIntExtra(PARAM_RESULT, 0);
+                            if (result > 0){
+                                initializeCountDrawer();
+                                drawer.openDrawer(GravityCompat.START   );
+                                Toast toast = Toast.makeText(getContext(), "Появились новые уведомления!", Toast.LENGTH_LONG);
+                                toast.setGravity(Gravity.BOTTOM, 0, 0);
+                                toast.show();
+                            }
+                            break;
+
+                        case UPDATE_NOTIFICATION:
                             initializeCountDrawer();
-                            Toast toast = Toast.makeText(getContext(), "Загрузка окончена, Количество  = " + result, Toast.LENGTH_SHORT);
-                            toast.setGravity(Gravity.CENTER, 0, 0);
-                            toast.show();
                             break;
                     }
                 }
@@ -299,13 +289,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         initializeCountDrawer();
         if (!isMyServiceRunning(LoadNotificationsService.class)){
-            //startService(new Intent(this, LoadNotificationsService.class));
             Intent intent;
 
             // Создаем Intent для вызова сервиса,
             // кладем туда параметр времени и код задачи
             intent = new Intent(this, LoadNotificationsService.class).putExtra(PARAM_TIME, 7)
-                    .putExtra(PARAM_TASK, TASK1_CODE);
+                    .putExtra(PARAM_TASK, LOAD_NOTIFICATION);
             // стартуем сервис
             startService(intent);
         }
@@ -314,7 +303,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // дерегистрируем (выключаем) BroadcastReceiver
+        // выключаем BroadcastReceiver
         unregisterReceiver(br);
     }
 
