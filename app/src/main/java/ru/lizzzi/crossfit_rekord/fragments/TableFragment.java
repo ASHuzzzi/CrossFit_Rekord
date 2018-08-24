@@ -292,45 +292,57 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
                         dateSelectShow = sdfDataShow.format(today);
                         dateSelectFull = sdfDataFull.format(today);
                         String stTimeNow = sdfCheckTime.format(today);
-                        try {
-                            Date dTimeNow = sdfCheckTime.parse(stTimeNow);
-                            Date dSelectTime = sdfCheckTime.parse(stStartTime);
-                            if (dSelectTime.getTime() > dTimeNow.getTime()){ //проверяем чтобы выбранное время было позже чем сейчас
-                                Bundle bundle = new Bundle();
-                                bundle.putString("time", stStartTime);
-                                bundle.putString("datefull", dateSelectFull);
-                                bundle.putString("dateshow", dateSelectShow);
-                                bundle.putString("type", stTypesItem);
-
-                                CheckAuthData checkAuthData = new CheckAuthData();
-                                if (checkAuthData.checkAuthData(getContext())){
-                                    RecordForTrainingRecordingFragment yfc =  new RecordForTrainingRecordingFragment();
-                                    yfc.setArguments(bundle);
-                                    FragmentManager fragmentManager = getFragmentManager();
-                                    FragmentTransaction ft = fragmentManager.beginTransaction();
-                                    ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                                    ft.replace(R.id.container, yfc);
-                                    ft.addToBackStack(null);
-                                    ft.commit();
-                                }else {
-                                    bundle.putString("fragment", String.valueOf(R.string.strRecordForTrainingRecordingFragment));
-                                    LoginFragment yfc = new LoginFragment();
-                                    yfc.setArguments(bundle);
-                                    FragmentManager fragmentManager = getFragmentManager();
-                                    FragmentTransaction ft = fragmentManager.beginTransaction();
-                                    ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                                    ft.replace(R.id.container, yfc);
-                                    ft.addToBackStack(null);
-                                    ft.commit();
+                        boolean checkday = false; //проверка на выбор сегодняшнего дня;
+                        if (dayOfWeek == 0) {
+                            try {
+                                Date dTimeNow = sdfCheckTime.parse(stTimeNow);
+                                Date dSelectTime = sdfCheckTime.parse(stStartTime);
+                                if (dSelectTime.getTime() > dTimeNow.getTime()){ //проверяем чтобы выбранное время было позже чем сейчас
+                                    checkday = true;
+                                }else{
+                                    checkday = false;
+                                    Toast toast = Toast.makeText(getContext(), "Выберете более позднее время.", Toast.LENGTH_LONG);
+                                    toast.setGravity(Gravity.CENTER, 0, 0);
+                                    toast.show();
                                 }
-                            }else{
-                                Toast toast = Toast.makeText(getContext(), "Выберете более позднее время.", Toast.LENGTH_LONG);
-                                toast.setGravity(Gravity.CENTER, 0, 0);
-                                toast.show();
+                            } catch (ParseException e) {
+                                e.printStackTrace();
                             }
-                        } catch (ParseException e) {
-                            e.printStackTrace();
+
+                        }else {
+                            checkday = true;
                         }
+
+                        if(checkday){
+                            Bundle bundle = new Bundle();
+                            bundle.putString("time", stStartTime);
+                            bundle.putString("datefull", dateSelectFull);
+                            bundle.putString("dateshow", dateSelectShow);
+                            bundle.putString("type", stTypesItem);
+
+                            CheckAuthData checkAuthData = new CheckAuthData();
+                            if (checkAuthData.checkAuthData(getContext())){
+                                RecordForTrainingRecordingFragment yfc =  new RecordForTrainingRecordingFragment();
+                                yfc.setArguments(bundle);
+                                FragmentManager fragmentManager = getFragmentManager();
+                                FragmentTransaction ft = fragmentManager.beginTransaction();
+                                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                                ft.replace(R.id.container, yfc);
+                                ft.addToBackStack(null);
+                                ft.commit();
+                            }else {
+                                bundle.putString("fragment", String.valueOf(R.string.strRecordForTrainingRecordingFragment));
+                                LoginFragment yfc = new LoginFragment();
+                                yfc.setArguments(bundle);
+                                FragmentManager fragmentManager = getFragmentManager();
+                                FragmentTransaction ft = fragmentManager.beginTransaction();
+                                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                                ft.replace(R.id.container, yfc);
+                                ft.addToBackStack(null);
+                                ft.commit();
+                            }
+                        }
+
 
                     }else {
                         @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdfToast = new SimpleDateFormat("EEEE");
