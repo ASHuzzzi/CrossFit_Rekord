@@ -25,6 +25,9 @@ public class TableFragmentLoader extends AsyncTaskLoader<List<Map>> {
     public List<Map> loadInBackground() {
         List<Map> data;
         data = queries.loadTable(sNumberOfDay);
+
+        List<Map> data2;
+        data2 = queries.loadAllTable();
         return data;
     }
 }

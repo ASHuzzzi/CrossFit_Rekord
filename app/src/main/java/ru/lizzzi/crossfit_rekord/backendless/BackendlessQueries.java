@@ -54,6 +54,14 @@ public class BackendlessQueries {
         return Backendless.Data.of("schedule").find(queryBuilder);
     }
 
+    public List<Map> loadAllTable(){
+        DataQueryBuilder queryBuilder = DataQueryBuilder.create();
+        queryBuilder.setSortBy("day_of_week");
+        queryBuilder.setSortBy("start_time");
+        queryBuilder.setPageSize(100);
+        return Backendless.Data.of("schedule").find(queryBuilder);
+    }
+
     public List<Map> loadWorkoutDetails(String typeQuery, String tableName, String selecteDay, String userId){
         String whereClause;
         if (typeQuery.equals("all")){
