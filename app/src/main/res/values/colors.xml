@@ -22,6 +22,7 @@
     <color name="color_Table_Weighlifting">#836484</color>
     <color name="color_Table_Defence_Class">#5C6864</color>
     <color name="color_Table_Athleticism">#8E5983</color>
-    <color name="color_Table_Crossfit_Kids">#A8A390</color>
+    <color name="color_Table_Crossfit_Kids">#A8A390</color>#6d7177
+    <color name="color_Table_Out_of_Time">#6d7177</color>
 
 </resources>

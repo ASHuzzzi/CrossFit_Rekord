@@ -11,6 +11,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +33,7 @@ import ru.lizzzi.crossfit_rekord.interfaces.ListenerRecordForTrainingSelect;
 import ru.lizzzi.crossfit_rekord.loaders.TableFragmentLoader;
 
 
-public class RecordForTrainingSelectFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Map>>{
+public class RecordForTrainingSelectFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<List<Map>>>{
 
     private LinearLayout llErorRfTS;
     private LinearLayout llListTime;
@@ -57,6 +58,7 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
     private Thread threadOpenFragment;
 
     private Thread threadClickOnbutton;
+    private boolean flagTodayOrNot;
 
     @SuppressLint("HandlerLeak")
     @Override
@@ -83,6 +85,7 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
         rvTreningTime.setAdapter(adapter);
 
         gcNumberDayWeek = new GregorianCalendar();
+
 
         @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("EEEE dd MMMM");
         @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM");
@@ -132,6 +135,7 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
                     if (iNumberOfDay == 0){
                         iNumberOfDay = 7;
                     }
+                    flagTodayOrNot = true;
                     firstStartAsyncTaskLoader(iNumberOfDay);
 
                 }else {
@@ -213,6 +217,7 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
                 }
                 stDateSelectFull = sdf2.format(date);
                 stDateSelectShow = currentToday;
+                flagTodayOrNot = true;
                 threadClickOnbutton.run();
             }
         });
@@ -224,6 +229,7 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
                 iNumberOfDay = gcNumberDayWeek.get(Calendar.DAY_OF_WEEK);
                 stDateSelectFull = sdf2.format(tomorrow);
                 stDateSelectShow = currentTomorrow;
+                flagTodayOrNot = false;
                 threadClickOnbutton.run();
             }
         });
@@ -238,6 +244,7 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
                 }
                 stDateSelectFull = sdf2.format(aftertomorrow);
                 stDateSelectShow = currentAftertommorow;
+                flagTodayOrNot = false;
                 threadClickOnbutton.run();
             }
         });
@@ -257,9 +264,9 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
         getLoaderManager().restartLoader(LOADER_ID, bundle,this).onContentChanged();
     }
     @Override
-    public Loader<List<Map>> onCreateLoader(int id, Bundle args) {
+    public Loader<List<List<Map>>> onCreateLoader(int id, Bundle args) {
         if (networkCheck.checkInternet()) {
-            Loader<List<Map>> loader;
+            Loader<List<List<Map>>> loader;
             loader = new TableFragmentLoader(getContext(), args);
             return loader;
         }
@@ -267,24 +274,32 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
     }
 
     @Override
-    public void onLoadFinished(Loader<List<Map>> loader, List<Map> data) {
+    public void onLoadFinished(Loader<List<List<Map>>> loader, List<List<Map>> data) {
         if (data != null){
-            adapter = new RecyclerAdapterRecordForTrainingSelect(getContext(), data, new ListenerRecordForTrainingSelect(){
+            adapter = new RecyclerAdapterRecordForTrainingSelect(getContext(), data.get(iNumberOfDay-1),
+                    flagTodayOrNot, new ListenerRecordForTrainingSelect(){
                 @Override
                 public void selectTime(String stStartTime, String stTypesItem) {
-                    RecordForTrainingRecordingFragment yfc =  new RecordForTrainingRecordingFragment();
-                    Bundle bundle = new Bundle();
-                    bundle.putString("time", stStartTime);
-                    bundle.putString("datefull", stDateSelectFull);
-                    bundle.putString("dateshow", stDateSelectShow);
-                    bundle.putString("type", stTypesItem);
-                    yfc.setArguments(bundle);
-                    FragmentManager fragmentManager = getFragmentManager();
-                    FragmentTransaction ft = fragmentManager.beginTransaction();
-                    ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                    ft.replace(R.id.container, yfc);
-                    ft.addToBackStack(null);
-                    ft.commit();
+                    if(stStartTime.equals("outTime") && stTypesItem.equals("outTime")){
+                        Toast toast = Toast.makeText(getContext(), "Тренировка уже прошла. Выбери более позднее время!", Toast.LENGTH_LONG);
+                        toast.setGravity(Gravity.CENTER, 0, 0);
+                        toast.show();
+                    }else {
+                        RecordForTrainingRecordingFragment yfc =  new RecordForTrainingRecordingFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("time", stStartTime);
+                        bundle.putString("datefull", stDateSelectFull);
+                        bundle.putString("dateshow", stDateSelectShow);
+                        bundle.putString("type", stTypesItem);
+                        yfc.setArguments(bundle);
+                        FragmentManager fragmentManager = getFragmentManager();
+                        FragmentTransaction ft = fragmentManager.beginTransaction();
+                        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                        ft.replace(R.id.container, yfc);
+                        ft.addToBackStack(null);
+                        ft.commit();
+                    }
+
                 }
             });
             LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
@@ -297,7 +312,7 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
     }
 
     @Override
-    public void onLoaderReset(Loader<List<Map>> loader) {
+    public void onLoaderReset(Loader<List<List<Map>>> loader) {
 
     }
 
@@ -309,7 +324,7 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
     public void onResume() {
         super.onResume();
         if (adapter == null){
-            threadOpenFragment.start();
+            threadOpenFragment.run();
         }
     }
 
