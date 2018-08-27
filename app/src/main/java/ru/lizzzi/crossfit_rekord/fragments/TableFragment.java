@@ -140,8 +140,10 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
         buttonMonday.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                iNumberOfDay = 1;
-                createList(schedule.get(iNumberOfDay-1));
+                if (adapter != null){
+                    iNumberOfDay = 1;
+                    createList(schedule.get(iNumberOfDay-1));
+                }
                 return true ;
             }
         });
@@ -149,8 +151,11 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
         buttonTuesday.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                iNumberOfDay = 2;
-                createList(schedule.get(iNumberOfDay-1));
+                if (adapter != null){
+                    iNumberOfDay = 2;
+                    createList(schedule.get(iNumberOfDay-1));
+                }
+
                 return true ;
             }
         });
@@ -158,8 +163,10 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
         buttonWednesday.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                iNumberOfDay = 3;
-                createList(schedule.get(iNumberOfDay-1));
+                if (adapter != null){
+                    iNumberOfDay = 3;
+                    createList(schedule.get(iNumberOfDay-1));
+                }
                 return true ;
             }
         });
@@ -167,8 +174,10 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
         buttonThursday.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                iNumberOfDay = 4;
-                createList(schedule.get(iNumberOfDay-1));
+                if (adapter != null){
+                    iNumberOfDay = 4;
+                    createList(schedule.get(iNumberOfDay-1));
+                }
                 return true ;
             }
         });
@@ -176,8 +185,10 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
         buttonFriday.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                iNumberOfDay = 5;
-                createList(schedule.get(iNumberOfDay-1));
+                if (adapter != null){
+                    iNumberOfDay = 5;
+                    createList(schedule.get(iNumberOfDay-1));
+                }
                 return true ;
             }
         });
@@ -185,8 +196,10 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
         buttonSaturday.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                iNumberOfDay = 6;
-                createList(schedule.get(iNumberOfDay-1));
+                if (adapter != null){
+                    iNumberOfDay = 6;
+                    createList(schedule.get(iNumberOfDay-1));
+                }
                 return true ;
             }
         });
@@ -194,8 +207,10 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
         buttonSunday.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                iNumberOfDay = 7;
-                createList(schedule.get(iNumberOfDay-1));
+                if (adapter != null){
+                    iNumberOfDay = 7;
+                    createList(schedule.get(iNumberOfDay-1));
+                }
                 return true ;
             }
         });

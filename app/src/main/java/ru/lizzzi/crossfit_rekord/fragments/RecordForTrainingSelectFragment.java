@@ -13,6 +13,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -57,10 +58,15 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
     private Handler handlerOpenFragment;
     private Thread threadOpenFragment;
 
-    private Thread threadClickOnbutton;
     private boolean flagTodayOrNot;
+    private List<List<Map>> schedule;
+    private int selectDay;
 
-    @SuppressLint("HandlerLeak")
+    private Button btToday;
+    private Button btTommorow;
+    private Button btAftertommorow;
+
+    @SuppressLint({"HandlerLeak", "ClickableViewAccessibility"})
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -68,9 +74,9 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
         View v = inflater.inflate(R.layout.fragment_record_for_training_select, container, false);
         getActivity().setTitle(R.string.title_RecordForTraining_Fragment);
 
-        Button btToday = v.findViewById(R.id.btToday);
-        Button btTommorow = v.findViewById(R.id.btTommorow);
-        Button btAftertommorow = v.findViewById(R.id.btAftertommorow);
+        btToday = v.findViewById(R.id.btToday);
+        btTommorow = v.findViewById(R.id.btTommorow);
+        btAftertommorow = v.findViewById(R.id.btAftertommorow);
         Button buttonError = v.findViewById(R.id.button6);
         rvTreningTime = v.findViewById(R.id.rvTrainingTime);
         llErorRfTS = v.findViewById(R.id.llEror_RfTS);
@@ -107,18 +113,6 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
                                 pbRfTS.setVisibility(View.INVISIBLE);
                             }
                         }
-                    }else{
-                        resultCheck = bundle.getString("onclick"); //поток от нажатия кнопок
-                        if (resultCheck != null) {
-                            if (resultCheck.equals("false")) {
-                                if (llErorRfTS.getVisibility() == View.INVISIBLE){
-                                    Toast.makeText(getContext(), "Нет подключения", Toast.LENGTH_SHORT).show();
-                                }
-                            }else {
-                                llListTime.setVisibility(View.INVISIBLE);
-                                pbRfTS.setVisibility(View.VISIBLE);
-                            }
-                        }
                     }
                 }
             }
@@ -136,6 +130,7 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
                         iNumberOfDay = 7;
                     }
                     flagTodayOrNot = true;
+                    selectDay = 1;
                     firstStartAsyncTaskLoader(iNumberOfDay);
 
                 }else {
@@ -150,32 +145,6 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
         };
         threadOpenFragment = new Thread(runnable_open_fragment);
         threadOpenFragment.setDaemon(true);
-
-        //поток запускаемый кнопками выборающими дня недели
-        Runnable runnableClickOnbutton = new Runnable() {
-            @Override
-            public void run() {
-                Message msg = handlerOpenFragment.obtainMessage();
-                Bundle bundle = new Bundle();
-                networkCheck = new NetworkCheck(getContext());
-                boolean resultCheck = networkCheck.checkInternet();
-                if (resultCheck){
-                    bundle.putString("onclick", String.valueOf(true));
-                    if (llErorRfTS.getVisibility() == View.VISIBLE) {
-                        llErorRfTS.setVisibility(View.INVISIBLE);
-                    }
-                    restartAsyncTaskLoader(iNumberOfDay);
-
-                }else {
-                    bundle.putString("onclick", String.valueOf(false));
-                }
-                bundle.putString("switch", "onclick");
-                msg.setData(bundle);
-                handlerOpenFragment.sendMessage(msg);
-            }
-        };
-        threadClickOnbutton = new Thread(runnableClickOnbutton);
-        threadClickOnbutton.setDaemon(true);
 
         //получаю значения для кнопок
         date = new Date();
@@ -207,45 +176,57 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
             }
         });
 
-        btToday.setOnClickListener(new View.OnClickListener() {
+        btToday.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View view) {
-                gcCalendarDay.setTime(date);
-                iNumberOfDay = gcNumberDayWeek.get(Calendar.DAY_OF_WEEK)-1;
-                if (iNumberOfDay == 0){
-                    iNumberOfDay = 7;
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if (adapter != null){
+                    gcCalendarDay.setTime(date);
+                    iNumberOfDay = gcNumberDayWeek.get(Calendar.DAY_OF_WEEK)-1;
+                    if (iNumberOfDay == 0){
+                        iNumberOfDay = 7;
+                    }
+                    stDateSelectFull = sdf2.format(date);
+                    stDateSelectShow = currentToday;
+                    flagTodayOrNot = true;
+                    selectDay = 1;
+                    drawList(schedule.get(iNumberOfDay-1));
                 }
-                stDateSelectFull = sdf2.format(date);
-                stDateSelectShow = currentToday;
-                flagTodayOrNot = true;
-                threadClickOnbutton.run();
+                return true ;
             }
         });
 
-        btTommorow.setOnClickListener(new View.OnClickListener() {
+        btTommorow.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View view) {
-                gcCalendarDay.setTime(tomorrow);
-                iNumberOfDay = gcNumberDayWeek.get(Calendar.DAY_OF_WEEK);
-                stDateSelectFull = sdf2.format(tomorrow);
-                stDateSelectShow = currentTomorrow;
-                flagTodayOrNot = false;
-                threadClickOnbutton.run();
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if (adapter != null){
+                    gcCalendarDay.setTime(tomorrow);
+                    iNumberOfDay = gcNumberDayWeek.get(Calendar.DAY_OF_WEEK);
+                    stDateSelectFull = sdf2.format(tomorrow);
+                    stDateSelectShow = currentTomorrow;
+                    flagTodayOrNot = false;
+                    selectDay = 2;
+                    drawList(schedule.get(iNumberOfDay-1));
+                }
+                return true ;
             }
         });
 
-        btAftertommorow.setOnClickListener(new View.OnClickListener() {
+        btAftertommorow.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View view) {
-                gcCalendarDay.setTime(aftertomorrow);
-                iNumberOfDay = gcNumberDayWeek.get(Calendar.DAY_OF_WEEK)+1;
-                if (iNumberOfDay == 8){
-                    iNumberOfDay = 1;
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                    if (adapter != null){
+                        gcCalendarDay.setTime(aftertomorrow);
+                        iNumberOfDay = gcNumberDayWeek.get(Calendar.DAY_OF_WEEK)+1;
+                        if (iNumberOfDay == 8){
+                            iNumberOfDay = 1;
+                        }
+                        stDateSelectFull = sdf2.format(aftertomorrow);
+                        stDateSelectShow = currentAftertommorow;
+                        flagTodayOrNot = false;
+                        selectDay = 3;
+                        drawList(schedule.get(iNumberOfDay-1));
                 }
-                stDateSelectFull = sdf2.format(aftertomorrow);
-                stDateSelectShow = currentAftertommorow;
-                flagTodayOrNot = false;
-                threadClickOnbutton.run();
+                return true ;
             }
         });
 
@@ -258,11 +239,6 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
         getLoaderManager().initLoader(LOADER_ID, bundle, this).forceLoad();
     }
 
-    private void restartAsyncTaskLoader(int day_select){
-        Bundle bundle = new Bundle();
-        bundle.putString(String.valueOf(TableFragmentLoader.ARG_WORD), String.valueOf(day_select));
-        getLoaderManager().restartLoader(LOADER_ID, bundle,this).onContentChanged();
-    }
     @Override
     public Loader<List<List<Map>>> onCreateLoader(int id, Bundle args) {
         if (networkCheck.checkInternet()) {
@@ -276,39 +252,28 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
     @Override
     public void onLoadFinished(Loader<List<List<Map>>> loader, List<List<Map>> data) {
         if (data != null){
-            adapter = new RecyclerAdapterRecordForTrainingSelect(getContext(), data.get(iNumberOfDay-1),
-                    flagTodayOrNot, new ListenerRecordForTrainingSelect(){
-                @Override
-                public void selectTime(String stStartTime, String stTypesItem) {
-                    if(stStartTime.equals("outTime") && stTypesItem.equals("outTime")){
-                        Toast toast = Toast.makeText(getContext(), "Тренировка уже прошла. Выбери более позднее время!", Toast.LENGTH_LONG);
-                        toast.setGravity(Gravity.CENTER, 0, 0);
-                        toast.show();
-                    }else {
-                        RecordForTrainingRecordingFragment yfc =  new RecordForTrainingRecordingFragment();
-                        Bundle bundle = new Bundle();
-                        bundle.putString("time", stStartTime);
-                        bundle.putString("datefull", stDateSelectFull);
-                        bundle.putString("dateshow", stDateSelectShow);
-                        bundle.putString("type", stTypesItem);
-                        yfc.setArguments(bundle);
-                        FragmentManager fragmentManager = getFragmentManager();
-                        FragmentTransaction ft = fragmentManager.beginTransaction();
-                        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                        ft.replace(R.id.container, yfc);
-                        ft.addToBackStack(null);
-                        ft.commit();
-                    }
-
-                }
-            });
-            LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
-            rvTreningTime.setLayoutManager(mLayoutManager);
-            rvTreningTime.setAdapter(adapter);
-
-            pbRfTS.setVisibility(View.INVISIBLE);
-            llListTime.setVisibility(View.VISIBLE);
+            schedule = data;
+            drawList(schedule.get(iNumberOfDay-1));
         }
+    }
+
+    private void preSelectionButtonDay(int iDaySelect){
+        if (iDaySelect == 1 ){
+            selectButtonDay(true, false, false);
+
+        }else if (iDaySelect == 2){
+            selectButtonDay(false, true, false);
+
+        }else if (iDaySelect == 3){
+            selectButtonDay(false, false, true);
+        }
+    }
+
+    //метод применяющий выбор кнопок
+    private void selectButtonDay(boolean tod, boolean tom, boolean aft) {
+        btToday.setPressed(tod);
+        btTommorow.setPressed(tom);
+        btAftertommorow.setPressed(aft);
     }
 
     @Override
@@ -325,6 +290,8 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
         super.onResume();
         if (adapter == null){
             threadOpenFragment.run();
+        }else {
+            preSelectionButtonDay(selectDay);
         }
     }
 
@@ -333,5 +300,41 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
         if (getLoaderManager().hasRunningLoaders()) {
             getLoaderManager().destroyLoader(LOADER_ID);
         }
+    }
+
+    private void drawList(List<Map> dailySchedule){
+        adapter = new RecyclerAdapterRecordForTrainingSelect(getContext(), dailySchedule,
+                flagTodayOrNot, new ListenerRecordForTrainingSelect(){
+            @Override
+            public void selectTime(String stStartTime, String stTypesItem) {
+                if(stStartTime.equals("outTime") && stTypesItem.equals("outTime")){
+                    Toast toast = Toast.makeText(getContext(), "Тренировка уже прошла. Выбери более позднее время!", Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.CENTER, 0, 0);
+                    toast.show();
+                }else {
+                    RecordForTrainingRecordingFragment yfc =  new RecordForTrainingRecordingFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("time", stStartTime);
+                    bundle.putString("datefull", stDateSelectFull);
+                    bundle.putString("dateshow", stDateSelectShow);
+                    bundle.putString("type", stTypesItem);
+                    yfc.setArguments(bundle);
+                    FragmentManager fragmentManager = getFragmentManager();
+                    FragmentTransaction ft = fragmentManager.beginTransaction();
+                    ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                    ft.replace(R.id.container, yfc);
+                    ft.addToBackStack(null);
+                    ft.commit();
+                }
+
+            }
+        });
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+        rvTreningTime.setLayoutManager(mLayoutManager);
+        rvTreningTime.setAdapter(adapter);
+        preSelectionButtonDay(selectDay);
+
+        pbRfTS.setVisibility(View.INVISIBLE);
+        llListTime.setVisibility(View.VISIBLE);
     }
 }
