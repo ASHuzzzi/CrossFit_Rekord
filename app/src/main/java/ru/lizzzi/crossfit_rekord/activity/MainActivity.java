@@ -23,6 +23,7 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -68,6 +69,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private NotificationDBHelper mDBHelper;
 
     private TextView tvNotificationCounter;
+    private int lastClicked = 0;
+    private  String tag = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +79,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
 
         final DrawerLayout drawer = findViewById(R.id.drawer_layout);
 
@@ -110,7 +115,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        View headerview = navigationView.getHeaderView(0);
 
+        LinearLayout llHeader = headerview.findViewById(R.id.llheader);
+        llHeader.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                OpenFragment(StartScreenFragment.class, StartScreenFragment.class, null);
+                DrawerLayout drawer = findViewById(R.id.drawer_layout);
+                drawer.closeDrawer(GravityCompat.START);
+            }
+        });
         tvNotificationCounter = (TextView) MenuItemCompat.getActionView(navigationView.getMenu().findItem(R.id.notification));
 
 
@@ -162,7 +177,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
 
-        OpenFragment(StartScreenFragment.class, StartScreenFragment.class);
+        OpenFragment(StartScreenFragment.class, StartScreenFragment.class, null);
     }
 
     @Override
@@ -173,46 +188,50 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         int id = item.getItemId();
 
-        if (id == R.id.shedule) {
-            fragmentClass = TableFragment.class;
-
-        } else if (id == R.id.record_training) {
-
-            if (checkAuthData.checkAuthData(getContext())){
-                fragmentClass = RecordForTrainingSelectFragment.class;
-            }else {
-                fragmentClass = LoginFragment.class;
-                nextFragmentClass = RecordForTrainingSelectFragment.class;
-
-            }
-
-        } else if (id == R.id.result) {
-            fragmentClass = Result_Fragment.class;
-
-        } else if (id == R.id.definition) {
-            fragmentClass = CharacterFragment.class;
-
-        } else if (id == R.id.contacts) {
-
-
-        } else if (id == R.id.profile) {
-            if (checkAuthData.checkAuthData(getContext())){
-                fragmentClass = AboutMeFragment.class;
-            }else {
-                fragmentClass = LoginFragment.class;
-                nextFragmentClass = AboutMeFragment.class;
-            }
-
-        } else if (id == R.id.calendar_wod){
-            fragmentClass = CalendarWodFragment.class;
-        }else if (id == R.id.notification){
-            fragmentClass = NotificationFragment.class;
-        }
-
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
 
-        OpenFragment(fragmentClass, nextFragmentClass);
+        if(lastClicked != id){
+            if (id == R.id.shedule) {
+                fragmentClass = TableFragment.class;
+                tag = "Table";
+
+            } else if (id == R.id.record_training) {
+
+                if (checkAuthData.checkAuthData(getContext())){
+                    fragmentClass = RecordForTrainingSelectFragment.class;
+                }else {
+                    fragmentClass = LoginFragment.class;
+                    nextFragmentClass = RecordForTrainingSelectFragment.class;
+
+                }
+
+            } else if (id == R.id.result) {
+                fragmentClass = Result_Fragment.class;
+
+            } else if (id == R.id.definition) {
+                fragmentClass = CharacterFragment.class;
+
+            } else if (id == R.id.contacts) {
+
+
+            } else if (id == R.id.profile) {
+                if (checkAuthData.checkAuthData(getContext())){
+                    fragmentClass = AboutMeFragment.class;
+                }else {
+                    fragmentClass = LoginFragment.class;
+                    nextFragmentClass = AboutMeFragment.class;
+                }
+
+            } else if (id == R.id.calendar_wod){
+                fragmentClass = CalendarWodFragment.class;
+            }else if (id == R.id.notification){
+                fragmentClass = NotificationFragment.class;
+            }
+
+            OpenFragment(fragmentClass, nextFragmentClass, tag);
+            lastClicked = id;
+        }
 
         return true;
     }
@@ -221,9 +240,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return this;
     }
 
-    public void OpenFragment(Class fragmentClass, Class nextFragmentClass){
+    public void OpenFragment(Class fragmentClass, Class nextFragmentClass, String tagFragment){
 
         Fragment fragment = null;
+
 
         try {
             fragment = (Fragment) (fragmentClass != null ? fragmentClass.newInstance() : null);
@@ -249,7 +269,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction ft = fragmentManager.beginTransaction();
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        ft.replace(R.id.container, fragment);
+        ft.replace(R.id.container, fragment, tagFragment);
         ft.addToBackStack(null);
         ft.commit();
 
@@ -257,6 +277,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed(){
+        lastClicked = 0;
         int count = getSupportFragmentManager().getBackStackEntryCount();
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if(drawer.isDrawerOpen(GravityCompat.START)){

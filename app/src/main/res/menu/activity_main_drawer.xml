@@ -5,24 +5,29 @@
 
     <item
         android:id="@+id/notification"
-        android:title="@string/notification"
         android:enabled="true"
-        app:actionViewClass="android.widget.TextView"/>
+        android:icon="@android:drawable/ic_menu_info_details"
+        android:title="@string/notification"
+        app:actionViewClass="android.widget.TextView" />
     <item
         android:id="@+id/shedule"
-        android:title="@string/schedule"
-        android:enabled="true" />
+        android:enabled="true"
+        android:icon="@android:drawable/ic_menu_today"
+        android:title="@string/schedule" />
     <item
         android:id="@+id/record_training"
-        android:title="@string/record_training"
-        android:enabled="true" />
+        android:enabled="true"
+        android:icon="@android:drawable/ic_menu_edit"
+        android:title="@string/record_training" />
     <item
         android:id="@+id/calendar_wod"
-        android:title="@string/calendar_wod"
-        android:enabled="true" />
+        android:enabled="true"
+        android:icon="@android:drawable/ic_menu_myplaces"
+        android:title="@string/calendar_wod" />
     <item
         android:id="@+id/definition"
         android:enabled="true"
+        android:icon="@android:drawable/ic_menu_sort_alphabetically"
         android:title="@string/definition" />
     <item
         android:id="@+id/result"
@@ -31,10 +36,12 @@
     <item
         android:id="@+id/profile"
         android:enabled="true"
+        android:icon="@android:drawable/ic_menu_my_calendar"
         android:title="@string/profile" />
     <item
         android:id="@+id/contacts"
         android:enabled="false"
+        android:icon="@android:drawable/ic_menu_call"
         android:title="@string/contacts" />
 
 

@@ -99,6 +99,8 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
                                     });
                     AlertDialog alert = builder.create();
                     alert.show();
+                    alert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.colorAccent));
+                    alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.colorPrimary));
                 }else {
                     Toast.makeText(EnterResultActivity.this, "Нет данных для удаления", Toast.LENGTH_SHORT).show();
                 }

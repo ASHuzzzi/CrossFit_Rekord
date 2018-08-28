@@ -35,6 +35,8 @@ public class NotificationDataFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_notificationdata, container, false);
 
+        getActivity().setTitle(R.string.title_Notification_Fragment);
+
         tvTime = v.findViewById(R.id.tvTimeNotificationND);
         tvHeader = v.findViewById(R.id.tvHeaderNotificationND);
         tvText = v.findViewById(R.id.tvTextNotificationND);

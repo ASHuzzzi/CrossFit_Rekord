@@ -53,6 +53,9 @@ public class NotificationFragment extends Fragment implements LoaderManager.Load
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View v = inflater.inflate(R.layout.fragment_notification, container, false);
+
+        getActivity().setTitle(R.string.title_Notification_Fragment);
+
         rvNotoficationList = v.findViewById(R.id.rvNotoficationList);
         pbNotification = v.findViewById(R.id.pbNotification);
 

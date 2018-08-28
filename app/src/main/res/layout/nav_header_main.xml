@@ -2,21 +2,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/llheader"
     android:layout_width="match_parent"
     android:layout_height="160dp"
     android:background="@drawable/side_nav_bar"
     android:gravity="bottom"
     android:orientation="vertical"
     android:paddingBottom="16dp"
+    android:paddingEnd="16dp"
     android:paddingLeft="20dp"
     android:paddingRight="16dp"
-    android:paddingTop="20dp"
-    android:paddingEnd="16dp"
-    android:paddingStart="20dp">
+    android:paddingStart="20dp"
+    android:paddingTop="20dp">
 
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/iv_mainlogo"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:paddingTop="16dp"
