@@ -1,6 +1,9 @@
 package ru.lizzzi.crossfit_rekord.fragments;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -31,6 +34,7 @@ import java.util.Map;
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterTable;
 import ru.lizzzi.crossfit_rekord.interfaces.ListenerRecordForTrainingSelect;
+import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeTitle;
 import ru.lizzzi.crossfit_rekord.loaders.TableFragmentLoader;
 
 public class TableFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<List<Map>>> {
@@ -61,12 +65,13 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
 
     private List<List<Map>> schedule;
 
+    private InterfaceChangeTitle listernerChangeTitle;
+
     @SuppressLint({"HandlerLeak", "ClickableViewAccessibility"})
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_table, container, false);
-        getActivity().setTitle(R.string.title_Table_Fragment);
 
         buttonMonday = v.findViewById(R.id.day_1);
         buttonTuesday = v.findViewById(R.id.day_2);
@@ -286,6 +291,16 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
         buttonFriday.setPressed(f);
         buttonSaturday.setPressed(sa);
         buttonSunday.setPressed(su);
+    }
+
+    @Override
+    public  void onStart() {
+        super.onStart();
+        if (getActivity() instanceof InterfaceChangeTitle){
+            listernerChangeTitle = (InterfaceChangeTitle) getActivity();
+            listernerChangeTitle.changeTitle(R.string.title_Table_Fragment, R.string.title_Table_Fragment);
+        }
+
     }
 
     //в onResume делаем проверку на наличие данных в адаптаре. При первом запуске адаптер пустой и

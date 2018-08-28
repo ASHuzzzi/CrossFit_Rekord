@@ -16,6 +16,7 @@ import java.util.List;
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.activity.MainActivity;
 import ru.lizzzi.crossfit_rekord.data.NotificationDBHelper;
+import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeTitle;
 
 public class NotificationDataFragment extends Fragment {
 
@@ -66,6 +67,16 @@ public class NotificationDataFragment extends Fragment {
         }
 
         return v;
+    }
+
+    @Override
+    public  void onStart() {
+        super.onStart();
+        if (getActivity() instanceof InterfaceChangeTitle){
+            InterfaceChangeTitle listernerChangeTitle = (InterfaceChangeTitle) getActivity();
+            listernerChangeTitle.changeTitle(R.string.title_NotificationData_Fragment, R.string.title_Notification_Fragment);
+        }
+
     }
 
     public void onResume() {

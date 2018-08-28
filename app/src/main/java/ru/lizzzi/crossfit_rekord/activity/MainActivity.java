@@ -43,11 +43,12 @@ import ru.lizzzi.crossfit_rekord.fragments.LoginFragment;
 import ru.lizzzi.crossfit_rekord.fragments.RecordForTrainingSelectFragment;
 import ru.lizzzi.crossfit_rekord.fragments.StartScreenFragment;
 import ru.lizzzi.crossfit_rekord.fragments.TableFragment;
+import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeTitle;
 import ru.lizzzi.crossfit_rekord.services.LoadNotificationsService;
 import ru.lizzzi.crossfit_rekord.fragments.NotificationFragment;
 
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, InterfaceChangeTitle {
 
     private CheckAuthData checkAuthData = new CheckAuthData();
 
@@ -69,8 +70,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private NotificationDBHelper mDBHelper;
 
     private TextView tvNotificationCounter;
-    private int lastClicked = 0;
     private  String tag = "";
+    private NavigationView navigationView;
+    private int iOpenFragment = 1;
+    private int iSelectFragment = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         View headerview = navigationView.getHeaderView(0);
 
@@ -188,50 +191,51 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         int id = item.getItemId();
 
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        if (id == R.id.shedule) {
+            fragmentClass = TableFragment.class;
+            iSelectFragment = R.string.title_Table_Fragment;
+            tag = "Table";
 
-        if(lastClicked != id){
-            if (id == R.id.shedule) {
-                fragmentClass = TableFragment.class;
-                tag = "Table";
+        } else if (id == R.id.record_training) {
 
-            } else if (id == R.id.record_training) {
+            if (checkAuthData.checkAuthData(getContext())){
+                fragmentClass = RecordForTrainingSelectFragment.class;
+            }else {
+                fragmentClass = LoginFragment.class;
+                nextFragmentClass = RecordForTrainingSelectFragment.class;
 
-                if (checkAuthData.checkAuthData(getContext())){
-                    fragmentClass = RecordForTrainingSelectFragment.class;
-                }else {
-                    fragmentClass = LoginFragment.class;
-                    nextFragmentClass = RecordForTrainingSelectFragment.class;
-
-                }
-
-            } else if (id == R.id.result) {
-                fragmentClass = Result_Fragment.class;
-
-            } else if (id == R.id.definition) {
-                fragmentClass = CharacterFragment.class;
-
-            } else if (id == R.id.contacts) {
-
-
-            } else if (id == R.id.profile) {
-                if (checkAuthData.checkAuthData(getContext())){
-                    fragmentClass = AboutMeFragment.class;
-                }else {
-                    fragmentClass = LoginFragment.class;
-                    nextFragmentClass = AboutMeFragment.class;
-                }
-
-            } else if (id == R.id.calendar_wod){
-                fragmentClass = CalendarWodFragment.class;
-            }else if (id == R.id.notification){
-                fragmentClass = NotificationFragment.class;
             }
 
-            OpenFragment(fragmentClass, nextFragmentClass, tag);
-            lastClicked = id;
+        } else if (id == R.id.result) {
+            fragmentClass = Result_Fragment.class;
+
+        } else if (id == R.id.definition) {
+            fragmentClass = CharacterFragment.class;
+
+        } else if (id == R.id.contacts) {
+
+
+        } else if (id == R.id.profile) {
+            if (checkAuthData.checkAuthData(getContext())){
+                fragmentClass = AboutMeFragment.class;
+            }else {
+                fragmentClass = LoginFragment.class;
+                nextFragmentClass = AboutMeFragment.class;
+            }
+
+        } else if (id == R.id.calendar_wod){
+            fragmentClass = CalendarWodFragment.class;
+        }else if (id == R.id.notification){
+            fragmentClass = NotificationFragment.class;
+            iSelectFragment = R.string.title_Notification_Fragment;
         }
+
+        if(iSelectFragment != iOpenFragment){
+            OpenFragment(fragmentClass, nextFragmentClass, tag);
+        }
+
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
 
         return true;
     }
@@ -277,7 +281,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed(){
-        lastClicked = 0;
         int count = getSupportFragmentManager().getBackStackEntryCount();
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if(drawer.isDrawerOpen(GravityCompat.START)){
@@ -341,6 +344,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+    //первый аргумент нужен для смены заголовка, второй для выделения элемента в шторке
+    @Override
+    public void changeTitle(int intNameFragmentTitle, int intNameFragmentSelectNavDraw) {
+        setTitle(intNameFragmentTitle);
+        if (iSelectFragment == 0) iSelectFragment=intNameFragmentTitle;
+        iOpenFragment = intNameFragmentTitle;
+        if (intNameFragmentSelectNavDraw == R.string.title_Table_Fragment){
+            navigationView.getMenu().getItem(1).setChecked(true);
+        }else {
+            navigationView.getMenu().getItem(1).setChecked(false);
+        }
 
+        if (intNameFragmentSelectNavDraw == R.string.title_Notification_Fragment){
+            navigationView.getMenu().getItem(0).setChecked(true);
+        }else {
+            navigationView.getMenu().getItem(0).setChecked(false);
+        }
 
     }
+}

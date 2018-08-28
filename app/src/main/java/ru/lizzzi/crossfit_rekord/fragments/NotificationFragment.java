@@ -1,10 +1,12 @@
 package ru.lizzzi.crossfit_rekord.fragments;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -25,6 +27,7 @@ import java.util.Map;
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterNotification;
 import ru.lizzzi.crossfit_rekord.loaders.NotificationLoader;
+import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeTitle;
 import ru.lizzzi.crossfit_rekord.interfaces.ListernerNotification;
 
 public class NotificationFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Map<String, Object>>> {
@@ -53,8 +56,6 @@ public class NotificationFragment extends Fragment implements LoaderManager.Load
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View v = inflater.inflate(R.layout.fragment_notification, container, false);
-
-        getActivity().setTitle(R.string.title_Notification_Fragment);
 
         rvNotoficationList = v.findViewById(R.id.rvNotoficationList);
         pbNotification = v.findViewById(R.id.pbNotification);
@@ -196,6 +197,10 @@ public class NotificationFragment extends Fragment implements LoaderManager.Load
         if (threadOpenFragment.getState() == Thread.State.NEW){
             rvNotoficationList.setVisibility(View.INVISIBLE);
             pbNotification.setVisibility(View.VISIBLE);
+        }
+        if (getActivity() instanceof InterfaceChangeTitle){
+            InterfaceChangeTitle listernerChangeTitle = (InterfaceChangeTitle) getActivity();
+            listernerChangeTitle.changeTitle(R.string.title_Notification_Fragment, R.string.title_Notification_Fragment);
         }
 
     }

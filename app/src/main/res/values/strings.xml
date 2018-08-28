@@ -106,6 +106,7 @@
     <string name="title_Table_Fragment">Расписание</string>
     <string name="title_RecordForTraining_Fragment">Записаться на тренировку</string>
     <string name="title_Notification_Fragment">Уведомления</string>
+    <string name="title_NotificationData_Fragment">Уведомление</string>
 
     <!-- Значения для фрагмента AboutMe -->
     <string name="strCardNumber">Номер карты</string>
