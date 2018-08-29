@@ -28,6 +28,7 @@ import java.util.Objects;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterRecord;
+import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeTitle;
 import ru.lizzzi.crossfit_rekord.loaders.RecordForTrainingRecordingLoadPeopleLoader;
 
 
@@ -333,6 +334,16 @@ public class RecordForTrainingRecordingFragment extends Fragment implements Load
             }
         }
         return false;
+    }
+
+    @Override
+    public  void onStart() {
+        super.onStart();
+        if (getActivity() instanceof InterfaceChangeTitle){
+            InterfaceChangeTitle listernerChangeTitle = (InterfaceChangeTitle) getActivity();
+            listernerChangeTitle.changeTitle(R.string.title_RecordForTrainingRecording_Fragment, R.string.title_RecordForTraining_Fragment);
+        }
+
     }
 
     //в onResume делаем проверку на наличие данных в адаптаре. При первом запуске адаптер пустой и

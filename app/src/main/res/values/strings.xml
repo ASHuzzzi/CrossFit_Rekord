@@ -71,7 +71,7 @@
     <string name="contacts">Контакты</string>
     <string name="definition">Словарь CrossFit</string>
     <string name="result">Результаты</string>
-    <string name="profile">Профиль</string>
+    <string name="profile">Мои данные</string>
     <string name="calendar_wod">Результаты тренировок</string>
 
     <string name="error_connection1">При загрузке данных произошла ошибка.</string>
@@ -105,8 +105,19 @@
     <!-- Заголовки Экранов -->
     <string name="title_Table_Fragment">Расписание</string>
     <string name="title_RecordForTraining_Fragment">Записаться на тренировку</string>
+    <string name="title_RecordForTrainingRecording_Fragment">Записаться на тренировку</string>
     <string name="title_Notification_Fragment">Уведомления</string>
     <string name="title_NotificationData_Fragment">Уведомление</string>
+    <string name="title_CalendarWod_Fragment">Календарь тренировок</string>
+    <string name="title_WorkoutDetails_Fragment">Результаты тренировки</string>
+    <string name="title_Character_Fragment">Словарь CrossFit</string>
+    <string name="title_Definition_Fragment">Словарь CrossFit</string>
+    <string name="title_AboutMe_Fragment">Мои данные</string>
+    <string name="title_Login_Fragment">Авторизация</string>
+    Login
+
+
+
 
     <!-- Значения для фрагмента AboutMe -->
     <string name="strCardNumber">Номер карты</string>

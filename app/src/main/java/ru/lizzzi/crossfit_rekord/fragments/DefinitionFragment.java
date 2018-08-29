@@ -16,6 +16,7 @@ import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterDefinition;
 import ru.lizzzi.crossfit_rekord.data.DefinitionDBHelper;
 import ru.lizzzi.crossfit_rekord.data.DefinitionDbContarct.DBdefinition;
+import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeTitle;
 
 
 /**
@@ -104,6 +105,15 @@ public class DefinitionFragment extends Fragment {
         }
     }
 
+    @Override
+    public  void onStart() {
+        super.onStart();
+        if (getActivity() instanceof InterfaceChangeTitle){
+            InterfaceChangeTitle listernerChangeTitle = (InterfaceChangeTitle) getActivity();
+            listernerChangeTitle.changeTitle(R.string.title_Definition_Fragment, R.string.title_Character_Fragment);
+        }
+
+    }
 
     @Override
     public void onDetach() {

@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.data.DefinitionDBHelper;
 import ru.lizzzi.crossfit_rekord.data.DefinitionDbContarct;
+import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeTitle;
 
 
 /**
@@ -178,6 +179,16 @@ public class CharacterFragment extends Fragment {
 //                    + " must implement OnFragmentInteractionListener");
 //        }
 //    }
+
+    @Override
+    public  void onStart() {
+        super.onStart();
+        if (getActivity() instanceof InterfaceChangeTitle){
+            InterfaceChangeTitle listernerChangeTitle = (InterfaceChangeTitle) getActivity();
+            listernerChangeTitle.changeTitle(R.string.title_Character_Fragment, R.string.title_Character_Fragment);
+        }
+
+    }
 
     @Override
     public void onDetach() {

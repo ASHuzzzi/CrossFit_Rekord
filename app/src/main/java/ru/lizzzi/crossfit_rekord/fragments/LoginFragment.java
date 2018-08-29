@@ -21,6 +21,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import ru.lizzzi.crossfit_rekord.R;
+import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeTitle;
 import ru.lizzzi.crossfit_rekord.loaders.LoginLoader;
 
 
@@ -51,7 +52,6 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
         btnComeIn = v.findViewById(R.id.button2);
         pbLogin = v.findViewById(R.id.pbLogin);
 
-        getActivity().setTitle("Авторизация");
         bundle = getArguments();
         stOpenableFragment = bundle.getString("fragment");
 
@@ -180,5 +180,15 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
             }
         }
     };
+
+    @Override
+    public  void onStart() {
+        super.onStart();
+        if (getActivity() instanceof InterfaceChangeTitle){
+            InterfaceChangeTitle listernerChangeTitle = (InterfaceChangeTitle) getActivity();
+            listernerChangeTitle.changeTitle(R.string.title_Login_Fragment, R.string.title_Login_Fragment);
+        }
+
+    }
 
 }

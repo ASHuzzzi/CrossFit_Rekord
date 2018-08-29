@@ -70,7 +70,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private NotificationDBHelper mDBHelper;
 
     private TextView tvNotificationCounter;
-    private  String tag = "";
     private NavigationView navigationView;
     private int iOpenFragment = 1;
     private int iSelectFragment = 0;
@@ -124,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         llHeader.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                OpenFragment(StartScreenFragment.class, StartScreenFragment.class, null);
+                OpenFragment(StartScreenFragment.class, StartScreenFragment.class);
                 DrawerLayout drawer = findViewById(R.id.drawer_layout);
                 drawer.closeDrawer(GravityCompat.START);
             }
@@ -180,7 +179,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
 
-        OpenFragment(StartScreenFragment.class, StartScreenFragment.class, null);
+        OpenFragment(StartScreenFragment.class, StartScreenFragment.class);
     }
 
     @Override
@@ -192,12 +191,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         if (id == R.id.shedule) {
-            fragmentClass = TableFragment.class;
             iSelectFragment = R.string.title_Table_Fragment;
-            tag = "Table";
+            fragmentClass = TableFragment.class;
 
         } else if (id == R.id.record_training) {
-
+            iSelectFragment = R.string.title_RecordForTraining_Fragment;
             if (checkAuthData.checkAuthData(getContext())){
                 fragmentClass = RecordForTrainingSelectFragment.class;
             }else {
@@ -207,15 +205,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
 
         } else if (id == R.id.result) {
+
             fragmentClass = Result_Fragment.class;
 
         } else if (id == R.id.definition) {
+            iSelectFragment = R.string.title_Character_Fragment;
             fragmentClass = CharacterFragment.class;
 
         } else if (id == R.id.contacts) {
 
 
         } else if (id == R.id.profile) {
+            iSelectFragment = R.string.title_AboutMe_Fragment;
             if (checkAuthData.checkAuthData(getContext())){
                 fragmentClass = AboutMeFragment.class;
             }else {
@@ -224,14 +225,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
 
         } else if (id == R.id.calendar_wod){
+            iSelectFragment = R.string.title_CalendarWod_Fragment;
             fragmentClass = CalendarWodFragment.class;
+
         }else if (id == R.id.notification){
             fragmentClass = NotificationFragment.class;
             iSelectFragment = R.string.title_Notification_Fragment;
         }
 
         if(iSelectFragment != iOpenFragment){
-            OpenFragment(fragmentClass, nextFragmentClass, tag);
+            OpenFragment(fragmentClass, nextFragmentClass);
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -244,7 +247,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return this;
     }
 
-    public void OpenFragment(Class fragmentClass, Class nextFragmentClass, String tagFragment){
+    public void OpenFragment(Class fragmentClass, Class nextFragmentClass){
 
         Fragment fragment = null;
 
@@ -273,7 +276,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction ft = fragmentManager.beginTransaction();
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        ft.replace(R.id.container, fragment, tagFragment);
+        ft.replace(R.id.container, fragment);
         ft.addToBackStack(null);
         ft.commit();
 
@@ -360,6 +363,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             navigationView.getMenu().getItem(0).setChecked(true);
         }else {
             navigationView.getMenu().getItem(0).setChecked(false);
+        }
+
+        if (intNameFragmentSelectNavDraw == R.string.title_RecordForTraining_Fragment){
+            navigationView.getMenu().getItem(2).setChecked(true);
+        }else {
+            navigationView.getMenu().getItem(2).setChecked(false);
+        }
+
+        if (intNameFragmentSelectNavDraw == R.string.title_CalendarWod_Fragment){
+            navigationView.getMenu().getItem(3).setChecked(true);
+        }else {
+            navigationView.getMenu().getItem(3).setChecked(false);
+        }
+
+        if (intNameFragmentSelectNavDraw == R.string.title_Character_Fragment){
+            navigationView.getMenu().getItem(4).setChecked(true);
+        }else {
+            navigationView.getMenu().getItem(4).setChecked(false);
+        }
+
+        if (intNameFragmentSelectNavDraw == R.string.title_AboutMe_Fragment){
+            navigationView.getMenu().getItem(6).setChecked(true);
+        }else {
+            navigationView.getMenu().getItem(6).setChecked(false);
         }
 
     }

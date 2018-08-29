@@ -22,6 +22,7 @@ import java.util.Date;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.adapters.PagerAdapterWorkoutDetails;
+import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeTitle;
 
 /**
  * Created by Liza on 13.03.2018.
@@ -42,10 +43,7 @@ public class WorkoutDetailsFragment extends Fragment{
         setRetainInstance(true);
 
         View v = inflater.inflate(R.layout.fragment_workout_details, container, false);
-        getActivity().setTitle("Результаты тренировки");
         tvSelectedDay = v.findViewById(R.id.tvSelectedDay);
-
-
 
         // Find the view pager that will allow the user to swipe between fragments
         final ViewPager viewPager = v.findViewById(R.id.vp_1);
@@ -84,6 +82,16 @@ public class WorkoutDetailsFragment extends Fragment{
 
 
         return v;
+    }
+
+    @Override
+    public  void onStart() {
+        super.onStart();
+        if (getActivity() instanceof InterfaceChangeTitle){
+            InterfaceChangeTitle listernerChangeTitle = (InterfaceChangeTitle) getActivity();
+            listernerChangeTitle.changeTitle(R.string.title_WorkoutDetails_Fragment, R.string.title_CalendarWod_Fragment);
+        }
+
     }
 
 

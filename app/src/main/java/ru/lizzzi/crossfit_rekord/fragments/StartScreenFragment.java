@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import ru.lizzzi.crossfit_rekord.R;
+import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeTitle;
 
 public class StartScreenFragment extends Fragment {
 
@@ -21,7 +22,6 @@ public class StartScreenFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_start_screen, container, false);
-        getActivity().setTitle(R.string.app_name);
 
         Button schedule = v.findViewById(R.id.button_schedule);
         Button recordTraining = v.findViewById(R.id.button_record_training);
@@ -98,6 +98,17 @@ public class StartScreenFragment extends Fragment {
         ft.replace(R.id.container, fragment);
         ft.addToBackStack(null);
         ft.commit();
+
+    }
+
+
+    @Override
+    public  void onStart() {
+        super.onStart();
+        if (getActivity() instanceof InterfaceChangeTitle){
+            InterfaceChangeTitle listernerChangeTitle = (InterfaceChangeTitle) getActivity();
+            listernerChangeTitle.changeTitle(R.string.app_name, R.string.app_name);
+        }
 
     }
     public void onResume() {
