@@ -73,10 +73,7 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        SharedPreferences mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = mSettings.edit();
-        editor.putString(APP_PREFERENCES_SELECTEDDAY, "0");
-        editor.apply();
+
     }
 
     @SuppressLint("HandlerLeak")

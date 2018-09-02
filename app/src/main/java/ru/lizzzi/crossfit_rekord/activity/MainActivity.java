@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
@@ -73,6 +74,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private NavigationView navigationView;
     private int iOpenFragment = 1;
     private int iSelectFragment = 0;
+
+    private static final String APP_PREFERENCES = "audata";
+    private static final String APP_PREFERENCES_SELECTEDDAY = "SelectedDay";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -176,9 +180,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // регистрируем (включаем) BroadcastReceiver
         registerReceiver(br, intFilt);
 
-
-
-
         OpenFragment(StartScreenFragment.class, StartScreenFragment.class);
     }
 
@@ -249,9 +250,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void OpenFragment(Class fragmentClass, Class nextFragmentClass){
 
+        FragmentManager fragmentManager2 = getSupportFragmentManager();
+        fragmentManager2.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        FragmentTransaction ft2 = fragmentManager2.beginTransaction();
+        Fragment fragment2 = null;
+        Class fragmentClass2;
+        fragmentClass2 = StartScreenFragment.class;
+        try {
+            if (fragmentClass != null) {
+                fragment2 = (Fragment) fragmentClass2.newInstance();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        ft2.add(R.id.container, fragment2);
+        ft2.addToBackStack(null);
+        ft2.commit();
+
         Fragment fragment = null;
-
-
         try {
             fragment = (Fragment) (fragmentClass != null ? fragmentClass.newInstance() : null);
         } catch (Exception e) {
@@ -274,6 +290,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         FragmentManager fragmentManager = getSupportFragmentManager();
+        //fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         FragmentTransaction ft = fragmentManager.beginTransaction();
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         ft.replace(R.id.container, fragment);
@@ -291,6 +308,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         else{
             if (count == 1) {
+                SharedPreferences mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = mSettings.edit();
+                editor.putString(APP_PREFERENCES_SELECTEDDAY, "0");
+                editor.apply();
                 finish();
             } else {
                 getSupportFragmentManager().popBackStack();
