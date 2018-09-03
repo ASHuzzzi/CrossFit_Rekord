@@ -69,6 +69,8 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
     long interval;
     long timeStart;
 
+    List<Date> loadDates;
+
 
     @Override
     public void onAttach(Context context) {
@@ -97,9 +99,14 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
             throw new Error("Unable to create database");
         }
 
+        Calendar c = Calendar.getInstance();
+        int mcvMaximumDateYear = c.get(Calendar.YEAR);
+        int mcvMaximumDateMonth = c.get(Calendar.MONTH);
+        int mcvMaximumDateDay = c.getActualMaximum(Calendar.DAY_OF_MONTH);
+
         mcv.state().edit()
                 .setMinimumDate(CalendarDay.from(2018, 0, 1))
-                .setMaximumDate(CalendarDay.from(2019, 0, 31))
+                .setMaximumDate(CalendarDay.from(mcvMaximumDateYear, mcvMaximumDateMonth, mcvMaximumDateDay))
                 .commit();
         mcv.setOnDateChangedListener(this);
         mcv.setOnMonthChangedListener(this);
@@ -112,7 +119,7 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
 
         gcCalendarDay.add(Calendar.DAY_OF_YEAR, 1);
         gcCalendarDay.setTime(date);
-        month = Integer.parseInt(sdf3.format(date));
+        mcvMaximumDateMonth = Integer.parseInt(sdf3.format(date));
 
         //хэндлер для потока runnableOpenFragment
         handlerOpenFragment = new Handler() {
@@ -200,9 +207,10 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
     @Override
     public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
         String selectedDate;
+        Date convertSelectDate;
         String Day;
         String Month;
-
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdfCheckTime2 = new SimpleDateFormat("mm/dd/yyyy");
         mcv.setDateSelected(date, false);
         if (date.getDay() <10){
             Day = "0" + date.getDay();
@@ -219,22 +227,39 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
 
         selectedDate = Month + "/" + Day + "/" + date.getYear();
 
-        SharedPreferences mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = mSettings.edit();
-        editor.putString(APP_PREFERENCES_SELECTEDDAY, selectedDate);
-        editor.apply();
+        GregorianCalendar calendarday = new GregorianCalendar();
+        Date today = calendarday.getTime();
+        String stTimeNow = sdfCheckTime2.format(today);
+        try {
+            convertSelectDate = sdfCheckTime2.parse(selectedDate);
+            Date dTimeNow = sdfCheckTime2.parse(stTimeNow);
+            if (convertSelectDate.getTime() <= dTimeNow.getTime()){
+                SharedPreferences mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = mSettings.edit();
+                editor.putString(APP_PREFERENCES_SELECTEDDAY, selectedDate);
+                editor.apply();
 
-        WorkoutDetailsFragment yfc = new WorkoutDetailsFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString("tag", selectedDate);
-        yfc.setArguments(bundle);
+                WorkoutDetailsFragment yfc = new WorkoutDetailsFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("tag", selectedDate);
+                yfc.setArguments(bundle);
 
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction ft = fragmentManager.beginTransaction();
-        ft.replace(R.id.container, yfc);
-        ft.addToBackStack(null);
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction ft = fragmentManager.beginTransaction();
+                ft.replace(R.id.container, yfc);
+                ft.addToBackStack(null);
 
-        ft.commit();
+                ft.commit();
+            }else {
+                for (int i = 0; i <loadDates.size(); i++){
+                    mcv.setDateSelected(CalendarDay.from(loadDates.get(i)), true);
+                }
+                Toast.makeText(getContext(), "Тренировки еще не было", Toast.LENGTH_SHORT).show();
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
 
     }
 
@@ -350,6 +375,7 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
     }
 
     public void showDates(List<Date> dates){
+        loadDates = dates;
         for (int i = 0; i <dates.size(); i++){
             mcv.setDateSelected(CalendarDay.from(dates.get(i)), true);
         }

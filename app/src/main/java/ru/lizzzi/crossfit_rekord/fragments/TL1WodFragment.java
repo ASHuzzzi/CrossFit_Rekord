@@ -203,7 +203,7 @@ public class TL1WodFragment extends Fragment implements LoaderManager.LoaderCall
         super.onResume();
 
         if (tvWarmUp.length() < 1){
-            threadOpenFragment.start();
+            threadOpenFragment.run();
         }
 
     }

@@ -94,7 +94,7 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
         gcNumberDayWeek = new GregorianCalendar();
 
 
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("EEEE dd MMMM");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("EEE.\n d MMMM");
         @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM");
 
         //хэндлер для обоих потоков. Какой именно поток вызвал хэндлер передается в key
