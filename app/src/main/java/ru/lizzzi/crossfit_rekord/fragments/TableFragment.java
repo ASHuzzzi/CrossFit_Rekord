@@ -1,9 +1,6 @@
 package ru.lizzzi.crossfit_rekord.fragments;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -65,8 +62,6 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
 
     private List<List<Map>> schedule;
 
-    private InterfaceChangeTitle listernerChangeTitle;
-
     @SuppressLint({"HandlerLeak", "ClickableViewAccessibility"})
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
@@ -114,8 +109,6 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
             public void run() {
                 Message msg = handlerOpenFragment.obtainMessage();
                 Bundle bundle = new Bundle();
-                bundle.putString("result", String.valueOf(true));
-                msg.setData(bundle);
                 NetworkCheck = new NetworkCheck(getContext());
                 boolean resultCheck = NetworkCheck.checkInternet();
                 if (resultCheck){
@@ -297,7 +290,7 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
     public  void onStart() {
         super.onStart();
         if (getActivity() instanceof InterfaceChangeTitle){
-            listernerChangeTitle = (InterfaceChangeTitle) getActivity();
+            InterfaceChangeTitle listernerChangeTitle = (InterfaceChangeTitle) getActivity();
             listernerChangeTitle.changeTitle(R.string.title_Table_Fragment, R.string.title_Table_Fragment);
         }
 
@@ -311,7 +304,12 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
     public void onResume() {
         super.onResume();
         if (adapter == null){
-            threadOpenFragment.run();
+            if (threadOpenFragment.getState() == Thread.State.NEW){
+                threadOpenFragment.start();
+            }else {
+                threadOpenFragment.run();
+            }
+
         }else {
             preSelectionButtonDay(iNumberOfDay);
         }
@@ -334,7 +332,7 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
                 int dayOfWeek = iNumberOfDay-numberDayOfWeek;
                 if ((dayOfWeek == 0) || (dayOfWeek == 1) || (dayOfWeek == 2) || (dayOfWeek == -5) || (dayOfWeek == -6)){
                     @SuppressLint("SimpleDateFormat") SimpleDateFormat sdfDataShow = new SimpleDateFormat("EEEE dd MMMM");
-                    @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdfDataFull = new SimpleDateFormat("dd/MM");
+                    @SuppressLint("SimpleDateFormat") SimpleDateFormat sdfDataFull = new SimpleDateFormat("dd/MM");
                     @SuppressLint("SimpleDateFormat") SimpleDateFormat sdfCheckTime = new SimpleDateFormat("HH:mm");
                     calendarday.add(Calendar.DAY_OF_YEAR, dayOfWeek);
                     today = calendarday.getTime();
@@ -363,6 +361,7 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
                     }
 
                     if(checkday){
+                        Fragment fragment;
                         Bundle bundle = new Bundle();
                         bundle.putString("time", stStartTime);
                         bundle.putString("datefull", dateSelectFull);
@@ -371,25 +370,21 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
 
                         CheckAuthData checkAuthData = new CheckAuthData();
                         if (checkAuthData.checkAuthData(getContext())){
-                            RecordForTrainingRecordingFragment yfc =  new RecordForTrainingRecordingFragment();
-                            yfc.setArguments(bundle);
-                            FragmentManager fragmentManager = getFragmentManager();
-                            FragmentTransaction ft = fragmentManager.beginTransaction();
-                            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                            ft.replace(R.id.container, yfc);
-                            ft.addToBackStack(null);
-                            ft.commit();
+                            fragment =  new RecordForTrainingRecordingFragment();
+
                         }else {
                             bundle.putString("fragment", String.valueOf(R.string.strRecordForTrainingRecordingFragment));
-                            LoginFragment yfc = new LoginFragment();
-                            yfc.setArguments(bundle);
-                            FragmentManager fragmentManager = getFragmentManager();
-                            FragmentTransaction ft = fragmentManager.beginTransaction();
-                            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                            ft.replace(R.id.container, yfc);
-                            ft.addToBackStack(null);
-                            ft.commit();
+                            fragment = new LoginFragment();
+
                         }
+
+                        fragment.setArguments(bundle);
+                        FragmentManager fragmentManager = getFragmentManager();
+                        FragmentTransaction ft = fragmentManager.beginTransaction();
+                        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                        ft.replace(R.id.container, fragment);
+                        ft.addToBackStack(null);
+                        ft.commit();
                     }
 
 

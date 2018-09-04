@@ -300,7 +300,11 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
     public void onResume() {
         super.onResume();
         if (adapter == null){
-            threadOpenFragment.run();
+            if (threadOpenFragment.getState() == Thread.State.NEW){
+                threadOpenFragment.start();
+            }else {
+                threadOpenFragment.run();
+            }
         }else {
             preSelectionButtonDay(selectDay);
         }

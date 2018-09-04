@@ -250,31 +250,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void OpenFragment(Class fragmentClass, Class nextFragmentClass){
 
-        FragmentManager fragmentManager2 = getSupportFragmentManager();
-        fragmentManager2.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        FragmentTransaction ft2 = fragmentManager2.beginTransaction();
-        Fragment fragment2 = null;
-        Class fragmentClass2;
-        fragmentClass2 = StartScreenFragment.class;
-        try {
-            if (fragmentClass != null) {
+        if (!fragmentClass.equals(StartScreenFragment.class)) {
+            Fragment fragment2 = null;
+            Class fragmentClass2 = StartScreenFragment.class;
+            try {
                 fragment2 = (Fragment) fragmentClass2.newInstance();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+            FragmentManager fragmentManager2 = getSupportFragmentManager();
+            fragmentManager2.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            FragmentTransaction ft2 = fragmentManager2.beginTransaction();
+            ft2.add(R.id.container, fragment2);
+            ft2.addToBackStack(null);
+            ft2.commit();
         }
-        ft2.add(R.id.container, fragment2);
-        ft2.addToBackStack(null);
-        ft2.commit();
 
         Fragment fragment = null;
         try {
-            fragment = (Fragment) (fragmentClass != null ? fragmentClass.newInstance() : null);
+            fragment = (Fragment) fragmentClass.newInstance();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        if (fragmentClass != null && fragmentClass.equals(LoginFragment.class)) {
+        if (fragmentClass.equals(LoginFragment.class)) {
             Bundle bundle = new Bundle();
 
             if (nextFragmentClass.equals(RecordForTrainingSelectFragment.class)) {
@@ -290,7 +289,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         FragmentManager fragmentManager = getSupportFragmentManager();
-        //fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         FragmentTransaction ft = fragmentManager.beginTransaction();
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         ft.replace(R.id.container, fragment);
