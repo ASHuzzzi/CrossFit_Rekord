@@ -25,14 +25,6 @@ import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.loaders.WorkoutDetailsLoaders;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link TL1WodFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link TL1WodFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class TL1WodFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Map>>{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -62,6 +54,8 @@ public class TL1WodFragment extends Fragment implements LoaderManager.LoaderCall
 
     private static final String APP_PREFERENCES = "audata";
     private static final String APP_PREFERENCES_SELECTEDDAY = "SelectedDay";
+
+    private Runnable runnableOpenFragment;
 
     public TL1WodFragment() {
         // Required empty public constructor
@@ -104,7 +98,7 @@ public class TL1WodFragment extends Fragment implements LoaderManager.LoaderCall
             }
         };
 
-        Runnable runnableOpenFragment = new Runnable() {
+        runnableOpenFragment = new Runnable() {
             @Override
             public void run() {
                 NetworkCheck = new NetworkCheck(getContext());
@@ -121,15 +115,15 @@ public class TL1WodFragment extends Fragment implements LoaderManager.LoaderCall
                 }
             }
         };
-        threadOpenFragment = new Thread(runnableOpenFragment);
-        threadOpenFragment.setDaemon(true);
 
         buttonError.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 pbProgressBar.setVisibility(View.VISIBLE);
                 llLayoutError.setVisibility(View.INVISIBLE);
-                threadOpenFragment.run();
+                threadOpenFragment = new Thread(runnableOpenFragment);
+                threadOpenFragment.setDaemon(true);
+                threadOpenFragment.start();
             }
         });
 
@@ -203,7 +197,9 @@ public class TL1WodFragment extends Fragment implements LoaderManager.LoaderCall
         super.onResume();
 
         if (tvWarmUp.length() < 1){
-            threadOpenFragment.run();
+            threadOpenFragment = new Thread(runnableOpenFragment);
+            threadOpenFragment.setDaemon(true);
+            threadOpenFragment.start();
         }
 
     }
@@ -211,7 +207,7 @@ public class TL1WodFragment extends Fragment implements LoaderManager.LoaderCall
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+
         }
     }
 

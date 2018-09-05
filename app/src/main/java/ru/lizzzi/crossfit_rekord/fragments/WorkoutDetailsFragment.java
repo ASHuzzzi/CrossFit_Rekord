@@ -7,13 +7,10 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import java.text.ParseException;
@@ -34,7 +31,6 @@ public class WorkoutDetailsFragment extends Fragment{
     private static final String APP_PREFERENCES_SELECTEDDAY = "SelectedDay";
 
     private TextView tvSelectedDay;
-
 
     @SuppressLint("HandlerLeak")
     @Override
@@ -78,9 +74,6 @@ public class WorkoutDetailsFragment extends Fragment{
             }
         });
 
-
-
-
         return v;
     }
 
@@ -99,27 +92,18 @@ public class WorkoutDetailsFragment extends Fragment{
     public void onResume() {
         super.onResume();
 
-        //bundle = getArguments();
-        //final String ri = bundle.getString("tag");
-        //bundle.putString("Selected_day", ri);
-        /*if (adapter == null){
-            threadOpenFragment.start();
-        }*/
-
-        SharedPreferences mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-        final String ri =  mSettings.getString(APP_PREFERENCES_SELECTEDDAY, "");
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-
-        Date ddd = null;
         try {
-            ddd = sdf.parse(ri);
+            SharedPreferences mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+            String ri =  mSettings.getString(APP_PREFERENCES_SELECTEDDAY, "");
+            @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+            Date ddd = sdf.parse(ri);
+            @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf2 = new SimpleDateFormat("EEEE dd MMMM");
+            String sdsd = sdf2.format(ddd);
+            tvSelectedDay.setText(sdsd);
         } catch (ParseException e) {
             e.printStackTrace();
         }
 
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf2 = new SimpleDateFormat("EEEE dd MMMM");
-        String sdsd = sdf2.format(ddd);
-        tvSelectedDay.setText(sdsd);
     }
 
     public void onPause(){

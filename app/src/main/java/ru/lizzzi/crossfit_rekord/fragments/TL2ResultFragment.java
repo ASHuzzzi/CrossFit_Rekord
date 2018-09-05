@@ -55,6 +55,9 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
     private String stWoDResults;
     private boolean flag;
 
+    private RecyclerAdapterWorkoutDetails adapter;
+    private Runnable runnableOpenFragment;
+
     public TL2ResultFragment() {
         // Required empty public constructor
     }
@@ -101,7 +104,7 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
         };
 
         //поток запускаемый при создании экрана
-        Runnable runnableOpenFragment = new Runnable() {
+        runnableOpenFragment = new Runnable() {
             @Override
             public void run() {
                 Message msg = handlerOpenFragment.obtainMessage();
@@ -124,13 +127,13 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
 
             }
         };
-        threadUpdateFragment = new Thread(runnableOpenFragment);
-        threadUpdateFragment.setDaemon(true);
 
         buttonError.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                threadUpdateFragment.run();
+                threadUpdateFragment = new Thread(runnableOpenFragment);
+                threadUpdateFragment.setDaemon(true);
+                threadUpdateFragment.start();
             }
         });
 
@@ -194,7 +197,7 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
          }
 
         if (data.size() > 0){
-            RecyclerAdapterWorkoutDetails adapter = new RecyclerAdapterWorkoutDetails(getContext(), data, R.layout.item_lv_workout_details);
+            adapter = new RecyclerAdapterWorkoutDetails(getContext(), data, R.layout.item_lv_workout_details);
             adapter.notifyDataSetChanged();
             lvItemsInWod.setAdapter(adapter);
         }else {
@@ -217,7 +220,7 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
     @Override
     public  void onStart() {
         super.onStart();
-        if (threadUpdateFragment.getState() == Thread.State.NEW){
+        if (adapter == null){
             llLayoutError.setVisibility(View.INVISIBLE);
             ll1.setVisibility(View.INVISIBLE);
             pbProgressBar.setVisibility(View.VISIBLE);
@@ -229,7 +232,10 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
     public void onResume() {
         super.onResume();
 
-        if (threadUpdateFragment.getState() == Thread.State.NEW){
+
+        if (adapter == null){
+            threadUpdateFragment = new Thread(runnableOpenFragment);
+            threadUpdateFragment.setDaemon(true);
             threadUpdateFragment.start();
         }
     }

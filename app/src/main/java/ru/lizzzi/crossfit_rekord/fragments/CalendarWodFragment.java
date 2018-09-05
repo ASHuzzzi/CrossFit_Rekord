@@ -45,8 +45,6 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
     private Handler handlerOpenFragment;
     private Thread threadOpenFragment;
 
-    private NetworkCheck NetworkCheck;
-
     private int LOADER_ID = 1; //идентефикатор loader'а
 
     private CalendarWodDBHelper mDBHelper;
@@ -61,15 +59,13 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
     private LinearLayout layoutErrorCalendarWod;
     private MaterialCalendarView mcv;
     private ProgressBar pbCalendarWod;
+    private Runnable runnableOpenFragment;
 
-    @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf2 = new SimpleDateFormat("MM.dd.yyyy");
-    @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf3 = new SimpleDateFormat("MM");
+    private long timenow;
+    private long interval;
+    private long timeStart;
 
-    long timenow;
-    long interval;
-    long timeStart;
-
-    List<Date> loadDates;
+    private List<Date> loadDates;
 
 
     @Override
@@ -119,7 +115,7 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
 
         gcCalendarDay.add(Calendar.DAY_OF_YEAR, 1);
         gcCalendarDay.setTime(date);
-        mcvMaximumDateMonth = Integer.parseInt(sdf3.format(date));
+        //mcvMaximumDateMonth = Integer.parseInt(sdf3.format(date));
 
         //хэндлер для потока runnableOpenFragment
         handlerOpenFragment = new Handler() {
@@ -150,38 +146,30 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
         };
 
         //поток запускаемый при создании экрана (запуск происходит из onResume)
-         Runnable runnableOpenFragment = new Runnable() {
+         runnableOpenFragment = new Runnable() {
 
             @Override
             public void run() {
                 Message msg = handlerOpenFragment.obtainMessage();
                 Bundle bundle = new Bundle();
-                NetworkCheck = new NetworkCheck(getContext());
-                boolean resultCheck = NetworkCheck.checkInternet();
-                if (resultCheck){
-                    bundle.putString("result", String.valueOf(true));
-                    bundle.putString("status", "load");
-                    msg.setData(bundle);
-                    handlerOpenFragment.sendMessage(msg);
+                bundle.putString("result", String.valueOf(true));
+                bundle.putString("status", "load");
+                msg.setData(bundle);
+                handlerOpenFragment.sendMessage(msg);
 
-                    loadDates(timeStart, timenow);
+                loadDates(timeStart, timenow);
 
-                }else {
-                    bundle.putString("result", String.valueOf(false));
-                    msg.setData(bundle);
-                    handlerOpenFragment.sendMessage(msg);
-                }
             }
         };
-        threadOpenFragment = new Thread(runnableOpenFragment);
-        threadOpenFragment.setDaemon(true);
 
         btErrorCalendarWod.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 layoutErrorCalendarWod.setVisibility(View.INVISIBLE);
                 pbCalendarWod.setVisibility(View.VISIBLE);
-                threadOpenFragment.run();
+                threadOpenFragment = new Thread(runnableOpenFragment);
+                threadOpenFragment.setDaemon(true);
+                threadOpenFragment.start();
             }
         });
 
@@ -194,6 +182,7 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
                 getLoaderManager().destroyLoader(LOADER_ID);
             }
 
+            @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf2 = new SimpleDateFormat("MM.dd.yyyy");
             String stNowDate = sdf2.format(timenow);
             String stStartDate = sdf2.format(timeStart);
 
@@ -272,7 +261,9 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
             interval = 2592000000L + 2592000000L;
             timenow = date.getDate().getTime() + interval;
 
-            threadOpenFragment.run();
+            threadOpenFragment = new Thread(runnableOpenFragment);
+            threadOpenFragment.setDaemon(true);
+            threadOpenFragment.start();
 
             month = date.getMonth() + 1;
         }
@@ -342,11 +333,9 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
             }
         }
 
-        if (threadOpenFragment.getState() == Thread.State.NEW){
-            threadOpenFragment.start();
-        }else {
-            threadOpenFragment.run();
-        }
+        threadOpenFragment = new Thread(runnableOpenFragment);
+        threadOpenFragment.setDaemon(true);
+        threadOpenFragment.start();
 
 
     }
@@ -359,6 +348,7 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
         if (getLoaderManager().hasRunningLoaders()) {
             getLoaderManager().destroyLoader(LOADER_ID);
         }
+        mDBHelper.close();
     }
 
     public void loadDates(long ltimeStart, long ltimenow){
@@ -370,8 +360,23 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
         if (dates.size() > 0) {
             showDates(dates);
         }else {
-            startAsyncTaskLoader(ltimeStart, ltimenow);
+            NetworkCheck networkCheck = new NetworkCheck(getContext());
+            boolean resultCheck = networkCheck.checkInternet();
+
+            if (resultCheck){
+                startAsyncTaskLoader(ltimeStart, ltimenow);
+
+            }else {
+                Message msg = handlerOpenFragment.obtainMessage();
+                Bundle bundle = new Bundle();
+                handlerOpenFragment.sendMessage(msg);
+                bundle.putString("result", String.valueOf(false));
+                msg.setData(bundle);
+                handlerOpenFragment.sendMessage(msg);
+            }
+
         }
+
     }
 
     public void showDates(List<Date> dates){
