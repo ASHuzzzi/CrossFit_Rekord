@@ -67,6 +67,8 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
     private Button btTommorow;
     private Button btAftertommorow;
 
+    private Runnable runnableOpenFragment;
+
     @SuppressLint({"HandlerLeak", "ClickableViewAccessibility"})
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -94,8 +96,9 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
         gcNumberDayWeek = new GregorianCalendar();
 
 
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("EEE.\n d MMMM");
+        @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf = new SimpleDateFormat("EEE.\n d MMMM");
         @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM");
+        @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf3 = new SimpleDateFormat("EEEE d MMMM");
 
         //хэндлер для обоих потоков. Какой именно поток вызвал хэндлер передается в key
         handlerOpenFragment = new Handler() {
@@ -120,7 +123,7 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
         };
 
         //поток запускаемый при создании экрана (запуск происходит из onResume)
-        Runnable runnable_open_fragment = new Runnable() {
+        runnableOpenFragment = new Runnable() {
             @Override
             public void run() {
                 networkCheck = new NetworkCheck(getContext());
@@ -144,8 +147,6 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
                 }
             }
         };
-        threadOpenFragment = new Thread(runnable_open_fragment);
-        threadOpenFragment.setDaemon(true);
 
         //получаю значения для кнопок
         date = new Date();
@@ -173,7 +174,9 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
             public void onClick(View view) {
                 llErorRfTS.setVisibility(View.INVISIBLE);
                 pbRfTS.setVisibility(View.VISIBLE);
-                threadOpenFragment.run();
+                threadOpenFragment = new Thread(runnableOpenFragment);
+                threadOpenFragment.setDaemon(true);
+                threadOpenFragment.start();
             }
         });
 
@@ -187,7 +190,7 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
                         iNumberOfDay = 7;
                     }
                     stDateSelectFull = sdf2.format(date);
-                    stDateSelectShow = currentToday;
+                    stDateSelectShow = sdf3.format(date);
                     flagTodayOrNot = true;
                     selectDay = 1;
                     drawList(schedule.get(iNumberOfDay-1));
@@ -203,7 +206,8 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
                     gcCalendarDay.setTime(tomorrow);
                     iNumberOfDay = gcNumberDayWeek.get(Calendar.DAY_OF_WEEK);
                     stDateSelectFull = sdf2.format(tomorrow);
-                    stDateSelectShow = currentTomorrow;
+                    final Date tomorrow = gcCalendarDay.getTime();
+                    stDateSelectShow = sdf3.format(tomorrow);
                     flagTodayOrNot = false;
                     selectDay = 2;
                     drawList(schedule.get(iNumberOfDay-1));
@@ -222,7 +226,9 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
                             iNumberOfDay = 1;
                         }
                         stDateSelectFull = sdf2.format(aftertomorrow);
-                        stDateSelectShow = currentAftertommorow;
+                        gcCalendarDay.add(Calendar.DAY_OF_YEAR, 1);
+                        final Date aftertomorrow = gcCalendarDay.getTime();
+                        stDateSelectShow = sdf3.format(aftertomorrow);
                         flagTodayOrNot = false;
                         selectDay = 3;
                         drawList(schedule.get(iNumberOfDay-1));
@@ -300,11 +306,10 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
     public void onResume() {
         super.onResume();
         if (adapter == null){
-            if (threadOpenFragment.getState() == Thread.State.NEW){
-                threadOpenFragment.start();
-            }else {
-                threadOpenFragment.run();
-            }
+            threadOpenFragment = new Thread(runnableOpenFragment);
+            threadOpenFragment.setDaemon(true);
+            threadOpenFragment.start();
+
         }else {
             preSelectionButtonDay(selectDay);
         }

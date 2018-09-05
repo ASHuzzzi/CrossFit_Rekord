@@ -61,6 +61,7 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
     private GregorianCalendar calendarday; //нужна для формирования дат для кнопок
 
     private List<List<Map>> schedule;
+    private Runnable runnableOpenFragment;
 
     @SuppressLint({"HandlerLeak", "ClickableViewAccessibility"})
     @Override
@@ -104,7 +105,7 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
         };
 
         //поток запускаемый при создании экрана (запуск происходит из onResume)
-        Runnable runnableOpenFragment = new Runnable() {
+        runnableOpenFragment = new Runnable() {
             @Override
             public void run() {
                 Message msg = handlerOpenFragment.obtainMessage();
@@ -123,15 +124,16 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
                 }
             }
         };
-        threadOpenFragment = new Thread(runnableOpenFragment);
-        threadOpenFragment.setDaemon(true);
+
 
         buttonError.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 pbProgressBar.setVisibility(View.VISIBLE);
                 llLayoutError.setVisibility(View.INVISIBLE);
-                threadOpenFragment.run();
+                threadOpenFragment = new Thread(runnableOpenFragment);
+                threadOpenFragment.setDaemon(true);
+                threadOpenFragment.start();
             }
         });
 
@@ -304,15 +306,19 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
     public void onResume() {
         super.onResume();
         if (adapter == null){
-            if (threadOpenFragment.getState() == Thread.State.NEW){
-                threadOpenFragment.start();
-            }else {
-                threadOpenFragment.run();
-            }
+            threadOpenFragment = new Thread(runnableOpenFragment);
+            threadOpenFragment.setDaemon(true);
+            threadOpenFragment.start();
 
         }else {
             preSelectionButtonDay(iNumberOfDay);
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        threadOpenFragment.interrupt();
     }
 
     private void createList(List<Map> dailySchedule){

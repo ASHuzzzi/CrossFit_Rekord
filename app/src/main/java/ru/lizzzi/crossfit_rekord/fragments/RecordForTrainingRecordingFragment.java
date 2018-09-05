@@ -68,8 +68,10 @@ public class RecordForTrainingRecordingFragment extends Fragment implements Load
 
     private Handler handlerOpenFragment;
     private Thread threadOpenFragment;
+    private Runnable runnableOpenFragment;
 
     private Thread threadClickOnbutton;
+    private Runnable runnableClickOnbutton;
 
 
     @SuppressLint("HandlerLeak")
@@ -77,8 +79,6 @@ public class RecordForTrainingRecordingFragment extends Fragment implements Load
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState){
         View v = inflater.inflate(R.layout.fragment_record_for_training_recording, container, false);
-
-        getActivity().setTitle(R.string.title_RecordForTraining_Fragment);
 
         llSelectedWorkout = v.findViewById(R.id.llSelectedWorkout);
         tvSelectedDay = v.findViewById(R.id.tvSelectedDay);
@@ -92,12 +92,6 @@ public class RecordForTrainingRecordingFragment extends Fragment implements Load
         layoutError = v.findViewById(R.id.Layout_Error);
         btNetworkError = v.findViewById(R.id.button7);
         layoutEmptyList = v.findViewById(R.id.Layout_emptylist2);
-
-        lvRecord.setVisibility(View.INVISIBLE);
-        btRegister.setVisibility(View.INVISIBLE);
-        progressBar2.setVisibility(View.VISIBLE);
-        layoutError.setVisibility(View.INVISIBLE);
-        layoutEmptyList.setVisibility(View.INVISIBLE);
 
         mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         stUserName =  mSettings.getString(APP_PREFERENCES_USERNAME, "");
@@ -157,6 +151,20 @@ public class RecordForTrainingRecordingFragment extends Fragment implements Load
                             if (resultCheck.equals("false")) {
                                 layoutError.setVisibility(View.VISIBLE);
                                 progressBar2.setVisibility(View.INVISIBLE);
+                            }else {
+                                String data = bundle.getString("data");
+                                if (data != null) {
+                                    if (data.equals("yes")) {
+                                        lvRecord.setVisibility(View.VISIBLE);
+                                        btRegister.setVisibility(View.VISIBLE);
+                                        progressBar2.setVisibility(View.INVISIBLE);
+                                    } else {
+                                        lvRecord.setVisibility(View.INVISIBLE);
+                                        btRegister.setVisibility(View.VISIBLE);
+                                        progressBar2.setVisibility(View.INVISIBLE);
+                                        layoutEmptyList.setVisibility(View.VISIBLE);
+                                    }
+                                }
                             }
                         }
                     }else{
@@ -177,7 +185,7 @@ public class RecordForTrainingRecordingFragment extends Fragment implements Load
         };
 
         //поток запускаемый при создании экрана (запуск происходит из onResume)
-        Runnable runnableOpenFragment = new Runnable() {
+        runnableOpenFragment = new Runnable() {
             @Override
             public void run() {
                 networkCheck = new NetworkCheck(getContext());
@@ -195,11 +203,10 @@ public class RecordForTrainingRecordingFragment extends Fragment implements Load
                 }
             }
         };
-        threadOpenFragment = new Thread(runnableOpenFragment);
-        threadOpenFragment.setDaemon(true);
+
 
         //поток запускаемый кнопкой удалить/записаться
-        Runnable runnableClickOnbutton = new Runnable() {
+        runnableClickOnbutton = new Runnable() {
             @Override
             public void run() {
                 Message msg = handlerOpenFragment.obtainMessage();
@@ -241,7 +248,9 @@ public class RecordForTrainingRecordingFragment extends Fragment implements Load
                 progressBar2.setVisibility(View.VISIBLE);
                 layoutEmptyList.setVisibility(View.INVISIBLE);
 
-                threadClickOnbutton.run();
+                threadClickOnbutton = new Thread(runnableClickOnbutton);
+                threadClickOnbutton.setDaemon(true);
+                threadClickOnbutton.start();
             }
         });
 
@@ -250,7 +259,10 @@ public class RecordForTrainingRecordingFragment extends Fragment implements Load
             public void onClick(View view) {
                 progressBar2.setVisibility(View.VISIBLE);
                 layoutError.setVisibility(View.INVISIBLE);
-                threadClickOnbutton.run();
+
+                threadOpenFragment = new Thread(runnableOpenFragment);
+                threadOpenFragment.setDaemon(true);
+                threadOpenFragment.start();
             }
         });
 
@@ -305,16 +317,25 @@ public class RecordForTrainingRecordingFragment extends Fragment implements Load
             LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
             lvRecord.setLayoutManager(mLayoutManager);
             lvRecord.setAdapter(adapter);
-            lvRecord.setVisibility(View.VISIBLE);
-            btRegister.setVisibility(View.VISIBLE);
-            progressBar2.setVisibility(View.INVISIBLE);
+            Message msg = handlerOpenFragment.obtainMessage();
+            Bundle bundle = new Bundle();
+            bundle.putString("open", String.valueOf(true));
+            bundle.putString("switch", "open");
+            bundle.putString("data", "yes");
+            msg.setData(bundle);
+            handlerOpenFragment.sendMessage(msg);
+
         }else {
             btRegister.setText(R.string.whrite_entry);
             stUserId = "noId";
-            lvRecord.setVisibility(View.INVISIBLE);
-            btRegister.setVisibility(View.VISIBLE);
-            progressBar2.setVisibility(View.INVISIBLE);
-            layoutEmptyList.setVisibility(View.VISIBLE);
+            Message msg = handlerOpenFragment.obtainMessage();
+            Bundle bundle = new Bundle();
+            bundle.putString("open", String.valueOf(true));
+            bundle.putString("switch", "open");
+            bundle.putString("data", "no");
+            msg.setData(bundle);
+            handlerOpenFragment.sendMessage(msg);
+
         }
 
 
@@ -344,6 +365,15 @@ public class RecordForTrainingRecordingFragment extends Fragment implements Load
             listernerChangeTitle.changeTitle(R.string.title_RecordForTrainingRecording_Fragment, R.string.title_RecordForTraining_Fragment);
         }
 
+        if (adapter == null){
+            lvRecord.setVisibility(View.INVISIBLE);
+            btRegister.setVisibility(View.INVISIBLE);
+            progressBar2.setVisibility(View.VISIBLE);
+            layoutError.setVisibility(View.INVISIBLE);
+            layoutEmptyList.setVisibility(View.INVISIBLE);
+        }
+
+
     }
 
     //в onResume делаем проверку на наличие данных в адаптаре. При первом запуске адаптер пустой и
@@ -354,6 +384,8 @@ public class RecordForTrainingRecordingFragment extends Fragment implements Load
     public void onResume() {
         super.onResume();
         if (adapter == null && layoutEmptyList.getVisibility() == View.INVISIBLE){
+            threadOpenFragment = new Thread(runnableOpenFragment);
+            threadOpenFragment.setDaemon(true);
             threadOpenFragment.start();
         }
     }

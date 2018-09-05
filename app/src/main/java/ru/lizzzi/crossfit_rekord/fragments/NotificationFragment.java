@@ -1,12 +1,10 @@
 package ru.lizzzi.crossfit_rekord.fragments;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -37,8 +35,6 @@ public class NotificationFragment extends Fragment implements LoaderManager.Load
     private Handler handlerOpenFragment;
     private Thread threadOpenFragment;
 
-    private NetworkCheck NetworkCheck; //переменная для проврки сети
-
     private ProgressBar pbNotification;
 
     BroadcastReceiver br2;
@@ -50,7 +46,10 @@ public class NotificationFragment extends Fragment implements LoaderManager.Load
     final int TASK1_CODE = 1;
 
     public final static int STATUS_FINISH = 200;
-    IntentFilter intFilt;
+    private IntentFilter intFilt;
+
+    private RecyclerAdapterNotification adapterNotification;
+    private Runnable runnableOpenFragment;
 
     @SuppressLint("HandlerLeak")
     @Override
@@ -83,7 +82,7 @@ public class NotificationFragment extends Fragment implements LoaderManager.Load
         };
 
         //поток запускаемый при создании экрана
-        Runnable runnableOpenFragment = new Runnable() {
+        runnableOpenFragment = new Runnable() {
             @Override
             public void run() {
                 Message msg = handlerOpenFragment.obtainMessage();
@@ -92,22 +91,11 @@ public class NotificationFragment extends Fragment implements LoaderManager.Load
                 bundle.putString("status", String.valueOf("start"));
                 msg.setData(bundle);
                 handlerOpenFragment.sendMessage(msg);
-
-                NetworkCheck = new NetworkCheck(getContext());
-                boolean resultCheck = NetworkCheck.checkInternet();
-                if (resultCheck){
-                    loadNotificationAsyncTaskLoader();
-
-                }else {
-                    bundle.putString("result", String.valueOf(false));
-                    msg.setData(bundle);
-                    handlerOpenFragment.sendMessage(msg);
-                }
+                loadNotificationAsyncTaskLoader();
 
             }
         };
-        threadOpenFragment = new Thread(runnableOpenFragment);
-        threadOpenFragment.setDaemon(true);
+
 
         br2 = new BroadcastReceiver() {
             // действия при получении сообщений
@@ -122,9 +110,9 @@ public class NotificationFragment extends Fragment implements LoaderManager.Load
                         case TASK1_CODE:
                             if (result > 0){
 
-                                if (threadOpenFragment.getState() == Thread.State.NEW){
-                                    threadOpenFragment.run();
-                                }
+                                threadOpenFragment = new Thread(runnableOpenFragment);
+                                threadOpenFragment.setDaemon(true);
+                                threadOpenFragment.start();
                             }
 
                             break;
@@ -157,7 +145,7 @@ public class NotificationFragment extends Fragment implements LoaderManager.Load
     public void onLoadFinished(Loader<List<Map<String, Object>>> loader, List<Map<String, Object>> data) {
 
         if (data != null){
-            RecyclerAdapterNotification adapterNotification = new RecyclerAdapterNotification(getContext(), R.layout.item_rv_notification, data, new ListernerNotification() {
+            adapterNotification = new RecyclerAdapterNotification(getContext(), R.layout.item_rv_notification, data, new ListernerNotification() {
                 @Override
                 public void selectNotificationInList(String stdateNote, String stheader) {
 
@@ -194,7 +182,7 @@ public class NotificationFragment extends Fragment implements LoaderManager.Load
     @Override
     public  void onStart() {
         super.onStart();
-        if (threadOpenFragment.getState() == Thread.State.NEW){
+        if (adapterNotification == null){
             rvNotoficationList.setVisibility(View.INVISIBLE);
             pbNotification.setVisibility(View.VISIBLE);
         }
@@ -210,8 +198,10 @@ public class NotificationFragment extends Fragment implements LoaderManager.Load
         super.onResume();
 
         getActivity().registerReceiver(br2, intFilt);
-        if (threadOpenFragment.getState() == Thread.State.NEW){
-            threadOpenFragment.run();
+        if (adapterNotification == null){
+            threadOpenFragment = new Thread(runnableOpenFragment);
+            threadOpenFragment.setDaemon(true);
+            threadOpenFragment.start();
         }
     }
 
