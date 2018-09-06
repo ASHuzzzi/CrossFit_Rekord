@@ -69,6 +69,10 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
 
     private Runnable runnableOpenFragment;
 
+    String currentTodayForShow;
+    String currentTomorrowForShow;
+    String currentAftertommorowForShow;
+
     @SuppressLint({"HandlerLeak", "ClickableViewAccessibility"})
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -161,13 +165,17 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
         final String currentTomorrow = sdf.format(tomorrow);
         final String currentAftertommorow = sdf.format(aftertomorrow);
 
+        currentTomorrowForShow = sdf3.format(tomorrow);
+        currentTodayForShow = sdf3.format(date);
+        currentAftertommorowForShow = sdf3.format(aftertomorrow);
+
         btToday.setText(currentToday);
         btTommorow.setText(currentTomorrow);
         btAftertommorow.setText(currentAftertommorow);
 
         gcCalendarDay.setTime(date);
         stDateSelectFull = sdf2.format(date);
-        stDateSelectShow = currentToday;
+        stDateSelectShow = currentTodayForShow;
 
         buttonError.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -190,7 +198,7 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
                         iNumberOfDay = 7;
                     }
                     stDateSelectFull = sdf2.format(date);
-                    stDateSelectShow = sdf3.format(date);
+                    stDateSelectShow = currentTodayForShow;
                     flagTodayOrNot = true;
                     selectDay = 1;
                     drawList(schedule.get(iNumberOfDay-1));
@@ -206,8 +214,7 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
                     gcCalendarDay.setTime(tomorrow);
                     iNumberOfDay = gcNumberDayWeek.get(Calendar.DAY_OF_WEEK);
                     stDateSelectFull = sdf2.format(tomorrow);
-                    final Date tomorrow = gcCalendarDay.getTime();
-                    stDateSelectShow = sdf3.format(tomorrow);
+                    stDateSelectShow = currentTomorrowForShow;
                     flagTodayOrNot = false;
                     selectDay = 2;
                     drawList(schedule.get(iNumberOfDay-1));
@@ -219,19 +226,17 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
         btAftertommorow.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                    if (adapter != null){
-                        gcCalendarDay.setTime(aftertomorrow);
-                        iNumberOfDay = gcNumberDayWeek.get(Calendar.DAY_OF_WEEK)+1;
-                        if (iNumberOfDay == 8){
-                            iNumberOfDay = 1;
-                        }
-                        stDateSelectFull = sdf2.format(aftertomorrow);
-                        gcCalendarDay.add(Calendar.DAY_OF_YEAR, 1);
-                        final Date aftertomorrow = gcCalendarDay.getTime();
-                        stDateSelectShow = sdf3.format(aftertomorrow);
-                        flagTodayOrNot = false;
-                        selectDay = 3;
-                        drawList(schedule.get(iNumberOfDay-1));
+                if (adapter != null){
+                    gcCalendarDay.setTime(aftertomorrow);
+                    iNumberOfDay = gcNumberDayWeek.get(Calendar.DAY_OF_WEEK)+1;
+                    if (iNumberOfDay == 8){
+                        iNumberOfDay = 1;
+                    }
+                    stDateSelectFull = sdf2.format(aftertomorrow);
+                    stDateSelectShow = currentAftertommorowForShow;
+                    flagTodayOrNot = false;
+                    selectDay = 3;
+                    drawList(schedule.get(iNumberOfDay-1));
                 }
                 return true ;
             }
@@ -267,12 +272,15 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
     private void preSelectionButtonDay(int iDaySelect){
         if (iDaySelect == 1 ){
             selectButtonDay(true, false, false);
+            stDateSelectShow = currentTodayForShow;
 
         }else if (iDaySelect == 2){
             selectButtonDay(false, true, false);
+            stDateSelectShow = currentTomorrowForShow;
 
         }else if (iDaySelect == 3){
             selectButtonDay(false, false, true);
+            stDateSelectShow = currentAftertommorowForShow;
         }
     }
 
