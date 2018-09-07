@@ -232,7 +232,6 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
     public void onResume() {
         super.onResume();
 
-
         if (adapter == null){
             threadUpdateFragment = new Thread(runnableOpenFragment);
             threadUpdateFragment.setDaemon(true);
@@ -245,8 +244,9 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == CHOOSE_THIEF) {
-            if (resultCode == RESULT_OK) {
+            if (resultCode == RESULT_OK && adapter != null) {
                 threadUpdateFragment.run();
+
             }
         }
     }

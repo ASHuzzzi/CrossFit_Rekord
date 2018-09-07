@@ -35,10 +35,6 @@
             android:icon="@android:drawable/ic_menu_sort_alphabetically"
             android:title="@string/definition" />
         <item
-            android:id="@+id/result"
-            android:enabled="true"
-            android:title="@string/result" />
-        <item
             android:id="@+id/profile"
             android:enabled="true"
             android:icon="@android:drawable/ic_menu_my_calendar"

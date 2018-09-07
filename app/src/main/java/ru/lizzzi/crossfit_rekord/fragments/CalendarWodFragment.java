@@ -115,6 +115,7 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
 
         gcCalendarDay.add(Calendar.DAY_OF_YEAR, 1);
         gcCalendarDay.setTime(date);
+        month = gcCalendarDay.get(Calendar.MONTH);
         //mcvMaximumDateMonth = Integer.parseInt(sdf3.format(date));
 
         //хэндлер для потока runnableOpenFragment
@@ -199,7 +200,7 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
         Date convertSelectDate;
         String Day;
         String Month;
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdfCheckTime2 = new SimpleDateFormat("mm/dd/yyyy");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdfCheckTime2 = new SimpleDateFormat("MM/dd/yyyy");
         mcv.setDateSelected(date, false);
         if (date.getDay() <10){
             Day = "0" + date.getDay();
@@ -213,16 +214,13 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
             Month = String.valueOf((date.getMonth() + 1));
         }
 
-
         selectedDate = Month + "/" + Day + "/" + date.getYear();
 
-        GregorianCalendar calendarday = new GregorianCalendar();
-        Date today = calendarday.getTime();
-        String stTimeNow = sdfCheckTime2.format(today);
         try {
             convertSelectDate = sdfCheckTime2.parse(selectedDate);
-            Date dTimeNow = sdfCheckTime2.parse(stTimeNow);
-            if (convertSelectDate.getTime() <= dTimeNow.getTime()){
+            GregorianCalendar calendarday = new GregorianCalendar();
+            Date today = calendarday.getTime();
+            if (convertSelectDate.getTime() <= today.getTime()){
                 SharedPreferences mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = mSettings.edit();
                 editor.putString(APP_PREFERENCES_SELECTEDDAY, selectedDate);
@@ -255,7 +253,8 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
     @Override
     public void onMonthChanged(MaterialCalendarView widget, CalendarDay date) {
 
-        int checkMonth = month - (date.getMonth() + 1);
+        int swipeMonth = date.getMonth();
+        int checkMonth = month - swipeMonth;
         if ((checkMonth == 2) || (checkMonth == -2) || (checkMonth == -10) || (checkMonth == 10)){
             timeStart = date.getDate().getTime() - 2592000000L ;
             interval = 2592000000L + 2592000000L;
@@ -265,7 +264,7 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
             threadOpenFragment.setDaemon(true);
             threadOpenFragment.start();
 
-            month = date.getMonth() + 1;
+            month = date.getMonth();
         }
 
     }
@@ -325,7 +324,8 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
                 @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf3 = new SimpleDateFormat("MM/dd/yyyy");
                 date = sdf3.parse(stDay);
                 timenow = date.getTime();
-                interval = 2592000000L;
+                //interval = 2592000000L;
+                interval = 7776000000L;
                 timeStart = timenow - interval;
                 timenow = timenow + interval;
             } catch (ParseException e) {

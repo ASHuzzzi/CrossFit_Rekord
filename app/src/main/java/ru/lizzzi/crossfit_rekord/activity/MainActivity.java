@@ -205,10 +205,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             }
 
-        } else if (id == R.id.result) {
-
-            fragmentClass = Result_Fragment.class;
-
         } else if (id == R.id.definition) {
             iSelectFragment = R.string.title_Character_Fragment;
             fragmentClass = CharacterFragment.class;
