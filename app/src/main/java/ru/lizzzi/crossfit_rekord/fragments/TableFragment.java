@@ -367,23 +367,13 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
                     }
 
                     if(checkday){
-                        Fragment fragment;
                         Bundle bundle = new Bundle();
                         bundle.putString("time", stStartTime);
                         bundle.putString("datefull", dateSelectFull);
                         bundle.putString("dateshow", dateSelectShow);
                         bundle.putString("type", stTypesItem);
 
-                        CheckAuthData checkAuthData = new CheckAuthData();
-                        if (checkAuthData.checkAuthData(getContext())){
-                            fragment =  new RecordForTrainingRecordingFragment();
-
-                        }else {
-                            bundle.putString("fragment", String.valueOf(R.string.strRecordForTrainingRecordingFragment));
-                            fragment = new LoginFragment();
-
-                        }
-
+                        Fragment fragment =  new RecordForTrainingRecordingFragment();
                         fragment.setArguments(bundle);
                         FragmentManager fragmentManager = getFragmentManager();
                         FragmentTransaction ft = fragmentManager.beginTransaction();

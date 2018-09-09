@@ -33,7 +33,6 @@ public class StartScreenFragment extends Fragment {
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onClick(View view) {
-
                 openFragment(TableFragment.class);
             }
         });
@@ -41,21 +40,7 @@ public class StartScreenFragment extends Fragment {
         recordTraining.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                if (checkAuthData.checkAuthData(getContext())){
-                    openFragment(RecordForTrainingSelectFragment.class);
-                }else {
-                    LoginFragment yfc = new LoginFragment();
-                    Bundle bundle = new Bundle();
-                    bundle.putString("fragment", String.valueOf(R.string.strRecordFragment));
-                    yfc.setArguments(bundle);
-                    FragmentManager fragmentManager = getFragmentManager();
-                    FragmentTransaction ft = fragmentManager.beginTransaction();
-                    ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                    ft.replace(R.id.container, yfc);
-                    ft.addToBackStack(null);
-                    ft.commit();
-                }
+                openFragment(RecordForTrainingSelectFragment.class);
             }
         });
 

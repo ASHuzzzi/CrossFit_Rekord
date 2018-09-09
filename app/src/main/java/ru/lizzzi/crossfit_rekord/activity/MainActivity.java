@@ -35,7 +35,6 @@ import java.util.Objects;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.data.NotificationDBHelper;
-import ru.lizzzi.crossfit_rekord.draft.wod_result_fragment.Result_Fragment;
 import ru.lizzzi.crossfit_rekord.fragments.AboutMeFragment;
 import ru.lizzzi.crossfit_rekord.fragments.CalendarWodFragment;
 import ru.lizzzi.crossfit_rekord.fragments.CharacterFragment;
@@ -45,11 +44,13 @@ import ru.lizzzi.crossfit_rekord.fragments.RecordForTrainingSelectFragment;
 import ru.lizzzi.crossfit_rekord.fragments.StartScreenFragment;
 import ru.lizzzi.crossfit_rekord.fragments.TableFragment;
 import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeTitle;
+import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeToggleStatus;
 import ru.lizzzi.crossfit_rekord.services.LoadNotificationsService;
 import ru.lizzzi.crossfit_rekord.fragments.NotificationFragment;
 
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, InterfaceChangeTitle {
+public class MainActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener, InterfaceChangeTitle, InterfaceChangeToggleStatus {
 
     private CheckAuthData checkAuthData = new CheckAuthData();
 
@@ -78,6 +79,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final String APP_PREFERENCES = "audata";
     private static final String APP_PREFERENCES_SELECTEDDAY = "SelectedDay";
 
+    private DrawerLayout drawer;
+    private ActionBarDrawerToggle toggle;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,11 +90,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        drawer = findViewById(R.id.drawer_layout);
 
-
-        final DrawerLayout drawer = findViewById(R.id.drawer_layout);
-
-        final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+        toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close){
 
             @Override
@@ -100,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 InputMethodManager inputMethodManager = (InputMethodManager)
                         getSystemService(Context.INPUT_METHOD_SERVICE);
                 assert inputMethodManager != null;
-                inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                inputMethodManager.hideSoftInputFromWindow(drawerView.getWindowToken(), 0);
             }
 
             @Override
@@ -110,14 +112,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 InputMethodManager inputMethodManager = (InputMethodManager)
                         getSystemService(Context.INPUT_METHOD_SERVICE);
                 assert inputMethodManager != null;
-                inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                inputMethodManager.hideSoftInputFromWindow(drawerView.getWindowToken(), 0);
             }
 
 
 
         };
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
+
 
         navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -127,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         llHeader.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                OpenFragment(StartScreenFragment.class, StartScreenFragment.class);
+                OpenFragment(StartScreenFragment.class);
                 DrawerLayout drawer = findViewById(R.id.drawer_layout);
                 drawer.closeDrawer(GravityCompat.START);
             }
@@ -180,14 +181,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // регистрируем (включаем) BroadcastReceiver
         registerReceiver(br, intFilt);
 
-        OpenFragment(StartScreenFragment.class, StartScreenFragment.class);
+
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
         Class fragmentClass = null;
-        Class nextFragmentClass = null;
 
         int id = item.getItemId();
 
@@ -201,8 +201,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 fragmentClass = RecordForTrainingSelectFragment.class;
             }else {
                 fragmentClass = LoginFragment.class;
-                nextFragmentClass = RecordForTrainingSelectFragment.class;
-
             }
 
         } else if (id == R.id.definition) {
@@ -218,7 +216,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 fragmentClass = AboutMeFragment.class;
             }else {
                 fragmentClass = LoginFragment.class;
-                nextFragmentClass = AboutMeFragment.class;
             }
 
         } else if (id == R.id.calendar_wod){
@@ -231,7 +228,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         if(iSelectFragment != iOpenFragment){
-            OpenFragment(fragmentClass, nextFragmentClass);
+            OpenFragment(fragmentClass);
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -244,9 +241,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return this;
     }
 
-    public void OpenFragment(Class fragmentClass, Class nextFragmentClass){
+    public void OpenFragment(Class fragmentClass){
 
-        if (!fragmentClass.equals(StartScreenFragment.class)) {
+        if (!fragmentClass.equals(StartScreenFragment.class) && !fragmentClass.equals(LoginFragment.class)) {
             Fragment fragment2 = null;
             Class fragmentClass2 = StartScreenFragment.class;
             try {
@@ -267,21 +264,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             fragment = (Fragment) fragmentClass.newInstance();
         } catch (Exception e) {
             e.printStackTrace();
-        }
-
-        if (fragmentClass.equals(LoginFragment.class)) {
-            Bundle bundle = new Bundle();
-
-            if (nextFragmentClass.equals(RecordForTrainingSelectFragment.class)) {
-                bundle.putString("fragment", String.valueOf(R.string.strRecordFragment));
-            }
-            if (nextFragmentClass.equals(AboutMeFragment.class)) {
-                bundle.putString("fragment", String.valueOf(R.string.strAboutMeFragment));
-            }
-
-            if (fragment != null) {
-                fragment.setArguments(bundle);
-            }
         }
 
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -326,20 +308,39 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
+    protected void  onStart() {
+        super.onStart();
+
+        Class fragmentClass;
+        if (checkAuthData.checkAuthData(getContext())){
+            if (!isMyServiceRunning(LoadNotificationsService.class)){
+                Intent intent;
+
+                // Создаем Intent для вызова сервиса,
+                // кладем туда параметр времени и код задачи
+                intent = new Intent(this, LoadNotificationsService.class).putExtra(PARAM_TIME, 7)
+                        .putExtra(PARAM_TASK, LOAD_NOTIFICATION);
+                // стартуем сервис
+                startService(intent);
+            }
+
+            initializeCountDrawer();
+            changeToggleStatus(true);
+            fragmentClass = StartScreenFragment.class;
+        }else {
+            changeToggleStatus(false);
+            fragmentClass = LoginFragment.class;
+        }
+
+        OpenFragment(fragmentClass);
+
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
 
-        initializeCountDrawer();
-        if (!isMyServiceRunning(LoadNotificationsService.class)){
-            Intent intent;
 
-            // Создаем Intent для вызова сервиса,
-            // кладем туда параметр времени и код задачи
-            intent = new Intent(this, LoadNotificationsService.class).putExtra(PARAM_TIME, 7)
-                    .putExtra(PARAM_TASK, LOAD_NOTIFICATION);
-            // стартуем сервис
-            startService(intent);
-        }
     }
 
     @Override
@@ -404,5 +405,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             navigationView.getMenu().getItem(6).setChecked(false);
         }
 
+    }
+
+    @Override
+    public void changeToggleStatus(boolean toggleVisible) {
+        if (toggleVisible){
+            drawer.addDrawerListener(toggle);
+            toggle.syncState();
+        }
     }
 }
