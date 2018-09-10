@@ -4,13 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark"
     android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/llLogo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
+        android:layout_weight="2"
         android:orientation="vertical">
 
         <ImageView
@@ -25,7 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="10dp"
-        android:layout_weight="1"
+        android:layout_weight="1.5"
         android:gravity="center"
         android:isScrollContainer="true"
         android:orientation="vertical">
@@ -34,7 +35,9 @@
             android:id="@+id/textView10"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:gravity="start"
             android:text="@string/strEnterCardNumber"
             android:textColor="@color/colorRedPrimary" />
 
@@ -48,13 +51,16 @@
             android:gravity="start"
             android:hint="@string/strHintCardNumber"
             android:inputType="number"
-            android:textColor="@color/colorRedPrimary" />
+            android:textColor="@color/colorRedPrimary"
+            android:theme="@style/Theme.App.Base" />
 
         <TextView
             android:id="@+id/textView11"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:gravity="start"
             android:text="@string/strEnterPassword"
             android:textColor="@color/colorRedPrimary" />
 
@@ -67,27 +73,29 @@
             android:layout_marginRight="20dp"
             android:gravity="start"
             android:hint="@string/strHintPassword"
-            android:inputType="number" />
+            android:inputType="number"
+            android:theme="@style/Theme.App.Base" />
 
         <Button
             android:id="@+id/button2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginTop="20dp"
             android:text="@string/strButtonEnter" />
 
         <TextView
             android:id="@+id/textView13"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:text="@string/strRegistration"
             android:visibility="invisible" />
 
         <Button
             android:id="@+id/button4"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:text="@string/strButtonRegistration"
             android:visibility="invisible" />
 
@@ -97,7 +105,7 @@
         android:id="@+id/rlContacts"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1">
+        android:layout_weight="2">
 
         <ProgressBar
             android:id="@+id/pbLogin"
@@ -105,16 +113,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
+            android:layout_centerInParent="false"
             android:layout_gravity="center"
             android:visibility="invisible" />
 
         <Button
             android:id="@+id/btContacts"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
+            android:layout_alignParentTop="false"
+            android:layout_centerHorizontal="true"
             android:layout_margin="20dp"
-            android:text="Контакты" />
+            android:background="@color/colorPrimaryDark"
+            android:padding="10dp"
+            android:text="Контакты"
+            android:textColor="@color/colorRedPrimary" />
     </RelativeLayout>
 
 </android.widget.LinearLayout>
