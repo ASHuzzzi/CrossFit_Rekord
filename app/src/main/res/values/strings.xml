@@ -114,7 +114,7 @@
     <string name="title_Definition_Fragment">Словарь CrossFit</string>
     <string name="title_AboutMe_Fragment">Мои данные</string>
     <string name="title_Login_Fragment">Авторизация</string>
-    Login
+    <string name="title_Contacts_Fragment">Контакты</string>
 
 
 
@@ -152,5 +152,19 @@
     <string name="header">header</string>
     <string name="text">text</string>
     <string name="viewed">viewed</string>
+
+    <!-- Значения для фрагмента Contacts -->
+    <string name="address">Санкт-Петербург, м. Парнас, ул. Михаила Дудина, 15</string>
+    <string name="metroStation">м. Парнас</string>
+    <string name="refinement">(вход с Толубеевского проезда)</string>
+    <string name="contactNumber">+7(812)9820062 </string>
+    <string name="contactWeb">www.crossfitrekord.ru</string>
+    <string name="contactMail">crossfitrekord@mail.ru</string>
+    <string name="groupVK">https://vk.com/crossfit_rekord</string>
+    <string name="Instagram">https://www.instagram.com/crossfit_rekord/</string>
+
+
+
+
 
 </resources>

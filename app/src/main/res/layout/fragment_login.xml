@@ -74,6 +74,7 @@
             android:gravity="start"
             android:hint="@string/strHintPassword"
             android:inputType="number"
+            android:textColor="@color/colorRedPrimary"
             android:theme="@style/Theme.App.Base" />
 
         <Button

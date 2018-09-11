@@ -41,6 +41,7 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
     private NetworkCheck NetworkCheck; //переменная для проврки сети
 
     private Button btnComeIn;
+    private Button btnContacts;
     private ProgressBar pbLogin;
     private EditText tvCardNumber;
     private EditText tvPassword;
@@ -54,6 +55,7 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
         tvPassword = v.findViewById(R.id.editText5);
         btnComeIn = v.findViewById(R.id.button2);
         pbLogin = v.findViewById(R.id.pbLogin);
+        btnContacts = v.findViewById(R.id.btContacts);
 
         btnComeIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,6 +88,25 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
                     Toast.makeText(getContext(), "Нет подключения", Toast.LENGTH_SHORT).show();
                 }
 
+            }
+        });
+
+        btnContacts.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Class fragmentClass = ContactsFragment.class;
+                Fragment fragment = null;
+                try {
+                    fragment = (Fragment) fragmentClass.newInstance();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction ft = fragmentManager.beginTransaction();
+                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                ft.replace(R.id.container, fragment);
+                ft.addToBackStack(null);
+                ft.commit();
             }
         });
 
@@ -179,26 +200,23 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
         @Override
         public void handleMessage(Message msg){
             if(msg.what == MSG_SHOW_DIALOG) {
-                TransactionFragment();
+                TransactionFragment(StartScreenFragment.class);
             }
         }
     };
 
-    private void TransactionFragment() {
+    private void TransactionFragment(Class fragmentClass) {
 
-        Class fragmentClass = StartScreenFragment.class;
         Fragment fragment = null;
         try {
             fragment = (Fragment) fragmentClass.newInstance();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.popBackStack();
         FragmentTransaction ft = fragmentManager.beginTransaction();
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         ft.replace(R.id.container, fragment);
-        ft.addToBackStack(null);
         ft.commit();
     }
 }

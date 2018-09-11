@@ -17,8 +17,6 @@ import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeTitle;
 
 public class StartScreenFragment extends Fragment {
 
-    private CheckAuthData checkAuthData = new CheckAuthData();
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -31,7 +29,7 @@ public class StartScreenFragment extends Fragment {
         Button recordTraining = v.findViewById(R.id.button_record_training);
         final Button description = v.findViewById(R.id.button_definition);
         Button calendarWod = v.findViewById(R.id.button_calendar_wod);
-        final Button contacts = v.findViewById(R.id.button_contacts);
+        Button contacts = v.findViewById(R.id.button_contacts);
 
         schedule.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -66,7 +64,7 @@ public class StartScreenFragment extends Fragment {
         contacts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                openFragment(ContactsFragment.class);
             }
         });
 

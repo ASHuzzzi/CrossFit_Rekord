@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.widget.RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="40dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:autoLink="map"
+            android:text="@string/address"
+            android:textColor="@color/colorWhite" />
+
+        <TextView
+            android:id="@+id/tvRefinement"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvAddress"
+            android:layout_marginBottom="40dp"
+            android:text="@string/refinement"
+            android:textColor="@color/colorWhite"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tvWeb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvMail"
+            android:layout_marginBottom="20dp"
+            android:autoLink="web"
+            android:text="@string/contactWeb"
+            android:textColor="@color/colorRedPrimary" />
+
+        <TextView
+            android:id="@+id/tvPhone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvRefinement"
+            android:layout_marginBottom="20dp"
+            android:autoLink="phone"
+            android:text="@string/contactNumber"
+            android:textColor="@color/colorWhite" />
+
+        <TextView
+            android:id="@+id/tvMail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvPhone"
+            android:autoLink="email"
+            android:text="@string/contactMail"
+            android:textColor="@color/colorRedPrimary" />
+
+    </LinearLayout>
+
+</android.widget.RelativeLayout>

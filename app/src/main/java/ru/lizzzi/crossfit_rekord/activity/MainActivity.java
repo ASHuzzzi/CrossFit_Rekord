@@ -39,6 +39,7 @@ import ru.lizzzi.crossfit_rekord.fragments.AboutMeFragment;
 import ru.lizzzi.crossfit_rekord.fragments.CalendarWodFragment;
 import ru.lizzzi.crossfit_rekord.fragments.CharacterFragment;
 import ru.lizzzi.crossfit_rekord.fragments.CheckAuthData;
+import ru.lizzzi.crossfit_rekord.fragments.ContactsFragment;
 import ru.lizzzi.crossfit_rekord.fragments.LoginFragment;
 import ru.lizzzi.crossfit_rekord.fragments.RecordForTrainingSelectFragment;
 import ru.lizzzi.crossfit_rekord.fragments.StartScreenFragment;
@@ -208,7 +209,8 @@ public class MainActivity extends AppCompatActivity
             fragmentClass = CharacterFragment.class;
 
         } else if (id == R.id.contacts) {
-
+            iSelectFragment = R.string.title_Contacts_Fragment;
+            fragmentClass = ContactsFragment.class;
 
         } else if (id == R.id.profile) {
             iSelectFragment = R.string.title_AboutMe_Fragment;
