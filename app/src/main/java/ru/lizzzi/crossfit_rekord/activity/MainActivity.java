@@ -16,6 +16,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -82,6 +83,8 @@ public class MainActivity extends AppCompatActivity
 
     private DrawerLayout drawer;
     private ActionBarDrawerToggle toggle;
+
+    public static ViewPager mViewPager;;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -313,7 +316,6 @@ public class MainActivity extends AppCompatActivity
     protected void  onStart() {
         super.onStart();
 
-        Class fragmentClass;
         if (checkAuthData.checkAuthData(getContext())){
             if (!isMyServiceRunning(LoadNotificationsService.class)){
                 Intent intent;
@@ -326,22 +328,23 @@ public class MainActivity extends AppCompatActivity
                 startService(intent);
             }
 
-            initializeCountDrawer();
-            changeToggleStatus(true);
-            fragmentClass = StartScreenFragment.class;
+            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.container);
+            if (fragment == null) {
+                initializeCountDrawer();
+                changeToggleStatus(true);
+                OpenFragment(StartScreenFragment.class);
+            }
+
         }else {
             changeToggleStatus(false);
-            fragmentClass = LoginFragment.class;
+            OpenFragment(LoginFragment.class);
         }
-
-        OpenFragment(fragmentClass);
 
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
 
     }
 
