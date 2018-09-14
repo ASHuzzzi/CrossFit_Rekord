@@ -63,10 +63,31 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tvPhone"
+            android:layout_marginBottom="20dp"
             android:autoLink="email"
             android:gravity="center_horizontal"
             android:text="@string/contactMail"
             android:textColor="@color/colorRedPrimary" />
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal">
+
+            <ImageButton
+                android:id="@+id/ibInstagram"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_margin="20dp"
+                android:background="@drawable/instagram" />
+
+            <ImageButton
+                android:id="@+id/ibVK"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_margin="20dp"
+                android:background="@drawable/vk" />
+        </TableRow>
 
     </LinearLayout>
 
