@@ -60,13 +60,10 @@
             android:text="@string/button_definition" />
 
         <Button
-            android:id="@+id/button_contacts"
+            android:id="@+id/button_contss"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
+            android:layout_margin="5dp"
             android:layout_weight="1"
             android:text="@string/button_contacts" />
 

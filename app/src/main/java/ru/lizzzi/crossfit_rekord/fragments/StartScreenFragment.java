@@ -27,12 +27,13 @@ public class StartScreenFragment extends Fragment {
 
         Button schedule = v.findViewById(R.id.button_schedule);
         Button recordTraining = v.findViewById(R.id.button_record_training);
-        final Button description = v.findViewById(R.id.button_definition);
+        Button description = v.findViewById(R.id.button_definition);
+        Button contactsSS = v.findViewById(R.id.button_contss);
         Button calendarWod = v.findViewById(R.id.button_calendar_wod);
-        Button contacts = v.findViewById(R.id.button_contacts);
+
 
         schedule.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+            //@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onClick(View view) {
                 openFragment(TableFragment.class);
@@ -61,7 +62,7 @@ public class StartScreenFragment extends Fragment {
             }
         });
 
-        contacts.setOnClickListener(new View.OnClickListener() {
+        contactsSS.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 openFragment(ContactsFragment.class);
