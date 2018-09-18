@@ -4,24 +4,25 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
 import ru.lizzzi.crossfit_rekord.R;
+import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterCharacter;
 import ru.lizzzi.crossfit_rekord.data.DefinitionDBHelper;
 import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeTitle;
+import ru.lizzzi.crossfit_rekord.interfaces.ListernerCharacter;
 
 public class CharacterFragment extends Fragment {
 
     private ArrayList<String> itemListCharacter = new ArrayList<>();
-    private ListView lvDefinition;
+    private RecyclerView rvCharacter;
 
     public CharacterFragment() {
         // Required empty public constructor
@@ -31,7 +32,7 @@ public class CharacterFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_character, container, false);
-        lvDefinition = view.findViewById(R.id.lvdefinition);
+        rvCharacter = view.findViewById(R.id.rvCharacter);
 
         return  view;
     }
@@ -46,7 +47,6 @@ public class CharacterFragment extends Fragment {
 
         DefinitionDBHelper mDbHelper = new DefinitionDBHelper(getContext());
 
-
         try {
             mDbHelper.createDataBase();
         } catch (IOException ioe) {
@@ -57,18 +57,13 @@ public class CharacterFragment extends Fragment {
 
         itemListCharacter.clear();
         itemListCharacter = mDbHelper.selectCharacter();
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
-                android.R.layout.simple_list_item_1, itemListCharacter);
-        lvDefinition.setAdapter(adapter);
-        lvDefinition.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mDbHelper.close();
+        RecyclerAdapterCharacter adapterCharacter = new RecyclerAdapterCharacter(itemListCharacter, new ListernerCharacter() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String selectedItem = itemListCharacter.get(i);
-
+            public void SelectCharacter(String stCharacter) {
                 DefinitionFragment yfc = new DefinitionFragment();
                 Bundle bundle = new Bundle();
-                bundle.putString("tag", selectedItem);
+                bundle.putString("tag", stCharacter);
                 yfc.setArguments(bundle);
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction ft = fragmentManager.beginTransaction();
@@ -79,7 +74,9 @@ public class CharacterFragment extends Fragment {
             }
         });
 
-        mDbHelper.close();
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+        rvCharacter.setLayoutManager(mLayoutManager);
+        rvCharacter.setAdapter(adapterCharacter);
 
     }
 
