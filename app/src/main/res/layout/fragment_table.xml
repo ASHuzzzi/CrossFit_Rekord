@@ -2,13 +2,14 @@
 <android.widget.RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_margin="2dp">
 
     <LinearLayout
         android:id="@+id/Layout_Button_Day_of_Week"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
+        android:layout_marginTop="20dp"
         android:orientation="horizontal">
 
         <Button
@@ -18,7 +19,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:text="@string/day_1" />
+            android:text="@string/day_1"
+            android:textColor="@drawable/button_text_color" />
 
         <Button
             android:id="@+id/day_2"
@@ -27,7 +29,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:text="@string/day_2" />
+            android:text="@string/day_2"
+            android:textColor="@drawable/button_text_color" />
 
         <Button
             android:id="@+id/day_3"
@@ -36,7 +39,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:text="@string/day_3" />
+            android:text="@string/day_3"
+            android:textColor="@drawable/button_text_color" />
 
         <Button
             android:id="@+id/day_4"
@@ -45,7 +49,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:text="@string/day_4" />
+            android:text="@string/day_4"
+            android:textColor="@drawable/button_text_color" />
 
         <Button
             android:id="@+id/day_5"
@@ -54,7 +59,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:text="@string/day_5" />
+            android:text="@string/day_5"
+            android:textColor="@drawable/button_text_color" />
 
         <Button
             android:id="@+id/day_6"
@@ -63,7 +69,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:text="@string/day_6" />
+            android:text="@string/day_6"
+            android:textColor="@drawable/button_text_color" />
 
         <Button
             android:id="@+id/day_7"
@@ -72,14 +79,17 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:text="@string/day_7" />
+            android:text="@string/day_7"
+            android:textColor="@drawable/button_text_color" />
     </LinearLayout>
 
-    <ListView
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/lvTable"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/Layout_Button_Day_of_Week" />
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/Layout_Button_Day_of_Week"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="20dp" />
 
     <LinearLayout
         android:id="@+id/Layout_Error"
@@ -98,7 +108,7 @@
             android:layout_gravity="center"
             android:gravity="center_horizontal"
             android:text="@string/error_connection1"
-            android:textColor="@color/colorPrimaryLight" />
+            android:textColor="@color/colorRedPrimary" />
 
         <TextView
             android:id="@+id/textView17"
@@ -107,15 +117,16 @@
             android:layout_gravity="center"
             android:gravity="center_horizontal"
             android:text="@string/error_connection2"
-            android:textColor="@color/colorPrimaryLight" />
+            android:textColor="@color/colorRedPrimary" />
 
         <Button
             android:id="@+id/button5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
             android:background="@android:color/transparent"
             android:text="@string/error_connection_button"
-            android:textColor="@color/colorPrimary" />
+            android:textColor="@color/colorRedPrimary" />
     </LinearLayout>
 
     <ProgressBar

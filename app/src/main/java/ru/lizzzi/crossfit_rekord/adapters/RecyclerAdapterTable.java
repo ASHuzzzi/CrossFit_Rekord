@@ -1,12 +1,11 @@
 package ru.lizzzi.crossfit_rekord.adapters;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -17,63 +16,44 @@ import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.documentfields.DocumentFieldsTable;
 import ru.lizzzi.crossfit_rekord.interfaces.ListenerRecordForTrainingSelect;
 
-public class RecyclerAdapterTable extends BaseAdapter {
+public class RecyclerAdapterTable extends RecyclerView.Adapter<RecyclerAdapterTable.ViewHolder> {
     private List<Map> shediletems;
-    private int layoutId;
-    private LayoutInflater inflater;
     private final ThreadLocal<DocumentFieldsTable> fields = new ThreadLocal<>();
     private ListenerRecordForTrainingSelect mlistener;
 
-    public RecyclerAdapterTable(Context context, @NonNull List<Map> shediletems, int layoutId, ListenerRecordForTrainingSelect listener) {
+    public RecyclerAdapterTable(Context context, @NonNull List<Map> shediletems, ListenerRecordForTrainingSelect listener) {
         this.shediletems = shediletems;
-        this.layoutId = layoutId;
-        inflater = LayoutInflater.from(context);
         fields.set(new DocumentFieldsTable(context));
         mlistener = listener;
     }
 
-    @Override
-    public int getCount() {
-        return shediletems.size();
-    }
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        private TextView StartTimeItem;
+        private TextView TypesItem;
+        private LinearLayout ll_item_table;
 
-    @Override
-    public Object getItem(int position) {
-        return shediletems.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    @Override
-    public View getView(int position, View view, ViewGroup parent) {
-        ViewHolder holder;
-
-        if (view != null) {
-            holder = (ViewHolder) view.getTag();
-        } else {
-            view = inflater.inflate(layoutId, parent, false);
-            holder = new ViewHolder(view);
-            view.setTag(holder);
+        ViewHolder(View view) {
+            super(view);
+            StartTimeItem = view.findViewById(R.id.start_time);
+            TypesItem = view.findViewById(R.id.type);
+            ll_item_table = view.findViewById(R.id.ll_item_table);
         }
-
-        customizeView(view, holder, shediletems.get(position));
-
-        return view;
     }
 
-    @SuppressLint("ResourceAsColor")
-    private void customizeView(View view, ViewHolder holder, final Map documentInfo) {
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_lv_table, parent, false);
+        return new ViewHolder(v);
+    }
 
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position){
+        final Map documentInfo = shediletems.get(position);
         String start_time = (String) documentInfo.get(fields.get().getStartTimeField());
         String type = (String) documentInfo.get(fields.get().getTypeField());
 
         holder.StartTimeItem.setText(start_time);
         holder.TypesItem.setText(type);
-
-        LinearLayout ll_item_table = view.findViewById(R.id.ll_item_table);
 
 
         if (type.equals("CrossFit")){
@@ -106,7 +86,7 @@ public class RecyclerAdapterTable extends BaseAdapter {
         }
 
 
-        ll_item_table.setOnClickListener(new View.OnClickListener() {
+        holder.ll_item_table.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mlistener.selectTime((String) documentInfo.get(fields.get().getStartTimeField()),
@@ -115,14 +95,46 @@ public class RecyclerAdapterTable extends BaseAdapter {
         });
     }
 
-    static class ViewHolder {
-        private TextView StartTimeItem;
-        private TextView TypesItem;
-
-        ViewHolder(View view) {
-            StartTimeItem = view.findViewById(R.id.start_time);
-            TypesItem = view.findViewById(R.id.type);
-
-        }
+    @Override
+    public int getItemCount() {
+        return shediletems.size();
     }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    /*@Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public int getItemCount() {
+        return 0;
+    }
+
+    @Override
+    public View getView(int position, View view, ViewGroup parent) {
+        ViewHolder holder;
+
+        if (view != null) {
+            holder = (ViewHolder) view.getTag();
+        } else {
+            view = inflater.inflate(layoutId, parent, false);
+            holder = new ViewHolder(view);
+            view.setTag(holder);
+        }
+
+        customizeView(view, holder, shediletems.get(position));
+
+        return view;
+    }
+
+    @SuppressLint("ResourceAsColor")
+    private void customizeView(View view, ViewHolder holder, final Map documentInfo) {
+
+
+    }*/
 }

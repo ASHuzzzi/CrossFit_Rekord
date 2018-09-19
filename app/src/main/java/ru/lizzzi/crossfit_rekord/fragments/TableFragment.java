@@ -9,6 +9,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -16,7 +18,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -37,7 +38,7 @@ import ru.lizzzi.crossfit_rekord.loaders.TableFragmentLoader;
 public class TableFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<List<Map>>> {
 
     private ProgressBar pbProgressBar;
-    private ListView lvItemsInTable;
+    private RecyclerView lvItemsInTable;
     private Button buttonMonday;
     private Button buttonTuesday;
     private Button buttonWednesday;
@@ -322,7 +323,7 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
     }
 
     private void createList(List<Map> dailySchedule){
-        adapter = new RecyclerAdapterTable(getContext(), dailySchedule, R.layout.item_lv_table, new ListenerRecordForTrainingSelect() {
+        adapter = new RecyclerAdapterTable(getContext(), dailySchedule, new ListenerRecordForTrainingSelect() {
             @Override
             public void selectTime(String stStartTime, String stTypesItem) {
 
@@ -396,6 +397,8 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
 
             }
         });
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+        lvItemsInTable.setLayoutManager(mLayoutManager);
         lvItemsInTable.setAdapter(adapter);
         preSelectionButtonDay(iNumberOfDay);
     }
