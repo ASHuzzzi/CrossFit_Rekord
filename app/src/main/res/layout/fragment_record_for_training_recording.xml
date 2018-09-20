@@ -23,8 +23,7 @@
                 android:layout_marginRight="5dp"
                 android:layout_weight="1"
                 android:text="Когда:"
-                android:textColor="@color/colorPrimary"
-                android:textSize="14sp" />
+                style="@style/MainTextStyle" />
 
             <TextView
                 android:id="@+id/tvSelectedDay"
@@ -32,8 +31,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="TextView"
-                android:textColor="@color/colorPrimary"
-                android:textSize="14sp" />
+                style="@style/MainTextStyle" />
 
         </LinearLayout>
 
@@ -49,16 +47,14 @@
                 android:layout_marginEnd="5dp"
                 android:layout_marginRight="5dp"
                 android:text="Время:"
-                android:textColor="@color/colorPrimary"
-                android:textSize="14sp" />
+                style="@style/MainTextStyle" />
 
             <TextView
                 android:id="@+id/tvSelectedTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="TextView"
-                android:textColor="@color/colorPrimary"
-                android:textSize="14sp" />
+                style="@style/MainTextStyle" />
 
         </LinearLayout>
 
@@ -73,16 +69,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="5dp"
                 android:text="Тип тренировки:"
-                android:textColor="@color/colorPrimary"
-                android:textSize="14sp" />
+                style="@style/MainTextStyle" />
 
             <TextView
                 android:id="@+id/tvSelectedType"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="TextView"
-                android:textColor="@color/colorPrimary"
-                android:textSize="14sp" />
+                style="@style/MainTextStyle" />
         </LinearLayout>
 
     </LinearLayout>
@@ -120,27 +114,21 @@
             android:id="@+id/textView22"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center_horizontal"
             android:text="@string/error_connection1"
-            android:textColor="@color/colorPrimaryLight" />
+            style="@style/ErrorTextStyle"/>
 
         <TextView
             android:id="@+id/textView28"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center_horizontal"
             android:text="@string/error_connection2"
-            android:textColor="@color/colorPrimaryLight" />
+            style="@style/ErrorTextStyle"/>
 
         <Button
             android:id="@+id/button7"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:text="@string/error_connection_button"
-            android:textColor="@color/colorPrimary" />
+            style="@style/ErrorButtonStyle"/>
     </LinearLayout>
 
     <LinearLayout
@@ -154,7 +142,8 @@
             android:id="@+id/textView29"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Никто еще не записался" />
+            android:text="Никто еще не записался"
+            style="@style/MainTextStyle" />
     </LinearLayout>
 
 </android.widget.RelativeLayout>

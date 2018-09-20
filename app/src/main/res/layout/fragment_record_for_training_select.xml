@@ -10,8 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:text="@string/select_day"
-        android:textColor="@color/colorPrimary"
-        android:textSize="16sp" />
+        style="@style/MainTextStyle" />
 
     <LinearLayout
         android:id="@+id/llSekectDay_buttons"
@@ -22,7 +21,7 @@
 
         <Button
             android:id="@+id/btToday"
-            style="@style/TableStyleButton"
+            style="@style/TableButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
@@ -32,7 +31,7 @@
 
         <Button
             android:id="@+id/btTommorow"
-            style="@style/TableStyleButton"
+            style="@style/TableButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
@@ -42,7 +41,7 @@
 
         <Button
             android:id="@+id/btAftertommorow"
-            style="@style/TableStyleButton"
+            style="@style/TableButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
@@ -64,8 +63,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="@string/select_time"
-            android:textColor="@color/colorPrimary"
-            android:textSize="16sp" />
+            style="@style/MainTextStyle" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rvTrainingTime"
@@ -87,27 +85,21 @@
             android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center_horizontal"
-            android:text="@string/error_connection1"
-            android:textColor="@color/colorPrimaryLight" />
+            style="@style/ErrorTextStyle"
+            android:text="@string/error_connection1"/>
 
         <TextView
             android:id="@+id/textView4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center_horizontal"
-            android:text="@string/error_connection2"
-            android:textColor="@color/colorPrimaryLight" />
+            style="@style/ErrorTextStyle"
+            android:text="@string/error_connection2"/>
 
         <Button
             android:id="@+id/button6"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:text="@string/error_connection_button"
-            android:textColor="@color/colorPrimary" />
+            style="@style/ErrorButtonStyle"/>
     </LinearLayout>
 
     <ProgressBar

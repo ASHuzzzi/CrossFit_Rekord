@@ -36,27 +36,21 @@
             android:id="@+id/textView16"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center_horizontal"
             android:text="@string/error_connection1"
-            android:textColor="@color/colorPrimaryLight" />
+            style="@style/ErrorTextStyle"/>
 
         <TextView
             android:id="@+id/textView17"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center_horizontal"
             android:text="@string/error_connection2"
-            android:textColor="@color/colorPrimaryLight" />
+            style="@style/ErrorTextStyle"/>
 
         <Button
             android:id="@+id/bt_error_calendar_wod"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:text="@string/error_connection_button"
-            android:textColor="@color/colorPrimary" />
+            style="@style/ErrorButtonStyle"/>
     </LinearLayout>
 
     <ProgressBar

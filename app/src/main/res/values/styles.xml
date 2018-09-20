@@ -24,9 +24,31 @@
         <item name="android:gravity">center_vertical|center_horizontal</item>
     </style>
 
+    <style name="MainTextStyle">
+        <item name="android:textColor">@color/colorRedPrimary</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
     <!-- Стиль кнопок для экрана с расписанием тренировок -->
-    <style name="TableStyleButton" parent="MainStyleButton">
+    <style name="TableButtonStyle" parent="MainStyleButton">
         <item name="android:background">@drawable/table_button</item>
+        <item name="android:textColor">@drawable/button_text_color</item>
+    </style>
+
+    <!-- Блок отсутствия сети-->
+    <!-- Стиль кнопки-->
+    <style name="ErrorButtonStyle" parent="MainStyleButton">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:text">@string/error_connection_button</item>
+        <item name="android:textColor">@color/colorRedPrimary</item>
+        <item name="android:layout_marginTop">15dp</item>
+    </style>
+
+    <!-- Стиль текста-->
+    <style name="ErrorTextStyle">
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textColor">@color/colorRedPrimary</item>
     </style>
 
     <!-- Стиль календаря -->
@@ -35,21 +57,26 @@
         <item name="android:textSize">14sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:typeface">sans</item>
-        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textColor">@color/colorRedPrimary</item>
     </style>
 
     <style name="calendarHeaderStyle" parent="AppTheme">
         <item name="android:textSize">16sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:typeface">sans</item>
-        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textColor">@color/colorRedPrimary</item>
     </style>
 
     <style name="calendarweekDayStyle" parent="AppTheme">
         <item name="android:textSize">12sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:typeface">sans</item>
-        <item name="android:textColor">@color/colorPrimaryLight</item>
+        <item name="android:textColor">@color/colorRedPrimary</item>
+    </style>
+
+    <style name="calendarSelectDayStyle" parent="AppTheme">
+        <item name="android:background">@color/colorRedPrimary</item>
+        <item name="android:textColor">@color/colorPrimary</item>
     </style>
 
     <style name="Theme.App.Base" parent="Theme.AppCompat.Light.DarkActionBar">
