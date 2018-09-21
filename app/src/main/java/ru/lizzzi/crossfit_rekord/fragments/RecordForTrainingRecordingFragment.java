@@ -36,25 +36,26 @@ public class RecordForTrainingRecordingFragment extends Fragment implements Load
 
     public static final String APP_PREFERENCES = "audata";
     public static final String APP_PREFERENCES_USERNAME = "Username";
-    SharedPreferences mSettings;
+    public static final String APP_PREFERENCES_OBJECTID = "ObjectId";
+    private SharedPreferences mSettings;
 
     private RecyclerView lvRecord;
-    TextView tvSelectedDay;
-    TextView tvSelectedTime;
-    TextView tvSelectedType;
-    String stUserName;
-    String stUserId;
+    private TextView tvSelectedDay;
+    private TextView tvSelectedTime;
+    private TextView tvSelectedType;
+    private String stUserName;
+    private String stUserId;
 
-    String stDateSelect;
-    String stTimeSelect;
+    private String stDateSelect;
+    private String stTimeSelect;
 
     public int LOADER_SHOW_LIST = 1;
     public int LOADER_WRITE_ITEM = 2;
     public int LOADER_DELETE_ITEM = 3;
-    RecyclerAdapterRecord adapter;
-    Button btRegister;
-    Button btNetworkError;
-    Bundle bundle;
+    private RecyclerAdapterRecord adapter;
+    private Button btRegister;
+    private Button btNetworkError;
+    private Bundle bundle;
 
     private Loader<List<Map>> mLoader;
 
@@ -95,6 +96,7 @@ public class RecordForTrainingRecordingFragment extends Fragment implements Load
 
         mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         stUserName =  mSettings.getString(APP_PREFERENCES_USERNAME, "");
+
 
         bundle = getArguments();
         stDateSelect = bundle.getString("dateshow");
@@ -280,7 +282,10 @@ public class RecordForTrainingRecordingFragment extends Fragment implements Load
     private void restartAsyncTaskLoader(int loader_id){
         switch (loader_id){
             case 2:
+
+                stUserId =  mSettings.getString(APP_PREFERENCES_OBJECTID, "");
                 bundle.putString(String.valueOf(RecordForTrainingRecordingLoadPeopleLoader.ARG_USERNAME), stUserName);
+                bundle.putString(String.valueOf(RecordForTrainingRecordingLoadPeopleLoader.ARG_USERID), stUserId);
                 mLoader = getLoaderManager().restartLoader(LOADER_WRITE_ITEM,bundle, this);
                 mLoader.forceLoad();
                 break;

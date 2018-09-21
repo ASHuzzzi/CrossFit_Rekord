@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.widget.RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp">
 
     <LinearLayout
         android:id="@+id/llSelectedWorkout"
@@ -17,21 +19,21 @@
 
             <TextView
                 android:id="@+id/textView26"
+                style="@style/MainTextStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_weight="1"
-                android:text="Когда:"
-                style="@style/MainTextStyle" />
+                android:text="@string/DayWhere" />
 
             <TextView
                 android:id="@+id/tvSelectedDay"
+                style="@style/MainTextStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="TextView"
-                style="@style/MainTextStyle" />
+                android:text="@string/empty" />
 
         </LinearLayout>
 
@@ -42,19 +44,19 @@
 
             <TextView
                 android:id="@+id/textView27"
+                style="@style/MainTextStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
                 android:layout_marginRight="5dp"
-                android:text="Время:"
-                style="@style/MainTextStyle" />
+                android:text="@string/TimeWhere" />
 
             <TextView
                 android:id="@+id/tvSelectedTime"
+                style="@style/MainTextStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="TextView"
-                style="@style/MainTextStyle" />
+                android:text="@string/empty" />
 
         </LinearLayout>
 
@@ -65,18 +67,18 @@
 
             <TextView
                 android:id="@+id/textView18"
+                style="@style/MainTextStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="5dp"
-                android:text="Тип тренировки:"
-                style="@style/MainTextStyle" />
+                android:text="@string/Type" />
 
             <TextView
                 android:id="@+id/tvSelectedType"
+                style="@style/MainTextStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="TextView"
-                style="@style/MainTextStyle" />
+                android:text="@string/empty" />
         </LinearLayout>
 
     </LinearLayout>
@@ -85,6 +87,7 @@
         android:id="@+id/lvRecord"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@+id/btRecord"
         android:layout_below="@+id/llSelectedWorkout" />
 
     <Button
@@ -92,7 +95,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_margin="5dp" />
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="5dp" />
 
     <ProgressBar
         android:id="@+id/progressBar2"
@@ -112,23 +118,23 @@
 
         <TextView
             android:id="@+id/textView22"
+            style="@style/ErrorTextStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/error_connection1"
-            style="@style/ErrorTextStyle"/>
+            android:text="@string/error_connection1" />
 
         <TextView
             android:id="@+id/textView28"
+            style="@style/ErrorTextStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/error_connection2"
-            style="@style/ErrorTextStyle"/>
+            android:text="@string/error_connection2" />
 
         <Button
             android:id="@+id/button7"
+            style="@style/ErrorButtonStyle"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/ErrorButtonStyle"/>
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
     <LinearLayout
@@ -140,10 +146,17 @@
 
         <TextView
             android:id="@+id/textView29"
+            style="@style/MainTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Никто еще не записался"
-            style="@style/MainTextStyle" />
+            android:text="@string/EmptyListTV1" />
+
+        <TextView
+            android:id="@+id/textView42"
+            style="@style/MainTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/EmptyListTV2" />
     </LinearLayout>
 
 </android.widget.RelativeLayout>

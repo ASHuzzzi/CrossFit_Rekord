@@ -30,6 +30,7 @@ public class BackendlessQueries {
             record.put("data", dateSelect);
             record.put("time", timeSelect);
             record.put("username", userName);
+            record.put("ownerId", userId);
             Backendless.Persistence.of(table_name).save(record);
         }
 

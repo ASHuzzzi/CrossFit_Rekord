@@ -21,5 +21,8 @@
     <!-- Размер текста в кнопках -->
     <dimen name="button_text_size">14sp</dimen>
 
+    <!-- Размер скругления кнопок на экране выбора тренировки -->
+    <dimen name="corner_radius">14px</dimen>
+
 
 </resources>

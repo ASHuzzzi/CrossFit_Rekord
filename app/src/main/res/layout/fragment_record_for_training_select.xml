@@ -21,13 +21,12 @@
 
         <Button
             android:id="@+id/btToday"
-            style="@style/TableButtonStyle"
+            style="@style/SelectTrainingButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:text="@string/empty"
-            tools:ignore="ButtonStyle" />
+            android:text="@string/empty"/>
 
         <Button
             android:id="@+id/btTommorow"
@@ -36,8 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:text="@string/empty"
-            tools:ignore="ButtonStyle" />
+            android:text="@string/empty"/>
 
         <Button
             android:id="@+id/btAftertommorow"
@@ -46,8 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:text="@string/empty"
-            tools:ignore="ButtonStyle" />
+            android:text="@string/empty"/>
     </LinearLayout>
 
     <LinearLayout

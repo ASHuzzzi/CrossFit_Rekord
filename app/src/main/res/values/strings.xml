@@ -166,6 +166,12 @@
     <string name="Label">Rekord Crossfit 2018</string>
     <string name="appVersion">Версия </string>
 
+    <!-- Значения для фрагмента RecordForTraining_Recording_Fragment -->
+    <string name="DayWhere">Когда:</string>
+    <string name="TimeWhere">Во сколько:</string>
+    <string name="Type">Тренировка </string>
+    <string name="EmptyListTV1">Никто еще не записался</string>
+    <string name="EmptyListTV2">Покажи пример - будь первым!</string>
 
 
 
