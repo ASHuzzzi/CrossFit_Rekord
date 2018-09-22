@@ -328,10 +328,10 @@ public class MainActivity extends AppCompatActivity
                 startService(intent);
             }
 
+            changeToggleStatus(true);
             Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.container);
             if (fragment == null) {
                 initializeCountDrawer();
-                changeToggleStatus(true);
                 OpenFragment(StartScreenFragment.class);
             }
 

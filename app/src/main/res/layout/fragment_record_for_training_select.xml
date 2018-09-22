@@ -6,11 +6,11 @@
 
     <TextView
         android:id="@+id/tvSelectDay"
+        style="@style/MainTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:text="@string/select_day"
-        style="@style/MainTextStyle" />
+        android:text="@string/select_day" />
 
     <LinearLayout
         android:id="@+id/llSekectDay_buttons"
@@ -80,10 +80,10 @@
 
         <TextView
             android:id="@+id/textView"
+            style="@style/ErrorTextStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/ErrorTextStyle"
-            android:text="@string/error_connection1"/>
+            android:text="@string/error_connection1" />
 
         <TextView
             android:id="@+id/textView4"

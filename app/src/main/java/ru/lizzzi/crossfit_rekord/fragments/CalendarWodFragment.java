@@ -313,7 +313,7 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
         SharedPreferences mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         String stDay = mSettings.getString(APP_PREFERENCES_SELECTEDDAY, "");
 
-        if(stDay.equals("0")){
+        if(stDay.equals("0") || stDay.equals("")){
             Calendar cal = Calendar.getInstance();
             timenow = cal.getTimeInMillis();
             interval = 7776000000L;

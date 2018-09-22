@@ -43,6 +43,7 @@ public class TL1WodFragment extends Fragment implements LoaderManager.LoaderCall
     private TextView tvLevelRxPlus;
     private LinearLayout llMain;
     private LinearLayout llLayoutError;
+    private LinearLayout llEmptyData;
     private ProgressBar pbProgressBar;
 
     private NetworkCheck NetworkCheck; //переменная для проврки сети
@@ -76,10 +77,12 @@ public class TL1WodFragment extends Fragment implements LoaderManager.LoaderCall
         llMain = v.findViewById(R.id.llMain);
         Button buttonError = v.findViewById(R.id.button5);
         llLayoutError = v.findViewById(R.id.Layout_Error);
+        llEmptyData = v.findViewById(R.id.llEmptyData);
         pbProgressBar = v.findViewById(R.id.progressBar3);
 
         llLayoutError.setVisibility(View.INVISIBLE);
         llMain.setVisibility(View.INVISIBLE);
+        llEmptyData.setVisibility(View.INVISIBLE);
         pbProgressBar.setVisibility(View.VISIBLE);
 
 
@@ -183,8 +186,12 @@ public class TL1WodFragment extends Fragment implements LoaderManager.LoaderCall
             }else {
                 tvLevelRxPlus.setText("—");
             }
+            llMain.setVisibility(View.VISIBLE);
+        }else {
+            llEmptyData.setVisibility(View.VISIBLE);
+
         }
-        llMain.setVisibility(View.VISIBLE);
+
     }
 
     @Override

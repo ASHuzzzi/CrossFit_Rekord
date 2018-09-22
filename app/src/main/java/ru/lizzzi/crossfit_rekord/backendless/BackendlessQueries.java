@@ -78,8 +78,19 @@ public class BackendlessQueries {
     }
 
     public BackendlessUser authUser(String stcardNumber, String stPassword){
-        Backendless.UserService.login(stcardNumber, stPassword);
-        return Backendless.UserService.CurrentUser();
+        BackendlessUser user = null;
+
+        try
+        {
+            Backendless.UserService.login(stcardNumber, stPassword);
+            user = Backendless.UserService.CurrentUser();
+        }
+        catch( BackendlessException exception )
+        {
+
+        }
+
+        return user;
     }
 
     public boolean saveUserData(String objectid, String cardNumber, String name, String surname, String email, String phone){

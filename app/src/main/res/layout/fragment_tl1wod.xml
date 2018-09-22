@@ -31,12 +31,12 @@
 
             <TextView
                 android:id="@+id/tvWarmUp"
+                style="@style/MainTextStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 android:singleLine="false"
-                android:textColor="?attr/colorPrimary"
                 android:textSize="14sp" />
 
             <TextView
@@ -53,13 +53,13 @@
 
             <TextView
                 android:id="@+id/tvSkill"
+                style="@style/MainTextStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 android:singleLine="false"
                 android:text="TextView"
-                android:textColor="?attr/colorPrimary"
                 android:textSize="14sp" />
 
             <TextView
@@ -76,12 +76,12 @@
 
             <TextView
                 android:id="@+id/tvWOD"
+                style="@style/MainTextStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 android:singleLine="false"
-                android:textColor="?attr/colorPrimary"
                 android:textSize="14sp" />
 
             <TableLayout
@@ -158,6 +158,7 @@
 
                         <TextView
                             android:id="@+id/tvLevelSc"
+                            style="@style/MainTextStyle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="10dp"
@@ -165,7 +166,6 @@
                             android:layout_weight="1"
                             android:gravity="center"
                             android:singleLine="false"
-                            android:textColor="?attr/colorPrimary"
                             android:textSize="14sp" />
 
                         <TextView
@@ -182,6 +182,7 @@
 
                         <TextView
                             android:id="@+id/tvLevelRxplus"
+                            style="@style/MainTextStyle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="10dp"
@@ -211,29 +212,23 @@
 
         <TextView
             android:id="@+id/textView16"
+            style="@style/ErrorTextStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center_horizontal"
-            android:text="@string/error_connection1"
-            android:textColor="@color/colorPrimaryLight" />
+            android:text="@string/error_connection1" />
 
         <TextView
             android:id="@+id/textView17"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center_horizontal"
-            android:text="@string/error_connection2"
-            android:textColor="@color/colorPrimaryLight" />
+            style="@style/ErrorTextStyle"
+            android:text="@string/error_connection2"/>
 
         <Button
             android:id="@+id/button5"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:text="@string/error_connection_button"
-            android:textColor="@color/colorPrimary" />
+            style="@style/ErrorButtonStyle"/>
     </LinearLayout>
 
     <ProgressBar
@@ -244,5 +239,40 @@
         android:layout_centerInParent="true"
         android:layout_centerVertical="false"
         tools:layout_editor_absoluteY="8dp" />
+
+    <LinearLayout
+        android:id="@+id/llEmptyData"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="false"
+        android:layout_centerVertical="true"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView31"
+            style="@style/ErrorTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:singleLine="false"
+            android:text="@string/TL1NoData1" />
+
+        <TextView
+            android:id="@+id/textView43"
+            style="@style/ErrorTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:singleLine="false"
+            android:text="@string/TL1NoData2" />
+
+        <TextView
+            android:id="@+id/textView44"
+            style="@style/ErrorTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:singleLine="false"
+            android:text="@string/TL1NoData3" />
+    </LinearLayout>
 
 </RelativeLayout>

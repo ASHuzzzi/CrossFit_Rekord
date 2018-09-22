@@ -5,12 +5,11 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.content.AsyncTaskLoader;
 
-
 import com.backendless.BackendlessUser;
 
 import ru.lizzzi.crossfit_rekord.backendless.BackendlessQueries;
 
-public class LoginLoader extends AsyncTaskLoader<Void> {
+public class LoginLoader extends AsyncTaskLoader<Boolean> {
 
     private BackendlessQueries user = new BackendlessQueries();
     private String cardNumber;
@@ -32,16 +31,22 @@ public class LoginLoader extends AsyncTaskLoader<Void> {
     }
 
     @Override
-    public Void loadInBackground() {
+    public Boolean loadInBackground() {
+
         BackendlessUser data = user.authUser(cardNumber, password);
-        SharedPreferences mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = mSettings.edit();
-        editor.putString(APP_PREFERENCES_OBJECTID, data.getObjectId());
-        editor.putString(APP_PREFERENCES_CARDNUMBER, String.valueOf(data.getProperty("cardNumber")));
-        editor.putString(APP_PREFERENCES_USERNAME, String.valueOf(data.getProperty("name")));
-        editor.putString(APP_PREFERENCES_USERSURNAME, String.valueOf(data.getProperty("surname")));
-        //editor.putString(APP_PREFERENCES_EMAIL, user.getEmail());
-        editor.apply();
-        return null;
+        if (data != null){
+            SharedPreferences mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = mSettings.edit();
+            editor.putString(APP_PREFERENCES_OBJECTID, data.getObjectId());
+            editor.putString(APP_PREFERENCES_CARDNUMBER, String.valueOf(data.getProperty("cardNumber")));
+            editor.putString(APP_PREFERENCES_USERNAME, String.valueOf(data.getProperty("name")));
+            editor.putString(APP_PREFERENCES_USERSURNAME, String.valueOf(data.getProperty("surname")));
+            //editor.putString(APP_PREFERENCES_EMAIL, user.getEmail());
+            editor.apply();
+            return true;
+        }else {
+            return false;
+        }
+
     }
 }

@@ -6,13 +6,13 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.LoaderManager;
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,14 +34,14 @@ import ru.lizzzi.crossfit_rekord.services.LoadNotificationsService;
 
 //* Created by basso on 07.03.2018.
 
-public class LoginFragment extends Fragment implements LoaderManager.LoaderCallbacks<Void> {
+public class LoginFragment extends Fragment implements LoaderManager.LoaderCallbacks<Boolean> {
 
-    private static final int MSG_SHOW_DIALOG = 1 ;
+    private static final int MSG_AUTH_GOOD = 1;
+    private static final int MSG_AUTH_BAD = 2;
 
     private NetworkCheck NetworkCheck; //переменная для проврки сети
 
     private Button btnComeIn;
-    private Button btnContacts;
     private ProgressBar pbLogin;
     private EditText tvCardNumber;
     private EditText tvPassword;
@@ -55,7 +55,7 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
         tvPassword = v.findViewById(R.id.editText5);
         btnComeIn = v.findViewById(R.id.button2);
         pbLogin = v.findViewById(R.id.pbLogin);
-        btnContacts = v.findViewById(R.id.btContacts);
+        Button btnContacts = v.findViewById(R.id.btContacts);
 
         btnComeIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,7 +68,7 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
 
                 if (tvPassword.getText().length() != 13 ){
                     tvPassword.setFocusable(true);
-                    Toast.makeText(getContext(), "Введите пароль", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Проверьте пароль!", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -148,22 +148,27 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
     }
 
     @Override
-    public Loader<Void> onCreateLoader(int id, Bundle args) {
+    public Loader<Boolean> onCreateLoader(int id, Bundle args) {
         LoginLoader loader;
         loader = new LoginLoader(getContext(), args);
         return loader;
     }
 
     @Override
-    public void onLoadFinished(Loader<Void> loader, Void data) {
-        StartService();
-        InterfaceChangeToggleStatus interfaceChangeToggleStatus = (InterfaceChangeToggleStatus) getActivity();
-        interfaceChangeToggleStatus.changeToggleStatus(true);
-        handler.sendEmptyMessage(MSG_SHOW_DIALOG);
+    public void onLoadFinished(Loader<Boolean> loader, Boolean data) {
+        if (data){
+            StartService();
+            InterfaceChangeToggleStatus interfaceChangeToggleStatus = (InterfaceChangeToggleStatus) getActivity();
+            interfaceChangeToggleStatus.changeToggleStatus(true);
+            handler.sendEmptyMessage(MSG_AUTH_GOOD);
+        }else{
+            handler.sendEmptyMessage(MSG_AUTH_BAD);
+        }
+
     }
 
     @Override
-    public void onLoaderReset(Loader<Void> loader) {
+    public void onLoaderReset(Loader<Boolean> loader) {
 
     }
 
@@ -199,8 +204,11 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg){
-            if(msg.what == MSG_SHOW_DIALOG) {
+            if(msg.what == MSG_AUTH_GOOD) {
                 TransactionFragment(StartScreenFragment.class);
+            }else {
+                ChangeUIElements(0);
+                Toast.makeText(getContext(), "Неверный логин или пароль!", Toast.LENGTH_SHORT).show();
             }
         }
     };

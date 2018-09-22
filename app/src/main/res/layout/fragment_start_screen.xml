@@ -4,7 +4,6 @@
     android:id="@+id/fragment_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryDark"
     android:orientation="vertical">
 
     <ImageView
@@ -12,15 +11,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="2"
-        android:scaleType="centerCrop"
-        android:src="@drawable/start_screen_main_logo"
+        android:scaleType="centerInside"
+        android:src="@drawable/logo_cfr"
         tools:ignore="ContentDescription" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="3"
-        android:background="@color/colorPrimaryDark"
         android:orientation="vertical">
 
         <Button

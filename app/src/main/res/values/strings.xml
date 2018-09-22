@@ -117,8 +117,6 @@
     <string name="title_Contacts_Fragment">Контакты</string>
 
 
-
-
     <!-- Значения для фрагмента AboutMe -->
     <string name="strCardNumber">Номер карты</string>
     <string name="strUserName">Имя</string>
@@ -172,6 +170,11 @@
     <string name="Type">Тренировка </string>
     <string name="EmptyListTV1">Никто еще не записался</string>
     <string name="EmptyListTV2">Покажи пример - будь первым!</string>
+
+    <!-- Значения для фрагмента TL1WodFragment -->
+    <string name="TL1NoData1">Данных по тренировке пока нет.</string>
+    <string name="TL1NoData2">Но ты уже можешь записать свои результаты</string>
+    <string name="TL1NoData3">для этого сдвинь экран влево.</string>
 
 
 

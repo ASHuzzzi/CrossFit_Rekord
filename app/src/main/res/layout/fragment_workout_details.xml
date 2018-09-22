@@ -8,14 +8,12 @@
 
     <TextView
         android:id="@+id/tvSelectedDay"
+        style="@style/MainTextStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
         android:layout_marginTop="5dp"
-        android:layout_toRightOf="@+id/textView31"
-        android:layout_weight="1"
         android:gravity="center"
-        android:textColor="?attr/colorPrimary"
         android:textSize="14sp" />
 
     <android.support.design.widget.TabLayout
@@ -23,14 +21,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvSelectedDay"
-        app:tabIndicatorColor="?attr/colorPrimaryDark">
+        app:tabIndicatorColor="@color/colorRedPrimary"
+        app:tabSelectedTextColor="@color/colorRedPrimary"
+        app:tabTextColor="@color/colorWhite">
 
         <android.support.design.widget.TabItem
+            style="@style/MainTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Wod" />
 
         <android.support.design.widget.TabItem
+            style="@style/MainTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Result" />
