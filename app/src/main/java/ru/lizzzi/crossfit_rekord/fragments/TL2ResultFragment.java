@@ -11,12 +11,13 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import java.util.List;
@@ -32,7 +33,7 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
 
     private static final int RESULT_OK = -1;
     private LinearLayout ll1;
-    private ListView lvItemsInWod;
+    private RecyclerView rvItemsInWod;
 
     private NetworkCheck NetworkCheck; //переменная для проврки сети
 
@@ -70,7 +71,7 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
         final View v = inflater.inflate(R.layout.fragment_tl2result, container, false);
 
         ll1 = v.findViewById(R.id.ll1);
-        lvItemsInWod = v.findViewById(R.id.lvWodResult);
+        rvItemsInWod = v.findViewById(R.id.lvWodResult);
         buttonEnterReult = v.findViewById(R.id.btnOpenEnterResult);
         llLayoutError = v.findViewById(R.id.Layout_Error);
         pbProgressBar = v.findViewById(R.id.progressBar4);
@@ -197,11 +198,12 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
          }
 
         if (data.size() > 0){
-            adapter = new RecyclerAdapterWorkoutDetails(getContext(), data, R.layout.item_lv_workout_details);
-            adapter.notifyDataSetChanged();
-            lvItemsInWod.setAdapter(adapter);
+            adapter = new RecyclerAdapterWorkoutDetails(getContext(), data);
+            LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+            rvItemsInWod.setLayoutManager(mLayoutManager);
+            rvItemsInWod.setAdapter(adapter);
         }else {
-            lvItemsInWod.setAdapter(null);
+            rvItemsInWod.setAdapter(null);
         }
 
         Message msg = handlerOpenFragment.obtainMessage();

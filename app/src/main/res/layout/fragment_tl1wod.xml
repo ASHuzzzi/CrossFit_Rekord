@@ -6,7 +6,6 @@
     android:orientation="vertical"
     tools:context=".fragments.TL1WodFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -24,7 +23,7 @@
                 android:layout_height="wrap_content"
                 android:background="?attr/colorAccent"
                 android:gravity="center"
-                android:text="Warm-Up"
+                android:text="@string/TL1WarmUp"
                 android:textColor="?attr/colorPrimary"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -46,7 +45,7 @@
                 android:layout_marginTop="15dp"
                 android:background="?attr/colorAccent"
                 android:gravity="center"
-                android:text="Skill"
+                android:text="@string/TL1Skill"
                 android:textColor="?attr/colorPrimary"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -59,7 +58,6 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 android:singleLine="false"
-                android:text="TextView"
                 android:textSize="14sp" />
 
             <TextView
@@ -69,7 +67,7 @@
                 android:layout_marginTop="15dp"
                 android:background="?attr/colorAccent"
                 android:gravity="center"
-                android:text="WOD"
+                android:text="@string/TL1WOD"
                 android:textColor="?attr/colorPrimary"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -97,7 +95,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        tools:ignore="UselessParent">
 
                         <TextView
                             android:id="@+id/textView23"
@@ -108,7 +107,7 @@
                             android:layout_weight="1"
                             android:background="?attr/colorAccent"
                             android:gravity="center"
-                            android:text="Sc"
+                            android:text="@string/TL1Sc"
                             android:textColor="?attr/colorPrimary"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -122,7 +121,7 @@
                             android:layout_weight="1"
                             android:background="?attr/colorAccent"
                             android:gravity="center"
-                            android:text="Rx"
+                            android:text="@string/TL1Rx"
                             android:textColor="?attr/colorPrimary"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -136,7 +135,7 @@
                             android:layout_weight="1"
                             android:background="?attr/colorAccent"
                             android:gravity="center"
-                            android:text="Rx+"
+                            android:text="@string/TL1RxPlus"
                             android:textColor="?attr/colorPrimary"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -154,7 +153,8 @@
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
                         android:layout_weight="1"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        tools:ignore="UselessParent">
 
                         <TextView
                             android:id="@+id/tvLevelSc"
@@ -170,6 +170,7 @@
 
                         <TextView
                             android:id="@+id/tvLevelRx"
+                            style="@style/MainTextStyle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="10dp"
@@ -177,7 +178,6 @@
                             android:layout_weight="1"
                             android:gravity="center"
                             android:singleLine="false"
-                            android:textColor="?attr/colorPrimary"
                             android:textSize="14sp" />
 
                         <TextView
@@ -190,7 +190,6 @@
                             android:layout_weight="1"
                             android:gravity="center"
                             android:singleLine="false"
-                            android:textColor="?attr/colorPrimary"
                             android:textSize="14sp" />
                     </LinearLayout>
                 </TableRow>

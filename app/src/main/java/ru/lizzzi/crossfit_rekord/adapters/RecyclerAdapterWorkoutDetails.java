@@ -2,10 +2,10 @@ package ru.lizzzi.crossfit_rekord.adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.util.List;
@@ -15,53 +15,40 @@ import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.documentfields.DocumentFieldsWorkoutDetails;
 
 
-public class RecyclerAdapterWorkoutDetails extends BaseAdapter{
+public class RecyclerAdapterWorkoutDetails extends RecyclerView.Adapter<RecyclerAdapterWorkoutDetails.ViewHolder>{
 
     private List<Map> mapWodItems;
-    private int layoutId;
-    private LayoutInflater inflater;
     private DocumentFieldsWorkoutDetails fields;
 
-    public RecyclerAdapterWorkoutDetails(Context context, @NonNull List<Map> wodItems, int layoutId){
+    public RecyclerAdapterWorkoutDetails(Context context, @NonNull List<Map> wodItems){
         this.mapWodItems = wodItems;
-        this.layoutId = layoutId;
-        inflater = LayoutInflater.from(context);
         fields = new DocumentFieldsWorkoutDetails(context);
     }
 
-    @Override
-    public int getCount() {
-        return mapWodItems.size();
-    }
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        private TextView Name;
+        private TextView Skill;
+        private TextView Wod_level;
+        private TextView Wod_result;
 
-    @Override
-    public Object getItem(int position) {
-        return mapWodItems.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    @Override
-    public View getView(int position, View view, ViewGroup parent){
-        ViewHolder holder;
-
-        if (view != null) {
-            holder = (ViewHolder) view.getTag();
-        } else {
-            view = inflater.inflate(layoutId, parent, false);
-            holder = new ViewHolder(view);
-            view.setTag(holder);
+        ViewHolder(View view){
+            super(view);
+            Name = view.findViewById(R.id.tvName);
+            Skill = view.findViewById(R.id.tvSkill);
+            Wod_level = view.findViewById(R.id.tvWod_level);
+            Wod_result = view.findViewById(R.id.tvWod_result);
         }
-
-        customizeView(view, holder, mapWodItems.get(position));
-
-        return  view;
     }
 
-    private void customizeView(View view, ViewHolder holder, final Map documentInfo) {
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_rv_workout_details, parent, false);
+        return new ViewHolder(v);
+    }
+
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position){
+        final Map documentInfo = mapWodItems.get(position);
         String stName = (String) documentInfo.get(fields.getNameField());
         String stSkill = (String) documentInfo.get(fields.getSkillField());
         String stWodLevel = (String) documentInfo.get(fields.getWodLevelField());
@@ -71,26 +58,15 @@ public class RecyclerAdapterWorkoutDetails extends BaseAdapter{
         holder.Skill.setText(stSkill);
         holder.Wod_level.setText(stWodLevel);
         holder.Wod_result.setText(stWodResult);
-
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            }
-        });
-
     }
 
-    static class ViewHolder{
-        private TextView Name;
-        private TextView Skill;
-        private TextView Wod_level;
-        private TextView Wod_result;
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
 
-        ViewHolder(View view){
-            Name = view.findViewById(R.id.tvName);
-            Skill = view.findViewById(R.id.tvSkill);
-            Wod_level = view.findViewById(R.id.tvWod_level);
-            Wod_result = view.findViewById(R.id.tvWod_result);
-        }
+    @Override
+    public int getItemCount() {
+        return mapWodItems.size();
     }
 }

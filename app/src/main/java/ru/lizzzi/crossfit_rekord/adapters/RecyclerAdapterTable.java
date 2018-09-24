@@ -18,12 +18,12 @@ import ru.lizzzi.crossfit_rekord.interfaces.ListenerRecordForTrainingSelect;
 
 public class RecyclerAdapterTable extends RecyclerView.Adapter<RecyclerAdapterTable.ViewHolder> {
     private List<Map> shediletems;
-    private final ThreadLocal<DocumentFieldsTable> fields = new ThreadLocal<>();
+    private DocumentFieldsTable fields;
     private ListenerRecordForTrainingSelect mlistener;
 
     public RecyclerAdapterTable(Context context, @NonNull List<Map> shediletems, ListenerRecordForTrainingSelect listener) {
         this.shediletems = shediletems;
-        fields.set(new DocumentFieldsTable(context));
+        fields = new DocumentFieldsTable(context);
         mlistener = listener;
     }
 
@@ -49,8 +49,8 @@ public class RecyclerAdapterTable extends RecyclerView.Adapter<RecyclerAdapterTa
     @Override
     public void onBindViewHolder(ViewHolder holder, int position){
         final Map documentInfo = shediletems.get(position);
-        String start_time = (String) documentInfo.get(fields.get().getStartTimeField());
-        String type = (String) documentInfo.get(fields.get().getTypeField());
+        String start_time = (String) documentInfo.get(fields.getStartTimeField());
+        String type = (String) documentInfo.get(fields.getTypeField());
 
         holder.StartTimeItem.setText(start_time);
         holder.TypesItem.setText(type);
@@ -89,8 +89,8 @@ public class RecyclerAdapterTable extends RecyclerView.Adapter<RecyclerAdapterTa
         holder.ll_item_table.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mlistener.selectTime((String) documentInfo.get(fields.get().getStartTimeField()),
-                        (String) documentInfo.get(fields.get().getTypeField()));
+                mlistener.selectTime((String) documentInfo.get(fields.getStartTimeField()),
+                        (String) documentInfo.get(fields.getTypeField()));
             }
         });
     }

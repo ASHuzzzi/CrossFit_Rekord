@@ -38,7 +38,7 @@ import ru.lizzzi.crossfit_rekord.loaders.TableFragmentLoader;
 public class TableFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<List<Map>>> {
 
     private ProgressBar pbProgressBar;
-    private RecyclerView lvItemsInTable;
+    private RecyclerView rvItemsInTable;
     private Button buttonMonday;
     private Button buttonTuesday;
     private Button buttonWednesday;
@@ -80,10 +80,10 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
         Button buttonError = v.findViewById(R.id.button5);
         llLayoutError = v.findViewById(R.id.Layout_Error);
         pbProgressBar = v.findViewById(R.id.progressBar);
-        lvItemsInTable = v.findViewById(R.id.lvTable);
+        rvItemsInTable = v.findViewById(R.id.lvTable);
 
         llLayoutError.setVisibility(View.INVISIBLE);
-        lvItemsInTable.setVisibility(View.INVISIBLE);
+        rvItemsInTable.setVisibility(View.INVISIBLE);
         pbProgressBar.setVisibility(View.VISIBLE);
 
 
@@ -240,7 +240,7 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
         pbProgressBar.setVisibility(View.INVISIBLE);
         if (data != null){
             createList(schedule.get(iNumberOfDay-1));
-            lvItemsInTable.setVisibility(View.VISIBLE);
+            rvItemsInTable.setVisibility(View.VISIBLE);
         }else {
             Toast.makeText(getContext(), "Нет данных", Toast.LENGTH_SHORT).show();
         }
@@ -327,9 +327,10 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
             @Override
             public void selectTime(String stStartTime, String stTypesItem) {
 
+                Date today;
                 Calendar c = Calendar.getInstance();
                 calendarday = new GregorianCalendar();
-                Date today;
+
                 int numberDayOfWeek;
                 if (c.get(Calendar.DAY_OF_WEEK) == 1){
                     numberDayOfWeek = 7;
@@ -341,7 +342,27 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
                     @SuppressLint("SimpleDateFormat") SimpleDateFormat sdfDataShow = new SimpleDateFormat("EEEE dd MMMM");
                     @SuppressLint("SimpleDateFormat") SimpleDateFormat sdfDataFull = new SimpleDateFormat("dd/MM");
                     @SuppressLint("SimpleDateFormat") SimpleDateFormat sdfCheckTime = new SimpleDateFormat("HH:mm");
-                    calendarday.add(Calendar.DAY_OF_YEAR, dayOfWeek);
+
+                    //этот цикл нужен для проверки дней недели. Если сегодня сб/вс, то пн/вт должен
+                    //быть следующей недели а не текущей
+                    if (c.get(Calendar.DAY_OF_WEEK) == 1){ //если день недели вс
+                        if (dayOfWeek == -6){ //выбран пн.
+                            calendarday.add(Calendar.DAY_OF_YEAR, 1);
+                        }else if (dayOfWeek == -5){ // выбран вт.
+                            calendarday.add(Calendar.DAY_OF_YEAR, 2);
+                        }else{
+                            calendarday.add(Calendar.DAY_OF_YEAR, dayOfWeek);
+                        }
+                    }else if (c.get(Calendar.DAY_OF_WEEK) == 7){ //если день недели сб
+                        if (dayOfWeek == -5){ //если пн.
+                            calendarday.add(Calendar.DAY_OF_YEAR, 2);
+                        }else {
+                            calendarday.add(Calendar.DAY_OF_YEAR, dayOfWeek);
+                        }
+                    }else { //если любой другой день
+                        calendarday.add(Calendar.DAY_OF_YEAR, dayOfWeek);
+                    }
+
                     today = calendarday.getTime();
                     dateSelectShow = sdfDataShow.format(today);
                     dateSelectFull = sdfDataFull.format(today);
@@ -398,8 +419,8 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
             }
         });
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
-        lvItemsInTable.setLayoutManager(mLayoutManager);
-        lvItemsInTable.setAdapter(adapter);
+        rvItemsInTable.setLayoutManager(mLayoutManager);
+        rvItemsInTable.setAdapter(adapter);
         preSelectionButtonDay(iNumberOfDay);
     }
 }
