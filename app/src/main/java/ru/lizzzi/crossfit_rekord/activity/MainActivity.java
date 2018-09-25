@@ -405,6 +405,12 @@ public class MainActivity extends AppCompatActivity
         }
 
         if (intNameFragmentSelectNavDraw == R.string.title_AboutMe_Fragment){
+            navigationView.getMenu().getItem(5).setChecked(true);
+        }else {
+            navigationView.getMenu().getItem(5).setChecked(false);
+        }
+
+        if (intNameFragmentSelectNavDraw == R.string.title_Contacts_Fragment){
             navigationView.getMenu().getItem(6).setChecked(true);
         }else {
             navigationView.getMenu().getItem(6).setChecked(false);
