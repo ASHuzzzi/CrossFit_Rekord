@@ -182,7 +182,9 @@
     <string name="TL1NoData2">Но ты уже можешь записать свои результаты</string>
     <string name="TL1NoData3">для этого сдвинь экран влево.</string>
 
-
-
+    <!-- Значения для активити EnterResultActivity -->
+    <string name="strActivityERWod">WoD</string>
+    <string name="strActivityERLevel">Level</string>
+    <string name="strActivityERSkill">Skill"</string>
 
 </resources>

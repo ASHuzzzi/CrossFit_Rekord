@@ -59,6 +59,7 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
     private RecyclerAdapterWorkoutDetails adapter;
     private Runnable runnableOpenFragment;
 
+
     public TL2ResultFragment() {
         // Required empty public constructor
     }
@@ -128,6 +129,10 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
 
             }
         };
+
+
+        
+
 
         buttonError.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -203,7 +208,9 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
             rvItemsInWod.setLayoutManager(mLayoutManager);
             rvItemsInWod.setAdapter(adapter);
         }else {
-            rvItemsInWod.setAdapter(null);
+             if (adapter != null){
+                 rvItemsInWod.setAdapter(null);
+             }
         }
 
         Message msg = handlerOpenFragment.obtainMessage();
@@ -235,9 +242,11 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
         super.onResume();
 
         if (adapter == null){
-            threadUpdateFragment = new Thread(runnableOpenFragment);
-            threadUpdateFragment.setDaemon(true);
-            threadUpdateFragment.start();
+            if (Thread.currentThread() != threadUpdateFragment){
+                threadUpdateFragment = new Thread(runnableOpenFragment);
+                threadUpdateFragment.setDaemon(true);
+                threadUpdateFragment.start();
+            }
         }
     }
 
@@ -247,6 +256,7 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
 
         if (requestCode == CHOOSE_THIEF) {
             if (resultCode == RESULT_OK && adapter != null) {
+                rvItemsInWod.setAdapter(null);
                 threadUpdateFragment.run();
 
             }

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
     tools:context=".activity.EnterResultActivity">
 
     <android.support.design.widget.AppBarLayout
@@ -32,17 +33,18 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/pbSaveUpload">
+        android:layout_below="@+id/pbSaveUpload"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp">
 
         <TextView
-            android:id="@+id/textView39"
+            android:id="@+id/textView37"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/etResultLevel"
             android:layout_marginTop="10dp"
             android:background="?attr/colorAccent"
             android:gravity="center"
-            android:text="WoD"
+            android:text="@string/strActivityERSkill"
             android:textColor="?attr/colorPrimary"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -54,17 +56,20 @@
             android:layout_below="@+id/textView37"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="Name" />
+            android:text="@string/empty"
+            android:textColor="@color/colorRedPrimary"
+            android:theme="@style/Theme.App.Base"
+            tools:ignore="LabelFor" />
 
         <TextView
             android:id="@+id/textView38"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/etResultSkill"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
             android:background="?attr/colorAccent"
             android:gravity="center"
-            android:text="Level"
+            android:text="@string/strActivityERLevel"
             android:textColor="?attr/colorPrimary"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -76,16 +81,20 @@
             android:layout_below="@+id/textView38"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="Name" />
+            android:text="@string/empty"
+            android:textColor="@color/colorRedPrimary"
+            android:theme="@style/Theme.App.Base"
+            tools:ignore="LabelFor" />
 
         <TextView
-            android:id="@+id/textView37"
+            android:id="@+id/textView39"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_below="@+id/etResultLevel"
+            android:layout_marginTop="20dp"
             android:background="?attr/colorAccent"
             android:gravity="center"
-            android:text="Skill"
+            android:text="@string/strActivityERWod"
             android:textColor="?attr/colorPrimary"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -97,7 +106,10 @@
             android:layout_below="@+id/textView39"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="Name" />
+            android:text="@string/empty"
+            android:textColor="@color/colorRedPrimary"
+            android:theme="@style/Theme.App.Base"
+            tools:ignore="LabelFor" />
     </RelativeLayout>
 
     <Button
@@ -110,6 +122,6 @@
         android:layout_marginBottom="20dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:text="Button" />
+        android:text="@string/empty" />
 
 </android.widget.RelativeLayout>

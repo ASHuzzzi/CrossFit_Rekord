@@ -19,7 +19,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:scaleType="centerInside"
-            app:srcCompat="@drawable/logo_cfr" />
+            app:srcCompat="@drawable/logo_cfr"
+            tools:ignore="ContentDescription" />
     </LinearLayout>
 
     <LinearLayout
@@ -52,7 +53,8 @@
             android:gravity="start"
             android:inputType="number"
             android:textColor="@color/colorRedPrimary"
-            android:theme="@style/Theme.App.Base" />
+            android:theme="@style/Theme.App.Base"
+            tools:ignore="LabelFor" />
 
         <TextView
             android:id="@+id/textView11"
@@ -74,7 +76,8 @@
             android:gravity="start"
             android:inputType="number"
             android:textColor="@color/colorRedPrimary"
-            android:theme="@style/Theme.App.Base" />
+            android:theme="@style/Theme.App.Base"
+            tools:ignore="LabelFor" />
 
         <Button
             android:id="@+id/button2"
@@ -127,7 +130,7 @@
             android:layout_margin="20dp"
             android:background="@color/colorPrimaryDark"
             android:padding="10dp"
-            android:text="Контакты"
+            android:text="@string/contacts"
             android:textColor="@color/colorRedPrimary" />
     </RelativeLayout>
 
