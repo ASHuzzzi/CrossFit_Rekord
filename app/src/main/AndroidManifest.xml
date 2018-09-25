@@ -22,7 +22,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.EnterResultActivity" />
+        <activity
+            android:name=".activity.EnterResultActivity"
+            android:screenOrientation="portrait"/>
 
         <service
             android:name=".services.LoadNotificationsService"

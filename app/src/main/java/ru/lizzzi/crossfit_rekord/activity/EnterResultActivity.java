@@ -14,11 +14,12 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -65,64 +66,26 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
         setContentView(R.layout.activity_enter_result);
         Toolbar toolbar = findViewById(R.id.toolbarER);
         setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
 
         etResultSkill = findViewById(R.id.etResultSkill);
         etResultLevel = findViewById(R.id.etResultLevel);
         etResultWoD = findViewById(R.id.etResultWoD);
 
         pbSaveUpload = findViewById(R.id.pbSaveUpload);
-
-
-        ImageButton imbDelete = findViewById(R.id.imbDelete);
-        //mLoader = getSupportLoaderManager().initLoader(LOADER_SHOW_LIST, null, this);
-        imbDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(flag){
-                    AlertDialog.Builder builder = new AlertDialog.Builder(EnterResultActivity.this);
-                    builder.setTitle("Внимание!")
-                            .setMessage("Удалить результаты?")
-                            .setCancelable(false)
-                            .setPositiveButton("Да",
-                                    new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialogInterface, int i) {
-                                            flagDelete =  true;
-                                            runnableClickOnbuttonSave.run();
-                                        }
-                                    })
-                            .setNegativeButton("Нет",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            dialog.cancel();
-                                        }
-                                    });
-                    AlertDialog alert = builder.create();
-                    alert.show();
-                    alert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.colorAccent));
-                    alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.colorPrimary));
-                }else {
-                    Toast.makeText(EnterResultActivity.this, "Нет данных для удаления", Toast.LENGTH_SHORT).show();
-                }
-
-            }
-        });
-
-
         btnSave = findViewById(R.id.btnSaveUpload);
 
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 runnableClickOnbuttonSave.run();
-            }
-        });
-
-        Button btn = findViewById(R.id.button9);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
             }
         });
 
@@ -281,5 +244,47 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
     @Override
     public void onLoaderReset(Loader<Boolean> loader) {
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_er_drawer, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if(item.getItemId()==R.id.delete)
+        {
+            if(flag){
+                AlertDialog.Builder builder = new AlertDialog.Builder(EnterResultActivity.this);
+                builder.setTitle("Внимание!")
+                        .setMessage("Удалить результаты?")
+                        .setCancelable(false)
+                        .setPositiveButton("Да",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        flagDelete =  true;
+                                        runnableClickOnbuttonSave.run();
+                                    }
+                                })
+                        .setNegativeButton("Нет",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                    }
+                                });
+                AlertDialog alert = builder.create();
+                alert.show();
+                alert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.colorAccent));
+                alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.colorPrimary));
+            }else {
+                Toast.makeText(EnterResultActivity.this, "Нет данных для удаления", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        return true;
     }
 }
