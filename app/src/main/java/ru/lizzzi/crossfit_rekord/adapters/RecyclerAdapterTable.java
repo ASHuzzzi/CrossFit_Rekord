@@ -104,37 +104,4 @@ public class RecyclerAdapterTable extends RecyclerView.Adapter<RecyclerAdapterTa
     public long getItemId(int position) {
         return position;
     }
-
-    /*@Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    @Override
-    public int getItemCount() {
-        return 0;
-    }
-
-    @Override
-    public View getView(int position, View view, ViewGroup parent) {
-        ViewHolder holder;
-
-        if (view != null) {
-            holder = (ViewHolder) view.getTag();
-        } else {
-            view = inflater.inflate(layoutId, parent, false);
-            holder = new ViewHolder(view);
-            view.setTag(holder);
-        }
-
-        customizeView(view, holder, shediletems.get(position));
-
-        return view;
-    }
-
-    @SuppressLint("ResourceAsColor")
-    private void customizeView(View view, ViewHolder holder, final Map documentInfo) {
-
-
-    }*/
 }

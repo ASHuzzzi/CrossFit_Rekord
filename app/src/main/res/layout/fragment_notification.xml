@@ -13,12 +13,10 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true" />
 
-    <android.widget.ListView
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/rvNotoficationList"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="8dp" >
+        android:layout_height="match_parent" >
+    </android.support.v7.widget.RecyclerView>
 
-    </android.widget.ListView>
 </android.widget.RelativeLayout>

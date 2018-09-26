@@ -375,7 +375,6 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
                             if (dSelectTime.getTime() > dTimeNow.getTime()){ //проверяем чтобы выбранное время было позже чем сейчас
                                 checkday = true;
                             }else{
-                                checkday = false;
                                 Toast toast = Toast.makeText(getContext(), "Выберете более позднее время.", Toast.LENGTH_LONG);
                                 toast.setGravity(Gravity.CENTER, 0, 0);
                                 toast.show();

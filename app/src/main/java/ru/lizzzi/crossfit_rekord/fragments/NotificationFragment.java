@@ -13,10 +13,11 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import java.util.List;
@@ -30,7 +31,7 @@ import ru.lizzzi.crossfit_rekord.interfaces.ListernerNotification;
 
 public class NotificationFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Map<String, Object>>> {
 
-    private ListView rvNotoficationList;
+    private RecyclerView rvNotoficationList;
 
     private Handler handlerOpenFragment;
     private Thread threadOpenFragment;
@@ -145,7 +146,7 @@ public class NotificationFragment extends Fragment implements LoaderManager.Load
     public void onLoadFinished(Loader<List<Map<String, Object>>> loader, List<Map<String, Object>> data) {
 
         if (data != null){
-            adapterNotification = new RecyclerAdapterNotification(getContext(), R.layout.item_rv_notification, data, new ListernerNotification() {
+            adapterNotification = new RecyclerAdapterNotification(getContext(), data, new ListernerNotification() {
                 @Override
                 public void selectNotificationInList(String stdateNote, String stheader) {
 
@@ -163,6 +164,8 @@ public class NotificationFragment extends Fragment implements LoaderManager.Load
                 }
             });
 
+            LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+            rvNotoficationList.setLayoutManager(mLayoutManager);
             rvNotoficationList.setAdapter(adapterNotification);
 
             Message msg = handlerOpenFragment.obtainMessage();
@@ -198,10 +201,13 @@ public class NotificationFragment extends Fragment implements LoaderManager.Load
         super.onResume();
 
         getActivity().registerReceiver(br2, intFilt);
+
         if (adapterNotification == null){
             threadOpenFragment = new Thread(runnableOpenFragment);
             threadOpenFragment.setDaemon(true);
             threadOpenFragment.start();
+        }else{
+            threadOpenFragment.run();
         }
     }
 

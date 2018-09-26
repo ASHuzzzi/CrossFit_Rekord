@@ -6,32 +6,39 @@
 
     <TextView
         android:id="@+id/tvTimeNotificationND"
+        style="@style/MainTextStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="right"
+        android:gravity="end"
         android:padding="5dp"
-        android:text="TextView" />
+        android:text="@string/empty"
+        android:textSize="12sp" />
 
     <TextView
         android:id="@+id/tvHeaderNotificationND"
+        style="@style/MainTextStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvTimeNotificationND"
+        android:layout_marginTop="20dp"
         android:gravity="center"
-        android:paddingBottom="5dp"
-        android:paddingEnd="5dp"
-        android:paddingLeft="25dp"
-        android:paddingRight="5dp"
         android:paddingStart="25dp"
+        android:paddingLeft="25dp"
         android:paddingTop="5dp"
-        android:text="TextView" />
+        android:paddingEnd="5dp"
+        android:paddingRight="5dp"
+        android:paddingBottom="5dp"
+        android:text="@string/empty"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/tvTextNotificationND"
+        style="@style/MainTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvHeaderNotificationND"
         android:layout_marginLeft="10dp"
+        android:layout_marginTop="20dp"
         android:layout_marginRight="10dp"
-        android:text="TextView" />
+        android:text="@string/empty" />
 </android.widget.RelativeLayout>
