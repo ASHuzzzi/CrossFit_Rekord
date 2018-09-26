@@ -8,87 +8,112 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/textView33"
+            style="@style/MainTextStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/strCardNumber" />
+            android:layout_marginTop="10dp"
+            android:text="@string/strCardNumber"
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/tvCardNumber"
+            style="@style/MainTextStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/empty" />
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:text="@string/empty"
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/textView14"
+            style="@style/MainTextStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:text="@string/strUserName" />
 
         <EditText
             android:id="@+id/etName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:ems="10"
             android:inputType="textPersonName"
             android:text="@string/empty"
+            android:textColor="@color/colorRedPrimary"
+            android:theme="@style/Theme.App.Base"
             tools:ignore="LabelFor" />
 
         <TextView
             android:id="@+id/textView30"
+            style="@style/MainTextStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:text="@string/strUserSurname" />
 
         <EditText
             android:id="@+id/etSurname"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:ems="10"
             android:inputType="textPersonName"
             android:text="@string/empty"
+            android:textColor="@color/colorRedPrimary"
+            android:theme="@style/Theme.App.Base"
             tools:ignore="LabelFor" />
 
         <TextView
             android:id="@+id/textView15"
+            style="@style/MainTextStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:text="@string/strEmail" />
 
         <EditText
             android:id="@+id/etEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:ems="10"
             android:inputType="textEmailAddress"
             android:text="@string/empty"
+            android:textColor="@color/colorRedPrimary"
+            android:theme="@style/Theme.App.Base"
             tools:ignore="LabelFor" />
 
         <TextView
             android:id="@+id/textView32"
+            style="@style/MainTextStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:text="@string/strPhone" />
 
         <EditText
             android:id="@+id/etPhone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:ems="10"
             android:inputType="phone"
             android:text="@string/empty"
+            android:textColor="@color/colorRedPrimary"
+            android:theme="@style/Theme.App.Base"
             tools:ignore="LabelFor" />
-
-        <Button
-            android:id="@+id/btnChangeUserData"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:text="@string/strBtnChange" />
 
         <ProgressBar
             android:id="@+id/pbAboutMe"
@@ -98,4 +123,14 @@
             tools:visibility="invisible" />
 
     </LinearLayout>
+
+    <Button
+        android:id="@+id/btnChangeUserData"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="20dp"
+        android:text="@string/strBtnChange" />
 </android.widget.RelativeLayout>
