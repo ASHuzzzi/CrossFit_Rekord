@@ -90,9 +90,6 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
         llListTime = v.findViewById(R.id.llListTime);
         pbRfTS = v.findViewById(R.id.pbRfTS);
 
-        llListTime.setVisibility(View.INVISIBLE);
-        llErorRfTS.setVisibility(View.INVISIBLE);
-
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         rvTreningTime.setLayoutManager(mLayoutManager);
         rvTreningTime.setAdapter(adapter);
@@ -104,34 +101,31 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
         @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM");
         @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf3 = new SimpleDateFormat("EEEE d MMMM");
 
-        //хэндлер для обоих потоков. Какой именно поток вызвал хэндлер передается в key
         handlerOpenFragment = new Handler() {
             @SuppressLint("ShowToast")
             @Override
             public void handleMessage(Message msg) {
                 Bundle bundle = msg.getData();
-                String switchs = bundle.getString("switch"); //показывает какой поток вызвал
                 String resultCheck;
-                if (switchs != null){
-                    if (switchs.equals("open")){ //поток при первом запуске экрана
-                        resultCheck = bundle.getString("open");
-                        if (resultCheck != null) {
-                            if (resultCheck.equals("false")) {
-                                llErorRfTS.setVisibility(View.VISIBLE);
-                                pbRfTS.setVisibility(View.INVISIBLE);
-                            }
-                        }
-                    }
+                resultCheck = bundle.getString("open");
+                if (resultCheck != null && resultCheck.equals("false")) {
+                    llErorRfTS.setVisibility(View.VISIBLE);
+                    pbRfTS.setVisibility(View.INVISIBLE);
+                }else {
+                    llErorRfTS.setVisibility(View.INVISIBLE);
+                    pbRfTS.setVisibility(View.VISIBLE);
+                    startAsyncTaskLoader();
                 }
             }
         };
 
-        //поток запускаемый при создании экрана (запуск происходит из onResume)
+        //поток запускаемый при создании экрана (запуск происходит из onStart)
         runnableOpenFragment = new Runnable() {
             @Override
             public void run() {
                 networkCheck = new NetworkCheck(getContext());
                 boolean resultCheck = networkCheck.checkInternet();
+                Bundle bundle = new Bundle();
                 if (resultCheck){
                     iNumberOfDay = gcNumberDayWeek.get(Calendar.DAY_OF_WEEK)-1;
                     if (iNumberOfDay == 0){
@@ -139,16 +133,15 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
                     }
                     flagTodayOrNot = true;
                     selectDay = 1;
-                    firstStartAsyncTaskLoader(iNumberOfDay);
+                    bundle.putString("open", String.valueOf(true));
 
                 }else {
-                    Message msg = handlerOpenFragment.obtainMessage();
-                    Bundle bundle = new Bundle();
+
                     bundle.putString("open", String.valueOf(false));
-                    bundle.putString("switch", "open");
-                    msg.setData(bundle);
-                    handlerOpenFragment.sendMessage(msg);
                 }
+                Message msg = handlerOpenFragment.obtainMessage();
+                msg.setData(bundle);
+                handlerOpenFragment.sendMessage(msg);
             }
         };
 
@@ -245,89 +238,38 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
         return v;
     }
 
-    private void firstStartAsyncTaskLoader(int day_select){
-        Bundle bundle = new Bundle();
-        bundle.putString(String.valueOf(TableFragmentLoader.ARG_WORD), String.valueOf(day_select));
-        getLoaderManager().initLoader(LOADER_ID, bundle, this).forceLoad();
+    private void startAsyncTaskLoader(){
+        getLoaderManager().restartLoader(LOADER_ID, null, this).forceLoad();
     }
 
     @Override
     public Loader<List<List<Map>>> onCreateLoader(int id, Bundle args) {
-        if (networkCheck.checkInternet()) {
-            Loader<List<List<Map>>> loader;
-            loader = new TableFragmentLoader(getContext(), args);
-            return loader;
-        }
-        return null;
+        Loader<List<List<Map>>> loader;
+        loader = new TableFragmentLoader(getContext());
+        return loader;
     }
 
     @Override
     public void onLoadFinished(Loader<List<List<Map>>> loader, List<List<Map>> data) {
+
         if (data != null){
             schedule = data;
             drawList(schedule.get(iNumberOfDay-1));
+
+            llErorRfTS.setVisibility(View.INVISIBLE);
+            pbRfTS.setVisibility(View.INVISIBLE);
+            llListTime.setVisibility(View.VISIBLE);
+        }else {
+            llErorRfTS.setVisibility(View.VISIBLE);
+            pbRfTS.setVisibility(View.INVISIBLE);
+            llListTime.setVisibility(View.INVISIBLE);
         }
-    }
 
-    private void preSelectionButtonDay(int iDaySelect){
-        if (iDaySelect == 1 ){
-            selectButtonDay(true, false, false);
-            stDateSelectShow = currentTodayForShow;
-
-        }else if (iDaySelect == 2){
-            selectButtonDay(false, true, false);
-            stDateSelectShow = currentTomorrowForShow;
-
-        }else if (iDaySelect == 3){
-            selectButtonDay(false, false, true);
-            stDateSelectShow = currentAftertommorowForShow;
-        }
-    }
-
-    //метод применяющий выбор кнопок
-    private void selectButtonDay(boolean tod, boolean tom, boolean aft) {
-        btToday.setPressed(tod);
-        btTommorow.setPressed(tom);
-        btAftertommorow.setPressed(aft);
     }
 
     @Override
     public void onLoaderReset(Loader<List<List<Map>>> loader) {
 
-    }
-
-    @Override
-    public  void onStart() {
-        super.onStart();
-        if (getActivity() instanceof InterfaceChangeTitle){
-            InterfaceChangeTitle listernerChangeTitle = (InterfaceChangeTitle) getActivity();
-            listernerChangeTitle.changeTitle(R.string.title_RecordForTraining_Fragment, R.string.title_RecordForTraining_Fragment);
-        }
-
-    }
-
-    //в onResume делаем проверку на наличие данных в адаптаре. При первом запуске адаптер пустой и
-    //будет запущен поток.
-    //при возврате через кнопку back адаптер будет не пустым поток не запуститься. что сохранит
-    //состояние адаптера в положении перед открытием нового фрагмента
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (adapter == null){
-            threadOpenFragment = new Thread(runnableOpenFragment);
-            threadOpenFragment.setDaemon(true);
-            threadOpenFragment.start();
-
-        }else {
-            preSelectionButtonDay(selectDay);
-        }
-    }
-
-    public void onStop() {
-        super.onStop();
-        if (getLoaderManager().hasRunningLoaders()) {
-            getLoaderManager().destroyLoader(LOADER_ID);
-        }
     }
 
     private void drawList(List<Map> dailySchedule){
@@ -361,8 +303,76 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
         rvTreningTime.setLayoutManager(mLayoutManager);
         rvTreningTime.setAdapter(adapter);
         preSelectionButtonDay(selectDay);
-
-        pbRfTS.setVisibility(View.INVISIBLE);
-        llListTime.setVisibility(View.VISIBLE);
     }
+
+    private void preSelectionButtonDay(int iDaySelect){
+        switch (iDaySelect){
+            case 1:
+                stDateSelectShow = currentTodayForShow;
+                selectButtonDay(true, false, false);
+                break;
+
+            case 2:
+                stDateSelectShow = currentTomorrowForShow;
+                selectButtonDay(false, true, false);
+                break;
+
+            case 3:
+                stDateSelectShow = currentAftertommorowForShow;
+                selectButtonDay(false, false, true);
+                break;
+        }
+    }
+
+    //метод применяющий выбор кнопок
+    private void selectButtonDay(boolean tod, boolean tom, boolean aft) {
+        btToday.setPressed(tod);
+        btTommorow.setPressed(tom);
+        btAftertommorow.setPressed(aft);
+    }
+
+
+    //в onStart делаем проверку на наличие данных в адаптаре. При первом запуске адаптер пустой и
+    //будет запущен поток.
+    //при возврате через кнопку back адаптер будет не пустым поток не запуститься. что сохранит
+    //состояние адаптера в положении перед открытием нового фрагмента
+    @Override
+    public  void onStart() {
+        super.onStart();
+
+        if (adapter == null){
+            llListTime.setVisibility(View.INVISIBLE);
+            llErorRfTS.setVisibility(View.INVISIBLE);
+
+            threadOpenFragment = new Thread(runnableOpenFragment);
+            threadOpenFragment.setDaemon(true);
+            threadOpenFragment.start();
+
+        }else {
+            preSelectionButtonDay(selectDay);
+            llListTime.setVisibility(View.VISIBLE);
+        }
+
+        if (getActivity() instanceof InterfaceChangeTitle){
+            InterfaceChangeTitle listernerChangeTitle = (InterfaceChangeTitle) getActivity();
+            listernerChangeTitle.changeTitle(R.string.title_RecordForTraining_Fragment, R.string.title_RecordForTraining_Fragment);
+        }
+
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+    }
+
+    public void onStop() {
+        super.onStop();
+        if (getLoaderManager().hasRunningLoaders()) {
+            getLoaderManager().destroyLoader(LOADER_ID);
+        }
+    }
+
+
 }

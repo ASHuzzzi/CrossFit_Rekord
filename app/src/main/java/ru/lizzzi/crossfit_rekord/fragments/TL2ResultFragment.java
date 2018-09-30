@@ -37,7 +37,7 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
 
     private NetworkCheck NetworkCheck; //переменная для проврки сети
 
-    private Handler handlerOpenFragment;
+    private Handler handlerOpenFragmentTL2;
     private Thread threadUpdateFragment;
 
     private static final String APP_PREFERENCES = "audata";
@@ -80,7 +80,7 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
 
         mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
-        handlerOpenFragment = new Handler() {
+        handlerOpenFragmentTL2 = new Handler() {
             @Override
             public void handleMessage(Message msg) {
                 Bundle bundle = msg.getData();
@@ -109,12 +109,12 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
         runnableOpenFragment = new Runnable() {
             @Override
             public void run() {
-                Message msg = handlerOpenFragment.obtainMessage();
+                Message msg = handlerOpenFragmentTL2.obtainMessage();
                 Bundle bundle = new Bundle();
                 bundle.putString("result", String.valueOf(true));
                 bundle.putString("status", String.valueOf("start"));
                 msg.setData(bundle);
-                handlerOpenFragment.sendMessage(msg);
+                handlerOpenFragmentTL2.sendMessage(msg);
 
                 NetworkCheck = new NetworkCheck(getContext());
                 boolean resultCheck = NetworkCheck.checkInternet();
@@ -123,8 +123,9 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
 
                 }else {
                     bundle.putString("result", String.valueOf(false));
-                    msg.setData(bundle);
-                    handlerOpenFragment.sendMessage(msg);
+                    Message msg2 = handlerOpenFragmentTL2.obtainMessage();
+                    msg2.setData(bundle);
+                    handlerOpenFragmentTL2.sendMessage(msg2);
                 }
 
             }
@@ -213,12 +214,12 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
              }
         }
 
-        Message msg = handlerOpenFragment.obtainMessage();
+        Message msg = handlerOpenFragmentTL2.obtainMessage();
         Bundle bundle = new Bundle();
         bundle.putString("result", String.valueOf(true));
         bundle.putString("status", String.valueOf("finish"));
         msg.setData(bundle);
-        handlerOpenFragment.sendMessage(msg);
+        handlerOpenFragmentTL2.sendMessage(msg);
 
     }
 

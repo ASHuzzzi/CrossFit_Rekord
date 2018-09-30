@@ -93,36 +93,35 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
             public void handleMessage(Message msg) {
                 Bundle bundle = msg.getData();
                 String result_check = bundle.getString("result");
-                if (result_check != null){
-                    if (result_check.equals("false")){
-                        llLayoutError.setVisibility(View.VISIBLE);
-                        pbProgressBar.setVisibility(View.INVISIBLE);
-                    }else{
-                        llLayoutError.setVisibility(View.INVISIBLE);
-                        pbProgressBar.setVisibility(View.VISIBLE);
-                    }
+                if (result_check != null && result_check.equals("false")){
+                    llLayoutError.setVisibility(View.VISIBLE);
+                    pbProgressBar.setVisibility(View.INVISIBLE);
+                }else{
+                    llLayoutError.setVisibility(View.INVISIBLE);
+                    pbProgressBar.setVisibility(View.VISIBLE);
+                    firstStartAsyncTaskLoader();
                 }
             }
         };
 
-        //поток запускаемый при создании экрана (запуск происходит из onResume)
+        //поток запускаемый при создании экрана (запуск происходит из onStart)
         runnableOpenFragment = new Runnable() {
             @Override
             public void run() {
-                Message msg = handlerOpenFragment.obtainMessage();
-                Bundle bundle = new Bundle();
+
                 NetworkCheck = new NetworkCheck(getContext());
                 boolean resultCheck = NetworkCheck.checkInternet();
+                Bundle bundle = new Bundle();
                 if (resultCheck){
-                    handlerOpenFragment.sendMessage(msg);
                     iNumberOfDay = 1;
-                    firstStartAsyncTaskLoader(iNumberOfDay);
+                    bundle.putString("result", String.valueOf(true));
 
                 }else {
                     bundle.putString("result", String.valueOf(false));
-                    msg.setData(bundle);
-                    handlerOpenFragment.sendMessage(msg);
                 }
+                Message msg = handlerOpenFragment.obtainMessage();
+                msg.setData(bundle);
+                handlerOpenFragment.sendMessage(msg);
             }
         };
 
@@ -219,107 +218,38 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
         return v;
     }
 
-    private void firstStartAsyncTaskLoader(int iNumberOfDay){
+    private void firstStartAsyncTaskLoader(){
         preSelectionButtonDay(8); //передаем 8, чтобы сбросить нажатие всех кнопок
-        Bundle bundle = new Bundle();
-        bundle.putString(String.valueOf(TableFragmentLoader.ARG_WORD), String.valueOf(iNumberOfDay));
-        int LOADERID = 1;
-        getLoaderManager().initLoader(LOADERID, bundle, this).forceLoad();
+        int loaderid = 1;
+        getLoaderManager().initLoader(loaderid,null, this).forceLoad();
     }
 
     @Override
     public Loader<List<List<Map>>> onCreateLoader(int id, Bundle args) {
         Loader<List<List<Map>>> loader;
-        loader = new TableFragmentLoader(getContext(), args);
+        loader = new TableFragmentLoader(getContext());
         return loader;
     }
 
     @Override
     public void onLoadFinished(Loader<List<List<Map>>> loader, List<List<Map>> data) {
+
         schedule = data;
-        pbProgressBar.setVisibility(View.INVISIBLE);
-        if (data != null){
+
+        if (schedule != null){
             createList(schedule.get(iNumberOfDay-1));
+
+            llLayoutError.setVisibility(View.INVISIBLE);
+            pbProgressBar.setVisibility(View.INVISIBLE);
             rvItemsInTable.setVisibility(View.VISIBLE);
         }else {
-            Toast.makeText(getContext(), "Нет данных", Toast.LENGTH_SHORT).show();
+            pbProgressBar.setVisibility(View.INVISIBLE);
+            llLayoutError.setVisibility(View.VISIBLE);
         }
     }
 
     @Override
     public void onLoaderReset(Loader<List<List<Map>>> loader) {
-    }
-
-    //метод подготоавливающий состояние кнопок в зависимости от выбранного дня
-    private void preSelectionButtonDay(int iDayOfWeek){
-        if (iDayOfWeek == 1 ){
-            selectButtonDay(true, false, false, false, false, false, false);
-
-        }else if (iDayOfWeek == 2){
-            selectButtonDay(false, true, false, false, false, false, false);
-
-        }else if (iDayOfWeek == 3){
-            selectButtonDay(false, false, true, false, false, false, false);
-
-        }else if (iDayOfWeek == 4){
-            selectButtonDay(false, false, false, true, false, false, false);
-
-        }else if (iDayOfWeek == 5){
-            selectButtonDay(false, false, false, false, true, false, false);
-
-        }else if (iDayOfWeek == 6){
-            selectButtonDay(false, false, false, false, false, true, false);
-
-        }else if (iDayOfWeek == 7){
-            selectButtonDay(false, false, false, false, false, false, true);
-
-        }else {
-            selectButtonDay(false, false, false, false, false, false, false);
-        }
-    }
-
-    //метод применяющий выбор кнопок
-    private void selectButtonDay(boolean m, boolean tu, boolean w, boolean th, boolean f, boolean sa, boolean su) {
-        buttonMonday.setPressed(m);
-        buttonTuesday.setPressed(tu);
-        buttonWednesday.setPressed(w);
-        buttonThursday.setPressed(th);
-        buttonFriday.setPressed(f);
-        buttonSaturday.setPressed(sa);
-        buttonSunday.setPressed(su);
-    }
-
-    @Override
-    public  void onStart() {
-        super.onStart();
-        if (getActivity() instanceof InterfaceChangeTitle){
-            InterfaceChangeTitle listernerChangeTitle = (InterfaceChangeTitle) getActivity();
-            listernerChangeTitle.changeTitle(R.string.title_Table_Fragment, R.string.title_Table_Fragment);
-        }
-
-    }
-
-    //в onResume делаем проверку на наличие данных в адаптаре. При первом запуске адаптер пустой и
-    //будет запущен поток.
-    //при возврате через кнопку back адаптер будет не пустым поток не запуститься. что сохранит
-    //состояние адаптера в положении перед открытием нового фрагмента
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (adapter == null){
-            threadOpenFragment = new Thread(runnableOpenFragment);
-            threadOpenFragment.setDaemon(true);
-            threadOpenFragment.start();
-
-        }else {
-            preSelectionButtonDay(iNumberOfDay);
-        }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        threadOpenFragment.interrupt();
     }
 
     private void createList(List<Map> dailySchedule){
@@ -421,5 +351,82 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
         rvItemsInTable.setLayoutManager(mLayoutManager);
         rvItemsInTable.setAdapter(adapter);
         preSelectionButtonDay(iNumberOfDay);
+    }
+
+    //метод подготоавливающий состояние кнопок в зависимости от выбранного дня
+    private void preSelectionButtonDay(int iDayOfWeek){
+        if (iDayOfWeek == 1 ){
+            selectButtonDay(true, false, false, false, false, false, false);
+
+        }else if (iDayOfWeek == 2){
+            selectButtonDay(false, true, false, false, false, false, false);
+
+        }else if (iDayOfWeek == 3){
+            selectButtonDay(false, false, true, false, false, false, false);
+
+        }else if (iDayOfWeek == 4){
+            selectButtonDay(false, false, false, true, false, false, false);
+
+        }else if (iDayOfWeek == 5){
+            selectButtonDay(false, false, false, false, true, false, false);
+
+        }else if (iDayOfWeek == 6){
+            selectButtonDay(false, false, false, false, false, true, false);
+
+        }else if (iDayOfWeek == 7){
+            selectButtonDay(false, false, false, false, false, false, true);
+
+        }else {
+            selectButtonDay(false, false, false, false, false, false, false);
+        }
+    }
+
+    //метод применяющий выбор кнопок
+    private void selectButtonDay(boolean m, boolean tu, boolean w, boolean th, boolean f, boolean sa, boolean su) {
+        buttonMonday.setPressed(m);
+        buttonTuesday.setPressed(tu);
+        buttonWednesday.setPressed(w);
+        buttonThursday.setPressed(th);
+        buttonFriday.setPressed(f);
+        buttonSaturday.setPressed(sa);
+        buttonSunday.setPressed(su);
+    }
+
+    //в onStart делаем проверку на наличие данных в адаптаре. При первом запуске адаптер пустой и
+    //будет запущен поток.
+    //при возврате через кнопку back адаптер будет не пустым поток не запуститься. что сохранит
+    //состояние адаптера в положении перед открытием нового фрагмента
+    @Override
+    public  void onStart() {
+        super.onStart();
+
+        if (adapter == null){
+            threadOpenFragment = new Thread(runnableOpenFragment);
+            threadOpenFragment.setDaemon(true);
+            threadOpenFragment.start();
+
+        }else {
+            preSelectionButtonDay(iNumberOfDay);
+        }
+
+        if (getActivity() instanceof InterfaceChangeTitle){
+            InterfaceChangeTitle listernerChangeTitle = (InterfaceChangeTitle) getActivity();
+            listernerChangeTitle.changeTitle(R.string.title_Table_Fragment, R.string.title_Table_Fragment);
+        }
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        if(threadOpenFragment.isAlive()){
+            threadOpenFragment.interrupt();
+        }
     }
 }

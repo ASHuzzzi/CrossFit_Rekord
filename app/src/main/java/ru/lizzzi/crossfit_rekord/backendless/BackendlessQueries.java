@@ -13,15 +13,20 @@ public class BackendlessQueries {
 
 
     public List<Map> loadCalendarWod(String objectID, String startDay, String nowDay){
-        List<Map> data;
-        String whereClause = "userID = '" + objectID + "' and date_session >= '" +
-                startDay + "' and date_session <= '" + nowDay + "'";
-        DataQueryBuilder queryBuilder = DataQueryBuilder.create();
-        queryBuilder.setWhereClause(whereClause);
-        queryBuilder.setPageSize(100);
-        data = Backendless.Data.of("results").find(queryBuilder);
+        try
+        {
+            String whereClause = "userID = '" + objectID + "' and date_session >= '" +
+                    startDay + "' and date_session <= '" + nowDay + "'";
+            DataQueryBuilder queryBuilder = DataQueryBuilder.create();
+            queryBuilder.setWhereClause(whereClause);
+            queryBuilder.setPageSize(100);
 
-        return data;
+            return Backendless.Data.of("results").find(queryBuilder);
+        }catch( BackendlessException exception )
+        {
+            return null;
+        }
+
     }
     public List<Map> loadPeople(int iLoaderId, String dateSelect, String timeSelect, String userName, String userId){
         String table_name = "recording";
@@ -56,11 +61,21 @@ public class BackendlessQueries {
     }
 
     public List<Map> loadAllTable(){
-        DataQueryBuilder queryBuilder = DataQueryBuilder.create();
-        queryBuilder.setSortBy("day_of_week");
-        queryBuilder.setSortBy("start_time");
-        queryBuilder.setPageSize(100);
-        return Backendless.Data.of("schedule").find(queryBuilder);
+
+        //Пока никак не обрабатываю ошибки от сервера. Т.е. если данные есть, то строю список
+        //если данных нет, то список не строится и выскакивает стандартная заглушка.
+
+        try
+        {
+            DataQueryBuilder queryBuilder = DataQueryBuilder.create();
+            queryBuilder.setSortBy("day_of_week");
+            queryBuilder.setSortBy("start_time");
+            queryBuilder.setPageSize(100);
+            return Backendless.Data.of("schedule").find(queryBuilder);
+        }catch( BackendlessException exception )
+        {
+            return null;
+        }
     }
 
     public List<Map> loadWorkoutDetails(String typeQuery, String tableName, String selecteDay, String userId){

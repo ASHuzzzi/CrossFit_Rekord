@@ -39,21 +39,25 @@ public class CalendarWodLoader extends AsyncTaskLoader<List<Date>> {
         List<Map> data;
         data = queries.loadCalendarWod(objectID, stStartDate, stNowDate);
 
-        ArrayList<Date> dates = new ArrayList<>();
-        Date dateFromDb;
-        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
+        if(data != null){
+            ArrayList<Date> dates = new ArrayList<>();
+            Date dateFromDb;
+            SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
 
-        for (int i = 0; i < data.size(); i++){
-            String sr = String.valueOf(data.get(i).get("date_session"));
+            for (int i = 0; i < data.size(); i++){
+                String sr = String.valueOf(data.get(i).get("date_session"));
 
-            try {
-                dateFromDb = sdf.parse(sr);
-                dates.add(dateFromDb);
+                try {
+                    dateFromDb = sdf.parse(sr);
+                    dates.add(dateFromDb);
 
-            } catch (ParseException e) {
-                e.printStackTrace();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
+            return dates;
+        }else{
+            return null;
         }
-        return dates;
     }
 }
