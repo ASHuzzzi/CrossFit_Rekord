@@ -6,8 +6,11 @@
     android:layout_height="match_parent"
     tools:context="ru.lizzzi.crossfit_rekord.draft.price_fragment.Price_Fragment">
 
-    <ListView
-        android:id="@+id/lvtest"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvDefinition"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="20dp" />
 </FrameLayout>
