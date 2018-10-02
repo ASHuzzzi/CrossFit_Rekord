@@ -21,10 +21,9 @@ public class TableFragmentLoader extends AsyncTaskLoader<List<List<Map>>> {
     @Override
     public List<List<Map>> loadInBackground() {
 
-        List<Map> data2;
-        data2 = queries.loadAllTable();
+        List<Map> data = queries.loadAllTable();
 
-        if (data2 != null){
+        if (data != null){
             List<Map> scheduleMon = new ArrayList<>();
             List<Map> scheduleTue = new ArrayList<>();
             List<Map> scheduleWen = new ArrayList<>();
@@ -33,29 +32,29 @@ public class TableFragmentLoader extends AsyncTaskLoader<List<List<Map>>> {
             List<Map> scheduleSat = new ArrayList<>();
             List<Map> scheduleSun = new ArrayList<>();
             int k;
-            for (int i = 0; i < data2.size(); i++) {
-                k = Integer.valueOf(String.valueOf(data2.get(i).get("day_of_week")));
+            for (int i = 0; i < data.size(); i++) {
+                k = Integer.valueOf(String.valueOf(data.get(i).get("day_of_week")));
                 switch (k){
                     case 1:
-                        scheduleMon.add(data2.get(i));
+                        scheduleMon.add(data.get(i));
                         break;
                     case 2:
-                        scheduleTue.add(data2.get(i));
+                        scheduleTue.add(data.get(i));
                         break;
                     case 3:
-                        scheduleWen.add(data2.get(i));
+                        scheduleWen.add(data.get(i));
                         break;
                     case 4:
-                        scheduleThu.add(data2.get(i));
+                        scheduleThu.add(data.get(i));
                         break;
                     case 5:
-                        scheduleFri.add(data2.get(i));
+                        scheduleFri.add(data.get(i));
                         break;
                     case 6:
-                        scheduleSat.add(data2.get(i));
+                        scheduleSat.add(data.get(i));
                         break;
                     case 7:
-                        scheduleSun.add(data2.get(i));
+                        scheduleSun.add(data.get(i));
                         break;
                 }
             }

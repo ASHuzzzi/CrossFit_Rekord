@@ -29,35 +29,33 @@ public class BackendlessQueries {
 
     }
     public List<Map> loadPeople(int iLoaderId, String dateSelect, String timeSelect, String userName, String userId){
-        String table_name = "recording";
-        HashMap<String, String> record = new HashMap<>();
-        if (iLoaderId == 2) {
-            record.put("data", dateSelect);
-            record.put("time", timeSelect);
-            record.put("username", userName);
-            record.put("ownerId", userId);
-            Backendless.Persistence.of(table_name).save(record);
+
+        try {
+            String table_name = "recording";
+            HashMap<String, String> record = new HashMap<>();
+            if (iLoaderId == 2) {
+                record.put("data", dateSelect);
+                record.put("time", timeSelect);
+                record.put("username", userName);
+                record.put("ownerId", userId);
+                Backendless.Persistence.of(table_name).save(record);
+            }
+
+            if (iLoaderId == 3) {
+                record.put("objectId", userId);
+                Backendless.Persistence.of(table_name).remove(record);
+            }
+
+            String whereClause = "data = '" + dateSelect + "' and time = '" + timeSelect + "'";
+            DataQueryBuilder queryBuilder = DataQueryBuilder.create();
+            queryBuilder.setWhereClause(whereClause);
+            queryBuilder.setPageSize(20);
+            return Backendless.Data.of(table_name).find(queryBuilder);
+        }catch( BackendlessException exception )
+        {
+            return null;
         }
 
-        if (iLoaderId == 3) {
-            record.put("objectId", userId);
-            Backendless.Persistence.of(table_name).remove(record);
-        }
-
-        String whereClause = "data = '" + dateSelect + "' and time = '" + timeSelect + "'";
-        DataQueryBuilder queryBuilder = DataQueryBuilder.create();
-        queryBuilder.setWhereClause(whereClause);
-        queryBuilder.setPageSize(20);
-        return Backendless.Data.of(table_name).find(queryBuilder);
-    }
-
-    public List<Map> loadTable(int iNumberOfDayWeek){
-        String whereClause = "day_of_week = " + iNumberOfDayWeek;
-        DataQueryBuilder queryBuilder = DataQueryBuilder.create();
-        queryBuilder.setWhereClause(whereClause);
-        queryBuilder.setSortBy("start_time");
-        queryBuilder.setPageSize(20);
-        return Backendless.Data.of("schedule").find(queryBuilder);
     }
 
     public List<Map> loadAllTable(){

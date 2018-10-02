@@ -35,8 +35,16 @@ public class RecordForTrainingRecordingLoadPeopleLoader extends AsyncTaskLoader<
 
     @Override
     public List<Map> loadInBackground() {
-        List<Map> data;
-        data = queries.loadPeople(iLoaderId, dateSelect, timeSelect, userName, userId);
-        return data;
+
+        List<Map> data = queries.loadPeople(iLoaderId, dateSelect, timeSelect, userName, userId);
+
+        if(data !=null){
+            return data;
+
+        }else {
+            return null;
+
+        }
+
     }
 }

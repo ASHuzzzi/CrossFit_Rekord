@@ -38,7 +38,8 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
     private NetworkCheck networkCheck; //переменная для проврки сети
 
     private Handler handlerOpenFragment;
-    private Thread runnableClickOnbuttonSave;
+    private Thread threadClickOnbuttonSave;
+    private Runnable runnableClickOnbuttonSave;
 
     private EditText etResultSkill;
     private EditText etResultLevel;
@@ -85,6 +86,9 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                pbSaveUpload.setVisibility(View.VISIBLE);
+                threadClickOnbuttonSave = new Thread(runnableClickOnbuttonSave);
+                threadClickOnbuttonSave.setDaemon(true);
                 runnableClickOnbuttonSave.run();
             }
         });
@@ -95,29 +99,10 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
             @Override
             public void handleMessage(Message msg) {
                 Bundle bundle = msg.getData();
-                String switchs = bundle.getString("status");
-                if (switchs != null){
-                    if (switchs.equals("start")){
-                        pbSaveUpload.setVisibility(View.VISIBLE);
-                    }else{
-                        pbSaveUpload.setVisibility(View.INVISIBLE);
-                    }
-                }
-            }
-        };
+                String resultCheck = bundle.getString("networkCheck");
+                if (resultCheck != null && resultCheck.equals("true")) {
+                    pbSaveUpload.setVisibility(View.VISIBLE);
 
-        //поток запускаемый кнопкой сохранить/записать
-        Runnable runnableClickOnbuttonSave = new Runnable() {
-            @Override
-            public void run() {
-                Message msg = handlerOpenFragment.obtainMessage();
-                Bundle bundle = new Bundle();
-                bundle.putString("status", "start");
-                msg.setData(bundle);
-                handlerOpenFragment.sendMessage(msg);
-                networkCheck = new NetworkCheck(EnterResultActivity.this);
-                boolean resultCheck = networkCheck.checkInternet();
-                if (resultCheck){
                     if(flagDelete){
                         restartAsyncTaskLoader(3); //удалить
                     }else{
@@ -127,15 +112,35 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
                             restartAsyncTaskLoader(2); //сохранить
                         }
                     }
-
                 }else {
-                    bundle.putString("status", "stop");
-
+                    pbSaveUpload.setVisibility(View.INVISIBLE);
+                    Toast.makeText(EnterResultActivity.this, "Нет подключения к сети!", Toast.LENGTH_SHORT).show();
                 }
             }
         };
-        this.runnableClickOnbuttonSave = new Thread(runnableClickOnbuttonSave);
-        this.runnableClickOnbuttonSave.setDaemon(true);
+
+        //поток запускаемый кнопкой сохранить/записать и из меню "удалить"
+        runnableClickOnbuttonSave = new Runnable() {
+            @Override
+            public void run() {
+
+                networkCheck = new NetworkCheck(EnterResultActivity.this);
+                Bundle bundle = new Bundle();
+                boolean resultCheck = networkCheck.checkInternet();
+                if (resultCheck){
+                    bundle.putString("networkCheck", String.valueOf(true));
+
+                }else {
+                    bundle.putString("networkCheck", String.valueOf(false));
+
+                }
+
+                Message msg = handlerOpenFragment.obtainMessage();
+                msg.setData(bundle);
+                handlerOpenFragment.sendMessage(msg);
+            }
+        };
+
 
 
     }
@@ -267,6 +272,7 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
                                         flagDelete =  true;
+                                        pbSaveUpload.setVisibility(View.VISIBLE);
                                         runnableClickOnbuttonSave.run();
                                     }
                                 })
