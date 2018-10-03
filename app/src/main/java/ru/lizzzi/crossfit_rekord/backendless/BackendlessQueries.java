@@ -77,17 +77,25 @@ public class BackendlessQueries {
     }
 
     public List<Map> loadWorkoutDetails(String typeQuery, String tableName, String selecteDay, String userId){
-        String whereClause;
-        if (typeQuery.equals("all")){
-            whereClause = "date_session = '" + selecteDay + "'" ;
-        }else {
-            whereClause = "date_session = '" + selecteDay + "' and userID = '" + userId + "'" ;
+
+        try
+        {
+            String whereClause;
+            if (typeQuery.equals("all")){
+                whereClause = "date_session = '" + selecteDay + "'" ;
+            }else {
+                whereClause = "date_session = '" + selecteDay + "' and userID = '" + userId + "'" ;
+            }
+
+            DataQueryBuilder queryBuilder = DataQueryBuilder.create();
+            queryBuilder.setWhereClause(whereClause);
+            queryBuilder.setPageSize(100);
+            return Backendless.Data.of(tableName).find(queryBuilder);
+        }catch( BackendlessException exception )
+        {
+            return null;
         }
 
-        DataQueryBuilder queryBuilder = DataQueryBuilder.create();
-        queryBuilder.setWhereClause(whereClause);
-        queryBuilder.setPageSize(100);
-        return Backendless.Data.of(tableName).find(queryBuilder);
     }
 
     public BackendlessUser authUser(String stcardNumber, String stPassword){

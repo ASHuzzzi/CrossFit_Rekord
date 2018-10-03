@@ -68,11 +68,6 @@ public class TL1WodFragment extends Fragment implements LoaderManager.LoaderCall
         llEmptyData = v.findViewById(R.id.llEmptyData);
         pbProgressBar = v.findViewById(R.id.progressBar3);
 
-        llLayoutError.setVisibility(View.INVISIBLE);
-        llMain.setVisibility(View.INVISIBLE);
-        llEmptyData.setVisibility(View.INVISIBLE);
-        pbProgressBar.setVisibility(View.VISIBLE);
-
 
         //хэндлер для потока runnableOpenFragment
         handlerOpenFragment = new Handler() {
@@ -80,11 +75,11 @@ public class TL1WodFragment extends Fragment implements LoaderManager.LoaderCall
             public void handleMessage(Message msg) {
                 Bundle bundle = msg.getData();
                 String result_check = bundle.getString("result");
-                if (result_check != null){
-                    if (result_check.equals("false")){
-                        llLayoutError.setVisibility(View.VISIBLE);
-                        pbProgressBar.setVisibility(View.INVISIBLE);
-                    }
+                if (result_check != null && result_check.equals("true")){
+                    loadExerciseAsyncTaskLoader();
+                }else {
+                    llLayoutError.setVisibility(View.VISIBLE);
+                    pbProgressBar.setVisibility(View.INVISIBLE);
                 }
             }
         };
@@ -94,16 +89,18 @@ public class TL1WodFragment extends Fragment implements LoaderManager.LoaderCall
             public void run() {
                 NetworkCheck = new NetworkCheck(getContext());
                 boolean resultCheck = NetworkCheck.checkInternet();
+                Bundle bundle = new Bundle();
                 if (resultCheck){
-                    loadExerciseAsyncTaskLoader();
+                    bundle.putString("result", String.valueOf(true));
 
                 }else {
-                    Message msg = handlerOpenFragment.obtainMessage();
-                    Bundle bundle = new Bundle();
                     bundle.putString("result", String.valueOf(false));
-                    msg.setData(bundle);
-                    handlerOpenFragment.sendMessage(msg);
+
                 }
+
+                Message msg = handlerOpenFragment.obtainMessage();
+                msg.setData(bundle);
+                handlerOpenFragment.sendMessage(msg);
             }
         };
 
@@ -188,14 +185,23 @@ public class TL1WodFragment extends Fragment implements LoaderManager.LoaderCall
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onStart(){
+        super.onStart();
 
         if (tvWarmUp.length() < 1){
+            llLayoutError.setVisibility(View.INVISIBLE);
+            llMain.setVisibility(View.INVISIBLE);
+            llEmptyData.setVisibility(View.INVISIBLE);
+            pbProgressBar.setVisibility(View.VISIBLE);
+
             threadOpenFragment = new Thread(runnableOpenFragment);
             threadOpenFragment.setDaemon(true);
             threadOpenFragment.start();
         }
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 }

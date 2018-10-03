@@ -85,22 +85,13 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
             public void handleMessage(Message msg) {
                 Bundle bundle = msg.getData();
                 String result_check = bundle.getString("result");
-                if (result_check != null){
-                    if (result_check.equals("false")){
-                        llLayoutError.setVisibility(View.VISIBLE);
-                        pbProgressBar.setVisibility(View.INVISIBLE);
-                    }else {
-                        String status = bundle.getString("status");
-                        if(status != null && status.equals("start")){
-                            llLayoutError.setVisibility(View.INVISIBLE);
-                            ll1.setVisibility(View.INVISIBLE);
-                            pbProgressBar.setVisibility(View.VISIBLE);
-                        }else {
-                            llLayoutError.setVisibility(View.INVISIBLE);
-                            ll1.setVisibility(View.VISIBLE);
-                            pbProgressBar.setVisibility(View.INVISIBLE);
-                        }
-                    }
+                if (result_check != null && result_check.equals("true")){
+                    loadSessionAsyncTaskLoader();
+
+                }else {
+                    ll1.setVisibility(View.INVISIBLE);
+                    llLayoutError.setVisibility(View.VISIBLE);
+                    pbProgressBar.setVisibility(View.INVISIBLE);
                 }
             }
         };
@@ -109,35 +100,35 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
         runnableOpenFragment = new Runnable() {
             @Override
             public void run() {
-                Message msg = handlerOpenFragmentTL2.obtainMessage();
-                Bundle bundle = new Bundle();
-                bundle.putString("result", String.valueOf(true));
-                bundle.putString("status", String.valueOf("start"));
-                msg.setData(bundle);
-                handlerOpenFragmentTL2.sendMessage(msg);
 
                 NetworkCheck = new NetworkCheck(getContext());
                 boolean resultCheck = NetworkCheck.checkInternet();
+                Bundle bundle = new Bundle();
+
                 if (resultCheck){
-                    loadSessionAsyncTaskLoader();
+                    bundle.putString("status", String.valueOf("start"));
+                    bundle.putString("result", String.valueOf(true));
 
                 }else {
                     bundle.putString("result", String.valueOf(false));
-                    Message msg2 = handlerOpenFragmentTL2.obtainMessage();
-                    msg2.setData(bundle);
-                    handlerOpenFragmentTL2.sendMessage(msg2);
+
                 }
+                Message msg = handlerOpenFragmentTL2.obtainMessage();
+
+                msg.setData(bundle);
+                handlerOpenFragmentTL2.sendMessage(msg);
 
             }
         };
 
-
-        
-
-
         buttonError.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                ll1.setVisibility(View.INVISIBLE);
+                llLayoutError.setVisibility(View.INVISIBLE);
+                pbProgressBar.setVisibility(View.VISIBLE);
+
                 threadUpdateFragment = new Thread(runnableOpenFragment);
                 threadUpdateFragment.setDaemon(true);
                 threadUpdateFragment.start();
@@ -172,7 +163,7 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
         bundle.putString("Selected_day", selectedDay);
         bundle.putString("Table", "results");
         int LOADER_ID = 1;
-        getLoaderManager().initLoader(LOADER_ID, bundle, this).forceLoad();
+        getLoaderManager().restartLoader(LOADER_ID, bundle, this).forceLoad();
     }
 
     @Override
@@ -184,43 +175,41 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
 
     @Override
     public void onLoadFinished(Loader<List<Map>> loader, List<Map> data) {
-
         flag = false;
-         for (int i = 0; i < data.size(); i++){
-             String stObjectId =  mSettings.getString(APP_PREFERENCES_OBJECTID, "");
 
-             if(data.get(i).containsValue(stObjectId)){
-                stSkill = String.valueOf(data.get(i).get("skill"));
-                stWoDLevel = String.valueOf(data.get(i).get("wod_level"));
-                stWoDResults = String.valueOf(data.get(i).get("wod_result"));
-                flag = true;
-             }
-         }
+        pbProgressBar.setVisibility(View.INVISIBLE);
+        if (data != null && data.size() > 0){
+            for (int i = 0; i < data.size(); i++){
+                String stObjectId =  mSettings.getString(APP_PREFERENCES_OBJECTID, "");
 
-         if (flag){
-             buttonEnterReult.setText(R.string.strEditDeleteResult);
-         }else {
-             buttonEnterReult.setText(R.string.strEnterResult);
-         }
+                if(data.get(i).containsValue(stObjectId)){
+                    stSkill = String.valueOf(data.get(i).get("skill"));
+                    stWoDLevel = String.valueOf(data.get(i).get("wod_level"));
+                    stWoDResults = String.valueOf(data.get(i).get("wod_result"));
+                    flag = true;
+                }
+            }
 
-        if (data.size() > 0){
+            if (flag){
+                buttonEnterReult.setText(R.string.strEditDeleteResult);
+            }else {
+                buttonEnterReult.setText(R.string.strEnterResult);
+            }
+
             adapter = new RecyclerAdapterWorkoutDetails(getContext(), data);
             LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
             rvItemsInWod.setLayoutManager(mLayoutManager);
             rvItemsInWod.setAdapter(adapter);
+
         }else {
-             if (adapter != null){
-                 rvItemsInWod.setAdapter(null);
-             }
+            if (adapter != null){
+                LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+                rvItemsInWod.setLayoutManager(mLayoutManager);
+                rvItemsInWod.setAdapter(null);
+            }
         }
-
-        Message msg = handlerOpenFragmentTL2.obtainMessage();
-        Bundle bundle = new Bundle();
-        bundle.putString("result", String.valueOf(true));
-        bundle.putString("status", String.valueOf("finish"));
-        msg.setData(bundle);
-        handlerOpenFragmentTL2.sendMessage(msg);
-
+        llLayoutError.setVisibility(View.INVISIBLE);
+        ll1.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -234,15 +223,7 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
             llLayoutError.setVisibility(View.INVISIBLE);
             ll1.setVisibility(View.INVISIBLE);
             pbProgressBar.setVisibility(View.VISIBLE);
-        }
 
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        if (adapter == null){
             if (Thread.currentThread() != threadUpdateFragment){
                 threadUpdateFragment = new Thread(runnableOpenFragment);
                 threadUpdateFragment.setDaemon(true);
@@ -252,12 +233,18 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == CHOOSE_THIEF) {
-            if (resultCode == RESULT_OK && adapter != null) {
-                rvItemsInWod.setAdapter(null);
+            if (resultCode == RESULT_OK) {
+                ll1.setVisibility(View.INVISIBLE);
+                pbProgressBar.setVisibility(View.VISIBLE);
                 threadUpdateFragment.run();
 
             }

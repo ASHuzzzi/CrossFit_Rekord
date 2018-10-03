@@ -51,6 +51,7 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
     private static final String APP_PREFERENCES = "audata";
     private static final String APP_PREFERENCES_OBJECTID = "ObjectId";
     private static final String APP_PREFERENCES_SELECTEDDAY = "SelectedDay";
+    private static final String APP_PREFERENCES_SELECTEDDAYMONTH = "SelectedDayMonth";
     private SharedPreferences mSettings;
 
     private int month;
@@ -179,7 +180,8 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
             if (convertSelectDate.getTime() <= today.getTime()){
                 SharedPreferences mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = mSettings.edit();
-                editor.putString(APP_PREFERENCES_SELECTEDDAY, forMemoryDate);
+                editor.putString(APP_PREFERENCES_SELECTEDDAY, selectedDate);
+                editor.putString(APP_PREFERENCES_SELECTEDDAYMONTH, forMemoryDate);
                 editor.apply();
 
                 WorkoutDetailsFragment yfc = new WorkoutDetailsFragment();
@@ -281,7 +283,7 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
 
         if(layoutErrorCalendarWod.getVisibility() == View.INVISIBLE){
             SharedPreferences mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-            String stDay = mSettings.getString(APP_PREFERENCES_SELECTEDDAY, "");
+            String stDay = mSettings.getString(APP_PREFERENCES_SELECTEDDAYMONTH, "");
 
             Calendar cal = Calendar.getInstance();
             if(stDay.equals("0") || stDay.equals("")){
