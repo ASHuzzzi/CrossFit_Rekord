@@ -36,9 +36,6 @@ import ru.lizzzi.crossfit_rekord.services.LoadNotificationsService;
 
 public class LoginFragment extends Fragment implements LoaderManager.LoaderCallbacks<Boolean> {
 
-    private static final int MSG_AUTH_GOOD = 1;
-    private static final int MSG_AUTH_BAD = 2;
-
     private NetworkCheck NetworkCheck; //переменная для проврки сети
 
     private Button btnComeIn;
@@ -46,6 +43,11 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
     private EditText tvCardNumber;
     private EditText tvPassword;
 
+    private Handler handlerLoginFragment;
+    private Thread threadLoginFragment;
+    private Runnable runnableLoginFragment;
+
+    @SuppressLint("HandlerLeak")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState){
@@ -56,6 +58,42 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
         btnComeIn = v.findViewById(R.id.button2);
         pbLogin = v.findViewById(R.id.pbLogin);
         Button btnContacts = v.findViewById(R.id.btContacts);
+
+
+        //хэндлер для потока runnableOpenFragment
+        handlerLoginFragment = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                Bundle bundle = msg.getData();
+                String result_check = bundle.getString("result");
+                if (result_check != null && result_check.equals("true")){
+                    startAsyncTaskLoader(tvCardNumber.getText().toString(), tvPassword.getText().toString());
+                }else{
+                    ChangeUIElements(0);
+                    Toast.makeText(getContext(), "Нет подключения", Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
+
+        //поток запускаемый при создании экрана (запуск происходит из onStart)
+        runnableLoginFragment = new Runnable() {
+            @Override
+            public void run() {
+
+                NetworkCheck = new NetworkCheck(getContext());
+                boolean resultCheck = NetworkCheck.checkInternet();
+                Bundle bundle = new Bundle();
+                if (resultCheck){
+                    bundle.putString("result", String.valueOf(true));
+
+                }else {
+                    bundle.putString("result", String.valueOf(false));
+                }
+                Message msg = handlerLoginFragment.obtainMessage();
+                msg.setData(bundle);
+                handlerLoginFragment.sendMessage(msg);
+            }
+        };
 
         btnComeIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,15 +116,10 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
                     imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 }
 
-                NetworkCheck = new NetworkCheck(getContext());
                 ChangeUIElements(1);
-                if (NetworkCheck.checkInternet()){
-                    startAsyncTaskLoader(tvCardNumber.getText().toString(), tvPassword.getText().toString());
-
-                }else {
-                    ChangeUIElements(0);
-                    Toast.makeText(getContext(), "Нет подключения", Toast.LENGTH_SHORT).show();
-                }
+                threadLoginFragment = new Thread(runnableLoginFragment);
+                threadLoginFragment.setDaemon(true);
+                threadLoginFragment.start();
 
             }
         });
@@ -160,9 +193,10 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
             StartService();
             InterfaceChangeToggleStatus interfaceChangeToggleStatus = (InterfaceChangeToggleStatus) getActivity();
             interfaceChangeToggleStatus.changeToggleStatus(true);
-            handler.sendEmptyMessage(MSG_AUTH_GOOD);
+            TransactionFragment(StartScreenFragment.class);
         }else{
-            handler.sendEmptyMessage(MSG_AUTH_BAD);
+            ChangeUIElements(0);
+            Toast.makeText(getContext(), "Неверный логин или пароль!", Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -199,19 +233,6 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
         }
         return false;
     }
-
-    @SuppressLint("HandlerLeak")
-    private Handler handler = new Handler(){
-        @Override
-        public void handleMessage(Message msg){
-            if(msg.what == MSG_AUTH_GOOD) {
-                TransactionFragment(StartScreenFragment.class);
-            }else {
-                ChangeUIElements(0);
-                Toast.makeText(getContext(), "Неверный логин или пароль!", Toast.LENGTH_SHORT).show();
-            }
-        }
-    };
 
     private void TransactionFragment(Class fragmentClass) {
 

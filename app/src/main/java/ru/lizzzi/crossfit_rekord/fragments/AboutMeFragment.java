@@ -1,7 +1,10 @@
 package ru.lizzzi.crossfit_rekord.fragments;
 
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.LoaderManager;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -35,7 +38,7 @@ public class AboutMeFragment extends Fragment implements LoaderManager.LoaderCal
     private static final String APP_PREFERENCES_CARDNUMBER = "cardNumber";
     private static final String APP_PREFERENCES_EMAIL = "Email";
     private static final String APP_PREFERENCES_PHONE = "Phone";
-    SharedPreferences mSettings;
+    private SharedPreferences mSettings;
 
     private TextView tvCardNumber;
     private EditText etName;
@@ -47,6 +50,11 @@ public class AboutMeFragment extends Fragment implements LoaderManager.LoaderCal
 
     private NetworkCheck NetworkCheck; //переменная для проврки сети
 
+    private Handler handlerAboutMeFragment;
+    private Thread threadAboutMeFragment;
+    private Runnable runnableAboutMeFragment;
+
+    @SuppressLint("HandlerLeak")
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState){
         View v = inflater.inflate(R.layout.fragment_aboutme, container, false);
@@ -61,6 +69,49 @@ public class AboutMeFragment extends Fragment implements LoaderManager.LoaderCal
         btChangeUserData = v.findViewById(R.id.btnChangeUserData);
         pbAboutMe = v.findViewById(R.id.pbAboutMe);
 
+        //хэндлер для потока runnableOpenFragment
+        handlerAboutMeFragment = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                Bundle bundle = msg.getData();
+                String result_check = bundle.getString("result");
+                if (result_check != null && result_check.equals("true")){
+                    ChangeUIElements(1);
+                    startAsyncTaskLoader(
+                            mSettings.getString(APP_PREFERENCES_OBJECTID, ""),
+                            tvCardNumber.getText().toString(),
+                            etName.getText().toString(),
+                            etSurname.getText().toString(),
+                            etEmail.getText().toString(),
+                            etPhone.getText().toString()
+                    );
+                }else{
+                    ChangeUIElements(0);
+                    Toast.makeText(getContext(), "Нет подключения", Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
+
+        //поток запускаемый при создании экрана (запуск происходит из onStart)
+        runnableAboutMeFragment = new Runnable() {
+            @Override
+            public void run() {
+
+                NetworkCheck = new NetworkCheck(getContext());
+                boolean resultCheck = NetworkCheck.checkInternet();
+                Bundle bundle = new Bundle();
+                if (resultCheck){
+                    bundle.putString("result", String.valueOf(true));
+
+                }else {
+                    bundle.putString("result", String.valueOf(false));
+                }
+                Message msg = handlerAboutMeFragment.obtainMessage();
+                msg.setData(bundle);
+                handlerAboutMeFragment.sendMessage(msg);
+            }
+        };
+
         btChangeUserData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -71,23 +122,9 @@ public class AboutMeFragment extends Fragment implements LoaderManager.LoaderCal
                     imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 }
 
-                NetworkCheck = new NetworkCheck(getContext());
-                boolean resultCheck = NetworkCheck.checkInternet();
-                if (resultCheck){
-                    ChangeUIElements(1);
-                    startAsyncTaskLoader(
-                            mSettings.getString(APP_PREFERENCES_OBJECTID, ""),
-                            tvCardNumber.getText().toString(),
-                            etName.getText().toString(),
-                            etSurname.getText().toString(),
-                            etEmail.getText().toString(),
-                            etPhone.getText().toString()
-                    );
-
-                }else {
-                    ChangeUIElements(0);
-                    Toast.makeText(getContext(), "Нет подключения", Toast.LENGTH_SHORT).show();
-                }
+                threadAboutMeFragment = new Thread(runnableAboutMeFragment);
+                threadAboutMeFragment.setDaemon(true);
+                threadAboutMeFragment.start();
             }
         });
 
