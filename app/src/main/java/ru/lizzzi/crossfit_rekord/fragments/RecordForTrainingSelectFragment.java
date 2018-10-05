@@ -69,9 +69,14 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
 
     private Runnable runnableOpenFragment;
 
-    String currentTodayForShow;
-    String currentTomorrowForShow;
-    String currentAftertommorowForShow;
+    private String currentTodayForShow;
+    private String currentTomorrowForShow;
+    private String currentAftertommorowForShow;
+
+    private Date tomorrow;
+    private Date aftertomorrow;
+
+    @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM");
 
     @SuppressLint({"HandlerLeak", "ClickableViewAccessibility"})
     @Override
@@ -97,8 +102,10 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
         gcNumberDayWeek = new GregorianCalendar();
 
 
+
+
         @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf = new SimpleDateFormat("EEE.\n d MMMM");
-        @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM");
+
         @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf3 = new SimpleDateFormat("EEEE d MMMM");
 
         handlerOpenFragment = new Handler() {
@@ -149,10 +156,10 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
         date = new Date();
         gcCalendarDay = new GregorianCalendar();
         gcCalendarDay.add(Calendar.DAY_OF_YEAR, 1);
-        final Date tomorrow = gcCalendarDay.getTime();
+        tomorrow = gcCalendarDay.getTime();
 
         gcCalendarDay.add(Calendar.DAY_OF_YEAR, 1);
-        final Date aftertomorrow = gcCalendarDay.getTime();
+        aftertomorrow = gcCalendarDay.getTime();
 
         final String currentToday = sdf.format(date);
         final String currentTomorrow = sdf.format(tomorrow);
@@ -309,16 +316,20 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
         switch (iDaySelect){
             case 1:
                 stDateSelectShow = currentTodayForShow;
+                stDateSelectFull = sdf2.format(date);
                 selectButtonDay(true, false, false);
+
                 break;
 
             case 2:
                 stDateSelectShow = currentTomorrowForShow;
+                stDateSelectFull = sdf2.format(tomorrow);
                 selectButtonDay(false, true, false);
                 break;
 
             case 3:
                 stDateSelectShow = currentAftertommorowForShow;
+                stDateSelectFull = sdf2.format(aftertomorrow);
                 selectButtonDay(false, false, true);
                 break;
         }

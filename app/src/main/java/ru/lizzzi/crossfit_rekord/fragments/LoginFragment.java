@@ -47,6 +47,8 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
     private Thread threadLoginFragment;
     private Runnable runnableLoginFragment;
 
+    private int openFragment = 1;
+
     @SuppressLint("HandlerLeak")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -64,14 +66,19 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
         handlerLoginFragment = new Handler() {
             @Override
             public void handleMessage(Message msg) {
-                Bundle bundle = msg.getData();
-                String result_check = bundle.getString("result");
-                if (result_check != null && result_check.equals("true")){
-                    startAsyncTaskLoader(tvCardNumber.getText().toString(), tvPassword.getText().toString());
-                }else{
-                    ChangeUIElements(0);
-                    Toast.makeText(getContext(), "Нет подключения", Toast.LENGTH_SHORT).show();
+                if(msg.what == openFragment){
+                    TransactionFragment(StartScreenFragment.class);
+                }else {
+                    Bundle bundle = msg.getData();
+                    String result_check = bundle.getString("result");
+                    if (result_check != null && result_check.equals("true")){
+                        startAsyncTaskLoader(tvCardNumber.getText().toString(), tvPassword.getText().toString());
+                    }else{
+                        ChangeUIElements(0);
+                        Toast.makeText(getContext(), "Нет подключения", Toast.LENGTH_SHORT).show();
+                    }
                 }
+
             }
         };
 
@@ -193,7 +200,7 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
             StartService();
             InterfaceChangeToggleStatus interfaceChangeToggleStatus = (InterfaceChangeToggleStatus) getActivity();
             interfaceChangeToggleStatus.changeToggleStatus(true);
-            TransactionFragment(StartScreenFragment.class);
+            handlerLoginFragment.sendEmptyMessage(openFragment);
         }else{
             ChangeUIElements(0);
             Toast.makeText(getContext(), "Неверный логин или пароль!", Toast.LENGTH_SHORT).show();
