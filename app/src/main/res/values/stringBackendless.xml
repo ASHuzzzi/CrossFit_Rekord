@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Поля таблицы exercises -->
+    <string name="bTableExercisesName">exercises</string>
+    <string name="bTableExercisesCore">core</string>
+    <string name="bTableExercisesDateSession">date_session</string>
+    <string name="bTableExercisesPostworkout">postworkout</string>
+    <string name="bTableExercisesRx">Rx</string>
+    <string name="bTableExercisesRxplus">Rxplus</string>
+    <string name="bTableExercisesSc">Sc</string>
+    <string name="bTableExercisesSkill">skill</string>
+    <string name="bTableExercisesWarmup">warmup</string>
+    <string name="bTableExercisesWod">wod</string>
+
+    <!-- Поля таблицы notification -->
+    <string name="bTableNotificationName">notification</string>
+    <string name="bTableNotificationCodeNote">codeNote</string>
+    <string name="bTableNotificationDateNote">dateNote</string>
+    <string name="bTableNotificationHeader">header</string>
+    <string name="bTableNotificationNumberNote">notification</string>
+    <string name="bTableNotificationText">text</string>
+
+    <!-- Поля таблицы schedule -->
+    <string name="bTableScheduleName">schedule</string>
+    <string name="bTableScheduleDayOfWeek">day_of_week</string>
+    <string name="bTableScheduleDescription">description</string>
+    <string name="bTableScheduleStartTime">start_time</string>
+    <string name="bTableScheduleType">type</string>
+
+    <!-- Поля таблицы recording -->
+    <string name="bTableRecordingName">recording</string>
+    <string name="bTableRecordingCardNumber">cardNumber</string>
+    <string name="bTableRecordingData">Data</string>
+    <string name="bTableRecordingSurname">surname</string>
+    <string name="bTableRecordingTime">time</string>
+    <string name="bTableRecordingUsername">username</string>
+    <string name="bTableRecordingOwnerId">ownerId</string>
+    <string name="bTableRecordingObjectId">objectId</string>
+
+    <!-- Поля таблицы results -->
+    <string name="bTableResultsName">results</string>
+    <string name="bTableResultsDateSession">date_session</string>
+    <string name="bTableResultsNameT">Name</string>
+    <string name="bTableResultsSkill">skill</string>
+    <string name="bTableResultsUserID">userID</string>
+    <string name="bTableResultsWodLevel">wod_level</string>
+    <string name="bTableResultsWodResult">wod_result</string>
+
+    <!-- Поля таблицы Users -->
+    <string name="bTableUsersName">Users</string>
+    <string name="bTableUsersCardNumber">cardNumber</string>
+    <string name="bTableUsersEmail">email</string>
+    <string name="bTableUsersNameT">name</string>
+    <string name="bTableUsersPassword">password</string>
+    <string name="bTableUsersPhoneNumber">phoneNumber</string>
+    <string name="bTableUsersSurname">surname</string>
+
+
+</resources>

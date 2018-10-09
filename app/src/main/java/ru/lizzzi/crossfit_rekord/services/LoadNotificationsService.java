@@ -76,7 +76,7 @@ public class LoadNotificationsService extends Service {
 
                     if (resultCheck){
                         List<Map> data = queries.loadNotification(stLastDateCheck);
-                        if (data.size()>0){
+                        if (data != null && data.size()>0){
                             String dateNote;
                             String header;
                             String text;
@@ -100,14 +100,14 @@ public class LoadNotificationsService extends Service {
 
                                 mDBHelper.saveNotification(mils, header, text, codeNote, viewed);
                             }
-                        }
 
-                        // сообщаем об окончании задачи
-                        Intent intent = new Intent(MainActivity.BROADCAST_ACTION);
-                        intent.putExtra(MainActivity.PARAM_TASK, task);
-                        intent.putExtra(MainActivity.PARAM_STATUS, MainActivity.STATUS_FINISH);
-                        intent.putExtra(MainActivity.PARAM_RESULT, data.size());
-                        sendBroadcast(intent);
+                            // сообщаем об окончании задачи
+                            Intent intent = new Intent(MainActivity.BROADCAST_ACTION);
+                            intent.putExtra(MainActivity.PARAM_TASK, task);
+                            intent.putExtra(MainActivity.PARAM_STATUS, MainActivity.STATUS_FINISH);
+                            intent.putExtra(MainActivity.PARAM_RESULT, data.size());
+                            sendBroadcast(intent);
+                        }
 
                         break;
                     }else {

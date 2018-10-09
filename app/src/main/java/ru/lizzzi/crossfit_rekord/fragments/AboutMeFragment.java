@@ -21,6 +21,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeTitle;
 import ru.lizzzi.crossfit_rekord.loaders.AboutMeLoader;
@@ -116,15 +119,24 @@ public class AboutMeFragment extends Fragment implements LoaderManager.LoaderCal
             @Override
             public void onClick(View view) {
 
-                //убираем клавиатуру после нажатия на кнопку
-                InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
-                if (imm != null) {
-                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                if (isEmailValid(etEmail.getText().toString())){
+                    //убираем клавиатуру после нажатия на кнопку
+                    InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
+                    if (imm != null) {
+                        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                    }
+
+                    threadAboutMeFragment = new Thread(runnableAboutMeFragment);
+                    threadAboutMeFragment.setDaemon(true);
+                    threadAboutMeFragment.start();
+                }else {
+                    etEmail.setFocusableInTouchMode(true);
+                    etEmail.setFocusable(true);
+                    etEmail.requestFocus();
+                    Toast.makeText(getContext(), "Введите почту!", Toast.LENGTH_SHORT).show();
                 }
 
-                threadAboutMeFragment = new Thread(runnableAboutMeFragment);
-                threadAboutMeFragment.setDaemon(true);
-                threadAboutMeFragment.start();
+
             }
         });
 
@@ -164,16 +176,16 @@ public class AboutMeFragment extends Fragment implements LoaderManager.LoaderCal
     }
 
     private void startAsyncTaskLoader(String objectid, String carNumber, String name,
-                                      String surname, String email, String phone) {
+                                      String surname, String e_mail, String phone) {
         Bundle bundle = new Bundle();
         bundle.putString("objectid", objectid);
         bundle.putString("cardNumber", carNumber);
         bundle.putString("name", name);
         bundle.putString("surname", surname);
-        bundle.putString("email", email);
+        bundle.putString("e_mail", e_mail);
         bundle.putString("phone", phone);
         int LOADERID = 1;
-        getLoaderManager().initLoader(LOADERID, bundle, this).forceLoad();
+        getLoaderManager().restartLoader(LOADERID, bundle, this).forceLoad();
     }
 
 
@@ -204,5 +216,12 @@ public class AboutMeFragment extends Fragment implements LoaderManager.LoaderCal
     @Override
     public void onLoaderReset(Loader<Boolean> loader) {
 
+    }
+
+    public static boolean isEmailValid(String email) {
+        String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
+        Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
     }
 }

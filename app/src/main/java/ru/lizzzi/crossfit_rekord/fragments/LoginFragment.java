@@ -40,8 +40,8 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
 
     private Button btnComeIn;
     private ProgressBar pbLogin;
-    private EditText tvCardNumber;
-    private EditText tvPassword;
+    private EditText etCardNumber;
+    private EditText etPassword;
 
     private Handler handlerLoginFragment;
     private Thread threadLoginFragment;
@@ -55,8 +55,8 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
                              Bundle savedInstanceState){
         View v = inflater.inflate(R.layout.fragment_login, container, false);
 
-        tvCardNumber = v.findViewById(R.id.editText4);
-        tvPassword = v.findViewById(R.id.editText5);
+        etCardNumber = v.findViewById(R.id.editText4);
+        etPassword = v.findViewById(R.id.editText5);
         btnComeIn = v.findViewById(R.id.button2);
         pbLogin = v.findViewById(R.id.pbLogin);
         Button btnContacts = v.findViewById(R.id.btContacts);
@@ -72,7 +72,7 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
                     Bundle bundle = msg.getData();
                     String result_check = bundle.getString("result");
                     if (result_check != null && result_check.equals("true")){
-                        startAsyncTaskLoader(tvCardNumber.getText().toString(), tvPassword.getText().toString());
+                        startAsyncTaskLoader(etCardNumber.getText().toString(), etPassword.getText().toString());
                     }else{
                         ChangeUIElements(0);
                         Toast.makeText(getContext(), "Нет подключения", Toast.LENGTH_SHORT).show();
@@ -105,14 +105,14 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
         btnComeIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (tvCardNumber.getText().length() != 13 ){
-                    tvCardNumber.setFocusable(true);
+                if (etCardNumber.getText().length() != 13 ){
+                    etCardNumber.setFocusable(true);
                     Toast.makeText(getContext(), "Номер карты не корректный", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                if (tvPassword.getText().length() != 13 ){
-                    tvPassword.setFocusable(true);
+                if (etPassword.getText().length() != 13 ){
+                    etPassword.setFocusable(true);
                     Toast.makeText(getContext(), "Проверьте пароль!", Toast.LENGTH_SHORT).show();
                     return;
                 }

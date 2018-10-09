@@ -24,7 +24,7 @@ public class AboutMeLoader extends AsyncTaskLoader<Boolean> {
             stCardNumber = arg.getString("cardNumber");
             stName = arg.getString("name");
             stSurname = arg.getString("surname");
-            stEmail = arg.getString("email");
+            stEmail = arg.getString("e_mail");
             stPhone = arg.getString("phone");
         }
     }
