@@ -16,7 +16,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -83,8 +82,6 @@ public class MainActivity extends AppCompatActivity
 
     private DrawerLayout drawer;
     private ActionBarDrawerToggle toggle;
-
-    public static ViewPager mViewPager;;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -273,7 +270,7 @@ public class MainActivity extends AppCompatActivity
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction ft = fragmentManager.beginTransaction();
-        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        ft.setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right);
         ft.replace(R.id.container, fragment);
         ft.addToBackStack(null);
         ft.commit();
@@ -282,6 +279,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed(){
+
         int count = getSupportFragmentManager().getBackStackEntryCount();
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if(drawer.isDrawerOpen(GravityCompat.START)){
@@ -296,6 +294,8 @@ public class MainActivity extends AppCompatActivity
                 finish();
             } else {
                 getSupportFragmentManager().popBackStack();
+
+
             }
         }
     }

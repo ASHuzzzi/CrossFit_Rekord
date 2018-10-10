@@ -82,7 +82,7 @@ public class StartScreenFragment extends Fragment {
         }
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction ft = fragmentManager.beginTransaction();
-        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        ft.setCustomAnimations(R.anim.enter_from_down, R.anim.exit_to_up);
         ft.replace(R.id.container, fragment);
         ft.addToBackStack(null);
         ft.commit();
