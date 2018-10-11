@@ -92,15 +92,14 @@ public class RecyclerAdapterRecordForTrainingSelect extends RecyclerView.Adapter
                     if (type.equals("CrossFit Kids")){
                         holder.typesItem.setBackgroundResource(R.drawable.table_item_crossfitkids);
                     }
-                    if (type.equals("Weightlifting/Athleticism")){
-                        holder.typesItem.setBackgroundResource(R.drawable.table_item_weightlifting_and_athleticism);
+                    if (type.equals("Athleticism/TRX")){
+                        holder.typesItem.setBackgroundResource(R.drawable.table_item_athleticism_and_trx);
                     }
                     if (type.equals("Gymnastics/Defence")){
                         holder.typesItem.setBackgroundResource(R.drawable.table_item_gymnastics_and_defence);
-
                     }
-                    if (type.equals("Rowing/Lady class")){
-                        holder.typesItem.setBackgroundResource(R.drawable.table_item_rowing_and_ladyclass);
+                    if (type.equals("Endurance/Lady class")){
+                        holder.typesItem.setBackgroundResource(R.drawable.table_item_endurance_and_ladyclass);
                     }
                     if (type.equals("Weightlifting")){
                         holder.typesItem.setBackgroundResource(R.drawable.table_item_weighlifting);
@@ -142,14 +141,14 @@ public class RecyclerAdapterRecordForTrainingSelect extends RecyclerView.Adapter
                 holder.typesItem.setBackgroundResource(R.drawable.table_item_crossfitkids);
             }
             if (type.equals("Weightlifting/Athleticism")){
-                holder.typesItem.setBackgroundResource(R.drawable.table_item_weightlifting_and_athleticism);
+                holder.typesItem.setBackgroundResource(R.drawable.table_item_athleticism_and_trx);
             }
             if (type.equals("Gymnastics/Defence")){
                 holder.typesItem.setBackgroundResource(R.drawable.table_item_gymnastics_and_defence);
 
             }
             if (type.equals("Rowing/Lady class")){
-                holder.typesItem.setBackgroundResource(R.drawable.table_item_rowing_and_ladyclass);
+                holder.typesItem.setBackgroundResource(R.drawable.table_item_endurance_and_ladyclass);
             }
             if (type.equals("Weightlifting")){
                 holder.typesItem.setBackgroundResource(R.drawable.table_item_weighlifting);

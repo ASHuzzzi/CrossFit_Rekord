@@ -118,14 +118,14 @@ public class RecordForTrainingRecordingFragment extends Fragment implements Load
             case "CrossFit Kids":
                 tvSelectedType.setTextColor(getResources().getColor(R.color.color_Table_Crossfit_Kids));
                 break;
-            case "Weightlifting/Athleticism":
-                tvSelectedType.setTextColor(getResources().getColor(R.color.color_Table_Weighlifting));
+            case "Athleticism/TRX":
+                tvSelectedType.setTextColor(getResources().getColor(R.color.color_Table_TRX));
                 break;
             case "Gymnastics/Defence":
                 tvSelectedType.setTextColor(R.drawable.table_item_gymnastics_and_defence);
                 break;
-            case "Rowing/Lady class":
-                tvSelectedType.setTextColor(R.drawable.table_item_rowing_and_ladyclass);
+            case "Endurance/Lady class":
+                tvSelectedType.setTextColor(getResources().getColor(R.color.color_Table_Endurance));
                 break;
             case "Weightlifting":
                 tvSelectedType.setTextColor(getResources().getColor(R.color.color_Table_Weighlifting));
