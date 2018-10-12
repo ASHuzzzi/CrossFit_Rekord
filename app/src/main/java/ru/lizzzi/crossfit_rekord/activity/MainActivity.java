@@ -134,6 +134,7 @@ public class MainActivity extends AppCompatActivity
                 drawer.closeDrawer(GravityCompat.START);
             }
         });
+
         tvNotificationCounter = (TextView) MenuItemCompat.getActionView(navigationView.getMenu().findItem(R.id.notification));
 
 
@@ -245,22 +246,6 @@ public class MainActivity extends AppCompatActivity
 
     public void OpenFragment(Class fragmentClass){
 
-        if (!fragmentClass.equals(StartScreenFragment.class) && !fragmentClass.equals(LoginFragment.class)) {
-            Fragment fragment2 = null;
-            Class fragmentClass2 = StartScreenFragment.class;
-            try {
-                fragment2 = (Fragment) fragmentClass2.newInstance();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            FragmentManager fragmentManager2 = getSupportFragmentManager();
-            fragmentManager2.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            FragmentTransaction ft2 = fragmentManager2.beginTransaction();
-            ft2.add(R.id.container, fragment2);
-            ft2.addToBackStack(null);
-            ft2.commit();
-        }
-
         Fragment fragment = null;
         try {
             fragment = (Fragment) fragmentClass.newInstance();
@@ -269,6 +254,9 @@ public class MainActivity extends AppCompatActivity
         }
 
         FragmentManager fragmentManager = getSupportFragmentManager();
+        for(int i = 0; i < (fragmentManager.getBackStackEntryCount()-1); i++) {
+            fragmentManager.popBackStack();
+        }
         FragmentTransaction ft = fragmentManager.beginTransaction();
         ft.setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right);
         ft.replace(R.id.container, fragment);
