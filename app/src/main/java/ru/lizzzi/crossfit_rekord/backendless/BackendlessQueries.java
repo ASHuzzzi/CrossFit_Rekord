@@ -3,6 +3,7 @@ package ru.lizzzi.crossfit_rekord.backendless;
 import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
 
 import com.backendless.Backendless;
 import com.backendless.BackendlessUser;
@@ -19,6 +20,16 @@ public class BackendlessQueries extends Application {
 
     @SuppressLint("StaticFieldLeak")
     private static Context context;
+
+    private static final String APP_PREFERENCES = "audata";
+    private static final String APP_PREFERENCES_CARDNUMBER = "cardNumber";
+    private static final String APP_PREFERENCES_EMAIL = "Email";
+    private static final String APP_PREFERENCES_PASSWORD = "Password";
+    private static final String APP_PREFERENCES_OBJECTID = "ObjectId";
+    private static final String APP_PREFERENCES_USERNAME = "Username";
+    private static final String APP_PREFERENCES_USERSURNAME = "Usersurname";
+    private static final String APP_PREFERENCES_PHONE = "Phone";
+    private SharedPreferences mSettings;
 
     public void onCreate(){
         super.onCreate();
@@ -133,23 +144,32 @@ public class BackendlessQueries extends Application {
 
     }
 
-    public BackendlessUser authUser(String stcardNumber, String stPassword){
-        BackendlessUser user = null;
+    public boolean authUser(String stcardNumber, String stPassword){
 
         try
         {
             Backendless.UserService.login(stcardNumber, stPassword);
-            user = Backendless.UserService.CurrentUser();
+            BackendlessUser user = Backendless.UserService.CurrentUser();
+            mSettings = getAppContext().getSharedPreferences(APP_PREFERENCES, MODE_PRIVATE);
+            SharedPreferences.Editor editor = mSettings.edit();
+            editor.putString(APP_PREFERENCES_OBJECTID, user.getObjectId());
+            editor.putString(APP_PREFERENCES_CARDNUMBER, String.valueOf(user.getProperty("cardNumber")));
+            editor.putString(APP_PREFERENCES_USERNAME, String.valueOf(user.getProperty("name")));
+            editor.putString(APP_PREFERENCES_USERSURNAME, String.valueOf(user.getProperty("surname")));
+            editor.putString(APP_PREFERENCES_PASSWORD, stPassword);
+            editor.putString(APP_PREFERENCES_EMAIL, String.valueOf(user.getProperty("email")));
+            editor.apply();
+            return true;
         }
         catch( BackendlessException exception )
         {
-
+            return false;
         }
 
-        return user;
+
     }
 
-    public boolean saveUserData(String objectid, String cardNumber, String name, String surname, String e_mail, String phone){
+    public boolean saveUserData(String objectid, String cardNumber, String name, String surname, String phone){
 
         try
         {
@@ -162,12 +182,59 @@ public class BackendlessQueries extends Application {
 
             user.setProperty(stName, name);
             user.setProperty(stSurname, surname);
-            user.setEmail(e_mail);
             user.setProperty(stPhoneNumber, phone);
             try
             {
 
                 Backendless.UserService.update(user);
+                mSettings = getAppContext().getSharedPreferences(APP_PREFERENCES, MODE_PRIVATE);
+                SharedPreferences.Editor editor = mSettings.edit();
+                editor.putString(APP_PREFERENCES_USERNAME, name);
+                editor.putString(APP_PREFERENCES_USERSURNAME, surname);
+                editor.putString(APP_PREFERENCES_PHONE, phone);
+                editor.apply();
+                return true;
+
+            }
+            catch( BackendlessException exception )
+            {
+                // update failed, to get the error code, call exception.getFault().getCode()
+                return false;
+            }
+
+        }
+        catch( BackendlessException exception )
+        {
+            // login failed, to get the error code, call exception.getFault().getCode()
+            return false;
+        }
+
+
+
+    }
+
+    public boolean saveUserRegData(String cardNumber, String eMail, String oldPassword, String newPassword){
+
+        try
+        {
+            //логин и пас это номер карты
+            BackendlessUser user = Backendless.UserService.login(cardNumber, oldPassword);
+
+            String stPassword = getAppContext().getResources().getString(R.string.bTableUsersPassword);
+
+
+            user.setEmail(eMail);
+            user.setProperty(stPassword, newPassword);
+
+            try
+            {
+
+                Backendless.UserService.update(user);
+                mSettings = getAppContext().getSharedPreferences(APP_PREFERENCES, MODE_PRIVATE);
+                SharedPreferences.Editor editor = mSettings.edit();
+                editor.putString(APP_PREFERENCES_EMAIL, eMail);
+                editor.putString(APP_PREFERENCES_PASSWORD, newPassword);
+                editor.apply();
                 return true;
 
             }

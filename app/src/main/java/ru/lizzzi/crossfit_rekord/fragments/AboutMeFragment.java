@@ -5,6 +5,8 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -21,9 +23,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeTitle;
 import ru.lizzzi.crossfit_rekord.loaders.AboutMeLoader;
@@ -31,7 +30,7 @@ import ru.lizzzi.crossfit_rekord.loaders.AboutMeLoader;
 /**
  * Created by basso on 07.03.2018.
  */
-//TODO см в хэлпе User properties. Сначала логин, от него юзер -> нужные параметры.
+
 public class AboutMeFragment extends Fragment implements LoaderManager.LoaderCallbacks<Boolean> {
 
     private static final String APP_PREFERENCES = "audata";
@@ -39,14 +38,12 @@ public class AboutMeFragment extends Fragment implements LoaderManager.LoaderCal
     private static final String APP_PREFERENCES_USERNAME = "Username";
     private static final String APP_PREFERENCES_USERSURNAME = "Usersurname";
     private static final String APP_PREFERENCES_CARDNUMBER = "cardNumber";
-    private static final String APP_PREFERENCES_EMAIL = "Email";
     private static final String APP_PREFERENCES_PHONE = "Phone";
     private SharedPreferences mSettings;
 
     private TextView tvCardNumber;
     private EditText etName;
     private EditText etSurname;
-    private EditText etEmail;
     private EditText etPhone;
     private Button btChangeUserData;
     private ProgressBar pbAboutMe;
@@ -67,9 +64,9 @@ public class AboutMeFragment extends Fragment implements LoaderManager.LoaderCal
         tvCardNumber = v.findViewById(R.id.tvCardNumber);
         etName = v.findViewById(R.id.etName);
         etSurname = v.findViewById(R.id.etSurname);
-        etEmail = v.findViewById(R.id.etEmail);
         etPhone = v.findViewById(R.id.etPhone);
         btChangeUserData = v.findViewById(R.id.btnChangeUserData);
+        Button btnOpenUserRedData = v.findViewById(R.id.btnOpenUserRedData);
         pbAboutMe = v.findViewById(R.id.pbAboutMe);
 
         //хэндлер для потока runnableOpenFragment
@@ -85,7 +82,6 @@ public class AboutMeFragment extends Fragment implements LoaderManager.LoaderCal
                             tvCardNumber.getText().toString(),
                             etName.getText().toString(),
                             etSurname.getText().toString(),
-                            etEmail.getText().toString(),
                             etPhone.getText().toString()
                     );
                 }else{
@@ -119,24 +115,36 @@ public class AboutMeFragment extends Fragment implements LoaderManager.LoaderCal
             @Override
             public void onClick(View view) {
 
-                if (isEmailValid(etEmail.getText().toString())){
-                    //убираем клавиатуру после нажатия на кнопку
-                    InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
-                    if (imm != null) {
-                        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                    }
-
-                    threadAboutMeFragment = new Thread(runnableAboutMeFragment);
-                    threadAboutMeFragment.setDaemon(true);
-                    threadAboutMeFragment.start();
-                }else {
-                    etEmail.setFocusableInTouchMode(true);
-                    etEmail.setFocusable(true);
-                    etEmail.requestFocus();
-                    Toast.makeText(getContext(), "Введите почту!", Toast.LENGTH_SHORT).show();
+                String stCheckSpace = etName.getText().toString();
+                if(stCheckSpace.endsWith(" ")){
+                    stCheckSpace.substring(0, stCheckSpace.length() - 1);
+                    etName.setText(stCheckSpace);
                 }
 
+                //убираем клавиатуру после нажатия на кнопку
+                InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
+                if (imm != null) {
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
 
+                threadAboutMeFragment = new Thread(runnableAboutMeFragment);
+                threadAboutMeFragment.setDaemon(true);
+                threadAboutMeFragment.start();
+
+
+            }
+        });
+
+        btnOpenUserRedData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment fragment =  new UserRegData();
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction ft = fragmentManager.beginTransaction();
+                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                ft.replace(R.id.container, fragment);
+                ft.addToBackStack(null);
+                ft.commit();
             }
         });
 
@@ -161,7 +169,6 @@ public class AboutMeFragment extends Fragment implements LoaderManager.LoaderCal
         tvCardNumber.setText(mSettings.getString(APP_PREFERENCES_CARDNUMBER, ""));
         etName.setText(mSettings.getString(APP_PREFERENCES_USERNAME, ""));
         etSurname.setText(mSettings.getString(APP_PREFERENCES_USERSURNAME, ""));
-        etEmail.setText(mSettings.getString(APP_PREFERENCES_EMAIL, ""));
         etPhone.setText(mSettings.getString(APP_PREFERENCES_PHONE, ""));
     }
 
@@ -176,13 +183,12 @@ public class AboutMeFragment extends Fragment implements LoaderManager.LoaderCal
     }
 
     private void startAsyncTaskLoader(String objectid, String carNumber, String name,
-                                      String surname, String e_mail, String phone) {
+                                      String surname, String phone) {
         Bundle bundle = new Bundle();
         bundle.putString("objectid", objectid);
         bundle.putString("cardNumber", carNumber);
         bundle.putString("name", name);
         bundle.putString("surname", surname);
-        bundle.putString("e_mail", e_mail);
         bundle.putString("phone", phone);
         int LOADERID = 1;
         getLoaderManager().restartLoader(LOADERID, bundle, this).forceLoad();
@@ -199,12 +205,6 @@ public class AboutMeFragment extends Fragment implements LoaderManager.LoaderCal
     @Override
     public void onLoadFinished(Loader<Boolean> loader, Boolean data) {
         if (data){
-            SharedPreferences.Editor editor = mSettings.edit();
-            editor.putString(APP_PREFERENCES_USERNAME, etName.getText().toString());
-            editor.putString(APP_PREFERENCES_USERSURNAME, etSurname.getText().toString());
-            editor.putString(APP_PREFERENCES_EMAIL, etEmail.getText().toString());
-            editor.putString(APP_PREFERENCES_PHONE, etPhone.getText().toString());
-            editor.apply();
             Toast.makeText(getContext(), "Данные обновлены", Toast.LENGTH_SHORT).show();
         }else {
             Toast.makeText(getContext(), "Повторите сохранение", Toast.LENGTH_SHORT).show();
@@ -216,12 +216,5 @@ public class AboutMeFragment extends Fragment implements LoaderManager.LoaderCal
     @Override
     public void onLoaderReset(Loader<Boolean> loader) {
 
-    }
-
-    public static boolean isEmailValid(String email) {
-        String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
-        Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
-        Matcher matcher = pattern.matcher(email);
-        return matcher.matches();
     }
 }

@@ -74,6 +74,7 @@
     <string name="profile">Мои данные</string>
     <string name="calendar_wod">Результаты тренировок</string>
 
+
     <string name="error_connection1">При загрузке данных произошла ошибка.</string>
     <string name="error_connection2">Проверьте Ваше подключение к сети.</string>
     <string name="error_connection_button">Повторить попытку</string>
@@ -115,15 +116,17 @@
     <string name="title_AboutMe_Fragment">Мои данные</string>
     <string name="title_Login_Fragment">Авторизация</string>
     <string name="title_Contacts_Fragment">Контакты</string>
+    <string name="title_UserRegData_Fragment">Учетные данные</string>
 
 
     <!-- Значения для фрагмента AboutMe -->
     <string name="strCardNumber">Номер моей карты</string>
     <string name="strUserName">Имя</string>
     <string name="strUserSurname">Фамилия</string>
-    <string name="strEmail">Почта</string>
+
     <string name="strPhone">Телефон</string>
     <string name="strBtnChange">Изменить</string>
+    <string name="strBtnUserRedData">Учетные данные</string>
 
     <!-- Значения для фрагмента Login -->
     <string name="strEnterCardNumber">Номер карты</string>
@@ -186,5 +189,10 @@
     <string name="strActivityERWod">WoD</string>
     <string name="strActivityERLevel">Level</string>
     <string name="strActivityERSkill">Skill"</string>
+
+    <!-- Значения для фрагмента UserRegData -->
+    <string name="strEmail">Почта</string>
+    <string name="strNewPassword">Введите пароль</string>
+    <string name="strRepeatNewPassword">Повторите пароль</string>
 
 </resources>

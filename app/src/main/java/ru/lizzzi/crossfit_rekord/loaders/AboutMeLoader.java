@@ -14,7 +14,6 @@ public class AboutMeLoader extends AsyncTaskLoader<Boolean> {
     private String stCardNumber;
     private String stName;
     private String stSurname;
-    private String stEmail;
     private String stPhone;
 
     public AboutMeLoader(Context context, Bundle arg) {
@@ -24,13 +23,12 @@ public class AboutMeLoader extends AsyncTaskLoader<Boolean> {
             stCardNumber = arg.getString("cardNumber");
             stName = arg.getString("name");
             stSurname = arg.getString("surname");
-            stEmail = arg.getString("e_mail");
             stPhone = arg.getString("phone");
         }
     }
 
     @Override
     public Boolean loadInBackground() {
-        return user.saveUserData(stObjectId, stCardNumber, stName, stSurname, stEmail, stPhone);
+        return user.saveUserData(stObjectId, stCardNumber, stName, stSurname, stPhone);
     }
 }
