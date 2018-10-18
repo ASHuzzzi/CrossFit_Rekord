@@ -6,7 +6,7 @@ import android.support.v4.content.AsyncTaskLoader;
 
 import ru.lizzzi.crossfit_rekord.backendless.BackendlessQueries;
 
-public class UserRegDataLoader extends AsyncTaskLoader<Boolean> {
+public class ChangePasswordLoader extends AsyncTaskLoader<Boolean> {
 
     private BackendlessQueries user = new BackendlessQueries();
 
@@ -15,7 +15,7 @@ public class UserRegDataLoader extends AsyncTaskLoader<Boolean> {
     private String stNewPassword;
     private String stCardNumber;
 
-    public UserRegDataLoader(Context context, Bundle arg) {
+    public ChangePasswordLoader(Context context, Bundle arg) {
         super(context);
         if (arg != null){
             stCardNumber = arg.getString("cardNumber");

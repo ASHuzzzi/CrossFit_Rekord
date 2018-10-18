@@ -86,6 +86,25 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                String stCheckSpace = etResultSkill.getText().toString();
+                if(stCheckSpace.endsWith(" ")){
+                    stCheckSpace.substring(0, stCheckSpace.length() - 1);
+                    etResultSkill.setText(stCheckSpace);
+                }
+
+                stCheckSpace = etResultLevel.getText().toString();
+                if(stCheckSpace.endsWith(" ")){
+                    stCheckSpace.substring(0, stCheckSpace.length() - 1);
+                    etResultLevel.setText(stCheckSpace);
+                }
+
+                stCheckSpace = etResultWoD.getText().toString();
+                if(stCheckSpace.endsWith(" ")){
+                    stCheckSpace.substring(0, stCheckSpace.length() - 1);
+                    etResultWoD.setText(stCheckSpace);
+                }
+
                 pbSaveUpload.setVisibility(View.VISIBLE);
                 threadClickOnbuttonSave = new Thread(runnableClickOnbuttonSave);
                 threadClickOnbuttonSave.setDaemon(true);

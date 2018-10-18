@@ -115,13 +115,24 @@
         android:layout_marginBottom="20dp"
         android:text="@string/strBtnChange" />
 
-    <Button
-        android:id="@+id/btnOpenUserRedData"
+    <TextView
+        android:id="@+id/tvOpenChangeEmail"
+        style="@style/MainTextStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginBottom="20dp"
-        android:text="@string/strBtnUserRedData" />
+        android:layout_below="@+id/btnChangeUserData"
+        android:layout_marginTop="30dp"
+        android:gravity="center_horizontal"
+        android:text="@string/strEmailChange" />
+
+    <TextView
+        android:id="@+id/tvOpenChangePas"
+        style="@style/MainTextStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvOpenChangeEmail"
+        android:layout_marginTop="30dp"
+        android:gravity="center_horizontal"
+        android:text="@string/strPasswordChange" />
+
 </android.widget.RelativeLayout>

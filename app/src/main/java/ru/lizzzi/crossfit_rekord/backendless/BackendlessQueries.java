@@ -222,8 +222,6 @@ public class BackendlessQueries extends Application {
 
             String stPassword = getAppContext().getResources().getString(R.string.bTableUsersPassword);
 
-
-            user.setEmail(eMail);
             user.setProperty(stPassword, newPassword);
 
             try
@@ -232,8 +230,44 @@ public class BackendlessQueries extends Application {
                 Backendless.UserService.update(user);
                 mSettings = getAppContext().getSharedPreferences(APP_PREFERENCES, MODE_PRIVATE);
                 SharedPreferences.Editor editor = mSettings.edit();
-                editor.putString(APP_PREFERENCES_EMAIL, eMail);
                 editor.putString(APP_PREFERENCES_PASSWORD, newPassword);
+                editor.apply();
+                return true;
+
+            }
+            catch( BackendlessException exception )
+            {
+                // update failed, to get the error code, call exception.getFault().getCode()
+                return false;
+            }
+
+        }
+        catch( BackendlessException exception )
+        {
+            // login failed, to get the error code, call exception.getFault().getCode()
+            return false;
+        }
+
+
+
+    }
+
+    public boolean saveChangeEmail(String cardNumber, String oldEMail, String newEMail, String password){
+
+        try
+        {
+            //логин и пас это номер карты
+            BackendlessUser user = Backendless.UserService.login(cardNumber, password);
+
+            user.setEmail(newEMail);
+
+            try
+            {
+
+                Backendless.UserService.update(user);
+                mSettings = getAppContext().getSharedPreferences(APP_PREFERENCES, MODE_PRIVATE);
+                SharedPreferences.Editor editor = mSettings.edit();
+                editor.putString(APP_PREFERENCES_EMAIL, newEMail);
                 editor.apply();
                 return true;
 

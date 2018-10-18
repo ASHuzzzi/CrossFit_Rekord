@@ -117,15 +117,17 @@
     <string name="title_Login_Fragment">Авторизация</string>
     <string name="title_Contacts_Fragment">Контакты</string>
     <string name="title_UserRegData_Fragment">Учетные данные</string>
-
+    <string name="title_ChangeEmail_Fragment">Изменение эл. почты</string>
+    <string name="title_ChangePassword_Fragment">Изменение пароля</string>
 
     <!-- Значения для фрагмента AboutMe -->
     <string name="strCardNumber">Номер моей карты</string>
     <string name="strUserName">Имя</string>
     <string name="strUserSurname">Фамилия</string>
-
     <string name="strPhone">Телефон</string>
-    <string name="strBtnChange">Изменить</string>
+    <string name="strBtnChange">Изменить мои данные</string>
+    <string name="strEmailChange">Изменить эл. почту</string>\
+    <string name="strPasswordChange">Изменить пароль</string>
     <string name="strBtnUserRedData">Учетные данные</string>
 
     <!-- Значения для фрагмента Login -->
@@ -190,9 +192,16 @@
     <string name="strActivityERLevel">Level</string>
     <string name="strActivityERSkill">Skill"</string>
 
-    <!-- Значения для фрагмента UserRegData -->
-    <string name="strEmail">Почта</string>
-    <string name="strNewPassword">Введите пароль</string>
-    <string name="strRepeatNewPassword">Повторите пароль</string>
+    <!-- Значения для фрагмента ChangeEmail -->
+    <string name="strEmailText">Адрес Вашей электронной почты</string>
+    <string name="strEmailTextOld">Текущий адрес:</string>
+    <string name="strEmailTextNew">Новый адрес:</string>
+    <string name="btnEmailSaveNew">Сохранить адрес</string>
+
+    <!-- Значения для фрагмента ChangePassword -->
+    <string name="strPasswordOld">Старый пароль</string>
+    <string name="strPasswordNew">Новый пароль</string>
+    <string name="strPasswordRepeat">Повторите пароль</string>
+    <string name="btnPasswordSaveNew">Сохранить пароль</string>
 
 </resources>

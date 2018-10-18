@@ -105,6 +105,13 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
         btnComeIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                String stCheckSpace = etCardNumber.getText().toString();
+                if(stCheckSpace.endsWith(" ")){
+                    stCheckSpace.substring(0, stCheckSpace.length() - 1);
+                    etCardNumber.setText(stCheckSpace);
+                }
+
                 if (etCardNumber.getText().length() != 13 ){
                     etCardNumber.setFocusable(true);
                     Toast.makeText(getContext(), "Номер карты не корректный", Toast.LENGTH_SHORT).show();

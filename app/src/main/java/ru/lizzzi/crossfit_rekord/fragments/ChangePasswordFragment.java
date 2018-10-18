@@ -2,7 +2,6 @@ package ru.lizzzi.crossfit_rekord.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -25,43 +24,43 @@ import java.util.regex.Pattern;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeTitle;
-import ru.lizzzi.crossfit_rekord.loaders.UserRegDataLoader;
+import ru.lizzzi.crossfit_rekord.loaders.ChangeEmailLoader;
+import ru.lizzzi.crossfit_rekord.loaders.ChangePasswordLoader;
 
-public class UserRegData extends Fragment implements LoaderManager.LoaderCallbacks<Boolean>{
-
+public class ChangePasswordFragment extends Fragment implements LoaderManager.LoaderCallbacks<Boolean>{
     private static final String APP_PREFERENCES = "audata";
     private static final String APP_PREFERENCES_CARDNUMBER = "cardNumber";
     private static final String APP_PREFERENCES_EMAIL = "Email";
     private static final String APP_PREFERENCES_PASSWORD = "Password";
     private SharedPreferences mSettings;
 
-    private EditText etEmail;
-    private EditText etPassword;
-    private EditText etRepPassword;
-    private ProgressBar pbUserGegData;
-    private Button btnChangeUserRegData;
+    private EditText etPasswordOld;
+    private EditText etPasswordNew;
+    private EditText etPasswordRepeat;
+    private ProgressBar pbChangePassword;
+    private Button btnChangePassword;
 
     private NetworkCheck NetworkCheck; //переменная для проврки сети
 
-    private Handler handlerUserRegDataFragment;
-    private Thread threadUserRegDataFragment;
-    private Runnable runnableUserRegDataFragment;
+    private Handler handlerChangeEmailFragment;
+    private Thread threadChangeEmailFragment;
+    private Runnable runnableChangeEmailFragment;
 
     @SuppressLint("HandlerLeak")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_userregdata, container, false);
+        View v = inflater.inflate(R.layout.fragment_change_password, container, false);
 
         mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
-        etEmail = v.findViewById(R.id.etEmail);
-        etPassword = v.findViewById(R.id.etPassword);
-        etRepPassword = v.findViewById(R.id.etRepPasword);
-        pbUserGegData = v.findViewById(R.id.pbUserGegData);
-        btnChangeUserRegData = v.findViewById(R.id.btnChangeUserRegData);
+        etPasswordOld = v.findViewById(R.id.etPasswordOld);
+        etPasswordNew = v.findViewById(R.id.etPasswordNew);
+        etPasswordRepeat = v.findViewById(R.id.etPasswordRepeat);
+        pbChangePassword = v.findViewById(R.id.pbChangePassword);
+        btnChangePassword = v.findViewById(R.id.btnChangePassword);
 
         //хэндлер для потока runnableOpenFragment
-        handlerUserRegDataFragment = new Handler() {
+        handlerChangeEmailFragment = new Handler() {
             @Override
             public void handleMessage(Message msg) {
                 Bundle bundle = msg.getData();
@@ -70,9 +69,9 @@ public class UserRegData extends Fragment implements LoaderManager.LoaderCallbac
                     ChangeUIElements(1);
                     startAsyncTaskLoader(
                             mSettings.getString(APP_PREFERENCES_CARDNUMBER, ""),
-                            etEmail.getText().toString(),
-                            mSettings.getString(APP_PREFERENCES_PASSWORD, ""),
-                            etPassword.getText().toString()
+                            mSettings.getString(APP_PREFERENCES_EMAIL, ""),
+                            etPasswordOld.getText().toString(),
+                            etPasswordNew.getText().toString()
 
                     );
                 }else{
@@ -83,7 +82,7 @@ public class UserRegData extends Fragment implements LoaderManager.LoaderCallbac
         };
 
         //поток запускаемый при создании экрана (запуск происходит из onStart)
-        runnableUserRegDataFragment = new Runnable() {
+        runnableChangeEmailFragment = new Runnable() {
             @Override
             public void run() {
 
@@ -96,53 +95,53 @@ public class UserRegData extends Fragment implements LoaderManager.LoaderCallbac
                 }else {
                     bundle.putString("result", String.valueOf(false));
                 }
-                Message msg = handlerUserRegDataFragment.obtainMessage();
+                Message msg = handlerChangeEmailFragment.obtainMessage();
                 msg.setData(bundle);
-                handlerUserRegDataFragment.sendMessage(msg);
+                handlerChangeEmailFragment.sendMessage(msg);
             }
         };
 
-        btnChangeUserRegData.setOnClickListener(new View.OnClickListener() {
+        btnChangePassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                if (etEmail.getText().length()== 0 || !isEmailValid(etEmail.getText().toString())){
-                    etEmail.setFocusableInTouchMode(true);
-                    etEmail.setFocusable(true);
-                    etEmail.requestFocus();
-                    Toast.makeText(getContext(), "Введите почту!", Toast.LENGTH_SHORT).show();
+                String stCheckPas = mSettings.getString(APP_PREFERENCES_PASSWORD, "");
+                if(!etPasswordOld.getText().toString().equals(stCheckPas)){
+                    etPasswordOld.setFocusableInTouchMode(true);
+                    etPasswordOld.setFocusable(true);
+                    etPasswordOld.requestFocus();
+                    Toast.makeText(getContext(), "Неправильный старый пароль!", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                if(etPassword.getText().length()== 0 || etRepPassword.getText().length()==0){
-                    if(etPassword.getText().length()== 0){
-                        etPassword.setFocusableInTouchMode(true);
-                        etPassword.setFocusable(true);
-                        etPassword.requestFocus();
+                if(etPasswordNew.getText().length()== 0 || etPasswordRepeat.getText().length()==0){
+                    if(etPasswordNew.getText().length()== 0){
+                        etPasswordNew.setFocusableInTouchMode(true);
+                        etPasswordNew.setFocusable(true);
+                        etPasswordNew.requestFocus();
                         Toast.makeText(getContext(), "Введите пароль", Toast.LENGTH_SHORT).show();
                     }else {
-                        etRepPassword.setFocusableInTouchMode(true);
-                        etRepPassword.setFocusable(true);
-                        etRepPassword.requestFocus();
+                        etPasswordRepeat.setFocusableInTouchMode(true);
+                        etPasswordRepeat.setFocusable(true);
+                        etPasswordRepeat.requestFocus();
                         Toast.makeText(getContext(), "Повторите пароль", Toast.LENGTH_SHORT).show();
                     }
                     return;
                 }
 
-                if(!etPassword.getText().toString().equals(etRepPassword.getText().toString())){
+                if(!etPasswordNew.getText().toString().equals(etPasswordRepeat.getText().toString())){
                     Toast.makeText(getContext(), "Пароли не совпадают!", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
                 //убираем клавиатуру после нажатия на кнопку
                 InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
                 if (imm != null) {
                     imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 }
 
-                threadUserRegDataFragment = new Thread(runnableUserRegDataFragment);
-                threadUserRegDataFragment.setDaemon(true);
-                threadUserRegDataFragment.start();
+                threadChangeEmailFragment = new Thread(runnableChangeEmailFragment);
+                threadChangeEmailFragment.setDaemon(true);
+                threadChangeEmailFragment.start();
             }
         });
 
@@ -154,7 +153,7 @@ public class UserRegData extends Fragment implements LoaderManager.LoaderCallbac
         super.onStart();
         if (getActivity() instanceof InterfaceChangeTitle){
             InterfaceChangeTitle listernerChangeTitle = (InterfaceChangeTitle) getActivity();
-            listernerChangeTitle.changeTitle(R.string.title_UserRegData_Fragment, R.string.title_AboutMe_Fragment);
+            listernerChangeTitle.changeTitle(R.string.title_ChangePassword_Fragment, R.string.title_AboutMe_Fragment);
         }
 
     }
@@ -163,23 +162,24 @@ public class UserRegData extends Fragment implements LoaderManager.LoaderCallbac
     public void onResume() {
         super.onResume();
 
-        pbUserGegData.setVisibility(View.INVISIBLE);
-        etEmail.setText(mSettings.getString(APP_PREFERENCES_EMAIL, ""));
-        etPassword.setText(mSettings.getString(APP_PREFERENCES_PASSWORD, ""));
-        etRepPassword.setText(getResources().getString(R.string.empty));
+        pbChangePassword.setVisibility(View.INVISIBLE);
+        etPasswordOld.setText(getResources().getString(R.string.empty));
+        etPasswordNew.setText(getResources().getString(R.string.empty));
+        etPasswordRepeat.setText(getResources().getString(R.string.empty));
     }
 
     private void ChangeUIElements(int status){
         if (status == 1){
-            pbUserGegData.setVisibility(View.VISIBLE);
-            btnChangeUserRegData.setPressed(true);
+            pbChangePassword.setVisibility(View.VISIBLE);
+            btnChangePassword.setPressed(true);
         }else{
-            pbUserGegData.setVisibility(View.INVISIBLE);
-            btnChangeUserRegData.setPressed(false);
+            pbChangePassword.setVisibility(View.INVISIBLE);
+            btnChangePassword.setPressed(false);
         }
     }
 
-    private void startAsyncTaskLoader(String carNumber, String e_mail, String oldPassword, String newPassword) {
+    private void startAsyncTaskLoader(
+            String carNumber, String e_mail, String oldPassword, String newPassword) {
         Bundle bundle = new Bundle();
         bundle.putString("cardNumber", carNumber);
         bundle.putString("e_mail", e_mail);
@@ -192,14 +192,17 @@ public class UserRegData extends Fragment implements LoaderManager.LoaderCallbac
 
     @Override
     public Loader<Boolean> onCreateLoader(int id, Bundle args) {
-        UserRegDataLoader loader;
-        loader = new UserRegDataLoader(getContext(), args);
+        ChangePasswordLoader loader;
+        loader = new ChangePasswordLoader(getContext(), args);
         return loader;
     }
 
     @Override
     public void onLoadFinished(Loader<Boolean> loader, Boolean data) {
         if (data){
+            etPasswordOld.setText(getResources().getString(R.string.empty));
+            etPasswordNew.setText(getResources().getString(R.string.empty));
+            etPasswordRepeat.setText(getResources().getString(R.string.empty));
             Toast.makeText(getContext(), "Данные обновлены", Toast.LENGTH_SHORT).show();
         }else {
             Toast.makeText(getContext(), "Повторите сохранение", Toast.LENGTH_SHORT).show();

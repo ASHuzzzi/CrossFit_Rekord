@@ -62,11 +62,12 @@ public class AboutMeFragment extends Fragment implements LoaderManager.LoaderCal
         mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
         tvCardNumber = v.findViewById(R.id.tvCardNumber);
+        TextView tvOpenChangeEmail = v.findViewById(R.id.tvOpenChangeEmail);
+        TextView tvOpenChangePas = v.findViewById(R.id.tvOpenChangePas);
         etName = v.findViewById(R.id.etName);
         etSurname = v.findViewById(R.id.etSurname);
         etPhone = v.findViewById(R.id.etPhone);
         btChangeUserData = v.findViewById(R.id.btnChangeUserData);
-        Button btnOpenUserRedData = v.findViewById(R.id.btnOpenUserRedData);
         pbAboutMe = v.findViewById(R.id.pbAboutMe);
 
         //хэндлер для потока runnableOpenFragment
@@ -121,6 +122,20 @@ public class AboutMeFragment extends Fragment implements LoaderManager.LoaderCal
                     etName.setText(stCheckSpace);
                 }
 
+                stCheckSpace = etSurname.getText().toString();
+                if(stCheckSpace.endsWith(" ")){
+                    stCheckSpace.substring(0, stCheckSpace.length() - 1);
+                    etSurname.setText(stCheckSpace);
+                }
+
+                stCheckSpace = etPhone.getText().toString();
+                if(stCheckSpace.endsWith(" ")){
+                    stCheckSpace.substring(0, stCheckSpace.length() - 1);
+                    etPhone.setText(stCheckSpace);
+                }
+
+
+
                 //убираем клавиатуру после нажатия на кнопку
                 InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
                 if (imm != null) {
@@ -135,10 +150,23 @@ public class AboutMeFragment extends Fragment implements LoaderManager.LoaderCal
             }
         });
 
-        btnOpenUserRedData.setOnClickListener(new View.OnClickListener() {
+        tvOpenChangeEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Fragment fragment =  new UserRegData();
+                Fragment fragment =  new ChangeEmailFragment();
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction ft = fragmentManager.beginTransaction();
+                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                ft.replace(R.id.container, fragment);
+                ft.addToBackStack(null);
+                ft.commit();
+            }
+        });
+
+        tvOpenChangePas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment fragment =  new ChangePasswordFragment();
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction ft = fragmentManager.beginTransaction();
                 ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
