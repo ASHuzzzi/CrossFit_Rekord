@@ -28,8 +28,8 @@ import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeTitle;
 import ru.lizzzi.crossfit_rekord.loaders.ChangeEmailLoader;
 
 public class ChangeEmailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Boolean>{
+
     private static final String APP_PREFERENCES = "audata";
-    private static final String APP_PREFERENCES_CARDNUMBER = "cardNumber";
     private static final String APP_PREFERENCES_EMAIL = "Email";
     private static final String APP_PREFERENCES_PASSWORD = "Password";
     private SharedPreferences mSettings;
@@ -66,7 +66,6 @@ public class ChangeEmailFragment extends Fragment implements LoaderManager.Loade
                 if (result_check != null && result_check.equals("true")){
                     ChangeUIElements(1);
                     startAsyncTaskLoader(
-                            mSettings.getString(APP_PREFERENCES_CARDNUMBER, ""),
                             mSettings.getString(APP_PREFERENCES_EMAIL, ""),
                             etChangeEmail.getText().toString(),
                             mSettings.getString(APP_PREFERENCES_PASSWORD, "")
@@ -105,7 +104,7 @@ public class ChangeEmailFragment extends Fragment implements LoaderManager.Loade
 
                 String stCheckSpace = etChangeEmail.getText().toString();
                 if(stCheckSpace.endsWith(" ")){
-                    stCheckSpace.substring(0, stCheckSpace.length() - 1);
+                    stCheckSpace = stCheckSpace.substring(0, stCheckSpace.length() - 1);
                     etChangeEmail.setText(stCheckSpace);
                 }
 
@@ -163,9 +162,8 @@ public class ChangeEmailFragment extends Fragment implements LoaderManager.Loade
     }
 
     private void startAsyncTaskLoader(
-            String carNumber, String e_mailOld, String e_mailNew, String password) {
+            String e_mailOld, String e_mailNew, String password) {
         Bundle bundle = new Bundle();
-        bundle.putString("cardNumber", carNumber);
         bundle.putString("e_mailOld", e_mailOld);
         bundle.putString("e_mailNew", e_mailNew);
         bundle.putString("password", password);

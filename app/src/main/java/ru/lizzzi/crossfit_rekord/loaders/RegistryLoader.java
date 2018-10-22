@@ -6,24 +6,25 @@ import android.support.v4.content.AsyncTaskLoader;
 
 import ru.lizzzi.crossfit_rekord.backendless.BackendlessQueries;
 
-public class LoginLoader extends AsyncTaskLoader<Boolean> {
+public class RegistryLoader extends AsyncTaskLoader<Boolean> {
 
     private BackendlessQueries user = new BackendlessQueries();
+    private String stUserName;
     private String stEmail;
-    private String password;
+    private String stPassword;
 
-    public LoginLoader(Context context, Bundle args) {
+
+    public RegistryLoader(Context context, Bundle args) {
         super(context);
         if (args != null){
+            stUserName = args.getString("userName");
             stEmail = args.getString("e_mail");
-            password = args.getString("password");
+            stPassword = args.getString("password");
         }
     }
 
     @Override
     public Boolean loadInBackground() {
-
-        return user.authUser(stEmail, password);
-
+        return user.regUser(stUserName, stEmail, stPassword);
     }
 }

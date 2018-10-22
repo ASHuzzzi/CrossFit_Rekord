@@ -1,70 +1,113 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="ru.lizzzi.crossfit_rekord.fragments.RegistryFragment">
 
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/textView1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/user_name" />
+            android:layout_marginTop="10dp"
+            android:gravity="start"
+            android:text="@string/strUserNameR"
+            android:textColor="@color/colorRedPrimary" />
 
         <EditText
             android:id="@+id/username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:ems="10"
-            android:hint="@string/hint_user_name"
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName"
+            android:textColor="@color/colorRedPrimary"
+            android:theme="@style/Theme.App.Base"
+            tools:ignore="LabelFor" />
 
         <TextView
             android:id="@+id/textView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="start"
+            android:textColor="@color/colorRedPrimary"
             android:text="@string/email" />
 
         <EditText
             android:id="@+id/email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:ems="10"
-            android:hint="@string/hint_email"
-            android:inputType="textEmailAddress" />
+            android:inputType="textEmailAddress"
+            android:textColor="@color/colorRedPrimary"
+            android:theme="@style/Theme.App.Base"
+            tools:ignore="LabelFor" />
 
         <TextView
             android:id="@+id/textView3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="start"
+            android:textColor="@color/colorRedPrimary"
             android:text="@string/password" />
 
         <EditText
             android:id="@+id/password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:ems="10"
-            android:hint="@string/hint_password"
-            android:inputType="textVisiblePassword" />
+            android:inputType="textVisiblePassword"
+            android:textColor="@color/colorRedPrimary"
+            android:theme="@style/Theme.App.Base"
+            tools:ignore="LabelFor" />
+
+        <TextView
+            android:id="@+id/textView45"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:textColor="@color/colorRedPrimary"
+            android:text="@string/passwordRep" />
 
         <EditText
             android:id="@+id/checkpassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:ems="10"
-            android:hint="@string/hint_check_password"
-            android:inputType="textVisiblePassword" />
+            android:inputType="textVisiblePassword"
+            android:textColor="@color/colorRedPrimary"
+            android:theme="@style/Theme.App.Base"
+            tools:ignore="LabelFor" />
 
-        <Button
-            android:id="@+id/btn_register"
-            android:layout_width="match_parent"
+        <ProgressBar
+            android:id="@+id/pbRegistry"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/registered" />
+            android:layout_gravity="center" />
+
     </LinearLayout>
 
-</FrameLayout>
+    <Button
+        android:id="@+id/btnRegister"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:text="@string/btnRegistered" />
+
+</LinearLayout>

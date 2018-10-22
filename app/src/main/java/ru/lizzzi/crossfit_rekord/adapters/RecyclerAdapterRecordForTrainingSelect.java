@@ -2,7 +2,9 @@ package ru.lizzzi.crossfit_rekord.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -113,6 +115,7 @@ public class RecyclerAdapterRecordForTrainingSelect extends RecyclerView.Adapter
                     });
                 }else{
                     holder.typesItem.setBackgroundResource(R.drawable.table_item_out_of_time);
+                    holder.startTimeItem.setTextColor(Color.BLACK);
                     ll_item_table.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {

@@ -18,11 +18,12 @@
     <!-- Поля для составления списка по записавшимся -->
     <string name="username">username</string>
 
-    <!-- Значения для фрагмента Login -->
-    <string name="user_name">Имя пользователя</string>
+    <!-- Значения для фрагмента Registry -->
+    <string name="strUserNameR">Имя пользователя</string>
     <string name="email">Email</string>
     <string name="password">Пароль</string>
-    <string name="registered">Зарегистрировать</string>
+    <string name="passwordRep">Повторите пароль</string>
+    <string name="btnRegistered">Зарегистрировать</string>
 
     <!-- Hint'ы полей  для фрагмента Login-->
     <string name="hint_user_name">Введите имя пользователя</string>
@@ -119,6 +120,7 @@
     <string name="title_UserRegData_Fragment">Учетные данные</string>
     <string name="title_ChangeEmail_Fragment">Изменение эл. почты</string>
     <string name="title_ChangePassword_Fragment">Изменение пароля</string>
+    <string name="title_Regystry_Fragment">Регистрация</string>
 
     <!-- Значения для фрагмента AboutMe -->
     <string name="strCardNumber">Номер моей карты</string>
@@ -131,7 +133,7 @@
     <string name="strBtnUserRedData">Учетные данные</string>
 
     <!-- Значения для фрагмента Login -->
-    <string name="strEnterCardNumber">Номер карты</string>
+    <string name="strEnterEmail">Адрес эл. почты</string>
     <string name="strHintCardNumber">0 000000 000000</string>
     <string name="strEnterPassword">Пароль</string>
     <string name="strHintPassword">******</string>

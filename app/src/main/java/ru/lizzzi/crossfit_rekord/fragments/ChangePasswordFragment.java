@@ -19,17 +19,12 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeTitle;
-import ru.lizzzi.crossfit_rekord.loaders.ChangeEmailLoader;
 import ru.lizzzi.crossfit_rekord.loaders.ChangePasswordLoader;
 
 public class ChangePasswordFragment extends Fragment implements LoaderManager.LoaderCallbacks<Boolean>{
     private static final String APP_PREFERENCES = "audata";
-    private static final String APP_PREFERENCES_CARDNUMBER = "cardNumber";
     private static final String APP_PREFERENCES_EMAIL = "Email";
     private static final String APP_PREFERENCES_PASSWORD = "Password";
     private SharedPreferences mSettings;
@@ -68,7 +63,6 @@ public class ChangePasswordFragment extends Fragment implements LoaderManager.Lo
                 if (result_check != null && result_check.equals("true")){
                     ChangeUIElements(1);
                     startAsyncTaskLoader(
-                            mSettings.getString(APP_PREFERENCES_CARDNUMBER, ""),
                             mSettings.getString(APP_PREFERENCES_EMAIL, ""),
                             etPasswordOld.getText().toString(),
                             etPasswordNew.getText().toString()
@@ -178,10 +172,8 @@ public class ChangePasswordFragment extends Fragment implements LoaderManager.Lo
         }
     }
 
-    private void startAsyncTaskLoader(
-            String carNumber, String e_mail, String oldPassword, String newPassword) {
+    private void startAsyncTaskLoader(String e_mail, String oldPassword, String newPassword) {
         Bundle bundle = new Bundle();
-        bundle.putString("cardNumber", carNumber);
         bundle.putString("e_mail", e_mail);
         bundle.putString("oldPassword", oldPassword);
         bundle.putString("newPassword", newPassword);
@@ -214,12 +206,5 @@ public class ChangePasswordFragment extends Fragment implements LoaderManager.Lo
     @Override
     public void onLoaderReset(Loader<Boolean> loader) {
 
-    }
-
-    public static boolean isEmailValid(String email) {
-        String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
-        Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
-        Matcher matcher = pattern.matcher(email);
-        return matcher.matches();
     }
 }

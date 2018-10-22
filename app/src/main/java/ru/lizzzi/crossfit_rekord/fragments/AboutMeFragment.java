@@ -34,11 +34,12 @@ import ru.lizzzi.crossfit_rekord.loaders.AboutMeLoader;
 public class AboutMeFragment extends Fragment implements LoaderManager.LoaderCallbacks<Boolean> {
 
     private static final String APP_PREFERENCES = "audata";
-    private static final String APP_PREFERENCES_OBJECTID = "ObjectId";
+    private static final String APP_PREFERENCES_EMAIL = "Email";
     private static final String APP_PREFERENCES_USERNAME = "Username";
     private static final String APP_PREFERENCES_USERSURNAME = "Usersurname";
     private static final String APP_PREFERENCES_CARDNUMBER = "cardNumber";
     private static final String APP_PREFERENCES_PHONE = "Phone";
+    private static final String APP_PREFERENCES_PASSWORD = "Password";
     private SharedPreferences mSettings;
 
     private TextView tvCardNumber;
@@ -79,8 +80,8 @@ public class AboutMeFragment extends Fragment implements LoaderManager.LoaderCal
                 if (result_check != null && result_check.equals("true")){
                     ChangeUIElements(1);
                     startAsyncTaskLoader(
-                            mSettings.getString(APP_PREFERENCES_OBJECTID, ""),
-                            tvCardNumber.getText().toString(),
+                            mSettings.getString(APP_PREFERENCES_EMAIL, ""),
+                            mSettings.getString(APP_PREFERENCES_PASSWORD, ""),
                             etName.getText().toString(),
                             etSurname.getText().toString(),
                             etPhone.getText().toString()
@@ -118,19 +119,19 @@ public class AboutMeFragment extends Fragment implements LoaderManager.LoaderCal
 
                 String stCheckSpace = etName.getText().toString();
                 if(stCheckSpace.endsWith(" ")){
-                    stCheckSpace.substring(0, stCheckSpace.length() - 1);
+                    stCheckSpace = stCheckSpace.substring(0, stCheckSpace.length() - 1);
                     etName.setText(stCheckSpace);
                 }
 
                 stCheckSpace = etSurname.getText().toString();
                 if(stCheckSpace.endsWith(" ")){
-                    stCheckSpace.substring(0, stCheckSpace.length() - 1);
+                    stCheckSpace = stCheckSpace.substring(0, stCheckSpace.length() - 1);
                     etSurname.setText(stCheckSpace);
                 }
 
                 stCheckSpace = etPhone.getText().toString();
                 if(stCheckSpace.endsWith(" ")){
-                    stCheckSpace.substring(0, stCheckSpace.length() - 1);
+                    stCheckSpace = stCheckSpace.substring(0, stCheckSpace.length() - 1);
                     etPhone.setText(stCheckSpace);
                 }
 
@@ -210,11 +211,11 @@ public class AboutMeFragment extends Fragment implements LoaderManager.LoaderCal
         }
     }
 
-    private void startAsyncTaskLoader(String objectid, String carNumber, String name,
+    private void startAsyncTaskLoader(String stEmail, String carNumber, String name,
                                       String surname, String phone) {
         Bundle bundle = new Bundle();
-        bundle.putString("objectid", objectid);
-        bundle.putString("cardNumber", carNumber);
+        bundle.putString("e-mail", stEmail);
+        bundle.putString("password", carNumber);
         bundle.putString("name", name);
         bundle.putString("surname", surname);
         bundle.putString("phone", phone);

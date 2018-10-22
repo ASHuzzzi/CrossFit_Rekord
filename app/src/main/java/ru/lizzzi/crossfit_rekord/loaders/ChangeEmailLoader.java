@@ -13,12 +13,10 @@ public class ChangeEmailLoader extends AsyncTaskLoader<Boolean> {
     private String stOldEmail;
     private String stNewEmail;
     private String stPassword;
-    private String stCardNumber;
 
     public ChangeEmailLoader(Context context, Bundle arg) {
         super(context);
         if (arg != null){
-            stCardNumber = arg.getString("cardNumber");
             stOldEmail = arg.getString("e_mailOld");
             stNewEmail = arg.getString("e_mailNew");
             stPassword = arg.getString("password");
@@ -27,6 +25,6 @@ public class ChangeEmailLoader extends AsyncTaskLoader<Boolean> {
 
     @Override
     public Boolean loadInBackground() {
-        return user.saveChangeEmail(stCardNumber, stOldEmail, stNewEmail, stPassword);
+        return user.saveChangeEmail(stOldEmail, stNewEmail, stPassword);
     }
 }

@@ -144,11 +144,11 @@ public class BackendlessQueries extends Application {
 
     }
 
-    public boolean authUser(String stcardNumber, String stPassword){
+    public boolean authUser(String eMail, String stPassword){
 
         try
         {
-            Backendless.UserService.login(stcardNumber, stPassword);
+            Backendless.UserService.login(eMail, stPassword);
             BackendlessUser user = Backendless.UserService.CurrentUser();
             mSettings = getAppContext().getSharedPreferences(APP_PREFERENCES, MODE_PRIVATE);
             SharedPreferences.Editor editor = mSettings.edit();
@@ -169,12 +169,12 @@ public class BackendlessQueries extends Application {
 
     }
 
-    public boolean saveUserData(String objectid, String cardNumber, String name, String surname, String phone){
+    public boolean saveUserData(String eMail, String stPassword, String name, String surname, String phone){
 
         try
         {
             //логин и пас это номер карты
-            BackendlessUser user = Backendless.UserService.login(cardNumber, cardNumber);
+            BackendlessUser user = Backendless.UserService.login(eMail, stPassword);
 
             String stName = getAppContext().getResources().getString(R.string.bTableUsersNameT);
             String stSurname = getAppContext().getResources().getString(R.string.bTableUsersSurname);
@@ -213,12 +213,12 @@ public class BackendlessQueries extends Application {
 
     }
 
-    public boolean saveUserRegData(String cardNumber, String eMail, String oldPassword, String newPassword){
+    public boolean saveUserRegData(String eMail, String oldPassword, String newPassword){
 
         try
         {
             //логин и пас это номер карты
-            BackendlessUser user = Backendless.UserService.login(cardNumber, oldPassword);
+            BackendlessUser user = Backendless.UserService.login(eMail, oldPassword);
 
             String stPassword = getAppContext().getResources().getString(R.string.bTableUsersPassword);
 
@@ -252,12 +252,12 @@ public class BackendlessQueries extends Application {
 
     }
 
-    public boolean saveChangeEmail(String cardNumber, String oldEMail, String newEMail, String password){
+    public boolean saveChangeEmail(String oldEMail, String newEMail, String password){
 
         try
         {
             //логин и пас это номер карты
-            BackendlessUser user = Backendless.UserService.login(cardNumber, password);
+            BackendlessUser user = Backendless.UserService.login(oldEMail, password);
 
             user.setEmail(newEMail);
 
@@ -383,6 +383,34 @@ public class BackendlessQueries extends Application {
         catch( BackendlessException exception )
         {
             return null;
+        }
+
+    }
+
+    public boolean regUser(String stUserName, String stEmail, String stPassword){
+
+        try
+        {
+            BackendlessUser user = new BackendlessUser();
+            user.setEmail( stEmail );
+            user.setPassword( stPassword );
+            user.setProperty( "name", stUserName);
+
+            user = Backendless.UserService.register(user);
+
+            mSettings = getAppContext().getSharedPreferences(APP_PREFERENCES, MODE_PRIVATE);
+            SharedPreferences.Editor editor = mSettings.edit();
+            editor.putString(APP_PREFERENCES_USERNAME, stUserName);
+            editor.putString(APP_PREFERENCES_EMAIL, stEmail);
+            editor.putString(APP_PREFERENCES_PASSWORD, stPassword);
+            editor.putString(APP_PREFERENCES_OBJECTID, user.getObjectId());
+            editor.apply();
+
+            return true;
+        }
+        catch( BackendlessException exception )
+        {
+            return false;
         }
 
     }

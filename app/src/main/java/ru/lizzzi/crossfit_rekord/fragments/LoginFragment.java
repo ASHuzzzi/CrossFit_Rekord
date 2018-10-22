@@ -24,6 +24,8 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeTitle;
@@ -40,7 +42,7 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
 
     private Button btnComeIn;
     private ProgressBar pbLogin;
-    private EditText etCardNumber;
+    private EditText etEmail;
     private EditText etPassword;
 
     private Handler handlerLoginFragment;
@@ -55,7 +57,7 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
                              Bundle savedInstanceState){
         View v = inflater.inflate(R.layout.fragment_login, container, false);
 
-        etCardNumber = v.findViewById(R.id.editText4);
+        etEmail = v.findViewById(R.id.editText4);
         etPassword = v.findViewById(R.id.editText5);
         btnComeIn = v.findViewById(R.id.button2);
         pbLogin = v.findViewById(R.id.pbLogin);
@@ -72,7 +74,7 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
                     Bundle bundle = msg.getData();
                     String result_check = bundle.getString("result");
                     if (result_check != null && result_check.equals("true")){
-                        startAsyncTaskLoader(etCardNumber.getText().toString(), etPassword.getText().toString());
+                        startAsyncTaskLoader(etEmail.getText().toString(), etPassword.getText().toString());
                     }else{
                         ChangeUIElements(0);
                         Toast.makeText(getContext(), "Нет подключения", Toast.LENGTH_SHORT).show();
@@ -106,21 +108,25 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
             @Override
             public void onClick(View view) {
 
-                String stCheckSpace = etCardNumber.getText().toString();
+                String stCheckSpace = etEmail.getText().toString();
                 if(stCheckSpace.endsWith(" ")){
-                    stCheckSpace.substring(0, stCheckSpace.length() - 1);
-                    etCardNumber.setText(stCheckSpace);
+                    stCheckSpace = stCheckSpace.substring(0, stCheckSpace.length() - 1);
+                    etEmail.setText(stCheckSpace);
                 }
 
-                if (etCardNumber.getText().length() != 13 ){
-                    etCardNumber.setFocusable(true);
-                    Toast.makeText(getContext(), "Номер карты не корректный", Toast.LENGTH_SHORT).show();
+                if (etEmail.getText().length()== 0 || !isEmailValid(etEmail.getText().toString())){
+                    etEmail.setFocusableInTouchMode(true);
+                    etEmail.setFocusable(true);
+                    etEmail.requestFocus();
+                    Toast.makeText(getContext(), "Введите почту!", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                if (etPassword.getText().length() != 13 ){
+                if(etPassword.getText().length()== 0){
+                    etPassword.setFocusableInTouchMode(true);
                     etPassword.setFocusable(true);
-                    Toast.makeText(getContext(), "Проверьте пароль!", Toast.LENGTH_SHORT).show();
+                    etPassword.requestFocus();
+                    Toast.makeText(getContext(), "Введите пароль", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -186,9 +192,9 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
         }
     }
 
-    private void startAsyncTaskLoader(String iCardNumber, String stPassword) {
+    private void startAsyncTaskLoader(String stEmail, String stPassword) {
         Bundle bundle = new Bundle();
-        bundle.putString("cardNumber" , iCardNumber);
+        bundle.putString("e_mail" , stEmail);
         bundle.putString("password" , stPassword);
         int LOADERID = 1;
         getLoaderManager().initLoader(LOADERID, bundle,this).forceLoad();
@@ -261,5 +267,12 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         ft.replace(R.id.container, fragment);
         ft.commit();
+    }
+
+    public static boolean isEmailValid(String email) {
+        String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
+        Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
     }
 }

@@ -10,8 +10,8 @@ public class AboutMeLoader extends AsyncTaskLoader<Boolean> {
 
     private BackendlessQueries user = new BackendlessQueries();
 
-    private String stObjectId;
-    private String stCardNumber;
+    private String stEmail;
+    private String stPassword;
     private String stName;
     private String stSurname;
     private String stPhone;
@@ -19,8 +19,8 @@ public class AboutMeLoader extends AsyncTaskLoader<Boolean> {
     public AboutMeLoader(Context context, Bundle arg) {
         super(context);
         if (arg != null){
-            stObjectId = arg.getString("objectid");
-            stCardNumber = arg.getString("cardNumber");
+            stEmail = arg.getString("e-mail");
+            stPassword = arg.getString("password");
             stName = arg.getString("name");
             stSurname = arg.getString("surname");
             stPhone = arg.getString("phone");
@@ -29,6 +29,6 @@ public class AboutMeLoader extends AsyncTaskLoader<Boolean> {
 
     @Override
     public Boolean loadInBackground() {
-        return user.saveUserData(stObjectId, stCardNumber, stName, stSurname, stPhone);
+        return user.saveUserData(stEmail, stPassword, stName, stSurname, stPhone);
     }
 }

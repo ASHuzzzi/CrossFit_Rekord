@@ -40,7 +40,7 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:gravity="start"
-            android:text="@string/strEnterCardNumber"
+            android:text="@string/strEnterEmail"
             android:textColor="@color/colorRedPrimary" />
 
         <EditText
@@ -51,7 +51,7 @@
             android:layout_marginRight="20dp"
             android:layout_marginBottom="10dp"
             android:gravity="start"
-            android:inputType="number"
+            android:inputType="textWebEmailAddress"
             android:textColor="@color/colorRedPrimary"
             android:theme="@style/Theme.App.Base"
             tools:ignore="LabelFor" />
@@ -70,11 +70,10 @@
             android:id="@+id/editText5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
+            android:layout_marginBottom="10dp"
             android:gravity="start"
-            android:inputType="number"
             android:textColor="@color/colorRedPrimary"
             android:theme="@style/Theme.App.Base"
             tools:ignore="LabelFor" />

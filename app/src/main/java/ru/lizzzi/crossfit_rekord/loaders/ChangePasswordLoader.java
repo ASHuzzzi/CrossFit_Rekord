@@ -13,12 +13,10 @@ public class ChangePasswordLoader extends AsyncTaskLoader<Boolean> {
     private String stEmail;
     private String stOldPassword;
     private String stNewPassword;
-    private String stCardNumber;
 
     public ChangePasswordLoader(Context context, Bundle arg) {
         super(context);
         if (arg != null){
-            stCardNumber = arg.getString("cardNumber");
             stEmail = arg.getString("e_mail");
             stOldPassword = arg.getString("oldPassword");
             stNewPassword = arg.getString("newPassword");
@@ -27,6 +25,6 @@ public class ChangePasswordLoader extends AsyncTaskLoader<Boolean> {
 
     @Override
     public Boolean loadInBackground() {
-        return user.saveUserRegData(stCardNumber, stEmail, stOldPassword, stNewPassword);
+        return user.saveUserRegData(stEmail, stOldPassword, stNewPassword);
     }
 }
