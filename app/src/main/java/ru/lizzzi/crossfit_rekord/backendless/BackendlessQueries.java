@@ -295,7 +295,7 @@ public class BackendlessQueries extends Application {
 
         String stTableName = getAppContext().getResources().getString(R.string.bTableResultsName);
         String stDateSession = getAppContext().getResources().getString(R.string.bTableResultsDateSession);
-        String stUserID = getAppContext().getResources().getString(R.string.bTableResultsUserID);
+        String stOwnerID = getAppContext().getResources().getString(R.string.bTableRecordingOwnerId);
         String stName = getAppContext().getResources().getString(R.string.bTableResultsNameT);
         String stSkill = getAppContext().getResources().getString(R.string.bTableResultsSkill);
         String stWodLevel = getAppContext().getResources().getString(R.string.bTableResultsWodLevel);
@@ -309,7 +309,7 @@ public class BackendlessQueries extends Application {
         switch (iLoaderId){
             case 2:
                 record.put(stDateSession, dateSession);
-                record.put(stUserID, userId);
+                record.put(stOwnerID, userId);
                 record.put(stName, userName);
                 record.put(stSkill, userSkill);
                 record.put(stWodLevel, userWoDLevel);
@@ -328,7 +328,7 @@ public class BackendlessQueries extends Application {
 
             case 3:
                 whereClause =
-                        stDateSession + " = '" + dateSession + "' and " + stUserID + " = '" + userId + "'";
+                        stDateSession + " = '" + dateSession + "' and " + stOwnerID + " = '" + userId + "'";
 
                 try
                 {
@@ -348,7 +348,7 @@ public class BackendlessQueries extends Application {
                 record2.put(stWodLevel, userWoDLevel);
                 record2.put(stWodResult, userWodResult);
                 whereClause =
-                        stDateSession + " = '" + dateSession + "' and " + stUserID + " = '" + userId + "'";
+                        stDateSession + " = '" + dateSession + "' and " + stOwnerID + " = '" + userId + "'";
 
                 try
                 {

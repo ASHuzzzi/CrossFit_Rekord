@@ -28,7 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="10dp"
-        android:layout_weight="1.5"
+        android:layout_weight="1"
         android:gravity="center"
         android:isScrollContainer="true"
         android:orientation="vertical">
@@ -74,6 +74,8 @@
             android:layout_marginRight="20dp"
             android:layout_marginBottom="10dp"
             android:gravity="start"
+            android:inputType="textPassword"
+            android:maxLines="1"
             android:textColor="@color/colorRedPrimary"
             android:theme="@style/Theme.App.Base"
             tools:ignore="LabelFor" />
@@ -83,23 +85,25 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="40dp"
-            android:layout_marginRight="40dp"
             android:layout_marginTop="20dp"
+            android:layout_marginRight="40dp"
             android:text="@string/strButtonEnter" />
 
         <TextView
             android:id="@+id/textView13"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:text="@string/strRegistration"
             android:visibility="invisible" />
 
         <Button
-            android:id="@+id/button4"
+            android:id="@+id/btnRegisration"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:text="@string/strButtonRegistration"
-            android:visibility="invisible" />
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="40dp"
+            android:text="@string/strButtonRegistration" />
 
     </LinearLayout>
 

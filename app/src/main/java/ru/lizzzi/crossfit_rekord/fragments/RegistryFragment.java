@@ -2,10 +2,10 @@ package ru.lizzzi.crossfit_rekord.fragments;
 
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -20,15 +20,11 @@ import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-
-import com.backendless.Backendless;
-import com.backendless.BackendlessUser;
-import com.backendless.async.callback.AsyncCallback;
-import com.backendless.exceptions.BackendlessFault;
 
 import java.util.Objects;
 import java.util.regex.Matcher;
@@ -37,29 +33,22 @@ import java.util.regex.Pattern;
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeTitle;
 import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeToggleStatus;
-import ru.lizzzi.crossfit_rekord.loaders.LoginLoader;
 import ru.lizzzi.crossfit_rekord.loaders.RegistryLoader;
 import ru.lizzzi.crossfit_rekord.services.LoadNotificationsService;
 
 
 public class RegistryFragment extends Fragment implements LoaderManager.LoaderCallbacks<Boolean> {
 
-    public static final String APP_PREFERENCES = "audata";
-    public static final String APP_PREFERENCES_USERNAME = "Username";
-    public static final String APP_PREFERENCES_EMAIL = "Email";
-    public static final String APP_PREFERENCES_PASSWORD = "Password";
-    public static final String APP_PREFERENCES_OBJECTID = "ObjectId";
-    SharedPreferences mSettings;
-
     private EditText etUserName;
     private EditText etPassword;
+    private EditText etCheckPassword;
     private EditText etEmail;
     private ProgressBar pbRegistry;
     private Button btnRegister;
 
-    private Handler handlerLoginFragment;
-    private Thread threadLoginFragment;
-    private Runnable runnableLoginFragment;
+    private Handler handlerRegistryFragment;
+    private Thread threadRegistryFragment;
+    private Runnable runnableRegistryFragment;
 
     private int openFragment = 1;
 
@@ -74,20 +63,17 @@ public class RegistryFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
         View v = inflater.inflate(R.layout.fragment_registry, container, false);
         etUserName = v.findViewById(R.id.username);
         etPassword = v.findViewById(R.id.password);
+        etCheckPassword = v.findViewById(R.id.checkpassword);
         etEmail = v.findViewById(R.id.email);
         pbRegistry = v.findViewById(R.id.pbRegistry);
         btnRegister = v.findViewById(R.id.btnRegister);
 
-        getContext();
-        mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-        final SharedPreferences.Editor editor = mSettings.edit();
-
         //хэндлер для потока runnableOpenFragment
-        handlerLoginFragment = new Handler() {
+        handlerRegistryFragment = new Handler() {
             @Override
             public void handleMessage(Message msg) {
                 if(msg.what == openFragment){
@@ -96,7 +82,10 @@ public class RegistryFragment extends Fragment implements LoaderManager.LoaderCa
                     Bundle bundle = msg.getData();
                     String result_check = bundle.getString("result");
                     if (result_check != null && result_check.equals("true")){
-                        startAsyncTaskLoader(etEmail.getText().toString(), etPassword.getText().toString());
+                        startAsyncTaskLoader(
+                                etUserName.getText().toString(),
+                                etEmail.getText().toString(),
+                                etPassword.getText().toString());
                     }else{
                         ChangeUIElements(0);
                         Toast.makeText(getContext(), "Нет подключения", Toast.LENGTH_SHORT).show();
@@ -107,7 +96,7 @@ public class RegistryFragment extends Fragment implements LoaderManager.LoaderCa
         };
 
         //поток запускаемый при создании экрана (запуск происходит из onStart)
-        runnableLoginFragment = new Runnable() {
+        runnableRegistryFragment = new Runnable() {
             @Override
             public void run() {
 
@@ -120,9 +109,9 @@ public class RegistryFragment extends Fragment implements LoaderManager.LoaderCa
                 }else {
                     bundle.putString("result", String.valueOf(false));
                 }
-                Message msg = handlerLoginFragment.obtainMessage();
+                Message msg = handlerRegistryFragment.obtainMessage();
                 msg.setData(bundle);
-                handlerLoginFragment.sendMessage(msg);
+                handlerRegistryFragment.sendMessage(msg);
             }
         };
 
@@ -130,54 +119,65 @@ public class RegistryFragment extends Fragment implements LoaderManager.LoaderCa
             @Override
             public void onClick(View view) {
 
-                if (checkInternet()){
-                    final String stUserName = etUserName.getText().toString();
-                    final String stPassword = etPassword.getText().toString();
-                    final String stEmail = etEmail.getText().toString();
-
-                    BackendlessUser user = new BackendlessUser();
-                    user.setEmail( stEmail );
-                    user.setPassword( stPassword );
-                    user.setProperty( "name", stUserName);
-
-
-                    Backendless.UserService.register(user, new AsyncCallback<BackendlessUser>() {
-                        @Override
-                        public void handleResponse(BackendlessUser response) {
-
-                            editor.putString(APP_PREFERENCES_USERNAME, stUserName);
-                            editor.putString(APP_PREFERENCES_EMAIL, stEmail);
-                            editor.putString(APP_PREFERENCES_PASSWORD, stPassword);
-                            editor.putString(APP_PREFERENCES_OBJECTID, response.getObjectId());
-                            editor.apply();
-                            Toast.makeText(getContext(), "Новый пользователь зарегистрирован", Toast.LENGTH_SHORT).show();
-                            Fragment fragment = null;
-                            Class fragmentClass;
-                            fragmentClass = RecordForTrainingSelectFragment.class;
-                            try {
-                                fragment = (Fragment) fragmentClass.newInstance();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            FragmentManager fragmentManager = getFragmentManager();
-                            fragmentManager.popBackStack();
-                            FragmentTransaction ft = fragmentManager.beginTransaction();
-                            ft.replace(R.id.container, fragment);
-                            ft.addToBackStack(null);
-                            ft.commit();
-                        }
-
-                        @Override
-                        public void handleFault(BackendlessFault fault) {
-
-                            Toast.makeText(getContext(), fault.getMessage(), Toast.LENGTH_LONG).show();
-                        }
-
-                    });
-                }else {
-                    Toast.makeText(getContext(), "Нет подключения" , Toast.LENGTH_SHORT).show();
+                String stCheckSpace = etUserName.getText().toString();
+                if(stCheckSpace.endsWith(" ")){
+                    stCheckSpace = stCheckSpace.substring(0, stCheckSpace.length() - 1);
+                    etUserName.setText(stCheckSpace);
                 }
 
+                if (etUserName.getText().length()== 0){
+                    etUserName.setFocusableInTouchMode(true);
+                    etUserName.setFocusable(true);
+                    etUserName.requestFocus();
+                    Toast.makeText(getContext(), "Введите почту!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+
+                stCheckSpace = etEmail.getText().toString();
+                if(stCheckSpace.endsWith(" ")){
+                    stCheckSpace = stCheckSpace.substring(0, stCheckSpace.length() - 1);
+                    etEmail.setText(stCheckSpace);
+                }
+
+                if (etEmail.getText().length()== 0 || !isEmailValid(etEmail.getText().toString())){
+                    etEmail.setFocusableInTouchMode(true);
+                    etEmail.setFocusable(true);
+                    etEmail.requestFocus();
+                    Toast.makeText(getContext(), "Введите почту!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if(etPassword.getText().length()== 0 || etCheckPassword.getText().length()==0){
+                    if(etPassword.getText().length()== 0){
+                        etPassword.setFocusableInTouchMode(true);
+                        etPassword.setFocusable(true);
+                        etPassword.requestFocus();
+                        Toast.makeText(getContext(), "Введите пароль", Toast.LENGTH_SHORT).show();
+                    }else {
+                        etCheckPassword.setFocusableInTouchMode(true);
+                        etCheckPassword.setFocusable(true);
+                        etCheckPassword.requestFocus();
+                        Toast.makeText(getContext(), "Повторите пароль", Toast.LENGTH_SHORT).show();
+                    }
+                    return;
+                }
+
+                if(!etPassword.getText().toString().equals(etCheckPassword.getText().toString())){
+                    Toast.makeText(getContext(), "Пароли не совпадают!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                //убираем клавиатуру после нажатия на кнопку
+                InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
+                if (imm != null) {
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
+
+                ChangeUIElements(1);
+                threadRegistryFragment = new Thread(runnableRegistryFragment);
+                threadRegistryFragment.setDaemon(true);
+                threadRegistryFragment.start();
             }
         });
 
@@ -215,8 +215,9 @@ public class RegistryFragment extends Fragment implements LoaderManager.LoaderCa
 
 
 
-    private void startAsyncTaskLoader(String stEmail, String stPassword) {
+    private void startAsyncTaskLoader(String stName,  String stEmail, String stPassword) {
         Bundle bundle = new Bundle();
+        bundle.putString("userName", stName);
         bundle.putString("e_mail" , stEmail);
         bundle.putString("password" , stPassword);
         int LOADERID = 1;
@@ -236,7 +237,7 @@ public class RegistryFragment extends Fragment implements LoaderManager.LoaderCa
             StartService();
             InterfaceChangeToggleStatus interfaceChangeToggleStatus = (InterfaceChangeToggleStatus) getActivity();
             interfaceChangeToggleStatus.changeToggleStatus(true);
-            handlerLoginFragment.sendEmptyMessage(openFragment);
+            handlerRegistryFragment.sendEmptyMessage(openFragment);
         }else{
             ChangeUIElements(0);
             Toast.makeText(getContext(), "Неверный логин или пароль!", Toast.LENGTH_SHORT).show();
@@ -285,7 +286,11 @@ public class RegistryFragment extends Fragment implements LoaderManager.LoaderCa
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         FragmentManager fragmentManager = getFragmentManager();
+        for(int i = 0; i < (fragmentManager.getBackStackEntryCount()-1); i++) {
+            fragmentManager.popBackStack();
+        }
         FragmentTransaction ft = fragmentManager.beginTransaction();
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         ft.replace(R.id.container, fragment);

@@ -62,6 +62,7 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
         btnComeIn = v.findViewById(R.id.button2);
         pbLogin = v.findViewById(R.id.pbLogin);
         Button btnContacts = v.findViewById(R.id.btContacts);
+        Button btnRegisration = v.findViewById(R.id.btnRegisration);
 
 
         //хэндлер для потока runnableOpenFragment
@@ -147,7 +148,8 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
         btnContacts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Class fragmentClass = ContactsFragment.class;
+                TransactionFragment(ContactsFragment.class);
+                /*Class fragmentClass = ContactsFragment.class;
                 Fragment fragment = null;
                 try {
                     fragment = (Fragment) fragmentClass.newInstance();
@@ -159,17 +161,17 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
                 ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                 ft.replace(R.id.container, fragment);
                 ft.addToBackStack(null);
-                ft.commit();
+                ft.commit();*/
             }
         });
 
-        //убрал т.к. регистрация пока не планируется, только авторизация
-        /*btnRegisration.setOnClickListener(new View.OnClickListener() {
+        btnRegisration.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 TransactionFragment(RegistryFragment.class);
             }
-        });*/
+        });
+
         return  v;
     }
 
@@ -263,9 +265,15 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
             e.printStackTrace();
         }
         FragmentManager fragmentManager = getFragmentManager();
+        if (fragmentClass == StartScreenFragment.class){
+            for(int i = 0; i < (fragmentManager.getBackStackEntryCount()); i++) {
+                fragmentManager.popBackStack();
+            }
+        }
         FragmentTransaction ft = fragmentManager.beginTransaction();
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         ft.replace(R.id.container, fragment);
+        ft.addToBackStack(null);
         ft.commit();
     }
 
