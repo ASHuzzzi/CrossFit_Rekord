@@ -414,4 +414,16 @@ public class BackendlessQueries extends Application {
         }
 
     }
+
+    public boolean recoverPassword(String stEmail){
+        try
+        {
+            Backendless.UserService.restorePassword(stEmail);
+            return true;
+        }
+        catch( BackendlessException exception )
+        {
+            return false;
+        }
+    }
 }

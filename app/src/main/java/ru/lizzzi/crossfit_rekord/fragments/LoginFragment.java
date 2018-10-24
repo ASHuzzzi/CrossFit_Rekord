@@ -3,6 +3,7 @@ package ru.lizzzi.crossfit_rekord.fragments;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -21,6 +22,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Objects;
@@ -63,6 +65,7 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
         pbLogin = v.findViewById(R.id.pbLogin);
         Button btnContacts = v.findViewById(R.id.btContacts);
         Button btnRegisration = v.findViewById(R.id.btnRegisration);
+        TextView tvRecPas = v.findViewById(R.id.tvRecPas);
 
 
         //хэндлер для потока runnableOpenFragment
@@ -149,19 +152,6 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
             @Override
             public void onClick(View view) {
                 TransactionFragment(ContactsFragment.class);
-                /*Class fragmentClass = ContactsFragment.class;
-                Fragment fragment = null;
-                try {
-                    fragment = (Fragment) fragmentClass.newInstance();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                FragmentManager fragmentManager = getFragmentManager();
-                FragmentTransaction ft = fragmentManager.beginTransaction();
-                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                ft.replace(R.id.container, fragment);
-                ft.addToBackStack(null);
-                ft.commit();*/
             }
         });
 
@@ -169,6 +159,13 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
             @Override
             public void onClick(View view) {
                 TransactionFragment(RegistryFragment.class);
+            }
+        });
+
+        tvRecPas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TransactionFragment(PasswordRecoveryFragment.class);
             }
         });
 

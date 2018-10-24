@@ -121,6 +121,7 @@
     <string name="title_ChangeEmail_Fragment">Изменение эл. почты</string>
     <string name="title_ChangePassword_Fragment">Изменение пароля</string>
     <string name="title_Regystry_Fragment">Регистрация</string>
+    <string name="title_PasswordRecovery_Fragment">Восстановление пароля</string>
 
     <!-- Значения для фрагмента AboutMe -->
     <string name="strCardNumber">Номер моей карты</string>
@@ -140,6 +141,7 @@
     <string name="strButtonEnter">Войти</string>
     <string name="strRegistration">Если не регистрировался</string>
     <string name="strButtonRegistration">Регистрация</string>
+    <string name="strRecoveryPas">Не помню пароль!</string>
 
     <!-- Значения для аргументов для фрагмента Login -->
     <string name="strRecordFragment">RecordForTrainingSelectFragment</string>
@@ -205,5 +207,12 @@
     <string name="strPasswordNew">Новый пароль</string>
     <string name="strPasswordRepeat">Повторите пароль</string>
     <string name="btnPasswordSaveNew">Сохранить пароль</string>
+
+    <!-- Значения для диалога восстановления пароля -->
+    <string name="strDialogTitle">Восстановление пароля</string>
+    <string name="strDialogEmail">Адрес для восстановления пароля</string>
+    <string name="strDialogBtnSend">Отправить</string>
+    <string name="strDialogBtnCancel">Отмена</string>
+
 
 </resources>

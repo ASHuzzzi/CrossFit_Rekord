@@ -305,6 +305,7 @@ public class MainActivity extends AppCompatActivity
     protected void  onStart() {
         super.onStart();
 
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.container);
         if (checkAuthData.checkAuthData(getContext())){
             if (!isMyServiceRunning(LoadNotificationsService.class)){
                 Intent intent;
@@ -318,15 +319,17 @@ public class MainActivity extends AppCompatActivity
             }
 
             changeToggleStatus(true);
-            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.container);
             if (fragment == null) {
                 initializeCountDrawer();
                 OpenFragment(StartScreenFragment.class);
             }
 
         }else {
-            changeToggleStatus(false);
-            OpenFragment(LoginFragment.class);
+            if (fragment == null) {
+                changeToggleStatus(false);
+                OpenFragment(LoginFragment.class);
+            }
+
         }
 
     }
