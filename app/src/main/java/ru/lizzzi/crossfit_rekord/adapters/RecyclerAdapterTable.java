@@ -42,7 +42,7 @@ public class RecyclerAdapterTable extends RecyclerView.Adapter<RecyclerAdapterTa
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_lv_table, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_rv_table, parent, false);
         return new ViewHolder(v);
     }
 

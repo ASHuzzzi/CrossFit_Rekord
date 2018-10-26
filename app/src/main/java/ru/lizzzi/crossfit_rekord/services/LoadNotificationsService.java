@@ -23,7 +23,6 @@ import ru.lizzzi.crossfit_rekord.fragments.NetworkCheck;
 public class LoadNotificationsService extends Service {
 
     private GregorianCalendar calendarday; //нужна для формирования дат для кнопок
-    int task;
     private BackendlessQueries queries = new BackendlessQueries();
     private NotificationDBHelper mDBHelper = new  NotificationDBHelper(this);
     private NetworkCheck NetworkCheck; //переменная для проврки сети
@@ -31,18 +30,10 @@ public class LoadNotificationsService extends Service {
     public LoadNotificationsService() {
     }
 
-    public void onCreate() {
-        super.onCreate();
-    }
-
     public int onStartCommand(Intent intent, int flags, int startId) {
-        task = intent.getIntExtra(MainActivity.PARAM_TASK, 0);
+        int task = intent.getIntExtra(MainActivity.PARAM_TASK, 0);
         loadNotification(task);
         return super.onStartCommand(intent, flags, startId);
-    }
-
-    public void onDestroy() {
-        super.onDestroy();
     }
 
     @Override
@@ -51,7 +42,7 @@ public class LoadNotificationsService extends Service {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
-    void loadNotification(final int task) {
+    private void loadNotification(final int task) {
         new Thread(new Runnable() {
             public void run() {
 
