@@ -31,6 +31,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ru.lizzzi.crossfit_rekord.R;
+import ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck;
 import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeTitle;
 import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeToggleStatus;
 import ru.lizzzi.crossfit_rekord.loaders.RegistryLoader;
@@ -52,7 +53,7 @@ public class RegistryFragment extends Fragment implements LoaderManager.LoaderCa
 
     private int openFragment = 1;
 
-    private NetworkCheck NetworkCheck; //переменная для проврки сети
+    private ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck NetworkCheck; //переменная для проврки сети
 
     public RegistryFragment() {
         // Required empty public constructor

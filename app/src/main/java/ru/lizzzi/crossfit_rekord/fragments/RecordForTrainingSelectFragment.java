@@ -30,6 +30,7 @@ import java.util.Map;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterRecordForTrainingSelect;
+import ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck;
 import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeTitle;
 import ru.lizzzi.crossfit_rekord.interfaces.ListenerRecordForTrainingSelect;
 import ru.lizzzi.crossfit_rekord.loaders.TableFragmentLoader;

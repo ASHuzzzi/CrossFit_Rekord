@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import ru.lizzzi.crossfit_rekord.R;
+import ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck;
 import ru.lizzzi.crossfit_rekord.loaders.WorkoutDetailsLoaders;
 
 
@@ -37,7 +38,7 @@ public class TL1WodFragment extends Fragment implements LoaderManager.LoaderCall
     private LinearLayout llEmptyData;
     private ProgressBar pbProgressBar;
 
-    private NetworkCheck NetworkCheck; //переменная для проврки сети
+    private ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck NetworkCheck; //переменная для проврки сети
 
     private Handler handlerOpenFragment;
     private Thread threadOpenFragment;

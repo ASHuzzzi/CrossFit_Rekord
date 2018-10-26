@@ -23,6 +23,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ru.lizzzi.crossfit_rekord.R;
+import ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck;
 import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeTitle;
 import ru.lizzzi.crossfit_rekord.loaders.RecoveryEmailLoader;
 
@@ -32,7 +33,7 @@ public class PasswordRecoveryFragment extends Fragment implements LoaderManager.
     private Button btnRecPasSend;
     private ProgressBar pbRecPas;
 
-    private NetworkCheck NetworkCheck; //переменная для проврки сети
+    private ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck NetworkCheck; //переменная для проврки сети
 
     private Handler handlerPasswordRecoveryFragment;
     private Thread threadPasswordRecoveryFragment;

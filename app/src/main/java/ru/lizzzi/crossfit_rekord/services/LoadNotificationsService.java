@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 import ru.lizzzi.crossfit_rekord.activity.MainActivity;
 import ru.lizzzi.crossfit_rekord.backendless.BackendlessQueries;
 import ru.lizzzi.crossfit_rekord.data.NotificationDBHelper;
-import ru.lizzzi.crossfit_rekord.fragments.NetworkCheck;
+import ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck;
 
 public class LoadNotificationsService extends Service {
 

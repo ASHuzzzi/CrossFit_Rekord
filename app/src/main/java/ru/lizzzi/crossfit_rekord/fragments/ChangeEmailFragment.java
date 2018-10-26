@@ -24,6 +24,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ru.lizzzi.crossfit_rekord.R;
+import ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck;
 import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeTitle;
 import ru.lizzzi.crossfit_rekord.loaders.ChangeEmailLoader;
 
@@ -39,7 +40,7 @@ public class ChangeEmailFragment extends Fragment implements LoaderManager.Loade
     private ProgressBar pbChangeEmail;
     private Button btnChangeEmail;
 
-    private NetworkCheck NetworkCheck; //переменная для проврки сети
+    private ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck NetworkCheck; //переменная для проврки сети
 
     private Handler handlerChangeEmailFragment;
     private Thread threadChangeEmailFragment;

@@ -31,6 +31,7 @@ import java.util.Map;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterTable;
+import ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck;
 import ru.lizzzi.crossfit_rekord.interfaces.ListenerRecordForTrainingSelect;
 import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeTitle;
 import ru.lizzzi.crossfit_rekord.loaders.TableFragmentLoader;
@@ -53,7 +54,7 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
     private Handler handlerOpenFragment;
     private Thread threadOpenFragment;
 
-    private NetworkCheck NetworkCheck; //переменная для проврки сети
+    private ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck NetworkCheck; //переменная для проврки сети
 
     RecyclerAdapterTable adapter; //адаптер для списка тренировок
 

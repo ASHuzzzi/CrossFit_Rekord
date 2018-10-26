@@ -30,7 +30,7 @@ import java.util.Objects;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.data.CalendarWodDBHelper;
-import ru.lizzzi.crossfit_rekord.fragments.NetworkCheck;
+import ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck;
 import ru.lizzzi.crossfit_rekord.loaders.SaveLoadResultLoader;
 
 public class EnterResultActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Boolean> {

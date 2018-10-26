@@ -38,7 +38,7 @@ import ru.lizzzi.crossfit_rekord.data.NotificationDBHelper;
 import ru.lizzzi.crossfit_rekord.fragments.AboutMeFragment;
 import ru.lizzzi.crossfit_rekord.fragments.CalendarWodFragment;
 import ru.lizzzi.crossfit_rekord.fragments.CharacterFragment;
-import ru.lizzzi.crossfit_rekord.fragments.CheckAuthData;
+import ru.lizzzi.crossfit_rekord.inspectionСlasses.AuthDataCheck;
 import ru.lizzzi.crossfit_rekord.fragments.ContactsFragment;
 import ru.lizzzi.crossfit_rekord.fragments.LoginFragment;
 import ru.lizzzi.crossfit_rekord.fragments.RecordForTrainingSelectFragment;
@@ -53,7 +53,7 @@ import ru.lizzzi.crossfit_rekord.fragments.NotificationFragment;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, InterfaceChangeTitle, InterfaceChangeToggleStatus {
 
-    private CheckAuthData checkAuthData = new CheckAuthData();
+    private AuthDataCheck checkAuthData = new AuthDataCheck();
 
     private BroadcastReceiver br;
     private final int LOAD_NOTIFICATION = 1;

@@ -20,6 +20,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import ru.lizzzi.crossfit_rekord.R;
+import ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck;
 import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeTitle;
 import ru.lizzzi.crossfit_rekord.loaders.ChangePasswordLoader;
 
@@ -35,7 +36,7 @@ public class ChangePasswordFragment extends Fragment implements LoaderManager.Lo
     private ProgressBar pbChangePassword;
     private Button btnChangePassword;
 
-    private NetworkCheck NetworkCheck; //переменная для проврки сети
+    private ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck NetworkCheck; //переменная для проврки сети
 
     private Handler handlerChangeEmailFragment;
     private Thread threadChangeEmailFragment;

@@ -1,4 +1,4 @@
-package ru.lizzzi.crossfit_rekord.fragments;
+package ru.lizzzi.crossfit_rekord.inspectionСlasses;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

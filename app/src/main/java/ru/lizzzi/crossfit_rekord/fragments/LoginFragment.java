@@ -30,6 +30,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ru.lizzzi.crossfit_rekord.R;
+import ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck;
 import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeTitle;
 import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeToggleStatus;
 import ru.lizzzi.crossfit_rekord.loaders.LoginLoader;
@@ -40,7 +41,7 @@ import ru.lizzzi.crossfit_rekord.services.LoadNotificationsService;
 
 public class LoginFragment extends Fragment implements LoaderManager.LoaderCallbacks<Boolean> {
 
-    private NetworkCheck NetworkCheck; //переменная для проврки сети
+    private ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck NetworkCheck; //переменная для проврки сети
 
     private Button btnComeIn;
     private ProgressBar pbLogin;
