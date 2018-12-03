@@ -284,7 +284,8 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
 
         if(layoutErrorCalendarWod.getVisibility() == View.INVISIBLE){
             SharedPreferences mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-            String stDay = mSettings.getString(APP_PREFERENCES_SELECTEDDAYMONTH, "");
+            //String stDay = mSettings.getString(APP_PREFERENCES_SELECTEDDAYMONTH, "");
+            String stDay = mSettings.getString(APP_PREFERENCES_SELECTEDDAY, "");
 
             Calendar cal = Calendar.getInstance();
             if(stDay.equals("0") || stDay.equals("")){
