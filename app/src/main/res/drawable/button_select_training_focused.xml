@@ -3,8 +3,8 @@
     <corners android:radius="100px" />
     <gradient
         android:angle="90"
-        android:endColor="#ff5a36"
-        android:startColor="#ff0000"
+        android:endColor="@color/colorRedLight"
+        android:startColor="@color/colorRedPrimary"
         android:type="linear" />
     <padding
         android:bottom="7px"

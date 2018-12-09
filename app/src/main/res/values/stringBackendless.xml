@@ -42,6 +42,7 @@
     <string name="bTableResultsName">results</string>
     <string name="bTableResultsDateSession">date_session</string>
     <string name="bTableResultsNameT">Name</string>
+    <string name="bTableResultsSurname">surname</string>
     <string name="bTableResultsSkill">skill</string>
     <string name="bTableResultsUserID">userID</string>
     <string name="bTableResultsWodLevel">wod_level</string>

@@ -10,18 +10,48 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@color/colorRedPrimary"
         android:orientation="horizontal">
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:orientation="vertical"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp">
+
+            <TextView
+                android:id="@+id/tvName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxWidth="100dp"
+                android:minWidth="100dp"
+                android:text=""
+                android:textColor="?attr/colorPrimary"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tvSurname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="100dp"
+                android:maxWidth="100dp"
+                android:text=""
+                android:textColor="?attr/colorPrimary"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
         <TextView
-            android:id="@+id/tvName"
+            android:id="@+id/tvSkill"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginStart="10dp"
+            android:layout_gravity="center"
             android:layout_weight="1"
-            android:gravity="center_vertical"
+            android:gravity="center"
+            android:maxWidth="100dp"
             android:text=""
             android:textColor="?attr/colorPrimary"
             android:textSize="14sp" />
@@ -30,18 +60,10 @@
             android:id="@+id/tvWod_level"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_weight="1"
             android:gravity="center"
-            android:text=""
-            android:textColor="?attr/colorPrimary"
-            android:textSize="14sp" />
-
-        <TextView
-            android:id="@+id/tvSkill"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
+            android:maxWidth="50dp"
             android:text=""
             android:textColor="?attr/colorPrimary"
             android:textSize="14sp" />
@@ -50,6 +72,7 @@
             android:id="@+id/tvWod_result"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_weight="1"
             android:gravity="center"
             android:text=""

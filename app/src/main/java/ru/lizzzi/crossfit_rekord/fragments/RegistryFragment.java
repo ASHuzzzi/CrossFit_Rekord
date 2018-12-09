@@ -130,7 +130,7 @@ public class RegistryFragment extends Fragment implements LoaderManager.LoaderCa
                     etUserName.setFocusableInTouchMode(true);
                     etUserName.setFocusable(true);
                     etUserName.requestFocus();
-                    Toast.makeText(getContext(), "Введите почту!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Введите имя!", Toast.LENGTH_SHORT).show();
                     return;
                 }
 

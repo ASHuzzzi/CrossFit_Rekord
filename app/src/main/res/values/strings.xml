@@ -82,6 +82,7 @@
 
     <!-- Поля для составления результатов тренировки -->
     <string name="Name">Name</string>
+    <string name="Surname">surname</string>
     <string name="skill">skill</string>
     <string name="wod_level">wod_level</string>
     <string name="wod_result">wod_result</string>
@@ -151,6 +152,11 @@
     <!-- Значения для фрагмента TL2ResultFragment -->
     <string name="strEnterResult">Внести результаты</string>
     <string name="strEditDeleteResult">Редактировать</string>
+    <string name="strHeaderName">Имя</string>
+    <string name="strHeaderSkill">Skill</string>
+    <string name="strHeaderLevel">Level</string>
+    <string name="strHeaderResult">Result</string>
+
 
     <!-- Поля для составления уведомлений -->
     <string name="codeNote">codeNote</string>
@@ -214,5 +220,7 @@
     <string name="strDialogBtnSend">Отправить</string>
     <string name="strDialogBtnCancel">Отмена</string>
 
+    <!-- Значения для фрагмента Character -->
+    <string name="strSelectCharacter">Выберите букву раздела</string>
 
 </resources>

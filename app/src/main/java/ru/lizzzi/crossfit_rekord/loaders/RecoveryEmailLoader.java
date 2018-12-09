@@ -21,7 +21,7 @@ public class RecoveryEmailLoader extends AsyncTaskLoader<Boolean> {
 
     @Override
     public Boolean loadInBackground() {
-        return  true;
-        //return user.recoverPassword(stOldEmail);
+        //return  true;
+        return user.recoverPassword(stOldEmail);
     }
 }

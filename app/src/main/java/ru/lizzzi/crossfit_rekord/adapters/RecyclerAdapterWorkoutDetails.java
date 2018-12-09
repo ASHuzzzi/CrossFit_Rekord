@@ -27,6 +27,7 @@ public class RecyclerAdapterWorkoutDetails extends RecyclerView.Adapter<Recycler
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         private TextView Name;
+        private TextView Surname;
         private TextView Skill;
         private TextView Wod_level;
         private TextView Wod_result;
@@ -34,6 +35,7 @@ public class RecyclerAdapterWorkoutDetails extends RecyclerView.Adapter<Recycler
         ViewHolder(View view){
             super(view);
             Name = view.findViewById(R.id.tvName);
+            Surname = view.findViewById(R.id.tvSurname);
             Skill = view.findViewById(R.id.tvSkill);
             Wod_level = view.findViewById(R.id.tvWod_level);
             Wod_result = view.findViewById(R.id.tvWod_result);
@@ -50,11 +52,13 @@ public class RecyclerAdapterWorkoutDetails extends RecyclerView.Adapter<Recycler
     public void onBindViewHolder(ViewHolder holder, int position){
         final Map documentInfo = mapWodItems.get(position);
         String stName = (String) documentInfo.get(fields.getNameField());
+        String stSurname = (String) documentInfo.get(fields.getSurnameField());
         String stSkill = (String) documentInfo.get(fields.getSkillField());
         String stWodLevel = (String) documentInfo.get(fields.getWodLevelField());
         String stWodResult = (String) documentInfo.get(fields.getWodResultField());
 
         holder.Name.setText(stName);
+        holder.Surname.setText(stSurname);
         holder.Skill.setText(stSkill);
         holder.Wod_level.setText(stWodLevel);
         holder.Wod_result.setText(stWodResult);

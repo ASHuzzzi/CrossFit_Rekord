@@ -290,13 +290,14 @@ public class BackendlessQueries extends Application {
     }
 
     public boolean saveEditWorkoutDetails(int iLoaderId, String dateSession, String userId,
-                                            String userName, String userSkill, String userWoDLevel,
-                                            String userWodResult){
+                                          String userName, String userSurname, String userSkill,
+                                          String userWoDLevel, String userWodResult){
 
         String stTableName = getAppContext().getResources().getString(R.string.bTableResultsName);
         String stDateSession = getAppContext().getResources().getString(R.string.bTableResultsDateSession);
         String stOwnerID = getAppContext().getResources().getString(R.string.bTableRecordingOwnerId);
         String stName = getAppContext().getResources().getString(R.string.bTableResultsNameT);
+        String stSurname = getAppContext().getResources().getString(R.string.bTableResultsSurname);
         String stSkill = getAppContext().getResources().getString(R.string.bTableResultsSkill);
         String stWodLevel = getAppContext().getResources().getString(R.string.bTableResultsWodLevel);
         String stWodResult = getAppContext().getResources().getString(R.string.bTableResultsWodResult);
@@ -311,6 +312,7 @@ public class BackendlessQueries extends Application {
                 record.put(stDateSession, dateSession);
                 record.put(stOwnerID, userId);
                 record.put(stName, userName);
+                record.put(stSurname, userSurname);
                 record.put(stSkill, userSkill);
                 record.put(stWodLevel, userWoDLevel);
                 record.put(stWodResult, userWodResult);
@@ -344,6 +346,7 @@ public class BackendlessQueries extends Application {
             case 4:
                 Map<String, Object> record2 = new HashMap<>();
                 record2.put(stName, userName);
+                record2.put(stSurname, userSurname);
                 record2.put(stSkill, userSkill);
                 record2.put(stWodLevel, userWoDLevel);
                 record2.put(stWodResult, userWodResult);

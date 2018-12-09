@@ -13,6 +13,7 @@ public class DocumentFieldsWorkoutDetails {
 
     public enum Fields{
         name(R.string.Name),
+        surname(R.string.Surname),
         skill(R.string.skill),
         wodLevel(R.string.wod_level),
         wodResult(R.string.wod_result);
@@ -24,6 +25,7 @@ public class DocumentFieldsWorkoutDetails {
     }
 
     public String getNameField() {return  context.getString(Fields.name.getFieldNameId()); }
+    public String getSurnameField(){return context.getString(Fields.surname.getFieldNameId()); }
     public String getSkillField() {return  context.getString(Fields.skill.getFieldNameId()); }
     public String getWodLevelField() {return  context.getString(Fields.wodLevel.getFieldNameId()); }
     public String getWodResultField() {return  context.getString(Fields.wodResult.getFieldNameId()); }
