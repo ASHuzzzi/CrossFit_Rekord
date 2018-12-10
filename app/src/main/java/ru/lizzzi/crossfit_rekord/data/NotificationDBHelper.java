@@ -20,8 +20,6 @@ import java.util.Map;
 
 import ru.lizzzi.crossfit_rekord.data.NotificationDBContract.Notification;
 
-import static com.mongodb.operation.OrderBy.DESC;
-
 public class NotificationDBHelper extends SQLiteOpenHelper {
 
     // путь к базе данных вашего приложения
@@ -148,6 +146,7 @@ public class NotificationDBHelper extends SQLiteOpenHelper {
         if (cursor != null) {
             cursor.close();
         }
+        myDataBase.close();
         return stLastDateCheck;
     }
 
@@ -161,6 +160,7 @@ public class NotificationDBHelper extends SQLiteOpenHelper {
         newValues.put(Notification.columnCodeNote, codeNote);
         newValues.put(Notification.columnViewed, viewed);
         myDataBase.insert(Notification.TABLE_NAME, null, newValues);
+        myDataBase.close();
     }
 
     public List<Map<String, Object>> loadNotification() {

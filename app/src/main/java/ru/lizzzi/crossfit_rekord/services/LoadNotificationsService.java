@@ -109,6 +109,7 @@ public class LoadNotificationsService extends Service {
                         }
                     }
                 }
+
                 stopSelf();
             }
         }).start();
