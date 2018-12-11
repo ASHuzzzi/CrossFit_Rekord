@@ -38,6 +38,7 @@ import ru.lizzzi.crossfit_rekord.data.NotificationDBHelper;
 import ru.lizzzi.crossfit_rekord.fragments.AboutMeFragment;
 import ru.lizzzi.crossfit_rekord.fragments.CalendarWodFragment;
 import ru.lizzzi.crossfit_rekord.fragments.CharacterFragment;
+import ru.lizzzi.crossfit_rekord.fragments.MyResultsFragment;
 import ru.lizzzi.crossfit_rekord.inspectionСlasses.AuthDataCheck;
 import ru.lizzzi.crossfit_rekord.fragments.ContactsFragment;
 import ru.lizzzi.crossfit_rekord.fragments.LoginFragment;
@@ -228,6 +229,10 @@ public class MainActivity extends AppCompatActivity
         }else if (id == R.id.notification){
             fragmentClass = NotificationFragment.class;
             iSelectFragment = R.string.title_Notification_Fragment;
+
+        }else if (id == R.id.myResults){
+            fragmentClass = MyResultsFragment.class;
+            iSelectFragment = R.string.title_MyResults_Fragment;
         }
 
         if(iSelectFragment != iOpenFragment){
@@ -371,16 +376,17 @@ public class MainActivity extends AppCompatActivity
         setTitle(intNameFragmentTitle);
         if (iSelectFragment == 0) iSelectFragment=intNameFragmentTitle;
         iOpenFragment = intNameFragmentTitle;
-        if (intNameFragmentSelectNavDraw == R.string.title_Table_Fragment){
-            navigationView.getMenu().getItem(1).setChecked(true);
-        }else {
-            navigationView.getMenu().getItem(1).setChecked(false);
-        }
 
         if (intNameFragmentSelectNavDraw == R.string.title_Notification_Fragment){
             navigationView.getMenu().getItem(0).setChecked(true);
         }else {
             navigationView.getMenu().getItem(0).setChecked(false);
+        }
+
+        if (intNameFragmentSelectNavDraw == R.string.title_Table_Fragment){
+            navigationView.getMenu().getItem(1).setChecked(true);
+        }else {
+            navigationView.getMenu().getItem(1).setChecked(false);
         }
 
         if (intNameFragmentSelectNavDraw == R.string.title_RecordForTraining_Fragment){
@@ -395,24 +401,29 @@ public class MainActivity extends AppCompatActivity
             navigationView.getMenu().getItem(3).setChecked(false);
         }
 
-        if (intNameFragmentSelectNavDraw == R.string.title_Character_Fragment){
+        if (intNameFragmentSelectNavDraw == R.string.title_MyResults_Fragment){
             navigationView.getMenu().getItem(4).setChecked(true);
         }else {
             navigationView.getMenu().getItem(4).setChecked(false);
         }
 
-        if (intNameFragmentSelectNavDraw == R.string.title_AboutMe_Fragment){
+        if (intNameFragmentSelectNavDraw == R.string.title_Character_Fragment){
             navigationView.getMenu().getItem(5).setChecked(true);
         }else {
             navigationView.getMenu().getItem(5).setChecked(false);
         }
 
-        if (intNameFragmentSelectNavDraw == R.string.title_Contacts_Fragment){
+        if (intNameFragmentSelectNavDraw == R.string.title_AboutMe_Fragment){
             navigationView.getMenu().getItem(6).setChecked(true);
         }else {
             navigationView.getMenu().getItem(6).setChecked(false);
         }
 
+        if (intNameFragmentSelectNavDraw == R.string.title_Contacts_Fragment){
+            navigationView.getMenu().getItem(7).setChecked(true);
+        }else {
+            navigationView.getMenu().getItem(7).setChecked(false);
+        }
     }
 
     @Override

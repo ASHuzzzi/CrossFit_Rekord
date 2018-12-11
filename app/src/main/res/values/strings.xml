@@ -74,6 +74,7 @@
     <string name="result">Результаты</string>
     <string name="profile">Мои данные</string>
     <string name="calendar_wod">Результаты тренировок</string>
+    <string name="myResults">Мои результаты</string>
 
 
     <string name="error_connection1">При загрузке данных произошла ошибка.</string>
@@ -123,6 +124,7 @@
     <string name="title_ChangePassword_Fragment">Изменение пароля</string>
     <string name="title_Regystry_Fragment">Регистрация</string>
     <string name="title_PasswordRecovery_Fragment">Восстановление пароля</string>
+    <string name="title_MyResults_Fragment">Мои результаты</string>
 
     <!-- Значения для фрагмента AboutMe -->
     <string name="strCardNumber">Номер моей карты</string>
