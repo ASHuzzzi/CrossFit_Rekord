@@ -127,15 +127,19 @@ public class MyResultDBHelper extends SQLiteOpenHelper {
 
         newValues.put(dbMyResult.columnExercise, stExercise);
         newValues.put(dbMyResult.columnResult, stResult);
-        myDataBase.insert(dbMyResult.TABLE_NAME, null, newValues);
+        myDataBase.update(
+                dbMyResult.TABLE_NAME,
+                newValues,
+                dbMyResult.columnExercise + "= ?",
+                new String[]{stExercise});
         myDataBase.close();
     }
 
-    public List<Map<String, Object>> loadResult() {
+    public Map<String, String> loadResult() {
         myDataBase = this.getReadableDatabase();
-        List<Map<String, Object>> listResult = new ArrayList<>();
+        Map<String, String> listResult = new HashMap<>();
 
-        Cursor cursor = myDataBase.query(true,
+        Cursor cursor = myDataBase.query(
                 dbMyResult.TABLE_NAME,
                 null,
                 null,
@@ -149,15 +153,11 @@ public class MyResultDBHelper extends SQLiteOpenHelper {
             String stExercise;
             String stResult;
 
-
             do {
-                Map<String, Object> mapResult = new HashMap<>();
                 stExercise = cursor.getString(cursor.getColumnIndex(dbMyResult.columnExercise));
                 stResult = cursor.getString(cursor.getColumnIndex(dbMyResult.columnResult));
 
-                mapResult.put("exercise", stExercise);
-                mapResult.put("result", stResult);
-                listResult.add(mapResult);
+                listResult.put(stExercise, stResult);
             } while (cursor.moveToNext());
             cursor.close();
         }

@@ -1,6 +1,979 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<android.widget.RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
 
-</android.support.constraint.ConstraintLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/btnSaveMyResult">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TableRow
+                android:id="@+id/tlDeadlift"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textView71"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:maxWidth="160dp"
+                        android:minWidth="160dp"
+                        android:text="@string/strDBMyResultDeadliftEN"
+                        android:textColor="@color/colorRedPrimary"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textView61"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginLeft="15dp"
+                        android:maxWidth="160dp"
+                        android:minWidth="160dp"
+                        android:text="@string/strDBMyResultDeadliftRU"
+                        android:textColor="@color/colorRedPrimary"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <EditText
+                    android:id="@+id/etDeadlift"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_weight="1"
+                    android:focusableInTouchMode="true"
+                    android:gravity="center"
+                    android:inputType="phone"
+                    android:maxWidth="20dp"
+                    android:minWidth="20dp"
+                    android:text="@string/empty"
+                    android:textColor="@color/colorRedPrimary"
+                    android:theme="@style/Theme.App.Base.MyResult"
+                    tools:ignore="Autofill,LabelFor" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tlSnatch"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textView72"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:maxWidth="160dp"
+                        android:minWidth="160dp"
+                        android:text="@string/strDBMyResultSnatchEN"
+                        android:textColor="@color/colorRedPrimary"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textView62"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginLeft="15dp"
+                        android:maxWidth="160dp"
+                        android:minWidth="160dp"
+                        android:text="@string/strDBMyResultSnatchRU"
+                        android:textColor="@color/colorRedPrimary"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <EditText
+                    android:id="@+id/etSnatch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_weight="1"
+                    android:filterTouchesWhenObscured="true"
+                    android:focusableInTouchMode="true"
+                    android:gravity="center"
+                    android:inputType="phone"
+                    android:maxWidth="20dp"
+                    android:minWidth="20dp"
+                    android:text="@string/empty"
+                    android:textColor="@color/colorRedPrimary"
+                    android:theme="@style/Theme.App.Base.MyResult"
+                    tools:ignore="Autofill,LabelFor" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tlSquatClean"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textView73"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:maxWidth="160dp"
+                        android:minWidth="160dp"
+                        android:text="@string/strDBMyResultSquatCleanEN"
+                        android:textColor="@color/colorRedPrimary"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textView63"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginLeft="15dp"
+                        android:maxWidth="160dp"
+                        android:minWidth="160dp"
+                        android:text="@string/strDBMyResultSquatCleanRU"
+                        android:textColor="@color/colorRedPrimary"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <EditText
+                    android:id="@+id/etSquatClean"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_weight="1"
+                    android:filterTouchesWhenObscured="false"
+                    android:focusableInTouchMode="true"
+                    android:gravity="center"
+                    android:inputType="phone"
+                    android:maxWidth="20dp"
+                    android:minWidth="20dp"
+                    android:text="@string/empty"
+                    android:textColor="@color/colorRedPrimary"
+                    android:theme="@style/Theme.App.Base.MyResult"
+                    tools:ignore="Autofill,LabelFor" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tlClean"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textView74"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:maxWidth="160dp"
+                        android:minWidth="160dp"
+                        android:text="@string/strDBMyResultCleanEN"
+                        android:textColor="@color/colorRedPrimary"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textView64"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginLeft="15dp"
+                        android:maxWidth="160dp"
+                        android:minWidth="160dp"
+                        android:text="@string/strDBMyResultCleanRU"
+                        android:textColor="@color/colorRedPrimary"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <EditText
+                    android:id="@+id/etClean"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_weight="1"
+                    android:focusableInTouchMode="true"
+                    android:gravity="center"
+                    android:inputType="phone"
+                    android:maxWidth="20dp"
+                    android:minWidth="20dp"
+                    android:text="@string/empty"
+                    android:textColor="@color/colorRedPrimary"
+                    android:theme="@style/Theme.App.Base.MyResult"
+                    tools:ignore="Autofill,LabelFor" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tlSquatSnatches"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textView75"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:maxWidth="160dp"
+                        android:minWidth="160dp"
+                        android:text="@string/strDBMyResultSquatSnatchesEN"
+                        android:textColor="@color/colorRedPrimary"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textView65"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginLeft="15dp"
+                        android:maxWidth="160dp"
+                        android:minWidth="160dp"
+                        android:text="@string/strDBMyResultSquatSnatchesRU"
+                        android:textColor="@color/colorRedPrimary"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <EditText
+                    android:id="@+id/etSquatSnatches"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_weight="1"
+                    android:focusableInTouchMode="true"
+                    android:gravity="center"
+                    android:inputType="phone"
+                    android:maxWidth="20dp"
+                    android:minWidth="20dp"
+                    android:text="@string/empty"
+                    android:textColor="@color/colorRedPrimary"
+                    android:theme="@style/Theme.App.Base.MyResult"
+                    tools:ignore="Autofill,LabelFor" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tlCleanAndJerk"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textView76"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:maxWidth="160dp"
+                        android:minWidth="160dp"
+                        android:text="@string/strDBMyResultCleanAndJerkEN"
+                        android:textColor="@color/colorRedPrimary"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textView66"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginLeft="15dp"
+                        android:maxWidth="160dp"
+                        android:minWidth="160dp"
+                        android:text="@string/strDBMyResultCleanAndJerkRU"
+                        android:textColor="@color/colorRedPrimary"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <EditText
+                    android:id="@+id/etCleanAndJerk"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_weight="1"
+                    android:focusableInTouchMode="true"
+                    android:gravity="center"
+                    android:inputType="phone"
+                    android:maxWidth="20dp"
+                    android:minWidth="20dp"
+                    android:text="@string/empty"
+                    android:textColor="@color/colorRedPrimary"
+                    android:theme="@style/Theme.App.Base.MyResult"
+                    tools:ignore="Autofill,LabelFor" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tlFrontSquat"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textView77"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:maxWidth="160dp"
+                        android:minWidth="160dp"
+                        android:text="@string/strDBMyResultFrontSquatEN"
+                        android:textColor="@color/colorRedPrimary"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textView67"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginLeft="15dp"
+                        android:maxWidth="160dp"
+                        android:minWidth="160dp"
+                        android:text="@string/strDBMyResultFrontSquatRU"
+                        android:textColor="@color/colorRedPrimary"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <EditText
+                    android:id="@+id/etFrontSquat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_weight="1"
+                    android:focusableInTouchMode="true"
+                    android:gravity="center"
+                    android:inputType="phone"
+                    android:maxWidth="20dp"
+                    android:minWidth="20dp"
+                    android:text="@string/empty"
+                    android:textColor="@color/colorRedPrimary"
+                    android:theme="@style/Theme.App.Base.MyResult"
+                    tools:ignore="Autofill,LabelFor" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tlBackSquat"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textView78"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:maxWidth="160dp"
+                        android:minWidth="160dp"
+                        android:text="@string/strDBMyResultBackSquatEN"
+                        android:textColor="@color/colorRedPrimary"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textView68"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginLeft="15dp"
+                        android:maxWidth="160dp"
+                        android:minWidth="160dp"
+                        android:text="@string/strDBMyResultBackSquatRU"
+                        android:textColor="@color/colorRedPrimary"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <EditText
+                    android:id="@+id/etBackSquat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_weight="1"
+                    android:focusableInTouchMode="true"
+                    android:gravity="center"
+                    android:inputType="phone"
+                    android:maxWidth="20dp"
+                    android:minWidth="20dp"
+                    android:text="@string/empty"
+                    android:textColor="@color/colorRedPrimary"
+                    android:theme="@style/Theme.App.Base.MyResult"
+                    tools:ignore="Autofill,LabelFor" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tlShoulderPress"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textView79"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:maxWidth="160dp"
+                        android:minWidth="160dp"
+                        android:text="@string/strDBMyResultShoulderPressEN"
+                        android:textColor="@color/colorRedPrimary"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textView69"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginLeft="15dp"
+                        android:maxWidth="160dp"
+                        android:minWidth="160dp"
+                        android:text="@string/strDBMyResultShoulderPressRU"
+                        android:textColor="@color/colorRedPrimary"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <EditText
+                    android:id="@+id/etShoulderPress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_weight="1"
+                    android:focusableInTouchMode="true"
+                    android:gravity="center"
+                    android:inputType="phone"
+                    android:maxWidth="20dp"
+                    android:minWidth="20dp"
+                    android:text="@string/empty"
+                    android:textColor="@color/colorRedPrimary"
+                    android:theme="@style/Theme.App.Base.MyResult"
+                    tools:ignore="Autofill,LabelFor" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tlPushPress"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textView80"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:maxWidth="160dp"
+                        android:minWidth="160dp"
+                        android:text="@string/strDBMyResultPushPressEN"
+                        android:textColor="@color/colorRedPrimary"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textView90"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginLeft="15dp"
+                        android:maxWidth="160dp"
+                        android:minWidth="160dp"
+                        android:text="@string/strDBMyResultPushPressRU"
+                        android:textColor="@color/colorRedPrimary"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <EditText
+                    android:id="@+id/etPushPress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_weight="1"
+                    android:focusableInTouchMode="true"
+                    android:gravity="center"
+                    android:inputType="phone"
+                    android:maxWidth="20dp"
+                    android:minWidth="20dp"
+                    android:text="@string/empty"
+                    android:textColor="@color/colorRedPrimary"
+                    android:theme="@style/Theme.App.Base.MyResult"
+                    tools:ignore="Autofill,LabelFor" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tlBenchPress"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textView81"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:maxWidth="160dp"
+                        android:minWidth="160dp"
+                        android:text="@string/strDBMyResultBenchPressEN"
+                        android:textColor="@color/colorRedPrimary"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textView91"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginLeft="15dp"
+                        android:maxWidth="160dp"
+                        android:minWidth="160dp"
+                        android:text="@string/strDBMyResultBenchPressRU"
+                        android:textColor="@color/colorRedPrimary"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <EditText
+                    android:id="@+id/etBenchPress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_weight="1"
+                    android:focusableInTouchMode="true"
+                    android:gravity="center"
+                    android:inputType="phone"
+                    android:maxWidth="20dp"
+                    android:minWidth="20dp"
+                    android:text="@string/empty"
+                    android:textColor="@color/colorRedPrimary"
+                    android:theme="@style/Theme.App.Base.MyResult"
+                    tools:ignore="Autofill,LabelFor" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tlSumoDeadlift"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textView82"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:maxWidth="160dp"
+                        android:minWidth="160dp"
+                        android:text="@string/strDBMyResultSumoDeadliftEN"
+                        android:textColor="@color/colorRedPrimary"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textView92"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginLeft="15dp"
+                        android:maxWidth="160dp"
+                        android:minWidth="160dp"
+                        android:text="@string/strDBMyResultSumoDeadliftRU"
+                        android:textColor="@color/colorRedPrimary"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <EditText
+                    android:id="@+id/etSumoDeadlift"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_weight="1"
+                    android:focusableInTouchMode="true"
+                    android:gravity="center"
+                    android:inputType="phone"
+                    android:maxWidth="20dp"
+                    android:minWidth="20dp"
+                    android:text="@string/empty"
+                    android:textColor="@color/colorRedPrimary"
+                    android:theme="@style/Theme.App.Base.MyResult"
+                    tools:ignore="Autofill,LabelFor" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tlThruster"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textView83"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:maxWidth="160dp"
+                        android:minWidth="160dp"
+                        android:text="@string/strDBMyResultThrusterEN"
+                        android:textColor="@color/colorRedPrimary"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textView93"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginLeft="15dp"
+                        android:maxWidth="160dp"
+                        android:minWidth="160dp"
+                        android:text="@string/strDBMyResultThrusterRU"
+                        android:textColor="@color/colorRedPrimary"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <EditText
+                    android:id="@+id/etThruster"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_weight="1"
+                    android:focusableInTouchMode="true"
+                    android:gravity="center"
+                    android:inputType="phone"
+                    android:maxWidth="20dp"
+                    android:minWidth="20dp"
+                    android:text="@string/empty"
+                    android:textColor="@color/colorRedPrimary"
+                    android:theme="@style/Theme.App.Base.MyResult"
+                    tools:ignore="Autofill,LabelFor" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tlDumbellSnatch"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textView84"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:maxWidth="160dp"
+                        android:minWidth="160dp"
+                        android:text="@string/strDBMyResultDumbellSnatchEN"
+                        android:textColor="@color/colorRedPrimary"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textView94"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginLeft="15dp"
+                        android:maxWidth="160dp"
+                        android:minWidth="160dp"
+                        android:text="@string/strDBMyResultDumbellSnatchRU"
+                        android:textColor="@color/colorRedPrimary"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <EditText
+                    android:id="@+id/etDumbellSnatch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_weight="1"
+                    android:focusableInTouchMode="true"
+                    android:gravity="center"
+                    android:inputType="phone"
+                    android:maxWidth="20dp"
+                    android:minWidth="20dp"
+                    android:text="@string/empty"
+                    android:textColor="@color/colorRedPrimary"
+                    android:theme="@style/Theme.App.Base.MyResult"
+                    tools:ignore="Autofill,LabelFor" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tlRowM"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textView85"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:maxWidth="160dp"
+                        android:minWidth="160dp"
+                        android:text="@string/strDBMyResultRowMEN"
+                        android:textColor="@color/colorRedPrimary"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textView95"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginLeft="15dp"
+                        android:maxWidth="160dp"
+                        android:minWidth="160dp"
+                        android:text="@string/strDBMyResultRowMRU"
+                        android:textColor="@color/colorRedPrimary"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <EditText
+                    android:id="@+id/etRowM"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_weight="1"
+                    android:focusableInTouchMode="true"
+                    android:gravity="center"
+                    android:inputType="time"
+                    android:maxWidth="20dp"
+                    android:minWidth="20dp"
+                    android:text="@string/empty"
+                    android:textColor="@color/colorRedPrimary"
+                    android:theme="@style/Theme.App.Base.MyResult"
+                    tools:ignore="Autofill,LabelFor" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tlRowCal"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textView86"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:maxWidth="160dp"
+                        android:minWidth="160dp"
+                        android:text="@string/strDBMyResultRowCalEN"
+                        android:textColor="@color/colorRedPrimary"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textView96"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginLeft="15dp"
+                        android:maxWidth="160dp"
+                        android:minWidth="160dp"
+                        android:text="@string/strDBMyResultRowCalRU"
+                        android:textColor="@color/colorRedPrimary"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <EditText
+                    android:id="@+id/etRowCal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_weight="1"
+                    android:focusableInTouchMode="true"
+                    android:gravity="center"
+                    android:inputType="time"
+                    android:maxWidth="20dp"
+                    android:minWidth="20dp"
+                    android:text="@string/empty"
+                    android:textColor="@color/colorRedPrimary"
+                    android:theme="@style/Theme.App.Base.MyResult"
+                    tools:ignore="Autofill,LabelFor" />
+            </TableRow>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/btnSaveMyResult"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="20dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+
+        android:text="@string/strButtonSaveMyResult" />
+</android.widget.RelativeLayout>

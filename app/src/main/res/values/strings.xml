@@ -225,4 +225,55 @@
     <!-- Значения для фрагмента Character -->
     <string name="strSelectCharacter">Выберите букву раздела</string>
 
+    <!-- Значения для фрагмента MyResult -->
+    <string name="strButtonSaveMyResult">Сохранить</string>
+    <string name="strDBMyResultDeadliftEN">Deadlift</string>
+    <string name="strDBMyResultDeadliftRU">становая тяга</string>
+
+    <string name="strDBMyResultSnatchEN">Snatch</string>
+    <string name="strDBMyResultSnatchRU">рывок</string>
+
+    <string name="strDBMyResultSquatCleanEN">Squat Clean</string>
+    <string name="strDBMyResultSquatCleanRU">рывок в сед</string>
+
+    <string name="strDBMyResultCleanEN">Clean</string>
+    <string name="strDBMyResultCleanRU">взятие на грудь</string>
+
+    <string name="strDBMyResultSquatSnatchesEN">Squat Snatches</string>
+    <string name="strDBMyResultSquatSnatchesRU">взятие на грудь в сед</string>
+
+    <string name="strDBMyResultCleanAndJerkEN">Clean and jerk</string>
+    <string name="strDBMyResultCleanAndJerkRU">взятие на грудь и толчок штанги</string>
+
+    <string name="strDBMyResultFrontSquatEN">Front Squat</string>
+    <string name="strDBMyResultFrontSquatRU">приседания со штангой на груди</string>
+
+    <string name="strDBMyResultBackSquatEN">Back Squat</string>
+    <string name="strDBMyResultBackSquatRU">приседания со штангой на спине</string>
+
+    <string name="strDBMyResultShoulderPressEN">Shoulder Press</string>
+    <string name="strDBMyResultShoulderPressRU">жим стоя, с плеч строго</string>
+
+    <string name="strDBMyResultPushPressEN">Push Press</string>
+    <string name="strDBMyResultPushPressRU">жим стоя, с плеч толчком (швунг)</string>
+
+    <string name="strDBMyResultBenchPressEN">Bench Press</string>
+    <string name="strDBMyResultBenchPressRU">жим лежа от груди</string>
+
+    <string name="strDBMyResultSumoDeadliftEN">Sumo Deadlift</string>
+    <string name="strDBMyResultSumoDeadliftRU">становая тяга сумо</string>
+
+    <string name="strDBMyResultThrusterEN">Thruster</string>
+    <string name="strDBMyResultThrusterRU">выброс штанги</string>
+
+    <string name="strDBMyResultDumbellSnatchEN">Dumbell Snatch</string>
+    <string name="strDBMyResultDumbellSnatchRU">рывок гантели</string>
+
+    <string name="strDBMyResultRowMEN">Row (m)</string>
+    <string name="strDBMyResultRowMRU">гребля (500м)</string>
+
+    <string name="strDBMyResultRowCalEN">Row (cal)</string>
+    <string name="strDBMyResultRowCalRU">гребля (25 кал)</string>
+
+
 </resources>
