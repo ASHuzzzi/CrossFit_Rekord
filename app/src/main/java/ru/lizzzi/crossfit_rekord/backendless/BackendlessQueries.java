@@ -158,6 +158,7 @@ public class BackendlessQueries extends Application {
             editor.putString(APP_PREFERENCES_USERSURNAME, String.valueOf(user.getProperty("surname")));
             editor.putString(APP_PREFERENCES_PASSWORD, stPassword);
             editor.putString(APP_PREFERENCES_EMAIL, String.valueOf(user.getProperty("email")));
+            editor.putString(APP_PREFERENCES_PHONE, String.valueOf(user.getProperty("phoneNumber")));
             editor.apply();
             return true;
         }
