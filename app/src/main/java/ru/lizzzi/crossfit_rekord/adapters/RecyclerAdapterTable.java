@@ -71,17 +71,20 @@ public class RecyclerAdapterTable extends RecyclerView.Adapter<RecyclerAdapterTa
         if (type.equals("CrossFit Kids")){
             holder.TypesItem.setBackgroundResource(R.drawable.table_item_crossfitkids);
         }
-        if (type.equals("Athleticism/TRX")){
-            holder.TypesItem.setBackgroundResource(R.drawable.table_item_athleticism_and_trx);
+        if (type.equals("CrossFit/TRX")){
+            holder.TypesItem.setBackgroundResource(R.drawable.table_item_crossfit_and_trx);
         }
         if (type.equals("Gymnastics/Defence")){
             holder.TypesItem.setBackgroundResource(R.drawable.table_item_gymnastics_and_defence);
 
-        }if (type.equals("Endurance/Lady class")){
-            holder.TypesItem.setBackgroundResource(R.drawable.table_item_endurance_and_ladyclass);
+        }if (type.equals("CrossFit/Lady class")){
+            holder.TypesItem.setBackgroundResource(R.drawable.table_item_crossfit_and_ladyclass);
         }
         if (type.equals("Weightlifting")){
             holder.TypesItem.setBackgroundResource(R.drawable.table_item_weighlifting);
+        }
+        if (type.equals("Endurance")){
+            holder.TypesItem.setBackgroundResource(R.drawable.table_item_endurance);
         }
 
 
