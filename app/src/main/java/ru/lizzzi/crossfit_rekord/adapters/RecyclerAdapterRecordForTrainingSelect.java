@@ -93,17 +93,20 @@ public class RecyclerAdapterRecordForTrainingSelect extends RecyclerView.Adapter
                     if (type.equals("CrossFit Kids")){
                         holder.typesItem.setBackgroundResource(R.drawable.table_item_crossfitkids);
                     }
-                    if (type.equals("Athleticism/TRX")){
+                    if (type.equals("CrossFit/TRX")){
                         holder.typesItem.setBackgroundResource(R.drawable.table_item_crossfit_and_trx);
                     }
                     if (type.equals("Gymnastics/Defence")){
                         holder.typesItem.setBackgroundResource(R.drawable.table_item_gymnastics_and_defence);
-                    }
-                    if (type.equals("Endurance/Lady class")){
+
+                    }if (type.equals("CrossFit/Lady class")){
                         holder.typesItem.setBackgroundResource(R.drawable.table_item_crossfit_and_ladyclass);
                     }
                     if (type.equals("Weightlifting")){
                         holder.typesItem.setBackgroundResource(R.drawable.table_item_weighlifting);
+                    }
+                    if (type.equals("Endurance")){
+                        holder.typesItem.setBackgroundResource(R.drawable.table_item_endurance);
                     }
 
                     ll_item_table.setOnClickListener(new View.OnClickListener() {

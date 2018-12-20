@@ -1,12 +1,14 @@
 package ru.lizzzi.crossfit_rekord.fragments;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+//import android.support.v4.app.FragmentManager;
+//import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
@@ -31,6 +33,7 @@ import java.util.Map;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterTable;
+import ru.lizzzi.crossfit_rekord.inspectionСlasses.ConstructorLinks;
 import ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck;
 import ru.lizzzi.crossfit_rekord.interfaces.ListenerRecordForTrainingSelect;
 import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeTitle;
@@ -319,7 +322,16 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
                     }
 
                     if(checkday){
-                        Bundle bundle = new Bundle();
+
+                        ConstructorLinks constructorLinks = new ConstructorLinks();
+                        String stOpenURL = constructorLinks.constructorLinks(dayOfWeek, stStartTime, stTypesItem);
+                        Intent intent = new Intent();
+                        intent.setAction(Intent.ACTION_VIEW);
+                        intent.addCategory(Intent.CATEGORY_BROWSABLE);
+                        intent.setData(Uri.parse(stOpenURL));
+                        startActivity(intent);
+
+                        /*Bundle bundle = new Bundle();
                         bundle.putString("time", stStartTime);
                         bundle.putString("datefull", dateSelectFull);
                         bundle.putString("dateshow", dateSelectShow);
@@ -332,7 +344,7 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
                         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                         ft.replace(R.id.container, fragment);
                         ft.addToBackStack(null);
-                        ft.commit();
+                        ft.commit();*/
                     }
 
 

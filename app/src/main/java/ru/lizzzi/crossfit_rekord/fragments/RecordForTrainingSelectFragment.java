@@ -1,6 +1,8 @@
 package ru.lizzzi.crossfit_rekord.fragments;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -30,6 +32,7 @@ import java.util.Map;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterRecordForTrainingSelect;
+import ru.lizzzi.crossfit_rekord.inspectionСlasses.ConstructorLinks;
 import ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck;
 import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeTitle;
 import ru.lizzzi.crossfit_rekord.interfaces.ListenerRecordForTrainingSelect;
@@ -140,7 +143,7 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
                         iNumberOfDay = 7;
                     }
                     flagTodayOrNot = true;
-                    selectDay = 1;
+                    selectDay = 0;
                     bundle.putString("open", String.valueOf(true));
 
                 }else {
@@ -201,7 +204,7 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
                     stDateSelectFull = sdf2.format(date);
                     stDateSelectShow = currentTodayForShow;
                     flagTodayOrNot = true;
-                    selectDay = 1;
+                    selectDay = 0;
                     drawList(schedule.get(iNumberOfDay-1));
                 }
                 return true ;
@@ -217,7 +220,7 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
                     stDateSelectFull = sdf2.format(tomorrow);
                     stDateSelectShow = currentTomorrowForShow;
                     flagTodayOrNot = false;
-                    selectDay = 2;
+                    selectDay = 1;
                     drawList(schedule.get(iNumberOfDay-1));
                 }
                 return true ;
@@ -236,7 +239,7 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
                     stDateSelectFull = sdf2.format(aftertomorrow);
                     stDateSelectShow = currentAftertommorowForShow;
                     flagTodayOrNot = false;
-                    selectDay = 3;
+                    selectDay = 2;
                     drawList(schedule.get(iNumberOfDay-1));
                 }
                 return true ;
@@ -290,6 +293,14 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
                     toast.setGravity(Gravity.CENTER, 0, 0);
                     toast.show();
                 }else {
+                    ConstructorLinks constructorLinks = new ConstructorLinks();
+                    String stOpenURL = constructorLinks.constructorLinks(selectDay, stStartTime, stTypesItem);
+                    Intent intent = new Intent();
+                    intent.setAction(Intent.ACTION_VIEW);
+                    intent.addCategory(Intent.CATEGORY_BROWSABLE);
+                    intent.setData(Uri.parse(stOpenURL));
+                    startActivity(intent);
+                    /*
                     RecordForTrainingRecordingFragment yfc =  new RecordForTrainingRecordingFragment();
                     Bundle bundle = new Bundle();
                     bundle.putString("time", stStartTime);
@@ -302,7 +313,7 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
                     ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                     ft.replace(R.id.container, yfc);
                     ft.addToBackStack(null);
-                    ft.commit();
+                    ft.commit();*/
                 }
 
             }
@@ -315,20 +326,20 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
 
     private void preSelectionButtonDay(int iDaySelect){
         switch (iDaySelect){
-            case 1:
+            case 0:
                 stDateSelectShow = currentTodayForShow;
                 stDateSelectFull = sdf2.format(date);
                 selectButtonDay(true, false, false);
 
                 break;
 
-            case 2:
+            case 1:
                 stDateSelectShow = currentTomorrowForShow;
                 stDateSelectFull = sdf2.format(tomorrow);
                 selectButtonDay(false, true, false);
                 break;
 
-            case 3:
+            case 2:
                 stDateSelectShow = currentAftertommorowForShow;
                 stDateSelectFull = sdf2.format(aftertomorrow);
                 selectButtonDay(false, false, true);
