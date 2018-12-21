@@ -1,5 +1,6 @@
 package ru.lizzzi.crossfit_rekord.inspectionСlasses;
 
+//класс создает ссылку для переадресации на сайт
 public class ConstructorLinks {
 
     public String constructorLinks (int iSelectDay, String stStartTime, String stTypesItem){
@@ -27,13 +28,11 @@ public class ConstructorLinks {
 
         String stURL = "http://crossfitrekord.webox.beget.tech/rec.php?day=";
 
-        String stResult = stURL
+        return stURL
                 + String.valueOf(iSelectDay)
                 + "&time="
                 + stStartTime
                 + "%20"
                 + stTypesItem;
-
-        return stResult;
     }
 }

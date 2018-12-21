@@ -20,6 +20,7 @@ import java.util.Map;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.documentfields.DocumentFieldsTable;
+import ru.lizzzi.crossfit_rekord.inspectionСlasses.TakeBackgroungResourceForAdapter;
 import ru.lizzzi.crossfit_rekord.interfaces.ListenerRecordForTrainingSelect;
 
 public class RecyclerAdapterRecordForTrainingSelect extends RecyclerView.Adapter<RecyclerAdapterRecordForTrainingSelect.ViewHolder> {
@@ -78,36 +79,10 @@ public class RecyclerAdapterRecordForTrainingSelect extends RecyclerView.Adapter
                 Date dTimeNow = sdfCheckTime.parse(stTimeNow);
                 Date dSelectTime = sdfCheckTime.parse(start_time);
                 if (dSelectTime.getTime() > dTimeNow.getTime()){ //проверяем чтобы выбранное время было позже чем сейчас
-                    if (type.equals("CrossFit")){
-                        holder.typesItem.setBackgroundResource(R.drawable.table_item_crossfit);
-                    }
-                    if (type.equals("On-Ramp")){
-                        holder.typesItem.setBackgroundResource(R.drawable.table_item_onramp);
-                    }
-                    if (type.equals("Open Gym")){
-                        holder.typesItem.setBackgroundResource(R.drawable.table_item_opengym);
-                    }
-                    if (type.equals("Stretching")){
-                        holder.typesItem.setBackgroundResource(R.drawable.table_item_stretching);
-                    }
-                    if (type.equals("CrossFit Kids")){
-                        holder.typesItem.setBackgroundResource(R.drawable.table_item_crossfitkids);
-                    }
-                    if (type.equals("CrossFit/TRX")){
-                        holder.typesItem.setBackgroundResource(R.drawable.table_item_crossfit_and_trx);
-                    }
-                    if (type.equals("Gymnastics/Defence")){
-                        holder.typesItem.setBackgroundResource(R.drawable.table_item_gymnastics_and_defence);
 
-                    }if (type.equals("CrossFit/Lady class")){
-                        holder.typesItem.setBackgroundResource(R.drawable.table_item_crossfit_and_ladyclass);
-                    }
-                    if (type.equals("Weightlifting")){
-                        holder.typesItem.setBackgroundResource(R.drawable.table_item_weighlifting);
-                    }
-                    if (type.equals("Endurance")){
-                        holder.typesItem.setBackgroundResource(R.drawable.table_item_endurance);
-                    }
+                    TakeBackgroungResourceForAdapter takeBackgroungResourceForAdapter = new TakeBackgroungResourceForAdapter();
+                    int iResource = takeBackgroungResourceForAdapter.takeBackgroungResourceForAdapter(type);
+                    holder.typesItem.setBackgroundResource(iResource);
 
                     ll_item_table.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -130,34 +105,10 @@ public class RecyclerAdapterRecordForTrainingSelect extends RecyclerView.Adapter
                 e.printStackTrace();
             }
         }else {
-            if (type.equals("CrossFit")){
-                holder.typesItem.setBackgroundResource(R.drawable.table_item_crossfit);
-            }
-            if (type.equals("On-Ramp")){
-                holder.typesItem.setBackgroundResource(R.drawable.table_item_onramp);
-            }
-            if (type.equals("Open Gym")){
-                holder.typesItem.setBackgroundResource(R.drawable.table_item_opengym);
-            }
-            if (type.equals("Stretching")){
-                holder.typesItem.setBackgroundResource(R.drawable.table_item_stretching);
-            }
-            if (type.equals("CrossFit Kids")){
-                holder.typesItem.setBackgroundResource(R.drawable.table_item_crossfitkids);
-            }
-            if (type.equals("Weightlifting/Athleticism")){
-                holder.typesItem.setBackgroundResource(R.drawable.table_item_crossfit_and_trx);
-            }
-            if (type.equals("Gymnastics/Defence")){
-                holder.typesItem.setBackgroundResource(R.drawable.table_item_gymnastics_and_defence);
 
-            }
-            if (type.equals("Rowing/Lady class")){
-                holder.typesItem.setBackgroundResource(R.drawable.table_item_crossfit_and_ladyclass);
-            }
-            if (type.equals("Weightlifting")){
-                holder.typesItem.setBackgroundResource(R.drawable.table_item_weighlifting);
-            }
+            TakeBackgroungResourceForAdapter takeBackgroungResourceForAdapter = new TakeBackgroungResourceForAdapter();
+            int iResource = takeBackgroungResourceForAdapter.takeBackgroungResourceForAdapter(type);
+            holder.typesItem.setBackgroundResource(iResource);
 
             ll_item_table.setOnClickListener(new View.OnClickListener() {
                 @Override

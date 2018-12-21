@@ -14,6 +14,7 @@ import java.util.Map;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.documentfields.DocumentFieldsTable;
+import ru.lizzzi.crossfit_rekord.inspectionСlasses.TakeBackgroungResourceForAdapter;
 import ru.lizzzi.crossfit_rekord.interfaces.ListenerRecordForTrainingSelect;
 
 public class RecyclerAdapterTable extends RecyclerView.Adapter<RecyclerAdapterTable.ViewHolder> {
@@ -55,38 +56,9 @@ public class RecyclerAdapterTable extends RecyclerView.Adapter<RecyclerAdapterTa
         holder.StartTimeItem.setText(start_time);
         holder.TypesItem.setText(type);
 
-
-        if (type.equals("CrossFit")){
-            holder.TypesItem.setBackgroundResource(R.drawable.table_item_crossfit);
-        }
-        if (type.equals("On-Ramp")){
-            holder.TypesItem.setBackgroundResource(R.drawable.table_item_onramp);
-        }
-        if (type.equals("Open Gym")){
-            holder.TypesItem.setBackgroundResource(R.drawable.table_item_opengym);
-        }
-        if (type.equals("Stretching")){
-            holder.TypesItem.setBackgroundResource(R.drawable.table_item_stretching);
-        }
-        if (type.equals("CrossFit Kids")){
-            holder.TypesItem.setBackgroundResource(R.drawable.table_item_crossfitkids);
-        }
-        if (type.equals("CrossFit/TRX")){
-            holder.TypesItem.setBackgroundResource(R.drawable.table_item_crossfit_and_trx);
-        }
-        if (type.equals("Gymnastics/Defence")){
-            holder.TypesItem.setBackgroundResource(R.drawable.table_item_gymnastics_and_defence);
-
-        }if (type.equals("CrossFit/Lady class")){
-            holder.TypesItem.setBackgroundResource(R.drawable.table_item_crossfit_and_ladyclass);
-        }
-        if (type.equals("Weightlifting")){
-            holder.TypesItem.setBackgroundResource(R.drawable.table_item_weighlifting);
-        }
-        if (type.equals("Endurance")){
-            holder.TypesItem.setBackgroundResource(R.drawable.table_item_endurance);
-        }
-
+        TakeBackgroungResourceForAdapter takeBackgroungResourceForAdapter = new TakeBackgroungResourceForAdapter();
+        int iResource = takeBackgroungResourceForAdapter.takeBackgroungResourceForAdapter(type);
+        holder.TypesItem.setBackgroundResource(iResource);
 
         holder.ll_item_table.setOnClickListener(new View.OnClickListener() {
             @Override

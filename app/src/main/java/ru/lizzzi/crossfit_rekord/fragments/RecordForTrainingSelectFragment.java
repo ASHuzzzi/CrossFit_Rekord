@@ -7,8 +7,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
@@ -52,8 +50,8 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
     private GregorianCalendar gcCalendarDay; //нужна для формирования дат для кнопок
     private GregorianCalendar gcNumberDayWeek; // для преобразования выбранного дня в int
 
-    private String stDateSelectFull; //передает значение по поторому потом идет запрос в базу в следующем фрагменте
-    private String stDateSelectShow; //передает значение которое показывается в Textview следующего фрагмента
+    //private String stDateSelectFull; //передает значение по поторому потом идет запрос в базу в следующем фрагменте
+    //private String stDateSelectShow; //передает значение которое показывается в Textview следующего фрагмента
 
     private int iNumberOfDay; // выбранный пользователем день
     private  int LOADER_ID = 1; //идентефикатор loader'а
@@ -73,14 +71,14 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
 
     private Runnable runnableOpenFragment;
 
-    private String currentTodayForShow;
-    private String currentTomorrowForShow;
-    private String currentAftertommorowForShow;
+    //private String currentTodayForShow;
+    //private String currentTomorrowForShow;
+    //private String currentAftertommorowForShow;
 
     private Date tomorrow;
     private Date aftertomorrow;
 
-    @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM");
+    //@SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM");
 
     @SuppressLint({"HandlerLeak", "ClickableViewAccessibility"})
     @Override
@@ -110,7 +108,7 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
 
         @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf = new SimpleDateFormat("EEE.\n d MMMM");
 
-        @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf3 = new SimpleDateFormat("EEEE d MMMM");
+        //@SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf3 = new SimpleDateFormat("EEEE d MMMM");
 
         handlerOpenFragment = new Handler() {
             @SuppressLint("ShowToast")
@@ -169,17 +167,17 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
         final String currentTomorrow = sdf.format(tomorrow);
         final String currentAftertommorow = sdf.format(aftertomorrow);
 
-        currentTomorrowForShow = sdf3.format(tomorrow);
-        currentTodayForShow = sdf3.format(date);
-        currentAftertommorowForShow = sdf3.format(aftertomorrow);
+        //currentTomorrowForShow = sdf3.format(tomorrow);
+        //currentTodayForShow = sdf3.format(date);
+        //currentAftertommorowForShow = sdf3.format(aftertomorrow);
 
         btToday.setText(currentToday);
         btTommorow.setText(currentTomorrow);
         btAftertommorow.setText(currentAftertommorow);
 
         gcCalendarDay.setTime(date);
-        stDateSelectFull = sdf2.format(date);
-        stDateSelectShow = currentTodayForShow;
+        //stDateSelectFull = sdf2.format(date);
+        //stDateSelectShow = currentTodayForShow;
 
         buttonError.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -201,8 +199,8 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
                     if (iNumberOfDay == 0){
                         iNumberOfDay = 7;
                     }
-                    stDateSelectFull = sdf2.format(date);
-                    stDateSelectShow = currentTodayForShow;
+                    //stDateSelectFull = sdf2.format(date);
+                    //stDateSelectShow = currentTodayForShow;
                     flagTodayOrNot = true;
                     selectDay = 0;
                     drawList(schedule.get(iNumberOfDay-1));
@@ -217,8 +215,8 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
                 if (adapter != null){
                     gcCalendarDay.setTime(tomorrow);
                     iNumberOfDay = gcNumberDayWeek.get(Calendar.DAY_OF_WEEK);
-                    stDateSelectFull = sdf2.format(tomorrow);
-                    stDateSelectShow = currentTomorrowForShow;
+                    //stDateSelectFull = sdf2.format(tomorrow);
+                    //stDateSelectShow = currentTomorrowForShow;
                     flagTodayOrNot = false;
                     selectDay = 1;
                     drawList(schedule.get(iNumberOfDay-1));
@@ -236,8 +234,8 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
                     if (iNumberOfDay == 8){
                         iNumberOfDay = 1;
                     }
-                    stDateSelectFull = sdf2.format(aftertomorrow);
-                    stDateSelectShow = currentAftertommorowForShow;
+                    //stDateSelectFull = sdf2.format(aftertomorrow);
+                    //stDateSelectShow = currentAftertommorowForShow;
                     flagTodayOrNot = false;
                     selectDay = 2;
                     drawList(schedule.get(iNumberOfDay-1));
@@ -300,6 +298,8 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
                     intent.addCategory(Intent.CATEGORY_BROWSABLE);
                     intent.setData(Uri.parse(stOpenURL));
                     startActivity(intent);
+
+                    //Оставил эту часть кода на случай возврата к записи через приложение
                     /*
                     RecordForTrainingRecordingFragment yfc =  new RecordForTrainingRecordingFragment();
                     Bundle bundle = new Bundle();
@@ -327,21 +327,21 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
     private void preSelectionButtonDay(int iDaySelect){
         switch (iDaySelect){
             case 0:
-                stDateSelectShow = currentTodayForShow;
-                stDateSelectFull = sdf2.format(date);
+                //stDateSelectShow = currentTodayForShow;
+                //stDateSelectFull = sdf2.format(date);
                 selectButtonDay(true, false, false);
 
                 break;
 
             case 1:
-                stDateSelectShow = currentTomorrowForShow;
-                stDateSelectFull = sdf2.format(tomorrow);
+                //stDateSelectShow = currentTomorrowForShow;
+                //stDateSelectFull = sdf2.format(tomorrow);
                 selectButtonDay(false, true, false);
                 break;
 
             case 2:
-                stDateSelectShow = currentAftertommorowForShow;
-                stDateSelectFull = sdf2.format(aftertomorrow);
+                //stDateSelectShow = currentAftertommorowForShow;
+                //stDateSelectFull = sdf2.format(aftertomorrow);
                 selectButtonDay(false, false, true);
                 break;
         }

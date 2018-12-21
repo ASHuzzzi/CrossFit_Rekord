@@ -7,8 +7,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
-//import android.support.v4.app.FragmentManager;
-//import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
@@ -61,8 +59,8 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
 
     RecyclerAdapterTable adapter; //адаптер для списка тренировок
 
-    private String dateSelectFull; //передает значение по поторому потом идет запрос в базу в следующем фрагменте
-    private String dateSelectShow; //передает значение которое показывается в Textview следующего фрагмента
+    //private String dateSelectFull; //передает значение по поторому потом идет запрос в базу в следующем фрагменте
+    //private String dateSelectShow; //передает значение которое показывается в Textview следующего фрагмента
     private GregorianCalendar calendarday; //нужна для формирования дат для кнопок
 
     private List<List<Map>> schedule;
@@ -273,8 +271,8 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
                 }
                 int dayOfWeek = iNumberOfDay-numberDayOfWeek;
                 if ((dayOfWeek == 0) || (dayOfWeek == 1) || (dayOfWeek == 2) || (dayOfWeek == -5) || (dayOfWeek == -6)){
-                    @SuppressLint("SimpleDateFormat") SimpleDateFormat sdfDataShow = new SimpleDateFormat("EEEE dd MMMM");
-                    @SuppressLint("SimpleDateFormat") SimpleDateFormat sdfDataFull = new SimpleDateFormat("dd/MM");
+                    //@SuppressLint("SimpleDateFormat") SimpleDateFormat sdfDataShow = new SimpleDateFormat("EEEE dd MMMM");
+                    //@SuppressLint("SimpleDateFormat") SimpleDateFormat sdfDataFull = new SimpleDateFormat("dd/MM");
                     @SuppressLint("SimpleDateFormat") SimpleDateFormat sdfCheckTime = new SimpleDateFormat("HH:mm");
 
                     //этот цикл нужен для проверки дней недели. Если сегодня сб/вс, то пн/вт должен
@@ -298,8 +296,8 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
                     }
 
                     today = calendarday.getTime();
-                    dateSelectShow = sdfDataShow.format(today);
-                    dateSelectFull = sdfDataFull.format(today);
+                    //dateSelectShow = sdfDataShow.format(today);
+                    //dateSelectFull = sdfDataFull.format(today);
                     boolean checkday = false; //проверка на выбор сегодняшнего дня;
                     if (dayOfWeek == 0) {
                         try {
@@ -331,6 +329,7 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
                         intent.setData(Uri.parse(stOpenURL));
                         startActivity(intent);
 
+                        //Оставил эту часть кода на случай возврата к записи через приложение
                         /*Bundle bundle = new Bundle();
                         bundle.putString("time", stStartTime);
                         bundle.putString("datefull", dateSelectFull);

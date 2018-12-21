@@ -44,9 +44,7 @@ public class SaveLoadResultLoader extends AsyncTaskLoader<Boolean> {
         String userId = mSettings.getString(APP_PREFERENCES_OBJECTID, "");
         String userName = mSettings.getString(APP_PREFERENCES_USERNAME, "");
         String userSurname = mSettings.getString(APP_PREFERENCES_USERSURNAME, "");
-        if (userSurname.length() > 0){
-            userSurname = userSurname.charAt(0) + ".";
-        }
+
         return queries.saveEditWorkoutDetails(iLoaderId, dateSession, userId,
                 userName, userSurname, userSkill, userWoDLevel, userWodResult);
 

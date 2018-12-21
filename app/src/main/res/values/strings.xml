@@ -66,7 +66,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <!-- Значения для шторки-->
-    <string name="notification">Уведомления</string>
+    <string name="notification">Новости</string>
     <string name="schedule">Расписание</string>
     <string name="record_training">Записаться на тренировку</string>
     <string name="contacts">Контакты</string>
@@ -110,8 +110,8 @@
     <string name="title_Table_Fragment">Расписание</string>
     <string name="title_RecordForTraining_Fragment">Записаться на тренировку</string>
     <string name="title_RecordForTrainingRecording_Fragment">Записаться на тренировку</string>
-    <string name="title_Notification_Fragment">Уведомления</string>
-    <string name="title_NotificationData_Fragment">Уведомление</string>
+    <string name="title_Notification_Fragment">Новости</string>
+    <string name="title_NotificationData_Fragment">Новости</string>
     <string name="title_CalendarWod_Fragment">Календарь тренировок</string>
     <string name="title_WorkoutDetails_Fragment">Результаты тренировки</string>
     <string name="title_Character_Fragment">Словарь CrossFit</string>
@@ -274,6 +274,5 @@
 
     <string name="strDBMyResultRowCalEN">Row (cal)</string>
     <string name="strDBMyResultRowCalRU">гребля (25 кал)</string>
-
 
 </resources>
