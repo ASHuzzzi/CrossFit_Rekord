@@ -21,6 +21,8 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import java.text.ParseException;
@@ -42,10 +44,13 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
     private Runnable runnableClickOnbuttonSave;
 
     private EditText etResultSkill;
-    private EditText etResultLevel;
     private EditText etResultWoD;
     private ProgressBar pbSaveUpload;
     private Button btnSave;
+
+    private RadioButton rbSC;
+    private RadioButton rbRx;
+    private RadioButton rbRxP;
 
     public int LOADER_SAVE_ITEM = 2;
     public int LOADER_DELETE_ITEM = 3;
@@ -53,6 +58,8 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
 
     private boolean flag; //флаг показывает есть ли данные о тренировки от фрагмента
     private boolean flagDelete =  false; //флаг показывает, что нажата кнопка удалить
+
+    private String stLevel; //переменная для передачи уровня тренировки. По умолчанию Sc.
 
     private static final String APP_PREFERENCES = "audata";
     private static final String APP_PREFERENCES_OBJECTID = "ObjectId";
@@ -76,33 +83,61 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
             }
         });
 
+        stLevel = getResources().getString(R.string.strActivityERLevelSc);
+
         etResultSkill = findViewById(R.id.etResultSkill);
-        etResultLevel = findViewById(R.id.etResultLevel);
         etResultWoD = findViewById(R.id.etResultWoD);
 
         pbSaveUpload = findViewById(R.id.pbSaveUpload);
         btnSave = findViewById(R.id.btnSaveUpload);
+
+        rbSC = findViewById(R.id.rbSC);
+        rbRx = findViewById(R.id.rbRx);
+        rbRxP = findViewById(R.id.rbRxP);
+        RadioGroup rgSelectLevel = findViewById(R.id.rgSelectLevel);
+
+        rgSelectLevel.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId){
+                    case R.id.rbSC:
+                        stLevel = getResources().getString(R.string.strActivityERLevelSc);
+                        break;
+                    case R.id.rbRx:
+                        stLevel = getResources().getString(R.string.strActivityERLevelRx);
+                        break;
+                    case R.id.rbRxP:
+                        stLevel = getResources().getString(R.string.strActivityERLevelRxPlus);
+                }
+            }
+        });
 
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 String stCheckSpace = etResultSkill.getText().toString();
-                if(stCheckSpace.endsWith(" ")){
-                    stCheckSpace.substring(0, stCheckSpace.length() - 1);
-                    etResultSkill.setText(stCheckSpace);
-                }
-
-                stCheckSpace = etResultLevel.getText().toString();
-                if(stCheckSpace.endsWith(" ")){
-                    stCheckSpace.substring(0, stCheckSpace.length() - 1);
-                    etResultLevel.setText(stCheckSpace);
+                if (stCheckSpace.length() > 1){
+                    if(stCheckSpace.endsWith(" ")){
+                        stCheckSpace =  stCheckSpace.substring(0, stCheckSpace.length() - 1);
+                        etResultSkill.setText(stCheckSpace);
+                    }
+                    if(stCheckSpace.startsWith(" ")){
+                        stCheckSpace = stCheckSpace.substring(1);
+                        etResultSkill.setText(stCheckSpace);
+                    }
                 }
 
                 stCheckSpace = etResultWoD.getText().toString();
-                if(stCheckSpace.endsWith(" ")){
-                    stCheckSpace.substring(0, stCheckSpace.length() - 1);
-                    etResultWoD.setText(stCheckSpace);
+                if (stCheckSpace.length() > 1){
+                    if(stCheckSpace.endsWith(" ")){
+                        stCheckSpace =  stCheckSpace.substring(0, stCheckSpace.length() - 1);
+                        etResultSkill.setText(stCheckSpace);
+                    }
+                    if(stCheckSpace.startsWith(" ")){
+                        stCheckSpace = stCheckSpace.substring(1);
+                        etResultSkill.setText(stCheckSpace);
+                    }
                 }
 
                 pbSaveUpload.setVisibility(View.VISIBLE);
@@ -178,12 +213,37 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
         flag = intent.getBooleanExtra("flag", false);
         if (flag){
             etResultSkill.setText(intent.getStringExtra("skill"));
-            etResultLevel.setText(intent.getStringExtra("level"));
+
+            //создаем флаг для проверки чтобы точно какая-то кнопка была выбрана
+            Boolean checkLevelFlag = false;
+            stLevel = intent.getStringExtra("level");
+            switch(stLevel){
+                case "Sc":
+                    rbSC.setChecked(true);
+                    checkLevelFlag = true;
+                    break;
+                case "Rx":
+                    rbRx.setChecked(true);
+                    checkLevelFlag = true;
+                    break;
+                case "Rx+":
+                    rbRxP.setChecked(true);
+                    checkLevelFlag = true;
+                    break;
+            }
+
+            //если никакая кнопка не была выбрана, то по умолчанию выбираем Sc.
+            if (!checkLevelFlag){
+                rbSC.setChecked(true);
+                stLevel = getResources().getString(R.string.strActivityERLevelSc);
+            }
+
             etResultWoD.setText(intent.getStringExtra("results"));
 
         }else{
             etResultSkill.setText("");
-            etResultLevel.setText("");
+            rbSC.setChecked(true);
+            stLevel = getResources().getString(R.string.strActivityERLevelSc);
             etResultWoD.setText("");
 
         }
@@ -202,7 +262,7 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
         switch (loader_id){
             case 2:
                 bundle.putString(String.valueOf(SaveLoadResultLoader.ARG_USERSKIL), String.valueOf(etResultSkill.getText()));
-                bundle.putString(String.valueOf(SaveLoadResultLoader.ARG_USERWODLEVEL), String.valueOf(etResultLevel.getText()));
+                bundle.putString(String.valueOf(SaveLoadResultLoader.ARG_USERWODLEVEL), stLevel);
                 bundle.putString(String.valueOf(SaveLoadResultLoader.ARG_USERWODRESULT), String.valueOf(etResultWoD.getText()));
                 mLoader = getSupportLoaderManager().restartLoader(LOADER_SAVE_ITEM, bundle, this);
                 mLoader.forceLoad();
@@ -215,7 +275,7 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
 
             case 4:
                 bundle.putString(String.valueOf(SaveLoadResultLoader.ARG_USERSKIL), String.valueOf(etResultSkill.getText()));
-                bundle.putString(String.valueOf(SaveLoadResultLoader.ARG_USERWODLEVEL), String.valueOf(etResultLevel.getText()));
+                bundle.putString(String.valueOf(SaveLoadResultLoader.ARG_USERWODLEVEL), stLevel);
                 bundle.putString(String.valueOf(SaveLoadResultLoader.ARG_USERWODRESULT), String.valueOf(etResultWoD.getText()));
                 mLoader = getSupportLoaderManager().restartLoader(LOADER_UPLOAD_ITEM, bundle, this);
                 mLoader.forceLoad();
