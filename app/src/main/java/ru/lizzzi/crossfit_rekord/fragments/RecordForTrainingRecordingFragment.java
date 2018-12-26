@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -73,7 +74,7 @@ public class RecordForTrainingRecordingFragment extends Fragment implements Load
 
     @SuppressLint("HandlerLeak")
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState){
         View v = inflater.inflate(R.layout.fragment_record_for_training_recording, container, false);
 
@@ -279,6 +280,7 @@ public class RecordForTrainingRecordingFragment extends Fragment implements Load
         }
     }
 
+    @NonNull
     @Override
     public Loader<List<Map>> onCreateLoader(int id, Bundle args) {
         Loader<List<Map>> loader;
@@ -287,7 +289,7 @@ public class RecordForTrainingRecordingFragment extends Fragment implements Load
     }
 
     @Override
-    public void onLoadFinished(Loader<List<Map>> loader, List<Map> data) {
+    public void onLoadFinished(@NonNull Loader<List<Map>> loader, List<Map> data) {
 
         if (data != null) {
             if( data.size() > 0){
@@ -324,7 +326,7 @@ public class RecordForTrainingRecordingFragment extends Fragment implements Load
     }
 
     @Override
-    public void onLoaderReset(Loader loader) {
+    public void onLoaderReset(@NonNull Loader loader) {
 
     }
 

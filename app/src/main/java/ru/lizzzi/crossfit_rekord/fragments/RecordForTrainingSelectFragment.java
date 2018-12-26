@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -82,7 +83,7 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
 
     @SuppressLint({"HandlerLeak", "ClickableViewAccessibility"})
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.fragment_record_for_training_select, container, false);
@@ -251,6 +252,7 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
         getLoaderManager().restartLoader(LOADER_ID, null, this).forceLoad();
     }
 
+    @NonNull
     @Override
     public Loader<List<List<Map>>> onCreateLoader(int id, Bundle args) {
         Loader<List<List<Map>>> loader;
@@ -259,7 +261,7 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
     }
 
     @Override
-    public void onLoadFinished(Loader<List<List<Map>>> loader, List<List<Map>> data) {
+    public void onLoadFinished(@NonNull Loader<List<List<Map>>> loader, List<List<Map>> data) {
 
         if (data != null){
             schedule = data;
@@ -277,7 +279,7 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
     }
 
     @Override
-    public void onLoaderReset(Loader<List<List<Map>>> loader) {
+    public void onLoaderReset(@NonNull Loader<List<List<Map>>> loader) {
 
     }
 

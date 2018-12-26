@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -68,7 +69,7 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
 
     @SuppressLint({"HandlerLeak", "ClickableViewAccessibility"})
     @Override
-    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_table, container, false);
 
@@ -226,6 +227,7 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
         getLoaderManager().initLoader(loaderid,null, this).forceLoad();
     }
 
+    @NonNull
     @Override
     public Loader<List<List<Map>>> onCreateLoader(int id, Bundle args) {
         Loader<List<List<Map>>> loader;
@@ -234,7 +236,7 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
     }
 
     @Override
-    public void onLoadFinished(Loader<List<List<Map>>> loader, List<List<Map>> data) {
+    public void onLoadFinished(@NonNull Loader<List<List<Map>>> loader, List<List<Map>> data) {
 
         schedule = data;
 
@@ -251,7 +253,7 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
     }
 
     @Override
-    public void onLoaderReset(Loader<List<List<Map>>> loader) {
+    public void onLoaderReset(@NonNull Loader<List<List<Map>>> loader) {
     }
 
     private void createList(List<Map> dailySchedule){

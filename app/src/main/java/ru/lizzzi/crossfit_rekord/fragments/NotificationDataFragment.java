@@ -4,6 +4,7 @@ package ru.lizzzi.crossfit_rekord.fragments;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,7 +34,7 @@ public class NotificationDataFragment extends Fragment {
     @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf2 = new SimpleDateFormat("dd MMM yyyy HH:mm");
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_notificationdata, container, false);
 
         getActivity().setTitle(R.string.title_Notification_Fragment);

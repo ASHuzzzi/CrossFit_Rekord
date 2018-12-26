@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
@@ -284,6 +285,7 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
 
     }
 
+    @NonNull
     @Override
     public Loader<Boolean> onCreateLoader(int id, Bundle args) {
         Loader<Boolean> loader;
@@ -292,7 +294,7 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
     }
 
     @Override
-    public void onLoadFinished(Loader<Boolean> loader, Boolean result) {
+    public void onLoadFinished(@NonNull Loader<Boolean> loader, Boolean result) {
         if (result){
             if (loader.getId() != 4){
                 CalendarWodDBHelper mDBHelper = new CalendarWodDBHelper(this);
@@ -326,7 +328,7 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
     }
 
     @Override
-    public void onLoaderReset(Loader<Boolean> loader) {
+    public void onLoaderReset(@NonNull Loader<Boolean> loader) {
 
     }
 

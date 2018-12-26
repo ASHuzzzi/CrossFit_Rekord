@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -42,7 +43,7 @@ public class PasswordRecoveryFragment extends Fragment implements LoaderManager.
     private int openFragment = 1;
 
     @SuppressLint("HandlerLeak")
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_email, container, false);
 
@@ -142,6 +143,7 @@ public class PasswordRecoveryFragment extends Fragment implements LoaderManager.
     }
 
 
+    @NonNull
     @Override
     public Loader<Boolean> onCreateLoader(int id, Bundle args) {
         RecoveryEmailLoader loader;
@@ -150,7 +152,7 @@ public class PasswordRecoveryFragment extends Fragment implements LoaderManager.
     }
 
     @Override
-    public void onLoadFinished(Loader<Boolean> loader, Boolean data) {
+    public void onLoadFinished(@NonNull Loader<Boolean> loader, Boolean data) {
 
         if (data){
 
@@ -164,7 +166,7 @@ public class PasswordRecoveryFragment extends Fragment implements LoaderManager.
     }
 
     @Override
-    public void onLoaderReset(Loader<Boolean> loader) {
+    public void onLoaderReset(@NonNull Loader<Boolean> loader) {
 
     }
 

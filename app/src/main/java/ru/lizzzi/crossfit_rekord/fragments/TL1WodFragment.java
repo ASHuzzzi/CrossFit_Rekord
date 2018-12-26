@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck;
@@ -53,7 +55,7 @@ public class TL1WodFragment extends Fragment implements LoaderManager.LoaderCall
 
     @SuppressLint("HandlerLeak")
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_tl1wod, container, false);
         tvWarmUp = v.findViewById(R.id.tvWarmUp);
@@ -121,16 +123,18 @@ public class TL1WodFragment extends Fragment implements LoaderManager.LoaderCall
 
     private void loadExerciseAsyncTaskLoader(){
 
-        SharedPreferences mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-        String selectedDay =  mSettings.getString(APP_PREFERENCES_SELECTEDDAY, "");
-
-        Bundle bundle = new Bundle();
-        bundle.putString("Selected_day", selectedDay);
-        bundle.putString("Table", "exercises");
-        int LOADER_ID2 = 2;
-        getLoaderManager().initLoader(LOADER_ID2, bundle, this).forceLoad();
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+            SharedPreferences mSettings = Objects.requireNonNull(getContext()).getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+            String selectedDay =  mSettings.getString(APP_PREFERENCES_SELECTEDDAY, "");
+            Bundle bundle = new Bundle();
+            bundle.putString("Selected_day", selectedDay);
+            bundle.putString("Table", "exercises");
+            int LOADER_ID2 = 2;
+            getLoaderManager().initLoader(LOADER_ID2, bundle, this).forceLoad();
+        }
     }
 
+    @NonNull
     @Override
     public Loader<List<Map>> onCreateLoader(int id, Bundle args) {
         Loader<List<Map>> loader;
@@ -139,7 +143,7 @@ public class TL1WodFragment extends Fragment implements LoaderManager.LoaderCall
     }
 
     @Override
-    public void onLoadFinished(Loader<List<Map>> loader, List<Map> data) {
+    public void onLoadFinished(@NonNull Loader<List<Map>> loader, List<Map> data) {
         pbProgressBar.setVisibility(View.INVISIBLE);
         if (data != null && data.size() > 0){
             if(!String.valueOf(data.get(0).get("warmup")).equals("null")){
@@ -181,7 +185,7 @@ public class TL1WodFragment extends Fragment implements LoaderManager.LoaderCall
     }
 
     @Override
-    public void onLoaderReset(Loader<List<Map>> loader) {
+    public void onLoaderReset(@NonNull Loader<List<Map>> loader) {
 
     }
 

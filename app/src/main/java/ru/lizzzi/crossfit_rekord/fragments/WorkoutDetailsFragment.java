@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -34,7 +35,7 @@ public class WorkoutDetailsFragment extends Fragment{
 
     @SuppressLint("HandlerLeak")
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         setRetainInstance(true);
 
@@ -56,11 +57,6 @@ public class WorkoutDetailsFragment extends Fragment{
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                if (tab.getPosition() == 1) {
-                    //buttonEnterReult.setVisibility(View.VISIBLE);
-                }else{
-                    //buttonEnterReult.setVisibility(View.INVISIBLE);
-                }
             }
 
             @Override
@@ -104,9 +100,5 @@ public class WorkoutDetailsFragment extends Fragment{
             e.printStackTrace();
         }
 
-    }
-
-    public void onPause(){
-        super.onPause();
     }
 }

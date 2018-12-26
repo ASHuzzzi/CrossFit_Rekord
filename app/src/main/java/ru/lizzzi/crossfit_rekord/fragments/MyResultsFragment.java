@@ -1,6 +1,7 @@
 package ru.lizzzi.crossfit_rekord.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,7 +36,7 @@ public class MyResultsFragment extends Fragment implements View.OnFocusChangeLis
     private EditText etRowM;
     private EditText etRowCal;
 
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState){
         View v = inflater.inflate(R.layout.fragment_my_results, container, false);
 

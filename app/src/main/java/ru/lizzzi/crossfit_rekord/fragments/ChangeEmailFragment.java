@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -48,7 +49,7 @@ public class ChangeEmailFragment extends Fragment implements LoaderManager.Loade
 
     @SuppressLint("HandlerLeak")
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_change_email, container, false);
 
         mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
@@ -173,6 +174,7 @@ public class ChangeEmailFragment extends Fragment implements LoaderManager.Loade
     }
 
 
+    @NonNull
     @Override
     public Loader<Boolean> onCreateLoader(int id, Bundle args) {
         ChangeEmailLoader loader;
@@ -181,7 +183,7 @@ public class ChangeEmailFragment extends Fragment implements LoaderManager.Loade
     }
 
     @Override
-    public void onLoadFinished(Loader<Boolean> loader, Boolean data) {
+    public void onLoadFinished(@NonNull Loader<Boolean> loader, Boolean data) {
         if (data){
             tvOldEmail.setText(mSettings.getString(APP_PREFERENCES_EMAIL, ""));
             etChangeEmail.setText(getResources().getString(R.string.empty));
@@ -194,7 +196,7 @@ public class ChangeEmailFragment extends Fragment implements LoaderManager.Loade
     }
 
     @Override
-    public void onLoaderReset(Loader<Boolean> loader) {
+    public void onLoaderReset(@NonNull Loader<Boolean> loader) {
 
     }
 

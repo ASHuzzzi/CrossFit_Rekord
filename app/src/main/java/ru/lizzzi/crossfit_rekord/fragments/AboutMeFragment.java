@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
@@ -58,7 +59,7 @@ public class AboutMeFragment extends Fragment implements LoaderManager.LoaderCal
 
     @SuppressLint("HandlerLeak")
     @Override
-    public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState){
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View v = inflater.inflate(R.layout.fragment_aboutme, container, false);
 
         mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
@@ -225,6 +226,7 @@ public class AboutMeFragment extends Fragment implements LoaderManager.LoaderCal
     }
 
 
+    @NonNull
     @Override
     public Loader<Boolean> onCreateLoader(int id, Bundle args) {
         AboutMeLoader loader;
@@ -233,7 +235,7 @@ public class AboutMeFragment extends Fragment implements LoaderManager.LoaderCal
     }
 
     @Override
-    public void onLoadFinished(Loader<Boolean> loader, Boolean data) {
+    public void onLoadFinished(@NonNull Loader<Boolean> loader, Boolean data) {
         if (data){
             Toast.makeText(getContext(), "Данные обновлены", Toast.LENGTH_SHORT).show();
         }else {
@@ -244,7 +246,7 @@ public class AboutMeFragment extends Fragment implements LoaderManager.LoaderCal
     }
 
     @Override
-    public void onLoaderReset(Loader<Boolean> loader) {
+    public void onLoaderReset(@NonNull Loader<Boolean> loader) {
 
     }
 }

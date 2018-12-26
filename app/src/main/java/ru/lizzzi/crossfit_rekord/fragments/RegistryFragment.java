@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -62,7 +63,7 @@ public class RegistryFragment extends Fragment implements LoaderManager.LoaderCa
 
     @SuppressLint("HandlerLeak")
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.fragment_registry, container, false);
@@ -225,6 +226,7 @@ public class RegistryFragment extends Fragment implements LoaderManager.LoaderCa
         getLoaderManager().initLoader(LOADERID, bundle,this).forceLoad();
     }
 
+    @NonNull
     @Override
     public Loader<Boolean> onCreateLoader(int id, Bundle args) {
         RegistryLoader loader;
@@ -233,7 +235,7 @@ public class RegistryFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     @Override
-    public void onLoadFinished(Loader<Boolean> loader, Boolean data) {
+    public void onLoadFinished(@NonNull Loader<Boolean> loader, Boolean data) {
         if (data){
             StartService();
             InterfaceChangeToggleStatus interfaceChangeToggleStatus = (InterfaceChangeToggleStatus) getActivity();
@@ -247,7 +249,7 @@ public class RegistryFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     @Override
-    public void onLoaderReset(Loader<Boolean> loader) {
+    public void onLoaderReset(@NonNull Loader<Boolean> loader) {
 
     }
 

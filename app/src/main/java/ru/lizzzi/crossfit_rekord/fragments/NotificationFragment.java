@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -46,7 +47,7 @@ public class NotificationFragment extends Fragment implements LoaderManager.Load
 
     @SuppressLint("HandlerLeak")
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View v = inflater.inflate(R.layout.fragment_notification, container, false);
 
         rvNotoficationList = v.findViewById(R.id.rvNotoficationList);
@@ -87,6 +88,7 @@ public class NotificationFragment extends Fragment implements LoaderManager.Load
 
     }
 
+    @NonNull
     @Override
     public Loader<List<Map<String, Object>>> onCreateLoader(int id, Bundle args) {
         NotificationLoader loader;
@@ -95,7 +97,7 @@ public class NotificationFragment extends Fragment implements LoaderManager.Load
     }
 
     @Override
-    public void onLoadFinished(Loader<List<Map<String, Object>>> loader, List<Map<String, Object>> data) {
+    public void onLoadFinished(@NonNull Loader<List<Map<String, Object>>> loader, List<Map<String, Object>> data) {
 
         if (data != null){
             RecyclerAdapterNotification adapterNotification = new RecyclerAdapterNotification(getContext(), data, new ListernerNotification() {
@@ -126,7 +128,7 @@ public class NotificationFragment extends Fragment implements LoaderManager.Load
     }
 
     @Override
-    public void onLoaderReset(Loader<List<Map<String, Object>>> loader) {
+    public void onLoaderReset(@NonNull Loader<List<Map<String, Object>>> loader) {
 
     }
 

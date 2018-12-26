@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -56,7 +57,7 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
 
     @SuppressLint("HandlerLeak")
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState){
         View v = inflater.inflate(R.layout.fragment_login, container, false);
 
@@ -200,6 +201,7 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
         getLoaderManager().initLoader(LOADERID, bundle,this).forceLoad();
     }
 
+    @NonNull
     @Override
     public Loader<Boolean> onCreateLoader(int id, Bundle args) {
         LoginLoader loader;
@@ -208,7 +210,7 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
     }
 
     @Override
-    public void onLoadFinished(Loader<Boolean> loader, Boolean data) {
+    public void onLoadFinished(@NonNull Loader<Boolean> loader, Boolean data) {
         if (data){
             StartService();
             InterfaceChangeToggleStatus interfaceChangeToggleStatus = (InterfaceChangeToggleStatus) getActivity();
@@ -222,7 +224,7 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
     }
 
     @Override
-    public void onLoaderReset(Loader<Boolean> loader) {
+    public void onLoaderReset(@NonNull Loader<Boolean> loader) {
 
     }
 

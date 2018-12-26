@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -68,7 +69,7 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
 
     @SuppressLint("HandlerLeak")
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View v = inflater.inflate(R.layout.fragment_tl2result, container, false);
 
@@ -167,6 +168,7 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
         getLoaderManager().restartLoader(LOADER_ID, bundle, this).forceLoad();
     }
 
+    @NonNull
     @Override
     public Loader<List<Map>> onCreateLoader(int id, Bundle args) {
         Loader<List<Map>> loader;
@@ -175,7 +177,7 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
     }
 
     @Override
-    public void onLoadFinished(Loader<List<Map>> loader, List<Map> data) {
+    public void onLoadFinished(@NonNull Loader<List<Map>> loader, List<Map> data) {
         flag = false;
 
         pbProgressBar.setVisibility(View.INVISIBLE);
@@ -214,7 +216,7 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
     }
 
     @Override
-    public void onLoaderReset(Loader<List<Map>> loader) {
+    public void onLoaderReset(@NonNull Loader<List<Map>> loader) {
     }
 
     @Override

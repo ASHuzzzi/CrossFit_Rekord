@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -44,7 +45,7 @@ public class ChangePasswordFragment extends Fragment implements LoaderManager.Lo
 
     @SuppressLint("HandlerLeak")
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_change_password, container, false);
 
         mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
@@ -183,6 +184,7 @@ public class ChangePasswordFragment extends Fragment implements LoaderManager.Lo
     }
 
 
+    @NonNull
     @Override
     public Loader<Boolean> onCreateLoader(int id, Bundle args) {
         ChangePasswordLoader loader;
@@ -191,7 +193,7 @@ public class ChangePasswordFragment extends Fragment implements LoaderManager.Lo
     }
 
     @Override
-    public void onLoadFinished(Loader<Boolean> loader, Boolean data) {
+    public void onLoadFinished(@NonNull Loader<Boolean> loader, Boolean data) {
         if (data){
             etPasswordOld.setText(getResources().getString(R.string.empty));
             etPasswordNew.setText(getResources().getString(R.string.empty));
@@ -205,7 +207,7 @@ public class ChangePasswordFragment extends Fragment implements LoaderManager.Lo
     }
 
     @Override
-    public void onLoaderReset(Loader<Boolean> loader) {
+    public void onLoaderReset(@NonNull Loader<Boolean> loader) {
 
     }
 }

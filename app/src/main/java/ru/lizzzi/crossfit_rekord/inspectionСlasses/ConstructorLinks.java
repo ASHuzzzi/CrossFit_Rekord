@@ -21,10 +21,9 @@ public class ConstructorLinks {
                 break;
 
             case "CrossFit/Lady class":
-                stTypesItem = "%Lady%20class";
+                stTypesItem = "Lady%20Class";
                 break;
         }
-
 
         String stURL = "http://crossfitrekord.webox.beget.tech/rec.php?day=";
 

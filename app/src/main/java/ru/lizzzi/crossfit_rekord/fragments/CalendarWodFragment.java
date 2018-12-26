@@ -75,7 +75,7 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
     }
 
     @SuppressLint("HandlerLeak")
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState){
         View v = inflater.inflate(R.layout.fragment_calendar_wod, container, false);
 
@@ -246,6 +246,7 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
         }
     }
 
+    @NonNull
     @Override
     public Loader<List<Date>> onCreateLoader(int id, Bundle args) {
         Loader<List<Date>> loader;
@@ -254,7 +255,7 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
     }
 
     @Override
-    public void onLoadFinished(Loader<List<Date>> loader, List<Date> data) {
+    public void onLoadFinished(@NonNull Loader<List<Date>> loader, List<Date> data) {
 
         if (data != null){
             for (int i = 0; i <data.size(); i++){
@@ -274,7 +275,7 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
     }
 
     @Override
-    public void onLoaderReset(Loader<List<Date>> loader) {
+    public void onLoaderReset(@NonNull Loader<List<Date>> loader) {
 
     }
 
