@@ -2,6 +2,7 @@ package ru.lizzzi.crossfit_rekord.fragments;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -10,20 +11,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
-
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeTitle;
 
 public class StartScreenFragment extends Fragment {
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_start_screen, container, false);
-
-        LinearLayout fragment_main =  v.findViewById(R.id.fragment_main);
-        fragment_main.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
 
         Button schedule = v.findViewById(R.id.button_schedule);
         Button recordTraining = v.findViewById(R.id.button_record_training);

@@ -35,7 +35,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/tvHeaderNotificationND"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="10dp"
+        android:scrollbarSize="3dp"
+        android:scrollbarThumbVertical="@drawable/scrollbar">
 
         <LinearLayout
             android:layout_width="match_parent"

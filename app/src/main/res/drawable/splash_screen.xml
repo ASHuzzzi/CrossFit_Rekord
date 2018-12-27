@@ -2,9 +2,7 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:drawable="@drawable/spalsh_sceen_backround"/>
-
-
+        android:drawable="@color/colorPrimary"/>
 
     <item>
         <bitmap
