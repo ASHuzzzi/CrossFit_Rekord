@@ -12,6 +12,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -25,7 +27,9 @@ public class RecyclerAdapterNotification extends RecyclerView.Adapter<RecyclerAd
     private List<Map<String, Object>> notifications;
     private DocumentFieldsNotification fields;
     @SuppressLint("SimpleDateFormat")
-    private final SimpleDateFormat sdf2 = new SimpleDateFormat("dd MMM yyyy HH:mm");
+    private final SimpleDateFormat sdf2 = new SimpleDateFormat("d MMM yyyy");
+    @SuppressLint("SimpleDateFormat")
+    private final SimpleDateFormat sdf3 = new SimpleDateFormat("HH:mm");
 
 
     public RecyclerAdapterNotification(Context context, @NonNull List<Map<String, Object>> notifications, ListernerNotification listener) {
@@ -47,27 +51,42 @@ public class RecyclerAdapterNotification extends RecyclerView.Adapter<RecyclerAd
             stHeader = view.findViewById(R.id.tvHeaderNotification);
             tvForLong = view.findViewById(R.id.tvForLong);
             llNotification = view.findViewById(R.id.llNotification);
-
         }
     }
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType){
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_rv_notification, parent, false);
         return new ViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position){
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position){
         final Map documentInfo = notifications.get(position);
         String stdateNote = (String) documentInfo.get(fields.getDateField());
         String stheader = (String) documentInfo.get(fields.getHeaderField());
         int stviewed = Integer.valueOf((String) documentInfo.get(fields.getViewedField()));
 
-        long ldateNote;
-        ldateNote = Long.valueOf(stdateNote);
+        long ldateNote = Long.valueOf(stdateNote);
         String stLongToString = String.valueOf(ldateNote);
-        stdateNote = sdf2.format(ldateNote);
+
+        // set the calendar to start of today
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MILLISECOND, 0);
+
+        Date today = c.getTime();
+        Date dDateNote = new Date(ldateNote);
+
+        //проверка на сегодня новость или нет
+        if (dDateNote.before(today)) {
+            stdateNote = sdf2.format(ldateNote);
+        }else{
+            stdateNote = sdf3.format(ldateNote);
+        }
 
         holder.stDateNote.setText(stdateNote);
         holder.stHeader.setText(stheader);

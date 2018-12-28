@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import ru.lizzzi.crossfit_rekord.R;
@@ -31,13 +33,15 @@ public class NotificationDataFragment extends Fragment {
     private Long convertTime;
     List <String> listDetailNotification;
 
-    @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf2 = new SimpleDateFormat("dd MMM yyyy HH:mm");
+    @SuppressLint("SimpleDateFormat")
+    private final SimpleDateFormat sdf2 = new SimpleDateFormat("d MMM yyyy");
+    @SuppressLint("SimpleDateFormat")
+    private final SimpleDateFormat sdf3 = new SimpleDateFormat("HH:mm");
+
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_notificationdata, container, false);
-
-        getActivity().setTitle(R.string.title_Notification_Fragment);
 
         tvTime = v.findViewById(R.id.tvTimeNotificationND);
         tvHeader = v.findViewById(R.id.tvHeaderNotificationND);
@@ -84,7 +88,24 @@ public class NotificationDataFragment extends Fragment {
 
         super.onResume();
         tvHeader.setText(stHeader);
-        tvTime.setText(sdf2.format(convertTime));
+
         tvText.setText(stText);
+
+        // set the calendar to start of today
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MILLISECOND, 0);
+
+        Date today = c.getTime();
+        Date dDateNote = new Date(convertTime);
+
+        //проверка на сегодня новость или нет
+        if (dDateNote.before(today)) {
+            tvTime.setText(sdf2.format(convertTime));
+        }else{
+            tvTime.setText(sdf3.format(convertTime));
+        }
     }
 }
