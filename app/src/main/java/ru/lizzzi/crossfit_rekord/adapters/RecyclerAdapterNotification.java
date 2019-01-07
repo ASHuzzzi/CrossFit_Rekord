@@ -110,6 +110,16 @@ public class RecyclerAdapterNotification extends RecyclerView.Adapter<RecyclerAd
                         (String) documentInfo.get(fields.getHeaderField()));
             }
         });
+
+        holder.llNotification.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                mListener.deleteNotificationInList(
+                        (String) documentInfo.get(fields.getDateField())
+                );
+                return true;
+            }
+        });
     }
 
     @Override

@@ -271,5 +271,13 @@ public class NotificationDBHelper extends SQLiteOpenHelper {
         return stLastDateCheck;
     }
 
+    public void deleteNotification(long date){
+        myDataBase = this.getReadableDatabase();
 
+        myDataBase.delete(
+                Notification.TABLE_NAME,
+                Notification.columnDateNote + "= '" + date + "'",
+                null
+        );
+    }
 }

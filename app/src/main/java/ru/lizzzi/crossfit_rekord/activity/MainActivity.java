@@ -361,10 +361,12 @@ public class MainActivity extends AppCompatActivity
         new Thread(new Runnable() {
             public void run() {
                 int i = mDBHelper.countNotification();
-                tvNotificationCounter.setGravity(Gravity.CENTER_VERTICAL);
-                tvNotificationCounter.setTypeface(null, Typeface.BOLD);
-                tvNotificationCounter.setTextColor(getResources().getColor(R.color.colorAccent));
-                tvNotificationCounter.setText(String.valueOf(i));
+                if (i > 0 ){
+                    tvNotificationCounter.setGravity(Gravity.CENTER_VERTICAL);
+                    tvNotificationCounter.setTypeface(null, Typeface.BOLD);
+                    tvNotificationCounter.setTextColor(getResources().getColor(R.color.colorAccent));
+                    tvNotificationCounter.setText(String.valueOf(i));
+                }
             }
         }).run();
 
