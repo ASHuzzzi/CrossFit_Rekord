@@ -369,13 +369,14 @@ public class BackendlessQueries extends Application {
         return resultQueries;
     }
 
-    public List<Map> loadNotification (String datelastcheck){
+    public List<Map> loadNotification (String stDateLastCheck, String stTimeNow){
 
         try
         {
             String stDateNote = getAppContext().getResources().getString(R.string.bTableNotificationDateNote);
             String stTableName = getAppContext().getResources().getString(R.string.bTableNotificationName);
-            String whereClause = stDateNote + " > '" + datelastcheck + "'";
+            String whereClause = stDateNote + " > '" + stDateLastCheck + "' and " +
+                    stDateNote + " < '" + stTimeNow + "'";
 
             DataQueryBuilder queryBuilder = DataQueryBuilder.create();
             queryBuilder.setWhereClause(whereClause);

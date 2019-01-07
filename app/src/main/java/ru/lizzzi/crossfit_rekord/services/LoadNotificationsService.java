@@ -66,30 +66,25 @@ public class LoadNotificationsService extends Service {
                     boolean resultCheck = NetworkCheck.checkInternet();
 
                     if (resultCheck){
-                        List<Map> data = queries.loadNotification(stLastDateCheck);
+                        long lTimeNow= System.currentTimeMillis();
+                        String stTimeNow = sdf.format(lTimeNow);
+                        List<Map> data = queries.loadNotification(stLastDateCheck, stTimeNow);
                         if (data != null && data.size()>0){
-                            String dateNote;
-                            String header;
-                            String text;
-                            String codeNote;
-                            int viewed = 0;
-                            long mils = 0;
                             for(int i = 0; i < data.size(); i++){
-
-                                header = String.valueOf(data.get(i).get("header"));
-                                text = String.valueOf(data.get(i).get("text"));
-                                codeNote = String.valueOf(data.get(i).get("codeNote"));
-                                dateNote = String.valueOf(data.get(i).get("dateNote"));
-                                @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf2 = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.UK);
                                 try {
+                                    String header = String.valueOf(data.get(i).get("header"));
+                                    String text = String.valueOf(data.get(i).get("text"));
+                                    String codeNote = String.valueOf(data.get(i).get("codeNote"));
+                                    String dateNote = String.valueOf(data.get(i).get("dateNote"));
+                                    @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf2 = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.UK);
                                     Date newDate = sdf2.parse(dateNote);
-                                    mils = newDate.getTime();
+                                    long mils = newDate.getTime();
+                                    int viewed = 0;
+                                    mDBHelper.saveNotification(mils, header, text, codeNote, viewed);
 
                                 } catch (ParseException e) {
                                     e.printStackTrace();
                                 }
-
-                                mDBHelper.saveNotification(mils, header, text, codeNote, viewed);
                             }
 
                             // сообщаем об окончании задачи

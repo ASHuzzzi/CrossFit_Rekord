@@ -133,11 +133,11 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
                 if (stCheckSpace.length() > 1){
                     if(stCheckSpace.endsWith(" ")){
                         stCheckSpace =  stCheckSpace.substring(0, stCheckSpace.length() - 1);
-                        etResultSkill.setText(stCheckSpace);
+                        etResultWoD.setText(stCheckSpace);
                     }
                     if(stCheckSpace.startsWith(" ")){
                         stCheckSpace = stCheckSpace.substring(1);
-                        etResultSkill.setText(stCheckSpace);
+                        etResultWoD.setText(stCheckSpace);
                     }
                 }
 
