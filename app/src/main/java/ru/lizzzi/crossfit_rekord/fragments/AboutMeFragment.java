@@ -14,6 +14,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.Loader;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,6 +73,7 @@ public class AboutMeFragment extends Fragment implements LoaderManager.LoaderCal
         etPhone = v.findViewById(R.id.etPhone);
         btChangeUserData = v.findViewById(R.id.btnChangeUserData);
         pbAboutMe = v.findViewById(R.id.pbAboutMe);
+
 
         //хэндлер для потока runnableOpenFragment
         handlerAboutMeFragment = new Handler() {
@@ -201,6 +203,8 @@ public class AboutMeFragment extends Fragment implements LoaderManager.LoaderCal
         etName.setText(mSettings.getString(APP_PREFERENCES_USERNAME, ""));
         etSurname.setText(mSettings.getString(APP_PREFERENCES_USERSURNAME, ""));
         etPhone.setText(mSettings.getString(APP_PREFERENCES_PHONE, ""));
+
+        etName.setSelection(etName.getText().length());
     }
 
     private void ChangeUIElements(int status){
