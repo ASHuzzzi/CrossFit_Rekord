@@ -5,14 +5,12 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import ru.lizzzi.crossfit_rekord.fragments.TL1WodFragment;
-import ru.lizzzi.crossfit_rekord.fragments.WorkoutDetailsFragment;
 import ru.lizzzi.crossfit_rekord.fragments.TL2ResultFragment;
 
 public class PagerAdapterWorkoutDetails extends FragmentPagerAdapter {
 
-    public PagerAdapterWorkoutDetails(WorkoutDetailsFragment context, FragmentManager fm) {
+    public PagerAdapterWorkoutDetails(FragmentManager fm) {
         super(fm);
-        WorkoutDetailsFragment mContext = context;
     }
 
     @Override

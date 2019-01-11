@@ -104,7 +104,7 @@ public class NotificationFragment extends Fragment implements LoaderManager.Load
     @Override
     public Loader<List<Map<String, Object>>> onCreateLoader(int id, Bundle args) {
         NotificationLoader loader;
-        loader = new NotificationLoader(getContext(), args);
+        loader = new NotificationLoader(getContext());
         return loader;
     }
 

@@ -120,7 +120,7 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
                     etEmail.setText(stCheckSpace);
                 }
 
-                if (etEmail.getText().length()== 0 || !isEmailValid(etEmail.getText().toString())){
+                if (etEmail.getText().length()== 0 || isEmailValid(etEmail.getText().toString())){
                     etEmail.setFocusableInTouchMode(true);
                     etEmail.setFocusable(true);
                     etEmail.requestFocus();
@@ -281,6 +281,6 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
         String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
         Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(email);
-        return matcher.matches();
+        return !matcher.matches();
     }
 }

@@ -16,11 +16,8 @@ import java.io.OutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Locale;
 
 import ru.lizzzi.crossfit_rekord.data.CalendarWodDBContract.dbCaleendarWod;
 
@@ -143,17 +140,12 @@ public class CalendarWodDBHelper extends SQLiteOpenHelper {
                 null);
         if (cursor !=null && cursor.moveToFirst()){
             do {
-                GregorianCalendar gcCalendarDay; //нужна для формирования дат для кнопок
                 Date dateFromDb = null;
                 @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
-                @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf2 = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
-                long sDates = 0;
-                String ssDate = null;
-                gcCalendarDay = new GregorianCalendar();
 
                 for (String cn : cursor.getColumnNames()) {
-                    sDates = Long.parseLong(cursor.getString(cursor.getColumnIndex(cn)));
-                    ssDate = sdf.format(sDates);
+                    long sDates = Long.parseLong(cursor.getString(cursor.getColumnIndex(cn)));
+                    String ssDate = sdf.format(sDates);
                     try {
                         dateFromDb = sdf.parse(ssDate);
                     } catch (ParseException e) {

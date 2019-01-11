@@ -102,7 +102,7 @@ public class PasswordRecoveryFragment extends Fragment implements LoaderManager.
                     etRecPasEmail.setText(stCheckSpace);
                 }
 
-                if (etRecPasEmail.getText().length()== 0 || !isEmailValid(etRecPasEmail.getText().toString())){
+                if (etRecPasEmail.getText().length()== 0 || isEmailValid(etRecPasEmail.getText().toString())){
                     etRecPasEmail.setFocusableInTouchMode(true);
                     etRecPasEmail.setFocusable(true);
                     etRecPasEmail.requestFocus();
@@ -184,7 +184,7 @@ public class PasswordRecoveryFragment extends Fragment implements LoaderManager.
         String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
         Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(email);
-        return matcher.matches();
+        return !matcher.matches();
     }
 
     private void TransactionFragment(Class fragmentClass) {

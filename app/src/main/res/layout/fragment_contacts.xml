@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.widget.RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="match_parent">
@@ -17,18 +16,16 @@
             android:id="@+id/tvAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
             android:autoLink="map"
             android:gravity="center_horizontal"
             android:text="@string/address"
-            android:textColor="@color/colorWhite" />
+            android:textColor="@color/colorWhite"
+             />
 
         <TextView
             android:id="@+id/tvRefinement"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tvAddress"
             android:layout_marginBottom="40dp"
             android:gravity="center_horizontal"
             android:text="@string/refinement"
@@ -39,7 +36,6 @@
             android:id="@+id/tvWeb"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tvMail"
             android:layout_marginBottom="20dp"
             android:autoLink="web"
             android:gravity="center_horizontal"
@@ -50,7 +46,6 @@
             android:id="@+id/tvPhone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tvRefinement"
             android:layout_marginBottom="20dp"
             android:autoLink="phone"
             android:gravity="center_horizontal"
@@ -62,7 +57,6 @@
             android:id="@+id/tvMail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tvPhone"
             android:layout_marginBottom="20dp"
             android:autoLink="email"
             android:gravity="center_horizontal"
@@ -79,14 +73,16 @@
                 android:layout_width="10dp"
                 android:layout_height="10dp"
                 android:layout_margin="20dp"
-                android:background="@drawable/instagram" />
+                android:background="@drawable/instagram"
+                android:contentDescription="@string/descriptionInstagram" />
 
             <ImageButton
                 android:id="@+id/ibVK"
                 android:layout_width="10dp"
                 android:layout_height="10dp"
                 android:layout_margin="20dp"
-                android:background="@drawable/vk" />
+                android:background="@drawable/vk"
+                android:contentDescription="@string/descriptionGroupVK" />
         </TableRow>
 
     </LinearLayout>
@@ -113,6 +109,7 @@
         android:layout_marginBottom="10dp"
         android:text="@string/appVersion"
         android:textColor="@color/colorRedPrimary"
-        android:textSize="10sp" />
+        android:textSize="10sp"
+        tools:ignore="SmallSp" />
 
 </android.widget.RelativeLayout>

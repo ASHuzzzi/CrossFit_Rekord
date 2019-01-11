@@ -13,11 +13,8 @@ public class NotificationLoader extends AsyncTaskLoader<List<Map<String, Object>
 
     private NotificationDBHelper mDBHelper = new NotificationDBHelper(getContext());
 
-    public NotificationLoader(Context context, Bundle args) {
+    public NotificationLoader(Context context) {
         super(context);
-        if (args != null){
-
-        }
     }
 
     @Override

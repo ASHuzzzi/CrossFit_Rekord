@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Размер текста в кнопках -->
+    <dimen name="button_text_size">14sp</dimen>
+
+</resources>

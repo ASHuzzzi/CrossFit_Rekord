@@ -30,13 +30,13 @@
             style="@style/MainTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Wod" />
+            android:text="@string/strWorkoutDetailsWod" />
 
         <android.support.design.widget.TabItem
             style="@style/MainTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Result" />
+            android:text="@string/strWorkoutDetailsResult" />
 
     </android.support.design.widget.TabLayout>
 
@@ -44,7 +44,6 @@
         android:id="@+id/vp_1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/sliding_tabs"
-        android:layout_weight="1" />
+        android:layout_below="@+id/sliding_tabs" />
 
 </RelativeLayout>

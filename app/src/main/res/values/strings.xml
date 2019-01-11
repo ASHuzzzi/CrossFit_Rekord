@@ -177,8 +177,10 @@
     <string name="contactMail">crossfitrekord@mail.ru</string>
     <string name="groupVK">https://vk.com/crossfit_rekord</string>
     <string name="Instagram">https://instagram.com/crossfit_rekord/</string>
+    <string name="descriptionInstagram">Инстаграм</string>
+    <string name="descriptionGroupVK">Группа в контакте</string>
 
-    <string name="Label">Rekord Crossfit 2018</string>
+    <string name="Label">Rekord Crossfit 2019</string>
     <string name="appVersion">Версия </string>
 
     <!-- Значения для фрагмента RecordForTraining_Recording_Fragment -->
@@ -208,6 +210,7 @@
     <string name="strActivityERLevelRxPlus">Rx+</string>
     <string name="strActivityERLevelOver">Другое</string>
     <string name="strActivityERSkill">Skill"</string>
+    <string name="strActivityERDelete">Удалить"</string>
 
     <!-- Значения для фрагмента ChangeEmail -->
     <string name="strEmailText">Адрес Вашей электронной почты</string>
@@ -279,5 +282,9 @@
 
     <string name="strDBMyResultRowCalEN">Row (cal)</string>
     <string name="strDBMyResultRowCalRU">гребля (25 кал)</string>
+
+    <!-- Значения для фрагмента WorkoutDetails -->
+    <string name="strWorkoutDetailsWod">Wod</string>
+    <string name="strWorkoutDetailsResult">Result</string>
 
 </resources>

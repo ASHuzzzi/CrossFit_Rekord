@@ -7,6 +7,6 @@
     <item
         android:id="@+id/delete"
         android:icon="@android:drawable/ic_menu_info_details"
-        android:title="Удалить"
+        android:title="@string/strActivityERDelete"
         app:actionViewClass="android.widget.TextView" />
 </menu>

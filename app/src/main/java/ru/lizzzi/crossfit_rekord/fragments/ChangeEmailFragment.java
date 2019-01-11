@@ -110,7 +110,7 @@ public class ChangeEmailFragment extends Fragment implements LoaderManager.Loade
                     etChangeEmail.setText(stCheckSpace);
                 }
 
-                if (etChangeEmail.getText().length()== 0 || !isEmailValid(etChangeEmail.getText().toString())){
+                if (etChangeEmail.getText().length()== 0 || isEmailValid(etChangeEmail.getText().toString())){
                     etChangeEmail.setFocusableInTouchMode(true);
                     etChangeEmail.setFocusable(true);
                     etChangeEmail.requestFocus();
@@ -204,6 +204,6 @@ public class ChangeEmailFragment extends Fragment implements LoaderManager.Loade
         String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
         Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(email);
-        return matcher.matches();
+        return !matcher.matches();
     }
 }
