@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryDark"
     android:orientation="vertical">
 
     <LinearLayout
@@ -54,7 +53,9 @@
             android:inputType="textWebEmailAddress"
             android:textColor="@color/colorRedPrimary"
             android:theme="@style/Theme.App.Base"
-            tools:ignore="LabelFor" />
+            tools:ignore="LabelFor"
+            android:autofillHints="@string/empty"
+            tools:targetApi="o" />
 
         <TextView
             android:id="@+id/textView11"
@@ -78,7 +79,9 @@
             android:maxLines="1"
             android:textColor="@color/colorRedPrimary"
             android:theme="@style/Theme.App.Base"
-            tools:ignore="LabelFor" />
+            tools:ignore="LabelFor"
+            android:autofillHints="@string/empty"
+            tools:targetApi="o" />
 
         <Button
             android:id="@+id/button2"

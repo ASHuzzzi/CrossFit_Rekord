@@ -1,7 +1,6 @@
 package ru.lizzzi.crossfit_rekord.loaders;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.support.v4.content.AsyncTaskLoader;
 
 import java.util.List;

@@ -17,7 +17,7 @@ import ru.lizzzi.crossfit_rekord.backendless.BackendlessQueries;
 
 public class CalendarWodLoader extends AsyncTaskLoader<List<Date>> {
 
-    private BackendlessQueries queries = new BackendlessQueries();
+    private final BackendlessQueries queries = new BackendlessQueries();
     private static final String APP_PREFERENCES = "audata";
     private static final String APP_PREFERENCES_OBJECTID = "ObjectId";
 

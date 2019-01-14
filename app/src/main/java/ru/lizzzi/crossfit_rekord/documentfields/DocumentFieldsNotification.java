@@ -21,7 +21,7 @@ public class DocumentFieldsNotification {
 
         Fields(int fieldNameId){
             this.fieldNameId = fieldNameId; }
-        public  int getFieldNameId() {
+        int getFieldNameId() {
             return fieldNameId; }
     }
 

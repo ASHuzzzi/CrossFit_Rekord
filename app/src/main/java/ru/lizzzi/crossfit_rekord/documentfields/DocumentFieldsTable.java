@@ -21,7 +21,7 @@ public class DocumentFieldsTable {
             this.fieldNameId = fieldNameId;
         }
 
-        public int getNameId() {
+        int getNameId() {
             return fieldNameId;
         }
 

@@ -62,14 +62,14 @@ public class MainActivity extends AppCompatActivity
 
     public final static int STATUS_FINISH = 200;
 
-    public final static String PARAM_TIME = "time";
+    private final static String PARAM_TIME = "time";
     public final static String PARAM_TASK = "task";
     public final static String PARAM_RESULT = "result";
     public final static String PARAM_STATUS = "status";
     public final static String BROADCAST_ACTION = "ru.lizzzi.crossfit_rekord.activity";
 
-    public static final String APPLICATION_IDB = "215CF2B1-C44E-E365-FFB6-9C35DD6A9300";
-    public static final String API_KEYB = "8764616E-C5FE-CE43-FF54-17B4A8026F00";
+    private static final String APPLICATION_IDB = "215CF2B1-C44E-E365-FFB6-9C35DD6A9300";
+    private static final String API_KEYB = "8764616E-C5FE-CE43-FF54-17B4A8026F00";
 
     private NotificationDBHelper mDBHelper;
 
@@ -245,11 +245,11 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    public Context getContext() {
+    private Context getContext() {
         return this;
     }
 
-    public void OpenFragment(Class fragmentClass){
+    private void OpenFragment(Class fragmentClass){
 
         Fragment fragment = null;
         try {

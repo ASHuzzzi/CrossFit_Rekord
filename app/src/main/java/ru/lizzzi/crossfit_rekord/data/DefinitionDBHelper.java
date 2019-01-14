@@ -18,8 +18,8 @@ public class DefinitionDBHelper  extends SQLiteOpenHelper{
 
     // путь к базе данных вашего приложения
     @SuppressLint("SdCardPath")
-    private static String DB_PATH = "/data/data/ru.lizzzi.crossfit_rekord/databases/";
-    private static String DB_NAME = "DefinitionDirectory.db";
+    private static final String DB_PATH = "/data/data/ru.lizzzi.crossfit_rekord/databases/";
+    private static final String DB_NAME = "DefinitionDirectory.db";
     private SQLiteDatabase myDataBase;
     private final Context mContext;
 

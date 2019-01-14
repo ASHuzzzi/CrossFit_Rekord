@@ -8,7 +8,7 @@ import ru.lizzzi.crossfit_rekord.backendless.BackendlessQueries;
 
 public class AboutMeLoader extends AsyncTaskLoader<Boolean> {
 
-    private BackendlessQueries user = new BackendlessQueries();
+    private final BackendlessQueries user = new BackendlessQueries();
 
     private String stEmail;
     private String stPassword;

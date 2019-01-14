@@ -36,9 +36,9 @@ import ru.lizzzi.crossfit_rekord.loaders.RecordForTrainingRecordingLoadPeopleLoa
 
 public class RecordForTrainingRecordingFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Map>>{
 
-    public static final String APP_PREFERENCES = "audata";
-    public static final String APP_PREFERENCES_USERNAME = "Username";
-    public static final String APP_PREFERENCES_OBJECTID = "ObjectId";
+    private static final String APP_PREFERENCES = "audata";
+    private static final String APP_PREFERENCES_USERNAME = "Username";
+    private static final String APP_PREFERENCES_OBJECTID = "ObjectId";
     private SharedPreferences mSettings;
 
     private RecyclerView rvRecord;
@@ -47,9 +47,6 @@ public class RecordForTrainingRecordingFragment extends Fragment implements Load
 
     private String stTimeSelect;
 
-    public int LOADER_SHOW_LIST = 1;
-    public int LOADER_WRITE_ITEM = 2;
-    public int LOADER_DELETE_ITEM = 3;
     private RecyclerAdapterRecord adapter;
     private Button btRegister;
     private Bundle bundle;
@@ -258,11 +255,14 @@ public class RecordForTrainingRecordingFragment extends Fragment implements Load
         bundle = new Bundle();
         bundle.putString(String.valueOf(RecordForTrainingRecordingLoadPeopleLoader.ARG_DATE), stDateSelectFull);
         bundle.putString(String.valueOf(RecordForTrainingRecordingLoadPeopleLoader.ARG_TIME), stTimeSelect);
+        int LOADER_SHOW_LIST = 1;
         mLoader = getLoaderManager().initLoader(LOADER_SHOW_LIST, bundle, this);
         mLoader.forceLoad();
     }
 
     private void restartAsyncTaskLoader(int loader_id){
+        int LOADER_WRITE_ITEM = 2;
+        int LOADER_DELETE_ITEM = 3;
         switch (loader_id){
             case 2:
                 stUserId =  mSettings.getString(APP_PREFERENCES_OBJECTID, "");

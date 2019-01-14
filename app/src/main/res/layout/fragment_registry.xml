@@ -32,7 +32,9 @@
             android:inputType="textPersonName"
             android:textColor="@color/colorRedPrimary"
             android:theme="@style/Theme.App.Base"
-            tools:ignore="LabelFor" />
+            tools:ignore="LabelFor"
+            android:autofillHints="@string/empty"
+            tools:targetApi="o" />
 
         <TextView
             android:id="@+id/textView2"
@@ -52,7 +54,9 @@
             android:inputType="textEmailAddress"
             android:textColor="@color/colorRedPrimary"
             android:theme="@style/Theme.App.Base"
-            tools:ignore="LabelFor" />
+            tools:ignore="LabelFor"
+            android:autofillHints="@string/empty"
+            tools:targetApi="o" />
 
         <TextView
             android:id="@+id/textView3"
@@ -72,7 +76,9 @@
             android:inputType="textVisiblePassword"
             android:textColor="@color/colorRedPrimary"
             android:theme="@style/Theme.App.Base"
-            tools:ignore="LabelFor" />
+            tools:ignore="LabelFor"
+            android:autofillHints="@string/empty"
+            tools:targetApi="o" />
 
         <TextView
             android:id="@+id/textView45"
@@ -92,7 +98,9 @@
             android:inputType="textVisiblePassword"
             android:textColor="@color/colorRedPrimary"
             android:theme="@style/Theme.App.Base"
-            tools:ignore="LabelFor" />
+            tools:ignore="LabelFor"
+            android:autofillHints="@string/empty"
+            tools:targetApi="o" />
 
         <ProgressBar
             android:id="@+id/pbRegistry"

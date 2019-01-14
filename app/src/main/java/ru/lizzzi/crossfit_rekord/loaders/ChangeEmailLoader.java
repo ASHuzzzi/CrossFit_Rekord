@@ -8,7 +8,7 @@ import ru.lizzzi.crossfit_rekord.backendless.BackendlessQueries;
 
 public class ChangeEmailLoader extends AsyncTaskLoader<Boolean> {
 
-    private BackendlessQueries user = new BackendlessQueries();
+    private final BackendlessQueries user = new BackendlessQueries();
 
     private String stOldEmail;
     private String stNewEmail;

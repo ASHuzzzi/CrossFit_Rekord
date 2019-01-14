@@ -45,7 +45,7 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
 
     private Handler handlerOpenFragment;
 
-    private int LOADER_ID = 1; //идентефикатор loader'а
+    private final int LOADER_ID = 1; //идентефикатор loader'а
 
     private CalendarWodDBHelper mDBHelper;
 

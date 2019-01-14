@@ -79,7 +79,7 @@ public class RegistryFragment extends Fragment implements LoaderManager.LoaderCa
             @Override
             public void handleMessage(Message msg) {
                 if(msg.what == openFragment){
-                    TransactionFragment(StartScreenFragment.class);
+                    TransactionFragment();
                 }else {
                     Bundle bundle = msg.getData();
                     String result_check = bundle.getString("result");
@@ -281,11 +281,11 @@ public class RegistryFragment extends Fragment implements LoaderManager.LoaderCa
         return false;
     }
 
-    private void TransactionFragment(Class fragmentClass) {
+    private void TransactionFragment() {
 
         Fragment fragment = null;
         try {
-            fragment = (Fragment) fragmentClass.newInstance();
+            fragment = StartScreenFragment.class.newInstance();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -300,7 +300,7 @@ public class RegistryFragment extends Fragment implements LoaderManager.LoaderCa
         ft.commit();
     }
 
-    public static boolean isEmailValid(String email) {
+    private static boolean isEmailValid(String email) {
         String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
         Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(email);

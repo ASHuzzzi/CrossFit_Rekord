@@ -21,7 +21,7 @@ public class DocumentFieldsWorkoutDetails {
         private  int fieldNameId;
 
         Fields(int fieldNameId){ this.fieldNameId = fieldNameId; }
-        public  int getFieldNameId() {return fieldNameId; }
+        int getFieldNameId() {return fieldNameId; }
     }
 
     public String getNameField() {return  context.getString(Fields.name.getFieldNameId()); }

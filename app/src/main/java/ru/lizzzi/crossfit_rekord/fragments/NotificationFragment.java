@@ -38,15 +38,15 @@ public class NotificationFragment extends Fragment implements LoaderManager.Load
 
     private ProgressBar pbNotification;
 
-    BroadcastReceiver br2;
-    public final static String PARAM_TASK = "task";
-    public final static String PARAM_RESULT = "result";
-    public final static String PARAM_STATUS = "status";
-    public final static String BROADCAST_ACTION = "ru.startandroid.develop.p0961servicebackbroadcast";
+    private BroadcastReceiver br2;
+    private final static String PARAM_TASK = "task";
+    private final static String PARAM_RESULT = "result";
+    private final static String PARAM_STATUS = "status";
+    private final static String BROADCAST_ACTION = "ru.startandroid.develop.p0961servicebackbroadcast";
 
-    final int TASK1_CODE = 1;
+    private final int TASK1_CODE = 1;
 
-    public final static int STATUS_FINISH = 200;
+    private final static int STATUS_FINISH = 200;
     private IntentFilter intFilt;
 
     @SuppressLint("HandlerLeak")

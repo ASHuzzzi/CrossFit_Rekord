@@ -36,7 +36,7 @@ public class BackendlessQueries extends Application {
         BackendlessQueries.context = getApplicationContext();
     }
 
-    public static Context getAppContext(){
+    private static Context getAppContext(){
         return BackendlessQueries.context;
     }
 

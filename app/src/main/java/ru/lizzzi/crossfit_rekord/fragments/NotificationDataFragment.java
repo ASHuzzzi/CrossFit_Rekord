@@ -31,7 +31,6 @@ public class NotificationDataFragment extends Fragment {
     private String stText;
 
     private Long convertTime;
-    List <String> listDetailNotification;
 
     @SuppressLint("SimpleDateFormat")
     private final SimpleDateFormat sdf2 = new SimpleDateFormat("d MMM yyyy");
@@ -53,7 +52,7 @@ public class NotificationDataFragment extends Fragment {
         convertTime = Long.valueOf(stTime);
 
         NotificationDBHelper mDBHelper = new NotificationDBHelper(getContext());
-        listDetailNotification = mDBHelper.selectTextNotification(convertTime);
+        List<String> listDetailNotification = mDBHelper.selectTextNotification(convertTime);
         if (listDetailNotification.size() > 0){
             stText = listDetailNotification.get(0);
             String stVewed = listDetailNotification.get(1);

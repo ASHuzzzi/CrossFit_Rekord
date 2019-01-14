@@ -58,7 +58,7 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
 
     private ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck NetworkCheck; //переменная для проврки сети
 
-    RecyclerAdapterTable adapter; //адаптер для списка тренировок
+    private RecyclerAdapterTable adapter; //адаптер для списка тренировок
 
     //private String dateSelectFull; //передает значение по поторому потом идет запрос в базу в следующем фрагменте
     //private String dateSelectShow; //передает значение которое показывается в Textview следующего фрагмента

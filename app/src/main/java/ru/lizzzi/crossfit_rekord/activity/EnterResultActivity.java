@@ -53,10 +53,6 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
     private RadioButton rbRx;
     private RadioButton rbRxP;
 
-    public int LOADER_SAVE_ITEM = 2;
-    public int LOADER_DELETE_ITEM = 3;
-    public int LOADER_UPLOAD_ITEM = 4;
-
     private boolean flag; //флаг показывает есть ли данные о тренировки от фрагмента
     private boolean flagDelete =  false; //флаг показывает, что нажата кнопка удалить
 
@@ -260,6 +256,9 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
     private void restartAsyncTaskLoader(int loader_id){
         Loader<Boolean> mLoader;
         Bundle bundle = new Bundle();
+        int LOADER_SAVE_ITEM = 2;
+        int LOADER_DELETE_ITEM = 3;
+        int LOADER_UPLOAD_ITEM = 4;
         switch (loader_id){
             case 2:
                 bundle.putString(String.valueOf(SaveLoadResultLoader.ARG_USERSKIL), String.valueOf(etResultSkill.getText()));
