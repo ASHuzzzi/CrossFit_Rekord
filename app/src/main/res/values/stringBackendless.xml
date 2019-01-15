@@ -44,7 +44,7 @@
     <string name="bTableResultsNameT">Name</string>
     <string name="bTableResultsSurname">surname</string>
     <string name="bTableResultsSkill">skill</string>
-    <string name="bTableResultsUserID">userID</string>
+    <string name="bTableResultsUserID">ownerId</string>
     <string name="bTableResultsWodLevel">wod_level</string>
     <string name="bTableResultsWodResult">wod_result</string>
 

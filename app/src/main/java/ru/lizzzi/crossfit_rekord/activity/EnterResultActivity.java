@@ -295,28 +295,30 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
     @Override
     public void onLoadFinished(@NonNull Loader<Boolean> loader, Boolean result) {
         if (result){
-            if (loader.getId() != 4){
-                CalendarWodDBHelper mDBHelper = new CalendarWodDBHelper(this);
-                SharedPreferences mSettings = this.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-                String stDay = mSettings.getString(APP_PREFERENCES_SELECTEDDAY, "");
-                Date date;
-                long lDate = 0;
-                try {
-                    date = sdf2.parse(stDay);
-                    lDate = date.getTime();
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+            CalendarWodDBHelper mDBHelper = new CalendarWodDBHelper(this);
+            SharedPreferences mSettings = this.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+            String stDay = mSettings.getString(APP_PREFERENCES_SELECTEDDAY, "");
+            Date date;
+            long lDate = 0;
+            try {
+                date = sdf2.parse(stDay);
+                lDate = date.getTime();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
 
-                switch (loader.getId()) {
-                    case 2:
-                        mDBHelper.saveDates(mSettings.getString(APP_PREFERENCES_OBJECTID, ""), lDate);
-                        break;
+            switch (loader.getId()) {
+                case 2:
+                    mDBHelper.saveDates(mSettings.getString(APP_PREFERENCES_OBJECTID, ""), lDate);
+                    break;
 
-                    case 3:
-                        mDBHelper.deleteDate(mSettings.getString(APP_PREFERENCES_OBJECTID, ""), lDate);
-                        break;
-                }
+                case 3:
+                    mDBHelper.deleteDate(mSettings.getString(APP_PREFERENCES_OBJECTID, ""), lDate);
+                    break;
+
+                case 4:
+                    mDBHelper.saveDates(mSettings.getString(APP_PREFERENCES_OBJECTID, ""), lDate);
+                    break;
             }
             Intent answerIntent = new Intent();
             setResult(RESULT_OK, answerIntent);

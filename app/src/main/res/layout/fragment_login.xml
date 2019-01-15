@@ -97,7 +97,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="40dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="25dp"
             android:layout_marginRight="40dp"
             android:text="@string/strButtonRegistration" />
 
@@ -132,11 +132,11 @@
             android:id="@+id/btContacts"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
             android:layout_alignParentTop="false"
+            android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_margin="20dp"
-            android:background="@color/colorPrimaryDark"
+            android:background="@color/colorPrimary"
             android:padding="10dp"
             android:text="@string/contacts"
             android:textColor="@color/colorRedPrimary" />
