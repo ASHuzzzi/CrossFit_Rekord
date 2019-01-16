@@ -10,8 +10,6 @@
     android:orientation="vertical"
     android:paddingBottom="16dp"
     android:paddingEnd="16dp"
-    android:paddingLeft="20dp"
-    android:paddingRight="16dp"
     android:paddingStart="20dp"
     android:paddingTop="20dp">
 
@@ -22,7 +20,7 @@
         android:layout_height="80dp"
         android:paddingTop="16dp"
         android:scaleType="fitCenter"
-        app:srcCompat="@mipmap/ic_launcher_02"
+        app:srcCompat="@mipmap/ic_launcher"
         tools:ignore="ContentDescription" />
 
     <TextView

@@ -18,11 +18,23 @@
                                 <PersistentState>
                                   <option name="children">
                                     <map>
+                                      <entry key="clipArt">
+                                        <value>
+                                          <PersistentState>
+                                            <option name="values">
+                                              <map>
+                                                <entry key="color" value="000000" />
+                                              </map>
+                                            </option>
+                                          </PersistentState>
+                                        </value>
+                                      </entry>
                                       <entry key="image">
                                         <value>
                                           <PersistentState>
                                             <option name="values">
                                               <map>
+                                                <entry key="color" value="000000" />
                                                 <entry key="trimmed" value="true" />
                                               </map>
                                             </option>
@@ -74,7 +86,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="scalingPercent" value="61" />
+                                                <entry key="scalingPercent" value="73" />
                                                 <entry key="trimmed" value="true" />
                                               </map>
                                             </option>
@@ -88,13 +100,10 @@
                                       <entry key="backgroundAssetType" value="COLOR" />
                                       <entry key="backgroundColor" value="000000" />
                                       <entry key="backgroundImage" value="C:\Users\basso\StudioProjects\Project\CrossFit_Rekord\app\src\main\res\mipmap-xhdpi\ic_launcher_02.png" />
-                                      <entry key="backgroundLayerName" value="ic_launcher_background" />
-                                      <entry key="foregroundImage" value="C:\Users\basso\StudioProjects\Project\CrossFit_Rekord\app\src\main\res\mipmap-xhdpi\ic_launcher_new_round.png" />
-                                      <entry key="foregroundLayerName" value="ic_launcher_foreground" />
-                                      <entry key="legacyIconShape" value="CIRCLE" />
-                                      <entry key="outputName" value="ic_launcher_new" />
-                                      <entry key="previewDensity" value="HIGH" />
+                                      <entry key="foregroundImage" value="C:\Users\basso\StudioProjects\Data for app\CrossFir Rekord\kub.png" />
+                                      <entry key="previewDensity" value="XXHIGH" />
                                       <entry key="showGrid" value="true" />
+                                      <entry key="webIconShape" value="CIRCLE" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -103,6 +112,32 @@
                             <entry key="launcherLegacy">
                               <value>
                                 <PersistentState>
+                                  <option name="children">
+                                    <map>
+                                      <entry key="clipArt">
+                                        <value>
+                                          <PersistentState>
+                                            <option name="values">
+                                              <map>
+                                                <entry key="color" value="000000" />
+                                              </map>
+                                            </option>
+                                          </PersistentState>
+                                        </value>
+                                      </entry>
+                                      <entry key="image">
+                                        <value>
+                                          <PersistentState>
+                                            <option name="values">
+                                              <map>
+                                                <entry key="color" value="000000" />
+                                              </map>
+                                            </option>
+                                          </PersistentState>
+                                        </value>
+                                      </entry>
+                                    </map>
+                                  </option>
                                   <option name="values">
                                     <map>
                                       <entry key="assetType" value="IMAGE" />
@@ -132,6 +167,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
+                                                <entry key="color" value="000000" />
                                                 <entry key="trimmed" value="true" />
                                               </map>
                                             </option>
@@ -150,11 +186,6 @@
                                 </PersistentState>
                               </value>
                             </entry>
-                          </map>
-                        </option>
-                        <option name="values">
-                          <map>
-                            <entry key="outputIconType" value="NOTIFICATION" />
                           </map>
                         </option>
                       </PersistentState>
