@@ -101,7 +101,7 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
         int mcvMaximumDateDay = c.getActualMaximum(Calendar.DAY_OF_MONTH);
 
         mcv.state().edit()
-                .setMinimumDate(CalendarDay.from(2018, 0, 1))
+                .setMinimumDate(CalendarDay.from(2019, 0, 1))
                 .setMaximumDate(CalendarDay.from(mcvMaximumDateYear, mcvMaximumDateMonth, mcvMaximumDateDay))
                 .commit();
         mcv.setOnDateChangedListener(this);
