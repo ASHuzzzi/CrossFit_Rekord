@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity
                             if (result > 0){
                                 initializeCountDrawer();
                                 drawer.openDrawer(GravityCompat.START   );
-                                Toast toast = Toast.makeText(getContext(), "Появились новые уведомления!", Toast.LENGTH_LONG);
+                                Toast toast = Toast.makeText(getContext(), "Появились свежие новости!", Toast.LENGTH_LONG);
                                 toast.setGravity(Gravity.BOTTOM, 0, 0);
                                 toast.show();
                             }

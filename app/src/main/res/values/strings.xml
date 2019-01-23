@@ -32,6 +32,9 @@
     <string name="hint_check_password">Введите пароль еще раз</string>
 
     <!-- Значения для поля TableFragment -->
+    <string name="strSelectTlParnas">Парнас</string>
+    <string name="strSelectTlMyzhestvo">Мужество</string>
+
     <string name="select_day">Выберите день</string>
     <string name="select_time">Выберите время</string>
     <string name="T900">9:00</string>
@@ -50,17 +53,11 @@
     <string name="sign_up">Записаться на тренировку</string>
     <string name="set_a_record">Удалить запись</string>
 
-    <!-- Значения для фрагмента RecodrForTraining-->
+    <!-- Значения для фрагмента RecordForTraining-->
     <string name="whrite_entry">Записаться</string>
     <string name="delete_entry">Удалить запись</string>
 
-    <string name="_id">_id</string>
 
-    <!-- Значения для фрагмента New_Result_f2-->
-    <string name="new_quantity">Количество повторов</string>
-    <string name="new_exercise">Упражнение</string>
-    <string name="new_weight">Вес</string>
-    <string name="add_exercise">Добавить в тренировку</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -286,5 +283,6 @@
     <!-- Значения для фрагмента WorkoutDetails -->
     <string name="strWorkoutDetailsWod">Wod</string>
     <string name="strWorkoutDetailsResult">Result</string>
+
 
 </resources>

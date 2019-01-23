@@ -4,21 +4,21 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import ru.lizzzi.crossfit_rekord.fragments.WorkoutDetailsTL.TL1WodFragment;
-import ru.lizzzi.crossfit_rekord.fragments.WorkoutDetailsTL.TL2ResultFragment;
+import ru.lizzzi.crossfit_rekord.fragments.TableTL.TL1ParnasFragment;
+import ru.lizzzi.crossfit_rekord.fragments.TableTL.TL2MyzhestvoFragment;
 
-public class PagerAdapterWorkoutDetails extends FragmentPagerAdapter {
+public class PageAdapterTable extends FragmentPagerAdapter {
 
-    public PagerAdapterWorkoutDetails(FragmentManager fm) {
+    public PageAdapterTable(FragmentManager fm) {
         super(fm);
     }
 
     @Override
     public Fragment getItem(int position) {
         if (position == 0) {
-            return new TL1WodFragment();
+            return new TL1ParnasFragment();
         } else if (position == 1){
-            return new TL2ResultFragment();
+            return new TL2MyzhestvoFragment();
         } else {
             return null;
         }
@@ -35,12 +35,11 @@ public class PagerAdapterWorkoutDetails extends FragmentPagerAdapter {
         // Generate title based on item position
         switch (position) {
             case 0:
-                return "WoD"; //mContext.getString(R.string.category_usefulinfo);
+                return "Парнас"; //mContext.getString(R.string.category_usefulinfo);
             case 1:
-                return "Результаты";//mContext.getString(R.string.category_places);
+                return "Мужество";//mContext.getString(R.string.category_places);
             default:
                 return null;
         }
     }
-
 }

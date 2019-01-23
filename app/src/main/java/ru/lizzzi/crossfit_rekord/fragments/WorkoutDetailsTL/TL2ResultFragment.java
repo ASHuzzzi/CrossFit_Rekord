@@ -1,4 +1,4 @@
-package ru.lizzzi.crossfit_rekord.fragments;
+package ru.lizzzi.crossfit_rekord.fragments.WorkoutDetailsTL;
 
 
 import android.annotation.SuppressLint;
