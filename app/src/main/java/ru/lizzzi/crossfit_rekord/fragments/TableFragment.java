@@ -29,7 +29,7 @@ public class TableFragment extends Fragment {
         final ViewPager viewPager = v.findViewById(R.id.vp_1_table);
 
         // Create an adapter that knows which fragment should be shown on each page
-        PageAdapterTable adapter2 = new PageAdapterTable(getChildFragmentManager());
+        PageAdapterTable adapter2 = new PageAdapterTable(getChildFragmentManager(), getContext());
 
         // Set the adapter onto the view pager
         viewPager.setAdapter(adapter2);

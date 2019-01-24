@@ -56,7 +56,7 @@ public class TL1ParnasFragment extends Fragment implements LoaderManager.LoaderC
     private Handler handlerOpenFragment;
     private Thread threadOpenFragment;
 
-    private ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck NetworkCheck; //переменная для проврки сети
+    private NetworkCheck NetworkCheck; //переменная для проврки сети
 
     private RecyclerAdapterTable adapter; //адаптер для списка тренировок
 

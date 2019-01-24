@@ -17,6 +17,7 @@ import android.widget.TextView;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Objects;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.adapters.PagerAdapterWorkoutDetails;
@@ -46,7 +47,7 @@ public class WorkoutDetailsFragment extends Fragment{
         final ViewPager viewPager = v.findViewById(R.id.vp_1);
 
         // Create an adapter that knows which fragment should be shown on each page
-        PagerAdapterWorkoutDetails adapter2 = new PagerAdapterWorkoutDetails(getChildFragmentManager());
+        PagerAdapterWorkoutDetails adapter2 = new PagerAdapterWorkoutDetails(getChildFragmentManager(), getContext());
 
         // Set the adapter onto the view pager
         viewPager.setAdapter(adapter2);
@@ -89,7 +90,7 @@ public class WorkoutDetailsFragment extends Fragment{
         super.onResume();
 
         try {
-            SharedPreferences mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+            SharedPreferences mSettings = Objects.requireNonNull(getContext()).getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
             String ri =  mSettings.getString(APP_PREFERENCES_SELECTEDDAY, "");
             @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
             Date ddd = sdf.parse(ri);

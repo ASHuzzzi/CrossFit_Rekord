@@ -282,7 +282,7 @@
 
     <!-- Значения для фрагмента WorkoutDetails -->
     <string name="strWorkoutDetailsWod">Wod</string>
-    <string name="strWorkoutDetailsResult">Result</string>
+    <string name="strWorkoutDetailsResult">Результаты</string>
 
 
 </resources>
