@@ -28,6 +28,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterRecordForTrainingSelect;
@@ -87,7 +88,7 @@ public class RecordForTrainingSelectFragment extends Fragment implements LoaderM
                              Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.fragment_record_for_training_select, container, false);
-        getActivity().setTitle(R.string.title_RecordForTraining_Fragment);
+        Objects.requireNonNull(getActivity()).setTitle(R.string.title_RecordForTraining_Fragment);
 
         btToday = v.findViewById(R.id.btToday);
         btTommorow = v.findViewById(R.id.btTommorow);
