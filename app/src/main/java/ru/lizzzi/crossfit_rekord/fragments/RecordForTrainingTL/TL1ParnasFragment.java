@@ -248,14 +248,16 @@ public class TL1ParnasFragment extends Fragment implements LoaderManager.LoaderC
     }
 
     private void startAsyncTaskLoader(){
-        getLoaderManager().restartLoader(LOADER_ID, null, this).forceLoad();
+        Bundle bundle = new Bundle();
+        bundle.putString("SelectedGym", "1");
+        getLoaderManager().restartLoader(LOADER_ID, bundle, this).forceLoad();
     }
 
     @NonNull
     @Override
     public Loader<List<List<Map>>> onCreateLoader(int id, Bundle args) {
         Loader<List<List<Map>>> loader;
-        loader = new TableFragmentLoader(getContext());
+        loader = new TableFragmentLoader(getContext(), args);
         return loader;
     }
 
@@ -293,7 +295,7 @@ public class TL1ParnasFragment extends Fragment implements LoaderManager.LoaderC
                     toast.show();
                 }else {
                     ConstructorLinks constructorLinks = new ConstructorLinks();
-                    String stOpenURL = constructorLinks.constructorLinks(selectDay, stStartTime, stTypesItem);
+                    String stOpenURL = constructorLinks.constructorLinks(1,selectDay, stStartTime, stTypesItem);
                     Intent intent = new Intent();
                     intent.setAction(Intent.ACTION_VIEW);
                     intent.addCategory(Intent.CATEGORY_BROWSABLE);

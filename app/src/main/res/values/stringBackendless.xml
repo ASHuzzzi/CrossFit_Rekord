@@ -22,6 +22,7 @@
     <string name="bTableNotificationText">text</string>
 
     <!-- Поля таблицы schedule -->
+    <string name="bTableScheduleGym">gym</string>
     <string name="bTableScheduleName">schedule</string>
     <string name="bTableScheduleDayOfWeek">day_of_week</string>
     <string name="bTableScheduleDescription">description</string>

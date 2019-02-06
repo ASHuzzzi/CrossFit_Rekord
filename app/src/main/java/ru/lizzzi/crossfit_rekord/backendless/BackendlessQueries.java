@@ -97,20 +97,23 @@ public class BackendlessQueries extends Application {
 
     }
 
-    public List<Map> loadAllTable(){
+    public List<Map> loadAllTable(String gym){
 
         //Пока никак не обрабатываю ошибки от сервера. Т.е. если данные есть, то строю список
         //если данных нет, то список не строится и выскакивает стандартная заглушка.
 
         try
         {
+            String stGym = getAppContext().getResources().getString(R.string.bTableScheduleGym);
             String stDayOfWeek = getAppContext().getResources().getString(R.string.bTableScheduleDayOfWeek);
             String stStartTime = getAppContext().getResources().getString(R.string.bTableScheduleStartTime);
             String stTableName = getAppContext().getResources().getString(R.string.bTableScheduleName);
+            String whereClause = stGym + " = '" + gym + "'";
 
             DataQueryBuilder queryBuilder = DataQueryBuilder.create();
             queryBuilder.setSortBy(stDayOfWeek);
             queryBuilder.setSortBy(stStartTime);
+            queryBuilder.setWhereClause(whereClause);
             queryBuilder.setPageSize(100);
             return Backendless.Data.of(stTableName).find(queryBuilder);
         }catch( BackendlessException exception )
