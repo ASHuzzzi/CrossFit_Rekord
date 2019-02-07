@@ -28,6 +28,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterRecordForTrainingSelect;
@@ -294,8 +295,9 @@ public class TL1ParnasFragment extends Fragment implements LoaderManager.LoaderC
                     toast.setGravity(Gravity.CENTER, 0, 0);
                     toast.show();
                 }else {
+                    int iSelectGym = Objects.requireNonNull(getContext()).getResources().getInteger(R.integer.intSelectTlParnas);
                     ConstructorLinks constructorLinks = new ConstructorLinks();
-                    String stOpenURL = constructorLinks.constructorLinks(1,selectDay, stStartTime, stTypesItem);
+                    String stOpenURL = constructorLinks.constructorLinks(iSelectGym,selectDay, stStartTime, stTypesItem);
                     Intent intent = new Intent();
                     intent.setAction(Intent.ACTION_VIEW);
                     intent.addCategory(Intent.CATEGORY_BROWSABLE);

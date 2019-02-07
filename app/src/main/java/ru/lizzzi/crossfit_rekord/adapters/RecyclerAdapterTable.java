@@ -41,14 +41,15 @@ public class RecyclerAdapterTable extends RecyclerView.Adapter<RecyclerAdapterTa
         }
     }
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_rv_table, parent, false);
         return new ViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position){
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position){
         final Map documentInfo = shediletems.get(position);
         String start_time = (String) documentInfo.get(fields.getStartTimeField());
         String type = (String) documentInfo.get(fields.getTypeField());

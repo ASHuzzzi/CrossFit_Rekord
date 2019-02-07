@@ -5,24 +5,32 @@ public class ConstructorLinks {
 
     public String constructorLinks (int iSelectGym, int iSelectDay, String stStartTime, String stTypesItem){
 
-        switch (stTypesItem){
+        if (!stTypesItem.equals("CrossFit")){
+            switch (stTypesItem){
 
-            case "Open Gym":
-                stTypesItem = "Open%20Gym";
-                break;
+                case "Open Gym":
+                    stTypesItem = "Open%20Gym";
+                    break;
 
+                case "CrossFit Kids":
+                    stTypesItem = "CF%20kids";
+                    break;
 
-            case "CrossFit Kids":
-                stTypesItem = "CF%20kids";
-                break;
+                case "Lady class":
+                    stTypesItem = "Lady%20Class";
+                    break;
 
-            case "CrossFit/TRX":
-                stTypesItem = "TRX";
-                break;
+                case "bjj kids":
+                    stTypesItem = "bjj%20kids";
+                    break;
 
-            case "CrossFit/Lady class":
-                stTypesItem = "Lady%20Class";
-                break;
+                case "Muay Thai kids":
+                    stTypesItem = "Muay%20Thai%20kids";
+                    break;
+
+                case "Muay Thai":
+                    stTypesItem = "Muay%20Thai";
+            }
         }
 
         String stSelectGym;

@@ -22,8 +22,8 @@ android {
         applicationId "ru.lizzzi.crossfit_rekord"
         minSdkVersion 19
         targetSdkVersion 27
-        versionCode 20
-        versionName "2.89.50 alpha"
+        versionCode 21
+        versionName "3.0.0 beta"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

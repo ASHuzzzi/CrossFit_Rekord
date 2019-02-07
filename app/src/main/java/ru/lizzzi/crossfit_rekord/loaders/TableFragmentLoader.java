@@ -8,10 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.backendless.BackendlessQueries;
-
-import static com.backendless.ContextHandler.getAppContext;
 
 public class TableFragmentLoader extends AsyncTaskLoader<List<List<Map>>> {
 
@@ -21,7 +18,6 @@ public class TableFragmentLoader extends AsyncTaskLoader<List<List<Map>>> {
     public TableFragmentLoader(Context context, Bundle args) {
         super(context);
         if (args != null){
-            //stGym = args.getString(getAppContext().getResources().getString(R.string.bTableScheduleDayOfWeek));
             stGym = args.getString("SelectedGym");
         }
     }
