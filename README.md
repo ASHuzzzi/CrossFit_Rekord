@@ -5,8 +5,8 @@
 Стартовый экран приложения:
 
 <p align="center">
-<a> <img src="https://user-images.githubusercontent.com/25584477/50878491-1b210500-13e8-11e9-9965-eb397ef3eed6.jpg"  height="283" width="160"> </a>
-<a> <img src="https://user-images.githubusercontent.com/25584477/50878504-1c523200-13e8-11e9-93bf-d3078ec8cb7c.jpg"  height="283" width="160"> </a>
+<a> <img src="https://user-images.githubusercontent.com/25584477/52460884-8bed4580-2b7d-11e9-8dba-ab4e9ea4e51f.png"  height="283" width="160"> </a>
+<a> <img src="https://user-images.githubusercontent.com/25584477/52460885-8bed4580-2b7d-11e9-8504-adb605f03778.png"  height="283" width="160"> </a>
 </p>
 
 ### Что уже умеет приложение:
@@ -14,21 +14,21 @@
 * показывать расписание зала (на выбранный день недели);
 
 <p align="center">
-<a> <img src="https://user-images.githubusercontent.com/25584477/50878493-1b210500-13e8-11e9-991c-8aef7212921a.jpg"  height="283" width="160"> </a>
+<a> <img src="https://user-images.githubusercontent.com/25584477/52460886-8bed4580-2b7d-11e9-8e1e-85d4ead6a71b.png"  height="283" width="160"> </a>
 </p>
 
 * записать пользователя на тренировку (с выбором дня и времени тренировки, но не далее чем за три дня до неё);
 
 <p align="center">
-<a> <img src="https://user-images.githubusercontent.com/25584477/50878495-1b210500-13e8-11e9-9845-9718562806f8.jpg"  height="283" width="160"> </a>
+<a> <img src="https://user-images.githubusercontent.com/25584477/52460887-8bed4580-2b7d-11e9-9c95-67dbdfecfef1.png"  height="283" width="160"> </a>
 </p>
 
 * посмотреть комплексы прошедших тренировок. Внести свои результаты тренировки, а также посмотреть результаты других пользователей;
 
 <p align="center">
-<a> <img src="https://user-images.githubusercontent.com/25584477/50878496-1b210500-13e8-11e9-838c-c0f1e9ca2526.jpg"  height="283" width="160"> </a>
-<a> <img src="https://user-images.githubusercontent.com/25584477/50878498-1bb99b80-13e8-11e9-8c6e-12d1c9c6b6af.jpg"  height="283" width="160"> </a>
-<a> <img src="https://user-images.githubusercontent.com/25584477/50878500-1bb99b80-13e8-11e9-915e-53f897ea31b5.jpg"  height="283" width="160"> </a>
+<a> <img src="https://user-images.githubusercontent.com/25584477/52460889-8c85dc00-2b7d-11e9-9556-d011308da509.png"  height="283" width="160"> </a>
+<a> <img src="https://user-images.githubusercontent.com/25584477/52460890-8c85dc00-2b7d-11e9-90b1-2b6d877f4080.png"  height="283" width="160"> </a>
+<a> <img src="https://user-images.githubusercontent.com/25584477/52460891-8c85dc00-2b7d-11e9-896d-99bd655dfaf3.png"  height="283" width="160"> </a>
 </p>
 
 * просмотр новостей от зала (пока только текст). Загрузка новостей происходит в фоне через сервис при старте приложения;
@@ -48,7 +48,7 @@
 * имеется форма для сохранения одноповторных максимумов основных упражнений по тяжелой атлетике;
 
 <p align="center">
-<a> <img src="https://user-images.githubusercontent.com/25584477/50878501-1bb99b80-13e8-11e9-8ec3-6017390ae5d9.jpg"  height="283" width="160"> </a>
+<a> <img src="https://user-images.githubusercontent.com/25584477/52460892-8c85dc00-2b7d-11e9-8de1-63e3b72a12d8.png"  height="283" width="160"> </a>
 </p>
 
 ### В процессе:
