@@ -5,7 +5,6 @@ import android.provider.BaseColumns;
 public class CalendarWodDBContract {
 
     public CalendarWodDBContract() {
-
     }
 
     public static final class dbCaleendarWod implements BaseColumns{
