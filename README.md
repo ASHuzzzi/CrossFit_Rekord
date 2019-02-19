@@ -14,14 +14,21 @@
 * показывать расписание зала (на выбранный день недели);
 
 <p align="center">
-<a> <img src="https://user-images.githubusercontent.com/25584477/52460886-8bed4580-2b7d-11e9-8e1e-85d4ead6a71b.png"  height="283" width="160"> </a>
+<a> <img src="https://user-images.githubusercontent.com/25584477/53003988-419f7a80-3441-11e9-9214-5511f994d8b5.png"  height="283" width="160"> </a>
+</p>
+<p align="center">
+<a> <img src="https://user-images.githubusercontent.com/25584477/53003990-42381100-3441-11e9-8946-d4f61963027e.png"  height="283" width="160"> </a>
 </p>
 
 * записать пользователя на тренировку (с выбором дня и времени тренировки, но не далее чем за три дня до неё);
-
 <p align="center">
-<a> <img src="https://user-images.githubusercontent.com/25584477/52460887-8bed4580-2b7d-11e9-9c95-67dbdfecfef1.png"  height="283" width="160"> </a>
+<a> <img src="https://user-images.githubusercontent.com/25584477/53003991-42381100-3441-11e9-86db-7eba87f66450.png"  height="283" width="160"> </a>
 </p>
+<p align="center">
+<a> <img src="https://user-images.githubusercontent.com/25584477/53003987-419f7a80-3441-11e9-910b-7bcb956409c8.png"  height="283" width="160"> </a>
+</p>
+
+
 
 * посмотреть комплексы прошедших тренировок. Внести свои результаты тренировки, а также посмотреть результаты других пользователей;
 
@@ -34,15 +41,15 @@
 * просмотр новостей от зала (пока только текст). Загрузка новостей происходит в фоне через сервис при старте приложения;
 
 <p align="center">
-<a> <img src="https://user-images.githubusercontent.com/25584477/50878494-1b210500-13e8-11e9-85b0-46345b6c3042.jpg"  height="283" width="160"> </a>
+<a> <img src="https://user-images.githubusercontent.com/25584477/53003829-e8cfe200-3440-11e9-9fa8-774ed0b2cdd9.png"  height="283" width="160"> </a>
 </p>
 
 * посмотреть/изменить данные пользователя;
 * имеется небольшой словарь с терминами по кроссфиту (пока только в виде текста);
 
 <p align="center">
-<a> <img src="https://user-images.githubusercontent.com/25584477/50878502-1bb99b80-13e8-11e9-9dc1-876c2622eb5f.jpg"  height="283" width="160"> </a>
-<a> <img src="https://user-images.githubusercontent.com/25584477/50878503-1c523200-13e8-11e9-8681-81f8c3a6b90a.jpg"  height="283" width="160"> </a>
+<a> <img src="https://user-images.githubusercontent.com/25584477/53003826-e8374b80-3440-11e9-95cf-27a39d9bd287.png"  height="283" width="160"> </a>
+<a> <img src="https://user-images.githubusercontent.com/25584477/52460892-8c85dc00-2b7d-11e9-8de1-63e3b72a12d8.png"  height="283" width="160"> </a>
 </p>
 
 * имеется форма для сохранения одноповторных максимумов основных упражнений по тяжелой атлетике;
