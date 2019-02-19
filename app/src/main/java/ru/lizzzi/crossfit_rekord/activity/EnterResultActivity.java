@@ -138,6 +138,7 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
                 }
 
                 pbSaveUpload.setVisibility(View.VISIBLE);
+                btnSave.setClickable(false);
                 threadClickOnbuttonSave = new Thread(runnableClickOnbuttonSave);
                 threadClickOnbuttonSave.setDaemon(true);
                 runnableClickOnbuttonSave.run();
@@ -153,6 +154,7 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
                 String resultCheck = bundle.getString("networkCheck");
                 if (resultCheck != null && resultCheck.equals("true")) {
                     pbSaveUpload.setVisibility(View.VISIBLE);
+                    btnSave.setClickable(false);
 
                     if(flagDelete){
                         restartAsyncTaskLoader(3); //удалить
@@ -165,6 +167,7 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
                     }
                 }else {
                     pbSaveUpload.setVisibility(View.INVISIBLE);
+                    btnSave.setClickable(true);
                     Toast.makeText(EnterResultActivity.this, "Нет подключения к сети!", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -212,7 +215,7 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
             etResultSkill.setText(intent.getStringExtra("skill"));
 
             //создаем флаг для проверки чтобы точно какая-то кнопка была выбрана
-            Boolean checkLevelFlag = false;
+            boolean checkLevelFlag = false;
             stLevel = intent.getStringExtra("level");
             switch(stLevel){
                 case "Sc":
@@ -326,6 +329,7 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
         }else {
             Toast.makeText(EnterResultActivity.this, "Не удалось! Повторите попытку", Toast.LENGTH_SHORT).show();
         }
+
     }
 
     @Override
@@ -355,6 +359,7 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
                                     public void onClick(DialogInterface dialogInterface, int i) {
                                         flagDelete =  true;
                                         pbSaveUpload.setVisibility(View.VISIBLE);
+                                        btnSave.setPressed(true);
                                         runnableClickOnbuttonSave.run();
                                     }
                                 })

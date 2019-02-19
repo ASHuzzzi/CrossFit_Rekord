@@ -79,8 +79,9 @@ public class NotificationDBHelper extends SQLiteOpenHelper {
         InputStream myInput = mContext.getAssets().open("db/" + DB_NAME);
 
         //Путь ко вновь созданной БД
-        String outFileName = DB_PATH + DB_NAME;
-        //String outFileName = DB_PATH;
+        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+        String outFileName = sqLiteDatabase.getPath();
+        sqLiteDatabase.close();
 
         //Открываем пустую базу данных как исходящий поток
         OutputStream myOutput = new FileOutputStream(outFileName);
@@ -102,6 +103,7 @@ public class NotificationDBHelper extends SQLiteOpenHelper {
         //открываем БД
         String myPath = DB_PATH + DB_NAME;
         myDataBase = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
+        myDataBase.disableWriteAheadLogging();
     }
 
     @Override

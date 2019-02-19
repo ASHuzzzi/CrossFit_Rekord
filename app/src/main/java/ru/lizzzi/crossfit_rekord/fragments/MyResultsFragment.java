@@ -19,6 +19,7 @@ import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeTitle;
 
 public class MyResultsFragment extends Fragment implements View.OnFocusChangeListener {
 
+    private EditText etMyWeight;
     private EditText etDeadlift;
     private EditText etSnatch;
     private EditText etSquatClean;
@@ -40,6 +41,7 @@ public class MyResultsFragment extends Fragment implements View.OnFocusChangeLis
                              Bundle savedInstanceState){
         View v = inflater.inflate(R.layout.fragment_my_results, container, false);
 
+        etMyWeight = v.findViewById(R.id.etMyWeight);
         etDeadlift = v.findViewById(R.id.etDeadlift);
         etSnatch = v.findViewById(R.id.etSnatch);
         etSquatClean = v.findViewById(R.id.etSquatClean);
@@ -57,6 +59,7 @@ public class MyResultsFragment extends Fragment implements View.OnFocusChangeLis
         etRowM = v.findViewById(R.id.etRowM);
         etRowCal = v.findViewById(R.id.etRowCal);
 
+        etMyWeight.setOnFocusChangeListener(this);
         etDeadlift.setOnFocusChangeListener(this);
         etDeadlift.setOnFocusChangeListener(this);
         etSnatch.setOnFocusChangeListener(this);
@@ -82,6 +85,12 @@ public class MyResultsFragment extends Fragment implements View.OnFocusChangeLis
 
                 String stResult;
                 String stExercise;
+
+                if (etMyWeight.getText().toString().length() > 0){
+                    stResult = etMyWeight.getText().toString();
+                    stExercise = getResources().getString(R.string.strDBMyResultMyWeightEN);
+                    saveResultInDB(stExercise, stResult);
+                }
 
                 if (etDeadlift.getText().toString().length() > 0){
                     stResult = etDeadlift.getText().toString();
@@ -207,6 +216,13 @@ public class MyResultsFragment extends Fragment implements View.OnFocusChangeLis
         String stResult;
         String stEmpty = getResources().getString(R.string.empty);
         String stShow;
+
+        stExercise = getResources().getString(R.string.strDBMyResultMyWeightEN);
+        if (mapExercise.containsKey(stExercise)){
+            stResult = mapExercise.get(stExercise);
+            stShow = stEmpty + stResult;
+            etMyWeight.setText(stShow);
+        }
 
         stExercise = getResources().getString(R.string.strDBMyResultDeadliftEN);
         if (mapExercise.containsKey(stExercise)){
@@ -354,6 +370,12 @@ public class MyResultsFragment extends Fragment implements View.OnFocusChangeLis
         if(hasFocus){
             String stResult;
             switch (v.getId()){
+                case R.id.etMyWeight:
+                    stResult = etMyWeight.getText().toString();
+                    if (stResult.equals("0")){
+                        etMyWeight.setText("");
+                    }
+                    break;
                 case R.id.etDeadlift:
                     stResult = etDeadlift.getText().toString();
                     if (stResult.equals("0")){
@@ -454,6 +476,13 @@ public class MyResultsFragment extends Fragment implements View.OnFocusChangeLis
         }else {
             String stResult;
             switch (v.getId()){
+
+                case R.id.etMyWeight:
+                    stResult = etMyWeight.getText().toString();
+                    if (stResult.equals("")){
+                        etMyWeight.setText("0");
+                    }
+                    break;
                 case R.id.etDeadlift:
                     stResult = etDeadlift.getText().toString();
                     if (stResult.equals("")){

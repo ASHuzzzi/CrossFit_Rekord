@@ -26,9 +26,10 @@ public class MyResultDBHelper extends SQLiteOpenHelper {
     private static String DB_NAME = "MyResult.db";
     private SQLiteDatabase myDataBase;
     private final Context mContext;
+    private static final int DB_VERSION = 2;
 
     public MyResultDBHelper(Context context) {
-        super(context, DB_NAME, null, 1);
+        super(context, DB_NAME, null, DB_VERSION);
         this.mContext = context;
     }
 
@@ -59,6 +60,7 @@ public class MyResultDBHelper extends SQLiteOpenHelper {
         try{
             String myPath = DB_PATH + DB_NAME;
             checkDB = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
+            myDataBase = this.getReadableDatabase();
         }catch(SQLiteException e){
             //база еще не существует
         }
@@ -77,8 +79,9 @@ public class MyResultDBHelper extends SQLiteOpenHelper {
         InputStream myInput = mContext.getAssets().open("db/" + DB_NAME);
 
         //Путь ко вновь созданной БД
-        String outFileName = DB_PATH + DB_NAME;
-        //String outFileName = DB_PATH;
+        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+        String outFileName = sqLiteDatabase.getPath();
+        sqLiteDatabase.close();
 
         //Открываем пустую базу данных как исходящий поток
         OutputStream myOutput = new FileOutputStream(outFileName);
@@ -100,6 +103,7 @@ public class MyResultDBHelper extends SQLiteOpenHelper {
         //открываем БД
         String myPath = DB_PATH + DB_NAME;
         myDataBase = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
+        myDataBase.disableWriteAheadLogging();
     }
 
     @Override
@@ -115,8 +119,18 @@ public class MyResultDBHelper extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
+        switch (oldVersion) {
+            case 1:
+                ContentValues newValues = new ContentValues();
+                newValues.put(dbMyResult.columnExercise, "MyWeight");
+                newValues.put(dbMyResult.columnResult, "0");
+                sqLiteDatabase.insert(
+                        dbMyResult.TABLE_NAME,
+                        null,
+                        newValues);
+                break;
+        }
     }
 
     public void saveResult(String stExercise, String stResult){

@@ -7,7 +7,7 @@
     <item>
         <bitmap
             android:gravity="center"
-            android:src="@drawable/kub"/>
+            android:src="@drawable/logo_cfr2_mini"/>
     </item>
 
 </layer-list>

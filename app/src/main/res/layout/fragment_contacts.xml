@@ -16,13 +16,13 @@
             android:id="@+id/tvGymParnas"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/gymParnas"
             android:gravity="center_horizontal"
+            android:text="@string/gymParnas"
             android:textColor="@color/colorWhite"
             android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/tvAddress"
+            android:id="@+id/tvAddressParnas"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:autoLink="map"
@@ -34,11 +34,22 @@
             android:id="@+id/tvRefinement"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
+            android:layout_marginBottom="10dp"
             android:gravity="center_horizontal"
             android:text="@string/refinement"
             android:textColor="@color/colorWhite"
             android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tvPhoneParnas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:autoLink="phone"
+            android:gravity="center_horizontal"
+            android:text="@string/contactNumberParnas"
+            android:textColor="@color/colorWhite"
+            android:textColorLink="@color/colorWhite" />
 
         <TextView
             android:id="@+id/tvGymMyzhestvo"
@@ -50,14 +61,25 @@
             android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/textView9"
+            android:id="@+id/tvAddressMyzhestvo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:gravity="center_horizontal"
+            android:text="@string/addressMyzhestvo"
+            android:textColor="@color/colorWhite"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tvPhoneMyzhestvo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="40dp"
-            android:text="@string/addressMyzhestvo"
+            android:autoLink="phone"
             android:gravity="center_horizontal"
+            android:text="@string/contactNumberMyzhestvo"
             android:textColor="@color/colorWhite"
-            android:textSize="12sp" />
+            android:textColorLink="@color/colorWhite" />
 
         <TextView
             android:id="@+id/tvWeb"
@@ -66,19 +88,10 @@
             android:layout_marginBottom="20dp"
             android:autoLink="web"
             android:gravity="center_horizontal"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
             android:text="@string/contactWeb"
             android:textColor="@color/colorRedPrimary" />
-
-        <TextView
-            android:id="@+id/tvPhone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:autoLink="phone"
-            android:gravity="center_horizontal"
-            android:text="@string/contactNumber"
-            android:textColor="@color/colorWhite"
-            android:textColorLink="@color/colorWhite" />
 
         <TextView
             android:id="@+id/tvMail"
@@ -87,6 +100,8 @@
             android:layout_marginBottom="20dp"
             android:autoLink="email"
             android:gravity="center_horizontal"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
             android:text="@string/contactMail"
             android:textColor="@color/colorRedPrimary" />
 
