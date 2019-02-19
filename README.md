@@ -15,16 +15,14 @@
 
 <p align="center">
 <a> <img src="https://user-images.githubusercontent.com/25584477/53003988-419f7a80-3441-11e9-9214-5511f994d8b5.png"  height="283" width="160"> </a>
-</p>
-<p align="center">
+<align="center">
 <a> <img src="https://user-images.githubusercontent.com/25584477/53003990-42381100-3441-11e9-8946-d4f61963027e.png"  height="283" width="160"> </a>
 </p>
 
 * записать пользователя на тренировку (с выбором дня и времени тренировки, но не далее чем за три дня до неё);
 <p align="center">
 <a> <img src="https://user-images.githubusercontent.com/25584477/53003991-42381100-3441-11e9-86db-7eba87f66450.png"  height="283" width="160"> </a>
-</p>
-<p align="center">
+<align="center">
 <a> <img src="https://user-images.githubusercontent.com/25584477/53003987-419f7a80-3441-11e9-910b-7bcb956409c8.png"  height="283" width="160"> </a>
 </p>
 
