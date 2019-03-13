@@ -105,8 +105,6 @@ public class TL1ParnasFragment extends Fragment implements LoaderManager.LoaderC
         gcNumberDayWeek = new GregorianCalendar();
 
 
-
-
         @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf = new SimpleDateFormat("EEE.\n d MMMM");
 
         //@SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf3 = new SimpleDateFormat("EEEE d MMMM");

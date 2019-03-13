@@ -2,14 +2,14 @@
 <resources>
     <color name="colorPrimary">#141414</color>
     <color name="colorPrimaryDark">#000000</color>
-    <color name="colorPrimaryLight">#3a3a3a</color>
+    <color name="colorPrimaryLight">#3A3A3A</color>
     <color name="colorAccent">#e00000</color>
 
     <color name="colorRedPrimary">#e00000</color>
     <color name="colorRedDark">#c20000</color>
     <color name="colorRedLight">#ff5a36</color>
 
-    <color name="colorWhite">#ffffff</color>
+    <color name="colorWhite">#dcdcdc</color>
 
     <color name="color_Table_CrossFit">#F90000</color>
     <color name="color_Table_On_Ramp">#00B53E</color>

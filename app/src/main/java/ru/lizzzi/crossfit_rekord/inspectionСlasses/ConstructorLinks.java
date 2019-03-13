@@ -40,7 +40,7 @@ public class ConstructorLinks {
             stSelectGym = "";
         }
 
-        String stURL = "http://crossfitrekord.webox.beget.tech/rec";
+        String stURL = "http://i.crossfitrekord.ru/rec";
 
         return stURL
                 + stSelectGym
