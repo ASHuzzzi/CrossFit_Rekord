@@ -18,6 +18,9 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -39,6 +42,7 @@ public class TL1WodFragment extends Fragment implements LoaderManager.LoaderCall
     private LinearLayout llMain;
     private LinearLayout llLayoutError;
     private LinearLayout llEmptyData;
+    private TextView tvTL1ED1;
     private ProgressBar pbProgressBar;
 
     private ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck NetworkCheck; //переменная для проврки сети
@@ -65,6 +69,7 @@ public class TL1WodFragment extends Fragment implements LoaderManager.LoaderCall
         tvLevelSc = v.findViewById(R.id.tvLevelSc);
         tvLevelRx = v.findViewById(R.id.tvLevelRx);
         tvLevelRxPlus = v.findViewById(R.id.tvLevelRxplus);
+        tvTL1ED1 = v.findViewById(R.id.tvTL1ED1);
 
         llMain = v.findViewById(R.id.llMain);
         Button buttonError = v.findViewById(R.id.button5);
@@ -179,6 +184,7 @@ public class TL1WodFragment extends Fragment implements LoaderManager.LoaderCall
             }
             llMain.setVisibility(View.VISIBLE);
         }else {
+            tvTL1ED1.setText(getResources().getText(R.string.TL1NoData1));
             llEmptyData.setVisibility(View.VISIBLE);
 
         }
@@ -198,11 +204,36 @@ public class TL1WodFragment extends Fragment implements LoaderManager.LoaderCall
             llLayoutError.setVisibility(View.INVISIBLE);
             llMain.setVisibility(View.INVISIBLE);
             llEmptyData.setVisibility(View.INVISIBLE);
-            pbProgressBar.setVisibility(View.VISIBLE);
 
-            threadOpenFragment = new Thread(runnableOpenFragment);
-            threadOpenFragment.setDaemon(true);
-            threadOpenFragment.start();
+            try {
+                SharedPreferences mSettings = Objects.requireNonNull(getContext()).getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+                String ri =  mSettings.getString(APP_PREFERENCES_SELECTEDDAY, "");
+
+                @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+                @SuppressLint("SimpleDateFormat") SimpleDateFormat sdfMonthDay = new SimpleDateFormat("MMdd");
+                @SuppressLint("SimpleDateFormat") SimpleDateFormat sdfHourToday = new SimpleDateFormat("HH");
+
+                Date ddd = sdf.parse(ri);
+                int iSelectedDay = Integer.parseInt(sdfMonthDay.format(ddd));
+                int iDayToday = Integer.parseInt(sdfMonthDay.format(new Date()));
+                int iHourToday = Integer.parseInt(sdfHourToday.format(new Date()));
+
+                //не показваю комплекс только если дата = сегодня, а время до 21 часа
+                if(iSelectedDay != iDayToday || iHourToday > 20){
+                    pbProgressBar.setVisibility(View.VISIBLE);
+                    threadOpenFragment = new Thread(runnableOpenFragment);
+                    threadOpenFragment.setDaemon(true);
+                    threadOpenFragment.start();
+                }else {
+                    tvTL1ED1.setText(getResources().getText(R.string.TL1NoTime1));
+                    pbProgressBar.setVisibility(View.INVISIBLE);
+                    llEmptyData.setVisibility(View.VISIBLE);
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+                llLayoutError.setVisibility(View.VISIBLE);
+                pbProgressBar.setVisibility(View.INVISIBLE);
+            }
         }
 
         if (getActivity() instanceof InterfaceChangeTitle){
