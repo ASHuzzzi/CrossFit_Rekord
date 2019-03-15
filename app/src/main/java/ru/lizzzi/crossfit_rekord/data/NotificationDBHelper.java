@@ -282,4 +282,30 @@ public class NotificationDBHelper extends SQLiteOpenHelper {
                 null
         );
     }
+
+    //проверяем наличие таблицы в базе. если её нет, то повторяем копирование.
+    public boolean checkTable(){
+        myDataBase = this.getReadableDatabase();
+        try {
+            Cursor cursor = myDataBase.query(Notification.TABLE_NAME,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null);
+
+            if (cursor != null) {
+                cursor.close();
+            }
+            return true;
+        } catch (SQLException e) {
+            try {
+                copyDataBase();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+            return false;
+        }
+    }
 }
