@@ -360,17 +360,20 @@ public class MainActivity extends AppCompatActivity
     private void initializeCountDrawer() {
         new Thread(new Runnable() {
             public void run() {
-                int i = mDBHelper.countNotification();
-                String stCounter;
-                if (i > 0 ){
-                    stCounter = String.valueOf(i);
-                }else {
-                    stCounter = "";
+                boolean bCheckTable =  mDBHelper.checkTable();
+                if(bCheckTable){
+                    int i = mDBHelper.countNotification();
+                    String stCounter;
+                    if (i > 0 ){
+                        stCounter = String.valueOf(i);
+                    }else {
+                        stCounter = "";
+                    }
+                    tvNotificationCounter.setGravity(Gravity.CENTER_VERTICAL);
+                    tvNotificationCounter.setTypeface(null, Typeface.BOLD);
+                    tvNotificationCounter.setTextColor(getResources().getColor(R.color.colorAccent));
+                    tvNotificationCounter.setText(stCounter);
                 }
-                tvNotificationCounter.setGravity(Gravity.CENTER_VERTICAL);
-                tvNotificationCounter.setTypeface(null, Typeface.BOLD);
-                tvNotificationCounter.setTextColor(getResources().getColor(R.color.colorAccent));
-                tvNotificationCounter.setText(stCounter);
             }
         }).run();
 

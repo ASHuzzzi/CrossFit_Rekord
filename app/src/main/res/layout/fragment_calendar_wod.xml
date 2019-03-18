@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.widget.RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.widget.RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="centerCrop"
+        android:src="@drawable/backgroundfotovrtical3"
+        tools:ignore="ContentDescription" />
 
     <com.prolificinteractive.materialcalendarview.MaterialCalendarView
         android:id="@+id/calendarView"
@@ -20,14 +27,16 @@
         app:mcv_selectionColor="@color/colorRedPrimary"
         app:mcv_showOtherDates="defaults"
         app:mcv_tileSize="match_parent"
-        app:mcv_weekDayTextAppearance="@style/calendarweekDayStyle" />
+        app:mcv_weekDayTextAppearance="@style/calendarweekDayStyle" >
+
+    </com.prolificinteractive.materialcalendarview.MaterialCalendarView>
 
     <LinearLayout
         android:id="@+id/Layout_Error_Calendar_Wod"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerHorizontal="true"
         android:layout_centerInParent="false"
+        android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:gravity="center"
         android:orientation="vertical"
@@ -35,23 +44,23 @@
 
         <TextView
             android:id="@+id/textView16"
+            style="@style/ErrorTextStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/error_connection1"
-            style="@style/ErrorTextStyle"/>
+            android:text="@string/error_connection1" />
 
         <TextView
             android:id="@+id/textView17"
+            style="@style/ErrorTextStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/error_connection2"
-            style="@style/ErrorTextStyle"/>
+            android:text="@string/error_connection2" />
 
         <Button
             android:id="@+id/bt_error_calendar_wod"
+            style="@style/ErrorButtonStyle"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/ErrorButtonStyle"/>
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
     <ProgressBar

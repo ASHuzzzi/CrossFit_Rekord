@@ -3,6 +3,7 @@ package ru.lizzzi.crossfit_rekord.fragments.RecordForTrainingTL;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -18,6 +19,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -79,6 +81,8 @@ public class TL1ParnasFragment extends Fragment implements LoaderManager.LoaderC
     private Date tomorrow;
     private Date aftertomorrow;
 
+    private ImageView iv_RfTS;
+
     //@SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM");
 
     @SuppressLint({"HandlerLeak", "ClickableViewAccessibility"})
@@ -97,14 +101,13 @@ public class TL1ParnasFragment extends Fragment implements LoaderManager.LoaderC
         llErorRfTS = v.findViewById(R.id.llEror_RfTS);
         llListTime = v.findViewById(R.id.llListTime);
         pbRfTS = v.findViewById(R.id.pbRfTS);
+        iv_RfTS = v.findViewById(R.id.iv_RfTS);
 
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         rvTreningTime.setLayoutManager(mLayoutManager);
         rvTreningTime.setAdapter(adapter);
 
         gcNumberDayWeek = new GregorianCalendar();
-
-
 
 
         @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf = new SimpleDateFormat("EEE.\n d MMMM");
@@ -384,6 +387,12 @@ public class TL1ParnasFragment extends Fragment implements LoaderManager.LoaderC
         if (getActivity() instanceof InterfaceChangeTitle){
             InterfaceChangeTitle listernerChangeTitle = (InterfaceChangeTitle) getActivity();
             listernerChangeTitle.changeTitle(R.string.title_RecordForTraining_Fragment, R.string.title_RecordForTraining_Fragment);
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            iv_RfTS.setImageDrawable(getResources().getDrawable(R.drawable.backgroundfotovrtical, getContext().getTheme()));
+        } else {
+            iv_RfTS.setImageDrawable(getResources().getDrawable(R.drawable.backgroundfotovrtical));
         }
 
     }

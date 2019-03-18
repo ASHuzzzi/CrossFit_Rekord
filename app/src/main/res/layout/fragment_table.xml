@@ -5,6 +5,15 @@
     android:layout_height="match_parent"
     android:layout_margin="2dp">
 
+    <ImageView
+        android:id="@+id/ivTable"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/Layout_Button_Day_of_Week"
+        android:layout_centerHorizontal="true"
+        android:scaleType="center"
+        tools:ignore="ContentDescription" />
+
     <LinearLayout
         android:id="@+id/Layout_Button_Day_of_Week"
         android:layout_width="match_parent"
@@ -89,31 +98,31 @@
         android:id="@+id/Layout_Error"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerHorizontal="true"
         android:layout_centerInParent="false"
+        android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:gravity="center"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/textView16"
+            style="@style/ErrorTextStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/ErrorTextStyle"
-            android:text="@string/error_connection1"/>
+            android:text="@string/error_connection1" />
 
         <TextView
             android:id="@+id/textView17"
+            style="@style/ErrorTextStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/ErrorTextStyle"
-            android:text="@string/error_connection2"/>
+            android:text="@string/error_connection2" />
 
         <Button
             android:id="@+id/button5"
+            style="@style/ErrorButtonStyle"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/ErrorButtonStyle"/>
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
     <ProgressBar
