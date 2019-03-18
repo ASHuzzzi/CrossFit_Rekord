@@ -3,6 +3,7 @@ package ru.lizzzi.crossfit_rekord.fragments.TableTL;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -18,6 +19,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -50,6 +52,7 @@ public class TL2MyzhestvoTableFragment extends Fragment implements LoaderManager
     private Button buttonSaturday;
     private Button buttonSunday;
     private LinearLayout llLayoutError;
+    private ImageView ivTable;
 
     private int iNumberOfDay; // выбранный пользователем день
 
@@ -84,6 +87,7 @@ public class TL2MyzhestvoTableFragment extends Fragment implements LoaderManager
         llLayoutError = v.findViewById(R.id.Layout_Error);
         pbProgressBar = v.findViewById(R.id.progressBar);
         rvItemsInTable = v.findViewById(R.id.lvTable);
+        ivTable = v.findViewById(R.id.ivTable);
 
         llLayoutError.setVisibility(View.INVISIBLE);
         rvItemsInTable.setVisibility(View.INVISIBLE);
@@ -428,6 +432,12 @@ public class TL2MyzhestvoTableFragment extends Fragment implements LoaderManager
         if (getActivity() instanceof InterfaceChangeTitle) {
             InterfaceChangeTitle listernerChangeTitle = (InterfaceChangeTitle) getActivity();
             listernerChangeTitle.changeTitle(R.string.title_Table_Fragment, R.string.title_Table_Fragment);
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            ivTable.setImageDrawable(getResources().getDrawable(R.drawable.backgroundfotovrtical2, getContext().getTheme()));
+        } else {
+            ivTable.setImageDrawable(getResources().getDrawable(R.drawable.backgroundfotovrtical2));
         }
 
     }

@@ -47,6 +47,15 @@
             android:text="@string/empty"/>
     </LinearLayout>
 
+    <ImageView
+        android:id="@+id/iv_RfTS"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/llSekectDay_buttons"
+        android:scaleType="center"
+        android:src="@drawable/backgroundfotovrtical"
+        tools:ignore="ContentDescription" />
+
     <LinearLayout
         android:id="@+id/llListTime"
         android:layout_width="match_parent"
