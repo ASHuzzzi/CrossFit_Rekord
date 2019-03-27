@@ -88,7 +88,7 @@ public class RecordForTrainingRecordingFragment extends Fragment implements Load
         Button btNetworkError = v.findViewById(R.id.button7);
         layoutEmptyList = v.findViewById(R.id.Layout_emptylist2);
 
-        mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        mSettings = Objects.requireNonNull(getContext()).getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         stUserName =  mSettings.getString(APP_PREFERENCES_USERNAME, "");
 
 
@@ -139,16 +139,16 @@ public class RecordForTrainingRecordingFragment extends Fragment implements Load
             public void handleMessage(Message msg) {
                 Bundle bundle = msg.getData();
                 String switchs = bundle.getString("switch"); //показывает какой поток вызвал
-                String resultCheck = bundle.getString("networkCheck");
+                boolean resultCheck = bundle.getBoolean("networkCheck");
                 if (switchs != null && switchs.equals("open")){
-                    if (resultCheck != null && resultCheck.equals("false")) {
+                    if (!resultCheck) {
                         layoutError.setVisibility(View.VISIBLE);
                         progressBar2.setVisibility(View.INVISIBLE);
                     }else {
                         firstStartAsyncTaskLoader();
                     }
                 }else {
-                    if (resultCheck != null && resultCheck.equals("false")) {
+                    if (!resultCheck) {
                         if (layoutError.getVisibility() == View.INVISIBLE){
                             Toast.makeText(getContext(), "Нет подключения", Toast.LENGTH_SHORT).show();
                         }else {
@@ -183,15 +183,12 @@ public class RecordForTrainingRecordingFragment extends Fragment implements Load
                 boolean resultCheck = networkCheck.checkInternet();
                 Bundle bundle = new Bundle();
                 if (resultCheck){
-                    bundle.putString("networkCheck", String.valueOf(true));
-
+                    bundle.putBoolean("networkCheck", true);
                 }else {
-                    bundle.putString("networkCheck", String.valueOf(false));
-
+                    bundle.putBoolean("networkCheck", false);
                 }
-
-                Message msg = handlerOpenFragment.obtainMessage();
                 bundle.putString("switch", "open");
+                Message msg = handlerOpenFragment.obtainMessage();
                 msg.setData(bundle);
                 handlerOpenFragment.sendMessage(msg);
             }
@@ -207,10 +204,9 @@ public class RecordForTrainingRecordingFragment extends Fragment implements Load
                 boolean resultCheck = networkCheck.checkInternet();
                 Bundle bundle = new Bundle();
                 if (resultCheck){
-                    bundle.putString("networkCheck", String.valueOf(true));
-
+                    bundle.putBoolean("networkCheck", true);
                 }else {
-                    bundle.putString("networkCheck", String.valueOf(false));
+                    bundle.putBoolean("networkCheck", false);
                 }
                 bundle.putString("switch", "onclick");
                 Message msg = handlerOpenFragment.obtainMessage();
@@ -255,26 +251,23 @@ public class RecordForTrainingRecordingFragment extends Fragment implements Load
         bundle = new Bundle();
         bundle.putString(String.valueOf(RecordForTrainingRecordingLoadPeopleLoader.ARG_DATE), stDateSelectFull);
         bundle.putString(String.valueOf(RecordForTrainingRecordingLoadPeopleLoader.ARG_TIME), stTimeSelect);
-        int LOADER_SHOW_LIST = 1;
-        mLoader = getLoaderManager().initLoader(LOADER_SHOW_LIST, bundle, this);
+        mLoader = getLoaderManager().initLoader(1, bundle, this); //show list
         mLoader.forceLoad();
     }
 
-    private void restartAsyncTaskLoader(int loader_id){
-        int LOADER_WRITE_ITEM = 2;
-        int LOADER_DELETE_ITEM = 3;
-        switch (loader_id){
-            case 2:
+    private void restartAsyncTaskLoader(int loaderId){
+        switch (loaderId){
+            case 2: //whrite item
                 stUserId =  mSettings.getString(APP_PREFERENCES_OBJECTID, "");
                 bundle.putString(String.valueOf(RecordForTrainingRecordingLoadPeopleLoader.ARG_USERNAME), stUserName);
                 bundle.putString(String.valueOf(RecordForTrainingRecordingLoadPeopleLoader.ARG_USERID), stUserId);
-                mLoader = getLoaderManager().restartLoader(LOADER_WRITE_ITEM,bundle, this);
+                mLoader = getLoaderManager().restartLoader(loaderId,bundle, this);
                 mLoader.forceLoad();
                 break;
 
-            case 3:
+            case 3: //delete item
                 bundle.putString(String.valueOf(RecordForTrainingRecordingLoadPeopleLoader.ARG_USERID), stUserId);
-                mLoader = getLoaderManager().restartLoader(LOADER_DELETE_ITEM,bundle, this);
+                mLoader = getLoaderManager().restartLoader(loaderId,bundle, this);
                 mLoader.forceLoad();
                 break;
         }

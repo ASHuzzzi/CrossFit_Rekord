@@ -57,7 +57,7 @@ public class TL2MyzhestvoFragment extends Fragment implements LoaderManager.Load
     //private String stDateSelectShow; //передает значение которое показывается в Textview следующего фрагмента
 
     private int iNumberOfDay; // выбранный пользователем день
-    private  int LOADER_ID = 1; //идентефикатор loader'а
+    private static final int LOADER_ID = 1; //идентефикатор loader'а
 
     private NetworkCheck networkCheck;//переменная для проврки сети
 
@@ -103,14 +103,7 @@ public class TL2MyzhestvoFragment extends Fragment implements LoaderManager.Load
         pbRfTS = v.findViewById(R.id.pbRfTS);
         iv_RfTS = v.findViewById(R.id.iv_RfTS);
 
-        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
-        rvTreningTime.setLayoutManager(mLayoutManager);
-        rvTreningTime.setAdapter(adapter);
-
         gcNumberDayWeek = new GregorianCalendar();
-
-
-
 
         @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf = new SimpleDateFormat("EEE.\n d MMMM");
 
@@ -121,13 +114,12 @@ public class TL2MyzhestvoFragment extends Fragment implements LoaderManager.Load
             @Override
             public void handleMessage(Message msg) {
                 Bundle bundle = msg.getData();
-                String resultCheck;
-                resultCheck = bundle.getString("open");
-                if (resultCheck != null && resultCheck.equals("false")) {
+                boolean resultCheck = bundle.getBoolean("open");
+                if (!resultCheck) {
                     llErorRfTS.setVisibility(View.VISIBLE);
                     pbRfTS.setVisibility(View.INVISIBLE);
                 }else {
-                    llErorRfTS.setVisibility(View.INVISIBLE);
+                    llErorRfTS.setVisibility(View.GONE);
                     pbRfTS.setVisibility(View.VISIBLE);
                     startAsyncTaskLoader();
                 }
@@ -148,11 +140,11 @@ public class TL2MyzhestvoFragment extends Fragment implements LoaderManager.Load
                     }
                     flagTodayOrNot = true;
                     selectDay = 0;
-                    bundle.putString("open", String.valueOf(true));
+                    bundle.putBoolean("open", true);
 
                 }else {
 
-                    bundle.putString("open", String.valueOf(false));
+                    bundle.putBoolean("open", false);
                 }
                 Message msg = handlerOpenFragment.obtainMessage();
                 msg.setData(bundle);
@@ -274,8 +266,8 @@ public class TL2MyzhestvoFragment extends Fragment implements LoaderManager.Load
             schedule = data;
             drawList(schedule.get(iNumberOfDay-1));
 
-            llErorRfTS.setVisibility(View.INVISIBLE);
-            pbRfTS.setVisibility(View.INVISIBLE);
+            llErorRfTS.setVisibility(View.GONE);
+            pbRfTS.setVisibility(View.GONE);
             llListTime.setVisibility(View.VISIBLE);
         }else {
             llErorRfTS.setVisibility(View.VISIBLE);
