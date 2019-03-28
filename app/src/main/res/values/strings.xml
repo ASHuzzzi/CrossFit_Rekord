@@ -196,6 +196,7 @@
     <string name="strActivityERLevelOver">Другое</string>
     <string name="strActivityERSkill">Skill"</string>
     <string name="strActivityERDelete">Удалить"</string>
+    <string name="strActivityERSave">Сохранить"</string>
 
     <!-- Значения для фрагмента ChangeEmail -->
     <string name="strEmailText">Адрес Вашей электронной почты</string>

@@ -435,11 +435,11 @@ public class TL1ParnasTableFragment extends Fragment implements LoaderManager.Lo
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            ivTable.setImageDrawable(getResources().getDrawable(R.drawable.backgroundfotovrtical, getContext().getTheme()));
+            ivTable.setImageDrawable(getResources().getDrawable(
+                    R.drawable.backgroundfotovrtical, Objects.requireNonNull(getContext()).getTheme()));
         } else {
             ivTable.setImageDrawable(getResources().getDrawable(R.drawable.backgroundfotovrtical));
         }
-
     }
 
     @Override

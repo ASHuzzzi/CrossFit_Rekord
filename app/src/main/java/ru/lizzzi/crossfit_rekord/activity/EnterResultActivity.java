@@ -207,7 +207,6 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             Objects.requireNonNull(getSupportActionBar()).setTitle("Мои результаты тренировки");
         }
-        btnSave.setText("Сохранить");
 
         Intent intent = getIntent();
         flag = intent.getBooleanExtra("flag", false);
