@@ -112,13 +112,16 @@
 
     <Button
         android:id="@+id/btnChangeUserData"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/llAboutMe"
         android:layout_alignParentBottom="false"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
+        android:layout_centerHorizontal="true"
         android:layout_marginBottom="20dp"
+        android:paddingStart="25dp"
+        android:paddingLeft="25dp"
+        android:paddingEnd="25dp"
+        android:paddingRight="25dp"
         android:text="@string/strBtnChange" />
 
     <TextView

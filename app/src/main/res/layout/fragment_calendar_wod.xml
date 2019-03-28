@@ -27,7 +27,7 @@
         app:mcv_selectionColor="@color/colorRedPrimary"
         app:mcv_showOtherDates="defaults"
         app:mcv_tileSize="match_parent"
-        app:mcv_weekDayTextAppearance="@style/calendarweekDayStyle" >
+        app:mcv_weekDayTextAppearance="@style/calendarweekDayStyle">
 
     </com.prolificinteractive.materialcalendarview.MaterialCalendarView>
 
