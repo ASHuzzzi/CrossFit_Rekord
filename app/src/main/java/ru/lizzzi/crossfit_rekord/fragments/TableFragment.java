@@ -22,7 +22,7 @@ public class TableFragment extends Fragment{
                              Bundle savedInstanceState) {
         setRetainInstance(true);
 
-        View v = inflater.inflate(R.layout.fragment_record_for_training_tl, container, false);
+        View v = inflater.inflate(R.layout.fragment_tl_table, container, false);
         // Find the view pager that will allow the user to swipe between fragments
         final ViewPager viewPager = v.findViewById(R.id.vp_1_record);
 

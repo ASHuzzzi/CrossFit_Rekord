@@ -36,8 +36,8 @@
 
                     <FrameLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/gradient_bg" />
+                        android:layout_height="150dp"
+                        android:background="@drawable/gradient_bg_down" />
 
                 </FrameLayout>
 
@@ -88,14 +88,15 @@
                         android:id="@+id/imageView2"
                         android:layout_width="match_parent"
                         android:layout_height="150dp"
+                        android:layout_gravity="center_horizontal"
                         android:scaleType="matrix"
                         android:src="@drawable/myzhestvogym2"
                         tools:ignore="ContentDescription" />
 
                     <FrameLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/gradient_bg" />
+                        android:layout_height="150dp"
+                        android:background="@drawable/gradient_bg_down" />
 
                 </FrameLayout>
 
@@ -182,7 +183,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="10dp"
                 android:text="@string/appVersion"
                 android:textColor="@color/colorRedPrimary"
                 android:textSize="10sp"
@@ -193,10 +193,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginEnd="5dp"
-                android:layout_marginBottom="5dp"
+                android:layout_marginBottom="10dp"
                 android:gravity="center"
                 android:text="@string/Label"
                 android:textColor="@color/colorRedPrimary"

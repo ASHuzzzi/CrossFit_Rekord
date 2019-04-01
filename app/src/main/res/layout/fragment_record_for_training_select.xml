@@ -52,8 +52,8 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_below="@+id/llSekectDay_buttons"
-        android:scaleType="center"
-        android:src="@drawable/backgroundfotovrtical"
+        android:layout_centerInParent="true"
+        android:scaleType="centerCrop"
         tools:ignore="ContentDescription" />
 
     <LinearLayout

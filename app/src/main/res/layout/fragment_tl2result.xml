@@ -32,9 +32,9 @@
 
         <Button
             android:id="@+id/button5"
+            style="@style/ErrorButtonStyle"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/ErrorButtonStyle"/>
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
     <ProgressBar
@@ -120,13 +120,15 @@
 
         <Button
             android:id="@+id/btnOpenEnterResult"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_marginLeft="30dp"
+            android:layout_gravity="center_horizontal"
             android:layout_marginTop="20dp"
-            android:layout_marginRight="30dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="30dp"
+            android:paddingStart="30dp"
+            android:paddingLeft="30dp"
+            android:paddingEnd="30dp"
+            android:paddingRight="30dp"
             android:text="@string/strEnterResult" />
 
     </LinearLayout>

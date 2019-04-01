@@ -35,7 +35,6 @@
                                             <option name="values">
                                               <map>
                                                 <entry key="color" value="000000" />
-                                                <entry key="trimmed" value="true" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -46,9 +45,10 @@
                                   <option name="values">
                                     <map>
                                       <entry key="assetType" value="IMAGE" />
-                                      <entry key="imageAsset" value="C:\Users\basso\Desktop\ic_arrow_back_black_24dp.png" />
-                                      <entry key="outputName" value="ic_arrow_back" />
-                                      <entry key="theme" value="HOLO_DARK" />
+                                      <entry key="imageAsset" value="C:\Users\basso\StudioProjects\Data for app\CrossFir Rekord\instagram.png" />
+                                      <entry key="outputName" value="instagram" />
+                                      <entry key="theme" value="CUSTOM" />
+                                      <entry key="themeColor" value="fd0002" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -186,6 +186,11 @@
                                 </PersistentState>
                               </value>
                             </entry>
+                          </map>
+                        </option>
+                        <option name="values">
+                          <map>
+                            <entry key="outputIconType" value="ACTIONBAR" />
                           </map>
                         </option>
                       </PersistentState>

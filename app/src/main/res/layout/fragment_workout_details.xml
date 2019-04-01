@@ -21,8 +21,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvSelectedDay"
+        android:layout_marginBottom="5dp"
         app:tabIndicatorColor="@color/colorRedPrimary"
-        app:tabIndicatorHeight="4dp"
+        app:tabIndicatorHeight="7dp"
         app:tabSelectedTextColor="@color/colorRedPrimary"
         app:tabTextColor="@color/colorWhite">
 
