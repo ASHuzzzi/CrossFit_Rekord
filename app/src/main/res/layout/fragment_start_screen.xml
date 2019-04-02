@@ -18,8 +18,7 @@
         android:layout_height="@dimen/dots_height"
         android:layout_marginBottom="@dimen/dots_margin_bottom"
         android:gravity="center"
-        android:orientation="horizontal">
-    </LinearLayout>
+        android:orientation="horizontal"></LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -38,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:paddingBottom="5dp"
+            android:padding="5dp"
             android:text="@string/button_shedule"
             android:textAlignment="gravity"
             tools:ignore="NestedWeights" />
@@ -49,7 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:paddingBottom="5dp"
+            android:padding="5dp"
             android:text="@string/button_record_training"
             android:textAlignment="gravity"
             android:textStyle="bold" />
@@ -60,7 +59,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:paddingBottom="5dp"
+            android:padding="5dp"
             android:text="@string/button_calendar_wod" />
 
         <Button
@@ -69,7 +68,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:paddingBottom="5dp"
+            android:padding="5dp"
             android:text="@string/button_definition" />
 
         <Button
@@ -78,7 +77,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:paddingBottom="5dp"
+            android:padding="5dp"
             android:text="@string/button_contacts" />
 
     </LinearLayout>
