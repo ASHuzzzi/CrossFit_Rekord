@@ -12,20 +12,18 @@
 ### Что уже умеет приложение:
 * авторизация/регистрация пользователя (через стандартные формы почта/пароль). 
 * показывать расписание зала (на выбранный день недели);
-
 <p align="center">
 <a> <img src="https://user-images.githubusercontent.com/25584477/55539453-566e5f80-56c9-11e9-9cdd-058e9bf2541f.png"  height="283" width="160"> </a>
 <align="center">
-<a> <img src="https://user-images.githubusercontent.com/25584477/53003990-42381100-3441-11e9-8946-d4f61963027e.png"  height="283" width="160"> </a>
+<a> <img src="https://user-images.githubusercontent.com/25584477/55540014-b3b6e080-56ca-11e9-9371-fe829a14755b.png"  height="283" width="160"> </a>
 </p>
 
 * записать пользователя на тренировку (с выбором дня и времени тренировки, но не далее чем за три дня до неё);
 <p align="center">
-<a> <img src="https://user-images.githubusercontent.com/25584477/53003991-42381100-3441-11e9-86db-7eba87f66450.png"  height="283" width="160"> </a>
+<a> <img src="https://user-images.githubusercontent.com/25584477/55540016-b3b6e080-56ca-11e9-924f-6e8d51af9747.png"  height="283" width="160"> </a>
 <align="center">
 <a> <img src="https://user-images.githubusercontent.com/25584477/55539454-566e5f80-56c9-11e9-8928-70f238ddc367.png"  height="283" width="160"> </a>
 </p>
-
 
 
 * посмотреть комплексы прошедших тренировок. Внести свои результаты тренировки, а также посмотреть результаты других пользователей;
@@ -47,13 +45,13 @@
 
 <p align="center">
 <a> <img src="https://user-images.githubusercontent.com/25584477/53003826-e8374b80-3440-11e9-95cf-27a39d9bd287.png"  height="283" width="160"> </a>
-<a> <img src="https://user-images.githubusercontent.com/25584477/52460892-8c85dc00-2b7d-11e9-8de1-63e3b72a12d8.png"  height="283" width="160"> </a>
+<a> <img src="https://user-images.githubusercontent.com/25584477/55540017-b44f7700-56ca-11e9-8231-d55448887337.png"  height="283" width="160"> </a>
 </p>
 
 * имеется форма для сохранения одноповторных максимумов основных упражнений по тяжелой атлетике;
 
 <p align="center">
-<a> <img src="hhttps://user-images.githubusercontent.com/25584477/55539456-5706f600-56c9-11e9-9ce0-084e932895e7.png"  height="283" width="160"> </a>
+<a> <img src="https://user-images.githubusercontent.com/25584477/55539456-5706f600-56c9-11e9-9ce0-084e932895e7.png"  height="283" width="160"> </a>
 </p>
 
 ### В процессе:
