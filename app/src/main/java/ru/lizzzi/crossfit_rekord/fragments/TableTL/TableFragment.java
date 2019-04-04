@@ -41,9 +41,9 @@ import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeTitle;
 import ru.lizzzi.crossfit_rekord.interfaces.ListenerRecordForTrainingSelect;
 import ru.lizzzi.crossfit_rekord.loaders.TableFragmentLoader;
 
-public class TL2MyzhestvoTableFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<List<Map>>> {
-    private ProgressBar pbProgressBar;
-    private RecyclerView rvItemsInTable;
+public class TableFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<List<Map>>> {
+    private ProgressBar progressBar;
+    private RecyclerView itemsInTable;
     private Button buttonMonday;
     private Button buttonTuesday;
     private Button buttonWednesday;
@@ -51,24 +51,24 @@ public class TL2MyzhestvoTableFragment extends Fragment implements LoaderManager
     private Button buttonFriday;
     private Button buttonSaturday;
     private Button buttonSunday;
-    private LinearLayout llLayoutError;
-    private ImageView ivTable;
+    private LinearLayout layoutError;
+    private ImageView imageTable;
 
-    private int iNumberOfDay; // выбранный пользователем день
+    private int selectDay; // выбранный пользователем день
 
     private Handler handlerOpenFragment;
     private Thread threadOpenFragment;
 
-    private ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck NetworkCheck; //переменная для проврки сети
+    private NetworkCheck networkCheck; //переменная для проврки сети
 
     private RecyclerAdapterTable adapter; //адаптер для списка тренировок
 
-    //private String dateSelectFull; //передает значение по поторому потом идет запрос в базу в следующем фрагменте
-    //private String dateSelectShow; //передает значение которое показывается в Textview следующего фрагмента
     private GregorianCalendar calendarday; //нужна для формирования дат для кнопок
 
     private List<List<Map>> schedule;
     private Runnable runnableOpenFragment;
+
+    private int iSelectGym;
 
     @SuppressLint({"HandlerLeak", "ClickableViewAccessibility"})
     @Override
@@ -84,14 +84,22 @@ public class TL2MyzhestvoTableFragment extends Fragment implements LoaderManager
         buttonSaturday = v.findViewById(R.id.day_6);
         buttonSunday = v.findViewById(R.id.day_7);
         Button buttonError = v.findViewById(R.id.button5);
-        llLayoutError = v.findViewById(R.id.Layout_Error);
-        pbProgressBar = v.findViewById(R.id.progressBar);
-        rvItemsInTable = v.findViewById(R.id.lvTable);
-        ivTable = v.findViewById(R.id.ivTable);
+        layoutError = v.findViewById(R.id.Layout_Error);
+        progressBar = v.findViewById(R.id.progressBar);
+        itemsInTable = v.findViewById(R.id.lvTable);
+        imageTable = v.findViewById(R.id.ivTable);
 
-        llLayoutError.setVisibility(View.INVISIBLE);
-        rvItemsInTable.setVisibility(View.INVISIBLE);
-        pbProgressBar.setVisibility(View.VISIBLE);
+        layoutError.setVisibility(View.INVISIBLE);
+        itemsInTable.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
+
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            iSelectGym = bundle.getInt("gym");
+        } else {
+            iSelectGym = Objects.requireNonNull(
+                    getContext()).getResources().getInteger(R.integer.selectSheduleParnas);
+        }
 
 
         //хэндлер для потока runnableOpenFragment
@@ -99,14 +107,14 @@ public class TL2MyzhestvoTableFragment extends Fragment implements LoaderManager
             @Override
             public void handleMessage(Message msg) {
                 Bundle bundle = msg.getData();
-                String result_check = bundle.getString("result");
-                if (result_check != null && result_check.equals("false")) {
-                    llLayoutError.setVisibility(View.VISIBLE);
-                    pbProgressBar.setVisibility(View.INVISIBLE);
-                } else {
-                    llLayoutError.setVisibility(View.INVISIBLE);
-                    pbProgressBar.setVisibility(View.VISIBLE);
+                boolean checkDone = bundle.getBoolean("result");
+                if (checkDone) {
+                    layoutError.setVisibility(View.INVISIBLE);
+                    progressBar.setVisibility(View.VISIBLE);
                     firstStartAsyncTaskLoader();
+                } else {
+                    layoutError.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.INVISIBLE);
                 }
             }
         };
@@ -116,15 +124,14 @@ public class TL2MyzhestvoTableFragment extends Fragment implements LoaderManager
             @Override
             public void run() {
 
-                NetworkCheck = new NetworkCheck(getContext());
-                boolean resultCheck = NetworkCheck.checkInternet();
+                networkCheck = new NetworkCheck(getContext());
+                boolean checkDone = networkCheck.checkInternet();
                 Bundle bundle = new Bundle();
-                if (resultCheck) {
-                    iNumberOfDay = 1;
-                    bundle.putString("result", String.valueOf(true));
-
+                if (checkDone) {
+                    selectDay = 1;
+                    bundle.putBoolean("result", true);
                 } else {
-                    bundle.putString("result", String.valueOf(false));
+                    bundle.putBoolean("result", false);
                 }
                 Message msg = handlerOpenFragment.obtainMessage();
                 msg.setData(bundle);
@@ -136,8 +143,8 @@ public class TL2MyzhestvoTableFragment extends Fragment implements LoaderManager
         buttonError.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                pbProgressBar.setVisibility(View.VISIBLE);
-                llLayoutError.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.VISIBLE);
+                layoutError.setVisibility(View.INVISIBLE);
                 threadOpenFragment = new Thread(runnableOpenFragment);
                 threadOpenFragment.setDaemon(true);
                 threadOpenFragment.start();
@@ -148,10 +155,10 @@ public class TL2MyzhestvoTableFragment extends Fragment implements LoaderManager
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (adapter != null) {
-                    iNumberOfDay = 1;
-                    createList(schedule.get(iNumberOfDay - 1));
+                    selectDay = 1;
+                    createList(schedule.get(selectDay -1));
                 }
-                return true;
+                return true ;
             }
         });
 
@@ -159,11 +166,10 @@ public class TL2MyzhestvoTableFragment extends Fragment implements LoaderManager
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (adapter != null) {
-                    iNumberOfDay = 2;
-                    createList(schedule.get(iNumberOfDay - 1));
+                    selectDay = 2;
+                    createList(schedule.get(selectDay -1));
                 }
-
-                return true;
+                return true ;
             }
         });
 
@@ -171,10 +177,10 @@ public class TL2MyzhestvoTableFragment extends Fragment implements LoaderManager
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (adapter != null) {
-                    iNumberOfDay = 3;
-                    createList(schedule.get(iNumberOfDay - 1));
+                    selectDay = 3;
+                    createList(schedule.get(selectDay -1));
                 }
-                return true;
+                return true ;
             }
         });
 
@@ -182,10 +188,10 @@ public class TL2MyzhestvoTableFragment extends Fragment implements LoaderManager
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (adapter != null) {
-                    iNumberOfDay = 4;
-                    createList(schedule.get(iNumberOfDay - 1));
+                    selectDay = 4;
+                    createList(schedule.get(selectDay -1));
                 }
-                return true;
+                return true ;
             }
         });
 
@@ -193,10 +199,10 @@ public class TL2MyzhestvoTableFragment extends Fragment implements LoaderManager
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (adapter != null) {
-                    iNumberOfDay = 5;
-                    createList(schedule.get(iNumberOfDay - 1));
+                    selectDay = 5;
+                    createList(schedule.get(selectDay -1));
                 }
-                return true;
+                return true ;
             }
         });
 
@@ -204,10 +210,10 @@ public class TL2MyzhestvoTableFragment extends Fragment implements LoaderManager
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (adapter != null) {
-                    iNumberOfDay = 6;
-                    createList(schedule.get(iNumberOfDay - 1));
+                    selectDay = 6;
+                    createList(schedule.get(selectDay -1));
                 }
-                return true;
+                return true ;
             }
         });
 
@@ -215,22 +221,22 @@ public class TL2MyzhestvoTableFragment extends Fragment implements LoaderManager
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (adapter != null) {
-                    iNumberOfDay = 7;
-                    createList(schedule.get(iNumberOfDay - 1));
+                    selectDay = 7;
+                    createList(schedule.get(selectDay -1));
                 }
-                return true;
+                return true ;
             }
         });
-
         return v;
     }
 
-    private void firstStartAsyncTaskLoader() {
+    private void firstStartAsyncTaskLoader(){
         preSelectionButtonDay(8); //передаем 8, чтобы сбросить нажатие всех кнопок
+        String selectedGym = String.valueOf(iSelectGym);
         Bundle bundle = new Bundle();
-        bundle.putString("SelectedGym", "2");
-        int loaderid = 1;
-        getLoaderManager().initLoader(loaderid, bundle, this).forceLoad();
+        bundle.putString("SelectedGym", selectedGym);
+        int loaderId = 1;
+        getLoaderManager().initLoader(loaderId, bundle, this).forceLoad();
     }
 
     @NonNull
@@ -243,18 +249,15 @@ public class TL2MyzhestvoTableFragment extends Fragment implements LoaderManager
 
     @Override
     public void onLoadFinished(@NonNull Loader<List<List<Map>>> loader, List<List<Map>> data) {
-
         schedule = data;
-
         if (schedule != null) {
-            createList(schedule.get(iNumberOfDay - 1));
-
-            llLayoutError.setVisibility(View.INVISIBLE);
-            pbProgressBar.setVisibility(View.INVISIBLE);
-            rvItemsInTable.setVisibility(View.VISIBLE);
+            createList(schedule.get(selectDay -1));
+            layoutError.setVisibility(View.INVISIBLE);
+            progressBar.setVisibility(View.INVISIBLE);
+            itemsInTable.setVisibility(View.VISIBLE);
         } else {
-            pbProgressBar.setVisibility(View.INVISIBLE);
-            llLayoutError.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.INVISIBLE);
+            layoutError.setVisibility(View.VISIBLE);
         }
     }
 
@@ -262,7 +265,7 @@ public class TL2MyzhestvoTableFragment extends Fragment implements LoaderManager
     public void onLoaderReset(@NonNull Loader<List<List<Map>>> loader) {
     }
 
-    private void createList(List<Map> dailySchedule) {
+    private void createList(List<Map> dailySchedule){
         adapter = new RecyclerAdapterTable(getContext(), dailySchedule, new ListenerRecordForTrainingSelect() {
             @Override
             public void selectTime(String stStartTime, String stTypesItem) {
@@ -275,26 +278,24 @@ public class TL2MyzhestvoTableFragment extends Fragment implements LoaderManager
                 if (c.get(Calendar.DAY_OF_WEEK) == 1) {
                     numberDayOfWeek = 7;
                 } else {
-                    numberDayOfWeek = (c.get(Calendar.DAY_OF_WEEK) - 1);
+                    numberDayOfWeek = (c.get(Calendar.DAY_OF_WEEK)-1);
                 }
-                int dayOfWeek = iNumberOfDay - numberDayOfWeek;
+                int dayOfWeek = selectDay -numberDayOfWeek;
                 if ((dayOfWeek == 0) || (dayOfWeek == 1) || (dayOfWeek == 2) || (dayOfWeek == -5) || (dayOfWeek == -6)) {
-                    //@SuppressLint("SimpleDateFormat") SimpleDateFormat sdfDataShow = new SimpleDateFormat("EEEE dd MMMM");
-                    //@SuppressLint("SimpleDateFormat") SimpleDateFormat sdfDataFull = new SimpleDateFormat("dd/MM");
                     @SuppressLint("SimpleDateFormat") SimpleDateFormat sdfCheckTime = new SimpleDateFormat("HH:mm");
 
                     //этот цикл нужен для проверки дней недели. Если сегодня сб/вс, то пн/вт должен
                     //быть следующей недели а не текущей
                     if (c.get(Calendar.DAY_OF_WEEK) == 1) { //если день недели вс
-                        if (dayOfWeek == -6) { //выбран пн.
+                        if (dayOfWeek == -6){ //выбран пн.
                             calendarday.add(Calendar.DAY_OF_YEAR, 1);
                         } else if (dayOfWeek == -5) { // выбран вт.
                             calendarday.add(Calendar.DAY_OF_YEAR, 2);
                         } else {
                             calendarday.add(Calendar.DAY_OF_YEAR, dayOfWeek);
                         }
-                    } else if (c.get(Calendar.DAY_OF_WEEK) == 7) { //если день недели сб
-                        if (dayOfWeek == -5) { //если пн.
+                    } else if (c.get(Calendar.DAY_OF_WEEK) == 7){ //если день недели сб
+                        if (dayOfWeek == -5){ //если пн.
                             calendarday.add(Calendar.DAY_OF_YEAR, 2);
                         } else {
                             calendarday.add(Calendar.DAY_OF_YEAR, dayOfWeek);
@@ -304,8 +305,6 @@ public class TL2MyzhestvoTableFragment extends Fragment implements LoaderManager
                     }
 
                     today = calendarday.getTime();
-                    //dateSelectShow = sdfDataShow.format(today);
-                    //dateSelectFull = sdfDataFull.format(today);
                     boolean checkday = false; //проверка на выбор сегодняшнего дня;
                     if (dayOfWeek == 0) {
                         try {
@@ -326,77 +325,56 @@ public class TL2MyzhestvoTableFragment extends Fragment implements LoaderManager
                     } else {
                         checkday = true;
                     }
-
                     if (checkday) {
-
-                        int iSelectGym = Objects.requireNonNull(getContext()).getResources().getInteger(R.integer.intSelectTlMyzhestvo);
                         ConstructorLinks constructorLinks = new ConstructorLinks();
-                        String stOpenURL = constructorLinks.constructorLinks(iSelectGym,dayOfWeek, stStartTime, stTypesItem);
+                        String stOpenURL = constructorLinks.constructorLinks(iSelectGym, dayOfWeek, stStartTime, stTypesItem);
                         Intent intent = new Intent();
                         intent.setAction(Intent.ACTION_VIEW);
                         intent.addCategory(Intent.CATEGORY_BROWSABLE);
                         intent.setData(Uri.parse(stOpenURL));
                         startActivity(intent);
-
-                        //Оставил эту часть кода на случай возврата к записи через приложение
-                        /*Bundle bundle = new Bundle();
-                        bundle.putString("time", stStartTime);
-                        bundle.putString("datefull", dateSelectFull);
-                        bundle.putString("dateshow", dateSelectShow);
-                        bundle.putString("type", stTypesItem);
-                        Fragment fragment =  new RecordForTrainingRecordingFragment();
-                        fragment.setArguments(bundle);
-                        FragmentManager fragmentManager = getFragmentManager();
-                        FragmentTransaction ft = fragmentManager.beginTransaction();
-                        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                        ft.replace(R.id.container, fragment);
-                        ft.addToBackStack(null);
-                        ft.commit();*/
                     }
-
-
                 } else {
                     @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdfToast = new SimpleDateFormat("EEEE");
                     calendarday.add(Calendar.DAY_OF_YEAR, 0);
                     today = calendarday.getTime();
                     String toastToday = sdfToast.format(today);
-                    Toast toast = Toast.makeText(getContext(), "Запись возможна на сегодня (" + toastToday + ") и два дня вперед", Toast.LENGTH_LONG);
+                    Toast toast = Toast.makeText(getContext(), "Запись возможна на сегодня (" + toastToday  + ") и два дня вперед", Toast.LENGTH_LONG);
                     toast.setGravity(Gravity.CENTER, 0, 0);
                     toast.show();
                 }
-
             }
         });
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
-        rvItemsInTable.setLayoutManager(mLayoutManager);
-        rvItemsInTable.setAdapter(adapter);
-        preSelectionButtonDay(iNumberOfDay);
+        itemsInTable.setLayoutManager(mLayoutManager);
+        itemsInTable.setAdapter(adapter);
+        preSelectionButtonDay(selectDay);
     }
 
     //метод подготоавливающий состояние кнопок в зависимости от выбранного дня
-    private void preSelectionButtonDay(int iDayOfWeek) {
-        if (iDayOfWeek == 1) {
+    private void preSelectionButtonDay(int iDayOfWeek){
+        if (iDayOfWeek == 1 ){
             selectButtonDay(true, false, false, false, false, false, false);
 
-        } else if (iDayOfWeek == 2) {
+        }else if (iDayOfWeek == 2){
             selectButtonDay(false, true, false, false, false, false, false);
 
-        } else if (iDayOfWeek == 3) {
+        }else if (iDayOfWeek == 3){
             selectButtonDay(false, false, true, false, false, false, false);
 
-        } else if (iDayOfWeek == 4) {
+        }else if (iDayOfWeek == 4){
             selectButtonDay(false, false, false, true, false, false, false);
 
-        } else if (iDayOfWeek == 5) {
+        }else if (iDayOfWeek == 5){
             selectButtonDay(false, false, false, false, true, false, false);
 
-        } else if (iDayOfWeek == 6) {
+        }else if (iDayOfWeek == 6){
             selectButtonDay(false, false, false, false, false, true, false);
 
-        } else if (iDayOfWeek == 7) {
+        }else if (iDayOfWeek == 7){
             selectButtonDay(false, false, false, false, false, false, true);
 
-        } else {
+        }else {
             selectButtonDay(false, false, false, false, false, false, false);
         }
     }
@@ -417,7 +395,7 @@ public class TL2MyzhestvoTableFragment extends Fragment implements LoaderManager
     //при возврате через кнопку back адаптер будет не пустым поток не запуститься. что сохранит
     //состояние адаптера в положении перед открытием нового фрагмента
     @Override
-    public void onStart() {
+    public  void onStart() {
         super.onStart();
 
         if (adapter == null) {
@@ -426,7 +404,7 @@ public class TL2MyzhestvoTableFragment extends Fragment implements LoaderManager
             threadOpenFragment.start();
 
         } else {
-            preSelectionButtonDay(iNumberOfDay);
+            preSelectionButtonDay(selectDay);
         }
 
         if (getActivity() instanceof InterfaceChangeTitle) {
@@ -434,23 +412,23 @@ public class TL2MyzhestvoTableFragment extends Fragment implements LoaderManager
             listernerChangeTitle.changeTitle(R.string.title_Table_Fragment, R.string.title_Table_Fragment);
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            ivTable.setImageDrawable(getResources().getDrawable(R.drawable.backgroundfotovrtical2, getContext().getTheme()));
+        int backgroungImage;
+        if (iSelectGym ==1) {
+            backgroungImage = R.drawable.backgroundfotovrtical;
         } else {
-            ivTable.setImageDrawable(getResources().getDrawable(R.drawable.backgroundfotovrtical2));
+            backgroungImage = R.drawable.backgroundfotovrtical2;
         }
-
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            imageTable.setImageDrawable(getResources().getDrawable(
+                    backgroungImage, Objects.requireNonNull(getContext()).getTheme()));
+        } else {
+            imageTable.setImageDrawable(getResources().getDrawable(backgroungImage));
+        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-
         if (threadOpenFragment.isAlive()) {
             threadOpenFragment.interrupt();
         }

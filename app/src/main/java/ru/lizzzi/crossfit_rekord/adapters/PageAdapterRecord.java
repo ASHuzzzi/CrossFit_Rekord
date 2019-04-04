@@ -39,9 +39,9 @@ public class PageAdapterRecord extends FragmentPagerAdapter {
         // Generate title based on item position
         switch (position) {
             case 0:
-                return mContext.getString(R.string.strSelectTlParnas);
+                return mContext.getString(R.string.gymNameParnas);
             case 1:
-                return mContext.getString(R.string.strSelectTlMyzhestvo);
+                return mContext.getString(R.string.gymNameMyzhestvo);
             default:
                 return null;
         }

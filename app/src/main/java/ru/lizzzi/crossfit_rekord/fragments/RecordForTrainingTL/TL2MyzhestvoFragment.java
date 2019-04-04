@@ -300,7 +300,7 @@ public class TL2MyzhestvoFragment extends Fragment implements LoaderManager.Load
                     toast.setGravity(Gravity.CENTER, 0, 0);
                     toast.show();
                 }else {
-                    int iSelectGym = Objects.requireNonNull(getContext()).getResources().getInteger(R.integer.intSelectTlMyzhestvo);
+                    int iSelectGym = Objects.requireNonNull(getContext()).getResources().getInteger(R.integer.selectSheduleMyzhestvo);
                     ConstructorLinks constructorLinks = new ConstructorLinks();
                     String stOpenURL = constructorLinks.constructorLinks(iSelectGym,selectDay, stStartTime, stTypesItem);
                     Intent intent = new Intent();

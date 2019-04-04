@@ -298,7 +298,7 @@ public class TL1ParnasFragment extends Fragment implements LoaderManager.LoaderC
                     toast.setGravity(Gravity.CENTER, 0, 0);
                     toast.show();
                 }else {
-                    int iSelectGym = Objects.requireNonNull(getContext()).getResources().getInteger(R.integer.intSelectTlParnas);
+                    int iSelectGym = Objects.requireNonNull(getContext()).getResources().getInteger(R.integer.selectSheduleParnas);
                     ConstructorLinks constructorLinks = new ConstructorLinks();
                     String stOpenURL = constructorLinks.constructorLinks(iSelectGym,selectDay, stStartTime, stTypesItem);
                     Intent intent = new Intent();

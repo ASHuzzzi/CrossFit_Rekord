@@ -32,10 +32,10 @@
     <string name="hint_check_password">Введите пароль еще раз</string>
 
     <!-- Значения для поля TableFragment -->
-    <string name="strSelectTlParnas">Парнас</string>
-    <string name="strSelectTlMyzhestvo">Мужества</string>
-    <integer name="intSelectTlParnas">1</integer>
-    <integer name="intSelectTlMyzhestvo">2</integer>
+    <string name="gymNameParnas">Парнас</string>
+    <string name="gymNameMyzhestvo">Мужества</string>
+    <integer name="selectSheduleParnas">1</integer>
+    <integer name="selectSheduleMyzhestvo">2</integer>
 
     <!-- Значения для фрагмента RecordForTraining-->
     <string name="select_day">Выберите день</string>
