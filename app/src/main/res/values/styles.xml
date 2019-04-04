@@ -6,6 +6,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:buttonStyle">@style/MainStyleButton</item>
+        <item name="buttonStyle">@style/MainStyleButton</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>

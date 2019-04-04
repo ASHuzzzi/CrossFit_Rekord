@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.multidex.MultiDex;
 
 import com.backendless.Backendless;
 import com.backendless.BackendlessUser;
@@ -32,6 +33,7 @@ public class BackendlessQueries extends Application {
     private SharedPreferences mSettings;
 
     public void onCreate(){
+        MultiDex.install(getApplicationContext());
         super.onCreate();
         BackendlessQueries.context = getApplicationContext();
     }
