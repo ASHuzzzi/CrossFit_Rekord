@@ -26,10 +26,11 @@ import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -62,8 +63,6 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
     private NetworkCheck networkCheck; //переменная для проврки сети
 
     private RecyclerAdapterTable adapter; //адаптер для списка тренировок
-
-    private GregorianCalendar calendarday; //нужна для формирования дат для кнопок
 
     private List<List<Map>> schedule;
     private Runnable runnableOpenFragment;
@@ -128,7 +127,7 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
                 boolean checkDone = networkCheck.checkInternet();
                 Bundle bundle = new Bundle();
                 if (checkDone) {
-                    selectDay = 1;
+                    selectDay = Calendar.MONDAY;
                     bundle.putBoolean("result", true);
                 } else {
                     bundle.putBoolean("result", false);
@@ -155,8 +154,8 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (adapter != null) {
-                    selectDay = 1;
-                    createList(schedule.get(selectDay -1));
+                    selectDay = Calendar.MONDAY;
+                    createList(schedule.get(selectDay -2));
                 }
                 return true ;
             }
@@ -166,8 +165,8 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (adapter != null) {
-                    selectDay = 2;
-                    createList(schedule.get(selectDay -1));
+                    selectDay = Calendar.TUESDAY;
+                    createList(schedule.get(selectDay -2));
                 }
                 return true ;
             }
@@ -177,8 +176,8 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (adapter != null) {
-                    selectDay = 3;
-                    createList(schedule.get(selectDay -1));
+                    selectDay = Calendar.WEDNESDAY;
+                    createList(schedule.get(selectDay -2));
                 }
                 return true ;
             }
@@ -188,8 +187,8 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (adapter != null) {
-                    selectDay = 4;
-                    createList(schedule.get(selectDay -1));
+                    selectDay = Calendar.THURSDAY;
+                    createList(schedule.get(selectDay -2));
                 }
                 return true ;
             }
@@ -199,8 +198,8 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (adapter != null) {
-                    selectDay = 5;
-                    createList(schedule.get(selectDay -1));
+                    selectDay = Calendar.FRIDAY;
+                    createList(schedule.get(selectDay -2));
                 }
                 return true ;
             }
@@ -210,8 +209,8 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (adapter != null) {
-                    selectDay = 6;
-                    createList(schedule.get(selectDay -1));
+                    selectDay = Calendar.SATURDAY;
+                    createList(schedule.get(selectDay - 2 ));
                 }
                 return true ;
             }
@@ -221,8 +220,8 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (adapter != null) {
-                    selectDay = 7;
-                    createList(schedule.get(selectDay -1));
+                    selectDay = Calendar.SUNDAY;
+                    createList(schedule.get(selectDay + 5));
                 }
                 return true ;
             }
@@ -265,81 +264,47 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
     public void onLoaderReset(@NonNull Loader<List<List<Map>>> loader) {
     }
 
-    private void createList(List<Map> dailySchedule){
+    private void createList(final List<Map> dailySchedule){
         adapter = new RecyclerAdapterTable(getContext(), dailySchedule, new ListenerRecordForTrainingSelect() {
             @Override
             public void selectTime(String stStartTime, String stTypesItem) {
-
-                Date today;
-                Calendar c = Calendar.getInstance();
-                calendarday = new GregorianCalendar();
-
-                int numberDayOfWeek;
-                if (c.get(Calendar.DAY_OF_WEEK) == 1) {
-                    numberDayOfWeek = 7;
-                } else {
-                    numberDayOfWeek = (c.get(Calendar.DAY_OF_WEEK)-1);
+                Calendar calendar = Calendar.getInstance();
+                List<Integer> daysWhenRecordingIsPossible = new ArrayList<>();
+                for (int i=0; i < 3; i++) {
+                    calendar.add(Calendar.DAY_OF_WEEK, i);
+                    daysWhenRecordingIsPossible.add(calendar.get(Calendar.DAY_OF_WEEK));
+                    calendar.clear();
+                    calendar = Calendar.getInstance();
                 }
-                int dayOfWeek = selectDay -numberDayOfWeek;
-                if ((dayOfWeek == 0) || (dayOfWeek == 1) || (dayOfWeek == 2) || (dayOfWeek == -5) || (dayOfWeek == -6)) {
-                    @SuppressLint("SimpleDateFormat") SimpleDateFormat sdfCheckTime = new SimpleDateFormat("HH:mm");
-
-                    //этот цикл нужен для проверки дней недели. Если сегодня сб/вс, то пн/вт должен
-                    //быть следующей недели а не текущей
-                    if (c.get(Calendar.DAY_OF_WEEK) == 1) { //если день недели вс
-                        if (dayOfWeek == -6){ //выбран пн.
-                            calendarday.add(Calendar.DAY_OF_YEAR, 1);
-                        } else if (dayOfWeek == -5) { // выбран вт.
-                            calendarday.add(Calendar.DAY_OF_YEAR, 2);
+                boolean recordingIsPossible = daysWhenRecordingIsPossible.contains(selectDay);
+                if (recordingIsPossible){
+                    try {
+                        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdfCheckTime = new SimpleDateFormat("HH:mm");
+                        calendar = Calendar.getInstance();
+                        int hourNow = calendar.get(Calendar.HOUR_OF_DAY);
+                        Date selectTime = sdfCheckTime.parse(stStartTime);
+                        int selectHour = selectTime.getHours();
+                        boolean selectedToday = daysWhenRecordingIsPossible.get(0).equals(selectDay);
+                        if (selectedToday && (selectHour <= hourNow)) { //проверяем чтобы выбранное время было позже чем сейчас
+                            Toast toast = Toast.makeText(getContext(), "Выберите более позднее время.", Toast.LENGTH_LONG);
+                            toast.setGravity(Gravity.CENTER, 0, 0);
+                            toast.show();
                         } else {
-                            calendarday.add(Calendar.DAY_OF_YEAR, dayOfWeek);
+                            int numberDayOfWeek =daysWhenRecordingIsPossible.indexOf(selectDay);
+                            ConstructorLinks constructorLinks = new ConstructorLinks();
+                            String stOpenURL = constructorLinks.constructorLinks(iSelectGym, numberDayOfWeek, stStartTime, stTypesItem);
+                            Intent intent = new Intent();
+                            intent.setAction(Intent.ACTION_VIEW);
+                            intent.addCategory(Intent.CATEGORY_BROWSABLE);
+                            intent.setData(Uri.parse(stOpenURL));
+                            startActivity(intent);
                         }
-                    } else if (c.get(Calendar.DAY_OF_WEEK) == 7){ //если день недели сб
-                        if (dayOfWeek == -5){ //если пн.
-                            calendarday.add(Calendar.DAY_OF_YEAR, 2);
-                        } else {
-                            calendarday.add(Calendar.DAY_OF_YEAR, dayOfWeek);
-                        }
-                    } else { //если любой другой день
-                        calendarday.add(Calendar.DAY_OF_YEAR, dayOfWeek);
-                    }
-
-                    today = calendarday.getTime();
-                    boolean checkday = false; //проверка на выбор сегодняшнего дня;
-                    if (dayOfWeek == 0) {
-                        try {
-                            String stTimeNow = sdfCheckTime.format(today);
-                            Date dTimeNow = sdfCheckTime.parse(stTimeNow);
-                            Date dSelectTime = sdfCheckTime.parse(stStartTime);
-                            if (dSelectTime.getTime() > dTimeNow.getTime()) { //проверяем чтобы выбранное время было позже чем сейчас
-                                checkday = true;
-                            } else {
-                                Toast toast = Toast.makeText(getContext(), "Выберите более позднее время.", Toast.LENGTH_LONG);
-                                toast.setGravity(Gravity.CENTER, 0, 0);
-                                toast.show();
-                            }
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
-
-                    } else {
-                        checkday = true;
-                    }
-                    if (checkday) {
-                        ConstructorLinks constructorLinks = new ConstructorLinks();
-                        String stOpenURL = constructorLinks.constructorLinks(iSelectGym, dayOfWeek, stStartTime, stTypesItem);
-                        Intent intent = new Intent();
-                        intent.setAction(Intent.ACTION_VIEW);
-                        intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                        intent.setData(Uri.parse(stOpenURL));
-                        startActivity(intent);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
                     }
                 } else {
-                    @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdfToast = new SimpleDateFormat("EEEE");
-                    calendarday.add(Calendar.DAY_OF_YEAR, 0);
-                    today = calendarday.getTime();
-                    String toastToday = sdfToast.format(today);
-                    Toast toast = Toast.makeText(getContext(), "Запись возможна на сегодня (" + toastToday  + ") и два дня вперед", Toast.LENGTH_LONG);
+                    String nameDayOfWeek = calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault());
+                    Toast toast = Toast.makeText(getContext(), "Запись возможна на сегодня (" + nameDayOfWeek  + ") и два дня вперед", Toast.LENGTH_LONG);
                     toast.setGravity(Gravity.CENTER, 0, 0);
                     toast.show();
                 }
@@ -353,25 +318,25 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
 
     //метод подготоавливающий состояние кнопок в зависимости от выбранного дня
     private void preSelectionButtonDay(int iDayOfWeek){
-        if (iDayOfWeek == 1 ){
+        if (iDayOfWeek == Calendar.MONDAY){
             selectButtonDay(true, false, false, false, false, false, false);
 
-        }else if (iDayOfWeek == 2){
+        }else if (iDayOfWeek == Calendar.TUESDAY){
             selectButtonDay(false, true, false, false, false, false, false);
 
-        }else if (iDayOfWeek == 3){
+        }else if (iDayOfWeek == Calendar.WEDNESDAY){
             selectButtonDay(false, false, true, false, false, false, false);
 
-        }else if (iDayOfWeek == 4){
+        }else if (iDayOfWeek == Calendar.THURSDAY){
             selectButtonDay(false, false, false, true, false, false, false);
 
-        }else if (iDayOfWeek == 5){
+        }else if (iDayOfWeek == Calendar.FRIDAY){
             selectButtonDay(false, false, false, false, true, false, false);
 
-        }else if (iDayOfWeek == 6){
+        }else if (iDayOfWeek == Calendar.SATURDAY){
             selectButtonDay(false, false, false, false, false, true, false);
 
-        }else if (iDayOfWeek == 7){
+        }else if (iDayOfWeek == Calendar.SUNDAY){
             selectButtonDay(false, false, false, false, false, false, true);
 
         }else {
