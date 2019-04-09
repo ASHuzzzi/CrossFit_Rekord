@@ -25,7 +25,8 @@
 
         <activity
             android:name=".activity.EnterResultActivity"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
         <activity

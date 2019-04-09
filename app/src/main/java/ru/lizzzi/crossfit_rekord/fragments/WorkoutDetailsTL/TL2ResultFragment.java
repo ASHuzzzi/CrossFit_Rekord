@@ -151,6 +151,7 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
                 }
                 startActivityForResult(intent, CHOOSE_THIEF);
 
+
             }
         });
 

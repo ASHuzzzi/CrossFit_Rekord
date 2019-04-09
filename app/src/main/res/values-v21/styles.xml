@@ -9,4 +9,9 @@
         <item name="android:gravity">center_vertical|center_horizontal</item>
         <item name="android:stateListAnimator">@animator/batton_elevation</item>
     </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
 </resources>

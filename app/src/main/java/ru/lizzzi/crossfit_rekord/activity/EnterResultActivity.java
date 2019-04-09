@@ -11,6 +11,7 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -69,16 +70,7 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enter_result);
-        Toolbar toolbar = findViewById(R.id.toolbarER);
-        setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
 
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-            }
-        });
 
         stLevel = getResources().getString(R.string.strActivityERLevelSc);
 
@@ -92,6 +84,8 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
         rbRx = findViewById(R.id.rbRx);
         rbRxP = findViewById(R.id.rbRxP);
         RadioGroup rgSelectLevel = findViewById(R.id.rgSelectLevel);
+
+        initActionBar();
 
         rgSelectLevel.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -197,6 +191,26 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
 
 
 
+    }
+
+    private void initActionBar() {
+        /*Toolbar toolbar = findViewById(R.id.toolbarER);
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });*/
+
+        this.setSupportActionBar((Toolbar) findViewById(R.id.toolbarER));
+        final ActionBar actionBar = this.getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(false);
+        }
     }
 
     @Override
@@ -345,38 +359,48 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        if(item.getItemId()==R.id.delete)
-        {
-            if(flag){
-                AlertDialog.Builder builder = new AlertDialog.Builder(EnterResultActivity.this);
-                builder.setTitle("Внимание!")
-                        .setMessage("Удалить результаты?")
-                        .setCancelable(false)
-                        .setPositiveButton("Да",
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        flagDelete =  true;
-                                        pbSaveUpload.setVisibility(View.VISIBLE);
-                                        btnSave.setPressed(true);
-                                        runnableClickOnbuttonSave.run();
-                                    }
-                                })
-                        .setNegativeButton("Нет",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        dialog.cancel();
-                                    }
-                                });
-                AlertDialog alert = builder.create();
-                alert.show();
-                alert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.colorAccent));
-                alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.colorPrimary));
-            }else {
-                Toast.makeText(EnterResultActivity.this, "Нет данных для удаления", Toast.LENGTH_SHORT).show();
-            }
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            case R.id.delete:
+                if (flag) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(EnterResultActivity.this);
+                    builder.setTitle("Внимание!")
+                            .setMessage("Удалить результаты?")
+                            .setCancelable(false)
+                            .setPositiveButton("Да",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            flagDelete =  true;
+                                            pbSaveUpload.setVisibility(View.VISIBLE);
+                                            btnSave.setPressed(true);
+                                            runnableClickOnbuttonSave.run();
+                                        }
+                                    })
+                            .setNegativeButton("Нет",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.cancel();
+                                        }
+                                    });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                    alert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.colorAccent));
+                    alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.colorPrimary));
+                } else {
+                    Toast.makeText(EnterResultActivity.this, "Нет данных для удаления", Toast.LENGTH_SHORT).show();
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
+    }
 
-        return true;
+    @Override
+    public void onBackPressed(){
+        super.onBackPressed();
+        overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
     }
 }
