@@ -63,6 +63,10 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
     private static final String APP_PREFERENCES_OBJECTID = "ObjectId";
     private static final String APP_PREFERENCES_SELECTEDDAY = "SelectedDay";
 
+    private final int LOADER_START_SAVE = 2;
+    private final int LOADER_START_DELETE = 3;
+    private final int LOADER_START_UPLOAD= 4;
+
     @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf2 = new SimpleDateFormat("MM/dd/yyyy");
 
     @SuppressLint("HandlerLeak")
@@ -106,28 +110,27 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                String stCheckSpace = etResultSkill.getText().toString();
-                if (stCheckSpace.length() > 1){
-                    if(stCheckSpace.endsWith(" ")){
-                        stCheckSpace =  stCheckSpace.substring(0, stCheckSpace.length() - 1);
-                        etResultSkill.setText(stCheckSpace);
+                String deleteSpace = etResultSkill.getText().toString();
+                if (deleteSpace.length() > 1) {
+                    if(deleteSpace.endsWith(" ")) {
+                        deleteSpace =  deleteSpace.substring(0, deleteSpace.length() - 1);
+                        etResultSkill.setText(deleteSpace);
                     }
-                    if(stCheckSpace.startsWith(" ")){
-                        stCheckSpace = stCheckSpace.substring(1);
-                        etResultSkill.setText(stCheckSpace);
+                    if (deleteSpace.startsWith(" ")) {
+                        deleteSpace = deleteSpace.substring(1);
+                        etResultSkill.setText(deleteSpace);
                     }
                 }
 
-                stCheckSpace = etResultWoD.getText().toString();
-                if (stCheckSpace.length() > 1){
-                    if(stCheckSpace.endsWith(" ")){
-                        stCheckSpace =  stCheckSpace.substring(0, stCheckSpace.length() - 1);
-                        etResultWoD.setText(stCheckSpace);
+                deleteSpace = etResultWoD.getText().toString();
+                if (deleteSpace.length() > 1) {
+                    if(deleteSpace.endsWith(" ")) {
+                        deleteSpace =  deleteSpace.substring(0, deleteSpace.length() - 1);
+                        etResultWoD.setText(deleteSpace);
                     }
-                    if(stCheckSpace.startsWith(" ")){
-                        stCheckSpace = stCheckSpace.substring(1);
-                        etResultWoD.setText(stCheckSpace);
+                    if(deleteSpace.startsWith(" ")) {
+                        deleteSpace = deleteSpace.substring(1);
+                        etResultWoD.setText(deleteSpace);
                     }
                 }
 
@@ -145,21 +148,24 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
             @Override
             public void handleMessage(Message msg) {
                 Bundle bundle = msg.getData();
-                String resultCheck = bundle.getString("networkCheck");
-                if (resultCheck != null && resultCheck.equals("true")) {
+                boolean resultCheck = bundle.getBoolean("networkCheck");
+                if (resultCheck) {
                     pbSaveUpload.setVisibility(View.VISIBLE);
                     btnSave.setClickable(false);
 
-                    if(flagDelete){
-                        restartAsyncTaskLoader(3); //удалить
-                    }else{
-                        if(flag){
-                            restartAsyncTaskLoader(4); //обновить
-                        }else {
-                            restartAsyncTaskLoader(2); //сохранить
+
+                    int loaderId;
+                    if (flagDelete) {
+                        loaderId = LOADER_START_DELETE;
+                    } else {
+                        if (flag) {
+                            loaderId = LOADER_START_UPLOAD;
+                        } else {
+                            loaderId = LOADER_START_SAVE;
                         }
                     }
-                }else {
+                    restartAsyncTaskLoader(loaderId);
+                } else {
                     pbSaveUpload.setVisibility(View.INVISIBLE);
                     btnSave.setClickable(true);
                     Toast.makeText(EnterResultActivity.this, "Нет подключения к сети!", Toast.LENGTH_SHORT).show();
@@ -175,14 +181,11 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
                 networkCheck = new NetworkCheck(EnterResultActivity.this);
                 Bundle bundle = new Bundle();
                 boolean resultCheck = networkCheck.checkInternet();
-                if (resultCheck){
-                    bundle.putString("networkCheck", String.valueOf(true));
-
-                }else {
-                    bundle.putString("networkCheck", String.valueOf(false));
-
+                if (resultCheck) {
+                    bundle.putBoolean("networkCheck", true);
+                } else {
+                    bundle.putBoolean("networkCheck", false);
                 }
-
                 Message msg = handlerOpenFragment.obtainMessage();
                 msg.setData(bundle);
                 handlerOpenFragment.sendMessage(msg);
@@ -269,31 +272,29 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
 
-    private void restartAsyncTaskLoader(int loader_id){
+    private void restartAsyncTaskLoader(int loaderId){
         Loader<Boolean> mLoader;
         Bundle bundle = new Bundle();
-        int LOADER_SAVE_ITEM = 2;
-        int LOADER_DELETE_ITEM = 3;
-        int LOADER_UPLOAD_ITEM = 4;
-        switch (loader_id){
-            case 2:
+
+        switch (loaderId){
+            case LOADER_START_SAVE:
                 bundle.putString(String.valueOf(SaveLoadResultLoader.ARG_USERSKIL), String.valueOf(etResultSkill.getText()));
                 bundle.putString(String.valueOf(SaveLoadResultLoader.ARG_USERWODLEVEL), stLevel);
                 bundle.putString(String.valueOf(SaveLoadResultLoader.ARG_USERWODRESULT), String.valueOf(etResultWoD.getText()));
-                mLoader = getSupportLoaderManager().restartLoader(LOADER_SAVE_ITEM, bundle, this);
+                mLoader = getSupportLoaderManager().restartLoader(loaderId, bundle, this);
                 mLoader.forceLoad();
                 break;
 
-            case 3:
-                mLoader = getSupportLoaderManager().restartLoader(LOADER_DELETE_ITEM,null, this);
+            case LOADER_START_DELETE:
+                mLoader = getSupportLoaderManager().restartLoader(loaderId,null, this);
                 mLoader.forceLoad();
                 break;
 
-            case 4:
+            case LOADER_START_UPLOAD:
                 bundle.putString(String.valueOf(SaveLoadResultLoader.ARG_USERSKIL), String.valueOf(etResultSkill.getText()));
                 bundle.putString(String.valueOf(SaveLoadResultLoader.ARG_USERWODLEVEL), stLevel);
                 bundle.putString(String.valueOf(SaveLoadResultLoader.ARG_USERWODRESULT), String.valueOf(etResultWoD.getText()));
-                mLoader = getSupportLoaderManager().restartLoader(LOADER_UPLOAD_ITEM, bundle, this);
+                mLoader = getSupportLoaderManager().restartLoader(loaderId, bundle, this);
                 mLoader.forceLoad();
                 break;
         }
@@ -324,15 +325,15 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
             }
 
             switch (loader.getId()) {
-                case 2:
+                case LOADER_START_SAVE:
                     mDBHelper.saveDates(mSettings.getString(APP_PREFERENCES_OBJECTID, ""), lDate);
                     break;
 
-                case 3:
+                case LOADER_START_DELETE:
                     mDBHelper.deleteDate(mSettings.getString(APP_PREFERENCES_OBJECTID, ""), lDate);
                     break;
 
-                case 4:
+                case LOADER_START_UPLOAD:
                     mDBHelper.saveDates(mSettings.getString(APP_PREFERENCES_OBJECTID, ""), lDate);
                     break;
             }

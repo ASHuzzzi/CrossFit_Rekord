@@ -48,16 +48,10 @@ public class TL1ParnasFragment extends Fragment implements LoaderManager.LoaderC
     private ProgressBar progressBar;
 
     private RecyclerAdapterRecordForTrainingSelect adapter;
+    private GregorianCalendar numberDayOfWeek; // для преобразования выбранного дня в int
 
-    private Date date; //показывает сегодняшний день
-    private Date tomorrow;
-    private Date aftertomorrow;
-    private GregorianCalendar gregorianCalendar; //нужна для формирования дат для кнопок
-    private GregorianCalendar numberDayWeek; // для преобразования выбранного дня в int
-
-
-    private int numberOfSelectedDay; // выбранный пользователем день
-    private  int LOADER_ID = 1; //идентефикатор loader'а
+    private int dayOfWeekSelectedDay; // выбранный пользователем день
+    private final static int LOADER_ID = 1; //идентефикатор loader'а
 
     private NetworkCheck networkCheck;//переменная для проврки сети
 
@@ -74,7 +68,7 @@ public class TL1ParnasFragment extends Fragment implements LoaderManager.LoaderC
     private Button buttontAftertommorow;
 
     private ImageView imageBackground;
-    private int iSelectGym;
+    private int selectedGym;
 
     @SuppressLint({"HandlerLeak", "ClickableViewAccessibility"})
     @Override
@@ -82,7 +76,7 @@ public class TL1ParnasFragment extends Fragment implements LoaderManager.LoaderC
                              Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.fragment_record_for_training_select, container, false);
-        getActivity().setTitle(R.string.title_RecordForTraining_Fragment);
+        Objects.requireNonNull(getActivity()).setTitle(R.string.title_RecordForTraining_Fragment);
 
         buttontToday = v.findViewById(R.id.btToday);
         buttontTommorow = v.findViewById(R.id.btTommorow);
@@ -94,17 +88,13 @@ public class TL1ParnasFragment extends Fragment implements LoaderManager.LoaderC
         progressBar = v.findViewById(R.id.pbRfTS);
         imageBackground = v.findViewById(R.id.iv_RfTS);
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        recyclerViewShedule.setLayoutManager(layoutManager);
-        recyclerViewShedule.setAdapter(adapter);
-
-        numberDayWeek = new GregorianCalendar();
+        numberDayOfWeek = new GregorianCalendar();
 
         Bundle bundle = getArguments();
         if (bundle != null) {
-            iSelectGym = bundle.getInt("gym");
+            selectedGym = bundle.getInt("gym");
         } else {
-            iSelectGym = Objects.requireNonNull(
+            selectedGym = Objects.requireNonNull(
                     getContext()).getResources().getInteger(R.integer.selectSheduleParnas);
         }
 
@@ -133,9 +123,9 @@ public class TL1ParnasFragment extends Fragment implements LoaderManager.LoaderC
                 boolean resultCheck = networkCheck.checkInternet();
                 Bundle bundle = new Bundle();
                 if (resultCheck) {
-                    numberOfSelectedDay = numberDayWeek.get(Calendar.DAY_OF_WEEK)-1;
-                    if (numberOfSelectedDay == 0){
-                        numberOfSelectedDay = 7;
+                    dayOfWeekSelectedDay = numberDayOfWeek.get(Calendar.DAY_OF_WEEK)-1;
+                    if (dayOfWeekSelectedDay == 0){
+                        dayOfWeekSelectedDay = 7;
                     }
                     todayOrNot = true;
                     selectDay = 0;
@@ -151,15 +141,16 @@ public class TL1ParnasFragment extends Fragment implements LoaderManager.LoaderC
         };
 
         //получаю значения для кнопок
-        date = new Date();
-        gregorianCalendar = new GregorianCalendar();
+        final Date today = new Date();
+        final GregorianCalendar gregorianCalendar = new GregorianCalendar();
         gregorianCalendar.add(Calendar.DAY_OF_YEAR, 1);
-        tomorrow = gregorianCalendar.getTime();
+        final Date tomorrow = gregorianCalendar.getTime();
         gregorianCalendar.add(Calendar.DAY_OF_YEAR, 1);
-        aftertomorrow = gregorianCalendar.getTime();
+        final Date aftertomorrow = gregorianCalendar.getTime();
 
-        @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf = new SimpleDateFormat("EEE.\n d MMMM");
-        final String currentToday = sdf.format(date);
+        @SuppressLint("SimpleDateFormat")
+        final SimpleDateFormat sdf = new SimpleDateFormat("EEE.\n d MMMM");
+        final String currentToday = sdf.format(today);
         final String currentTomorrow = sdf.format(tomorrow);
         final String currentAftertommorow = sdf.format(aftertomorrow);
 
@@ -167,10 +158,10 @@ public class TL1ParnasFragment extends Fragment implements LoaderManager.LoaderC
         buttontTommorow.setText(currentTomorrow);
         buttontAftertommorow.setText(currentAftertommorow);
 
-        gregorianCalendar.setTime(date);
         buttonError.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                gregorianCalendar.setTime(today);
                 linLayoutError.setVisibility(View.INVISIBLE);
                 progressBar.setVisibility(View.VISIBLE);
                 threadOpenFragment = new Thread(runnableOpenFragment);
@@ -183,14 +174,14 @@ public class TL1ParnasFragment extends Fragment implements LoaderManager.LoaderC
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (adapter != null) {
-                    gregorianCalendar.setTime(date);
-                    numberOfSelectedDay = numberDayWeek.get(Calendar.DAY_OF_WEEK)-1;
-                    if (numberOfSelectedDay == 0) {
-                        numberOfSelectedDay = 7;
+                    gregorianCalendar.setTime(today);
+                    dayOfWeekSelectedDay = numberDayOfWeek.get(Calendar.DAY_OF_WEEK)-1;
+                    if (dayOfWeekSelectedDay == 0) {
+                        dayOfWeekSelectedDay = 7;
                     }
                     todayOrNot = true;
                     selectDay = 0;
-                    drawList(schedule.get(numberOfSelectedDay -1));
+                    drawList(schedule.get(dayOfWeekSelectedDay -1));
                 }
                 return true ;
             }
@@ -201,10 +192,10 @@ public class TL1ParnasFragment extends Fragment implements LoaderManager.LoaderC
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (adapter != null) {
                     gregorianCalendar.setTime(tomorrow);
-                    numberOfSelectedDay = numberDayWeek.get(Calendar.DAY_OF_WEEK);
+                    dayOfWeekSelectedDay = numberDayOfWeek.get(Calendar.DAY_OF_WEEK);
                     todayOrNot = false;
                     selectDay = 1;
-                    drawList(schedule.get(numberOfSelectedDay -1));
+                    drawList(schedule.get(dayOfWeekSelectedDay -1));
                 }
                 return true ;
             }
@@ -215,13 +206,13 @@ public class TL1ParnasFragment extends Fragment implements LoaderManager.LoaderC
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (adapter != null) {
                     gregorianCalendar.setTime(aftertomorrow);
-                    numberOfSelectedDay = numberDayWeek.get(Calendar.DAY_OF_WEEK)+1;
-                    if (numberOfSelectedDay == 8) {
-                        numberOfSelectedDay = 1;
+                    dayOfWeekSelectedDay = numberDayOfWeek.get(Calendar.DAY_OF_WEEK)+1;
+                    if (dayOfWeekSelectedDay == 8) {
+                        dayOfWeekSelectedDay = 1;
                     }
                     todayOrNot = false;
                     selectDay = 2;
-                    drawList(schedule.get(numberOfSelectedDay -1));
+                    drawList(schedule.get(dayOfWeekSelectedDay -1));
                 }
                 return true ;
             }
@@ -229,9 +220,9 @@ public class TL1ParnasFragment extends Fragment implements LoaderManager.LoaderC
         return v;
     }
 
-    private void startAsyncTaskLoader(){
+    private void startAsyncTaskLoader() {
         Bundle bundle = new Bundle();
-        bundle.putString("SelectedGym", String.valueOf(iSelectGym));
+        bundle.putString("SelectedGym", String.valueOf(selectedGym));
         getLoaderManager().restartLoader(LOADER_ID, bundle, this).forceLoad();
     }
 
@@ -245,10 +236,9 @@ public class TL1ParnasFragment extends Fragment implements LoaderManager.LoaderC
 
     @Override
     public void onLoadFinished(@NonNull Loader<List<List<Map>>> loader, List<List<Map>> data) {
-
         if (data != null) {
             schedule = data;
-            drawList(schedule.get(numberOfSelectedDay -1));
+            drawList(schedule.get(dayOfWeekSelectedDay -1));
 
             linLayoutError.setVisibility(View.INVISIBLE);
             progressBar.setVisibility(View.INVISIBLE);
@@ -262,47 +252,43 @@ public class TL1ParnasFragment extends Fragment implements LoaderManager.LoaderC
 
     @Override
     public void onLoaderReset(@NonNull Loader<List<List<Map>>> loader) {
-
     }
 
     private void drawList(List<Map> dailySchedule){
         adapter = new RecyclerAdapterRecordForTrainingSelect(getContext(), dailySchedule,
                 todayOrNot, new ListenerRecordForTrainingSelect() {
             @Override
-            public void selectTime(String stStartTime, String stTypesItem) {
-                if(stStartTime.equals("outTime") && stTypesItem.equals("outTime")) {
+            public void selectTime(String startTime, String typesItem) {
+                if (startTime.equals("outTime") && typesItem.equals("outTime")) {
                     Toast toast = Toast.makeText(getContext(), "Тренировка уже прошла. Выбери более позднее время!", Toast.LENGTH_LONG);
                     toast.setGravity(Gravity.CENTER, 0, 0);
                     toast.show();
                 } else {
                     ConstructorLinks constructorLinks = new ConstructorLinks();
-                    String stOpenURL = constructorLinks.constructorLinks(iSelectGym,selectDay, stStartTime, stTypesItem);
+                    String stOpenURL = constructorLinks.constructorLinks(selectedGym,selectDay, startTime, typesItem);
                     Intent intent = new Intent();
                     intent.setAction(Intent.ACTION_VIEW);
                     intent.addCategory(Intent.CATEGORY_BROWSABLE);
                     intent.setData(Uri.parse(stOpenURL));
                     startActivity(intent);
                 }
-
             }
         });
+
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         recyclerViewShedule.setLayoutManager(mLayoutManager);
         recyclerViewShedule.setAdapter(adapter);
         preSelectionButtonDay(selectDay);
     }
 
-    private void preSelectionButtonDay(int iDaySelect){
-        switch (iDaySelect){
+    private void preSelectionButtonDay(int selectedDay){
+        switch (selectedDay) {
             case 0:
                 selectButtonDay(true, false, false);
-
                 break;
-
             case 1:
                 selectButtonDay(false, true, false);
                 break;
-
             case 2:
                 selectButtonDay(false, false, true);
                 break;
@@ -310,12 +296,11 @@ public class TL1ParnasFragment extends Fragment implements LoaderManager.LoaderC
     }
 
     //метод применяющий выбор кнопок
-    private void selectButtonDay(boolean tod, boolean tom, boolean aft) {
-        buttontToday.setPressed(tod);
-        buttontTommorow.setPressed(tom);
-        buttontAftertommorow.setPressed(aft);
+    private void selectButtonDay(boolean today, boolean tommorow, boolean aftertommorow) {
+        buttontToday.setPressed(today);
+        buttontTommorow.setPressed(tommorow);
+        buttontAftertommorow.setPressed(aftertommorow);
     }
-
 
     //в onStart делаем проверку на наличие данных в адаптаре. При первом запуске адаптер пустой и
     //будет запущен поток.
@@ -324,15 +309,12 @@ public class TL1ParnasFragment extends Fragment implements LoaderManager.LoaderC
     @Override
     public  void onStart() {
         super.onStart();
-
         if (adapter == null) {
             linLauoutShedule.setVisibility(View.INVISIBLE);
             linLayoutError.setVisibility(View.INVISIBLE);
-
             threadOpenFragment = new Thread(runnableOpenFragment);
             threadOpenFragment.setDaemon(true);
             threadOpenFragment.start();
-
         } else {
             preSelectionButtonDay(selectDay);
             linLauoutShedule.setVisibility(View.VISIBLE);
@@ -343,7 +325,7 @@ public class TL1ParnasFragment extends Fragment implements LoaderManager.LoaderC
             listernerChangeTitle.changeTitle(R.string.title_RecordForTraining_Fragment, R.string.title_RecordForTraining_Fragment);
         }
         int backgroungImage;
-        if (iSelectGym ==1) {
+        if (selectedGym == getResources().getInteger(R.integer.selectSheduleParnas)) {
             backgroungImage = R.drawable.backgroundfotovrtical;
         } else {
             backgroungImage = R.drawable.backgroundfotovrtical2;
@@ -354,13 +336,6 @@ public class TL1ParnasFragment extends Fragment implements LoaderManager.LoaderC
         } else {
             imageBackground.setImageDrawable(getResources().getDrawable(backgroungImage));
         }
-    }
-
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
     }
 
     public void onStop() {
