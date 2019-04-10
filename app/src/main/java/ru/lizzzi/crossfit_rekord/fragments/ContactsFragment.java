@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import java.util.Objects;
+
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeTitle;
 
@@ -51,6 +53,7 @@ public class ContactsFragment extends Fragment {
 
                 intent.setData(Uri.parse(getResources().getString(R.string.Instagram)));
                 startActivity(intent);
+                Objects.requireNonNull(getActivity()).overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
 
             }
         });
@@ -71,6 +74,7 @@ public class ContactsFragment extends Fragment {
 
                 intent.setData(Uri.parse(getResources().getString(R.string.groupVK)));
                 startActivity(intent);
+                Objects.requireNonNull(getActivity()).overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
 
             }
         });

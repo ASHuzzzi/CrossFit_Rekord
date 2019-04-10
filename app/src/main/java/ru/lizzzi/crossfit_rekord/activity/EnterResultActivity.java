@@ -402,6 +402,6 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
     @Override
     public void onBackPressed(){
         super.onBackPressed();
-        overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
+        overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
     }
 }

@@ -160,7 +160,7 @@ public class AboutMeFragment extends Fragment implements LoaderManager.LoaderCal
                 Fragment fragment =  new ChangeEmailFragment();
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction ft = fragmentManager.beginTransaction();
-                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                ft.setCustomAnimations(R.anim.pull_in_right, R.anim.push_out_left, R.anim.pull_in_left, R.anim.push_out_right);
                 ft.replace(R.id.container, fragment);
                 ft.addToBackStack(null);
                 ft.commit();
@@ -173,7 +173,7 @@ public class AboutMeFragment extends Fragment implements LoaderManager.LoaderCal
                 Fragment fragment =  new ChangePasswordFragment();
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction ft = fragmentManager.beginTransaction();
-                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                ft.setCustomAnimations(R.anim.pull_in_right, R.anim.push_out_left, R.anim.pull_in_left, R.anim.push_out_right);
                 ft.replace(R.id.container, fragment);
                 ft.addToBackStack(null);
                 ft.commit();

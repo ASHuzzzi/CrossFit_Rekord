@@ -23,6 +23,7 @@ import android.widget.ProgressBar;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import ru.lizzzi.crossfit_rekord.activity.EnterResultActivity;
 import ru.lizzzi.crossfit_rekord.R;
@@ -150,6 +151,7 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
                     intent.putExtra("flag", false);
                 }
                 startActivityForResult(intent, CHOOSE_THIEF);
+                Objects.requireNonNull(getActivity()).overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
 
 
             }

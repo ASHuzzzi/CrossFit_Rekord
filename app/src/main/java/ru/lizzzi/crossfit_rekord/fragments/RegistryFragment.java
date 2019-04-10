@@ -295,7 +295,7 @@ public class RegistryFragment extends Fragment implements LoaderManager.LoaderCa
             fragmentManager.popBackStack();
         }
         FragmentTransaction ft = fragmentManager.beginTransaction();
-        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        ft.setCustomAnimations(R.anim.pull_in_right, R.anim.push_out_left, R.anim.pull_in_left, R.anim.push_out_right);
         ft.replace(R.id.container, fragment);
         ft.commit();
     }

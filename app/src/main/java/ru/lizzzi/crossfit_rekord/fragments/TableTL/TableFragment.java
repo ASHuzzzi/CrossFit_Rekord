@@ -298,6 +298,7 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
                             intent.addCategory(Intent.CATEGORY_BROWSABLE);
                             intent.setData(Uri.parse(stOpenURL));
                             startActivity(intent);
+                            Objects.requireNonNull(getActivity()).overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
                         }
                     } catch (ParseException e) {
                         e.printStackTrace();

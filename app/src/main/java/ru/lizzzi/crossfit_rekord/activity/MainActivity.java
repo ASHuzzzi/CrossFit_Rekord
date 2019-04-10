@@ -263,10 +263,9 @@ public class MainActivity extends AppCompatActivity
             fragmentManager.popBackStack();
         }
         FragmentTransaction ft = fragmentManager.beginTransaction();
-        ft.setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right);
+        ft.setCustomAnimations(R.anim.pull_in_right, R.anim.push_out_left, R.anim.pull_in_left, R.anim.push_out_right);
         ft.replace(R.id.container, fragment);
         ft.addToBackStack(null);
-
         ft.commit();
 
     }
@@ -274,13 +273,13 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onBackPressed(){
 
-        int count = getSupportFragmentManager().getBackStackEntryCount();
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if(drawer.isDrawerOpen(GravityCompat.START)){
             drawer.closeDrawer(GravityCompat.START);
         }
         else{
-            if (count == 1) {
+            int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
+            if (backStackEntryCount == 1) {
                 SharedPreferences mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = mSettings.edit();
                 editor.putString(APP_PREFERENCES_SELECTEDDAY, "0");
@@ -288,16 +287,8 @@ public class MainActivity extends AppCompatActivity
                 finish();
             } else {
                 getSupportFragmentManager().popBackStack();
-
-
             }
         }
-    }
-
-    @Override
-    public void startActivityForResult(Intent intent, int requestCode) {
-        super.startActivityForResult(intent, requestCode);
-        overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
     }
 
     private boolean isMyServiceRunning(Class<?> serviceClass) {

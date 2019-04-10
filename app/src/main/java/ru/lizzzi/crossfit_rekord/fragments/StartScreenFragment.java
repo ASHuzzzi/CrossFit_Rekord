@@ -107,7 +107,7 @@ public class StartScreenFragment extends Fragment {
         }
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction ft = fragmentManager.beginTransaction();
-        ft.setCustomAnimations(R.anim.enter_from_down, R.anim.exit_to_up);
+        ft.setCustomAnimations(R.anim.pull_in_right, R.anim.push_out_left, R.anim.pull_in_left, R.anim.push_out_right);
         ft.replace(R.id.container, fragment);
         ft.addToBackStack(null);
         ft.commit();

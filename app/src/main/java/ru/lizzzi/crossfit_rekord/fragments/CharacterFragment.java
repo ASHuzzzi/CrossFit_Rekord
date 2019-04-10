@@ -68,7 +68,7 @@ public class CharacterFragment extends Fragment {
                 yfc.setArguments(bundle);
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction ft = fragmentManager.beginTransaction();
-                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                ft.setCustomAnimations(R.anim.pull_in_right, R.anim.push_out_left, R.anim.pull_in_left, R.anim.push_out_right);
                 ft.replace(R.id.container, yfc);
                 ft.addToBackStack(null);
                 ft.commit();

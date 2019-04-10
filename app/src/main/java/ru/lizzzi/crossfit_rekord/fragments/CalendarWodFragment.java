@@ -192,6 +192,7 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
 
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction ft = fragmentManager.beginTransaction();
+                ft.setCustomAnimations(R.anim.pull_in_right, R.anim.push_out_left, R.anim.pull_in_left, R.anim.push_out_right);
                 ft.replace(R.id.container, yfc);
                 ft.addToBackStack(null);
 

@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.fragments.RecordForTrainingTL.TL1ParnasFragment;
+import ru.lizzzi.crossfit_rekord.fragments.RecordForTrainingTL.RecordForTrainingFragment;
 
 public class PageAdapterRecord extends FragmentPagerAdapter {
     private Context context;
@@ -19,7 +19,7 @@ public class PageAdapterRecord extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        Fragment tableFragment =  new TL1ParnasFragment();
+        Fragment tableFragment =  new RecordForTrainingFragment();
         Bundle bundle = new Bundle();
         if (position == 0) {
             bundle.putInt(

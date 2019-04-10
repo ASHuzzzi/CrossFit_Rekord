@@ -40,7 +40,7 @@ import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeTitle;
 import ru.lizzzi.crossfit_rekord.interfaces.ListenerRecordForTrainingSelect;
 import ru.lizzzi.crossfit_rekord.loaders.TableFragmentLoader;
 
-public class TL1ParnasFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<List<Map>>> {
+public class RecordForTrainingFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<List<Map>>> {
 
     private LinearLayout linLayoutError;
     private LinearLayout linLauoutShedule;
@@ -271,6 +271,7 @@ public class TL1ParnasFragment extends Fragment implements LoaderManager.LoaderC
                     intent.addCategory(Intent.CATEGORY_BROWSABLE);
                     intent.setData(Uri.parse(stOpenURL));
                     startActivity(intent);
+                    Objects.requireNonNull(getActivity()).overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
                 }
             }
         });
