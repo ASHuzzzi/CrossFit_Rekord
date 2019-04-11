@@ -7,7 +7,7 @@
         <item
             android:id="@+id/notification"
             android:enabled="true"
-            android:icon="@android:drawable/ic_menu_info_details"
+            android:icon="@drawable/news"
             android:title="@string/notification"
             app:actionViewClass="android.widget.TextView" />
     </group>
@@ -15,39 +15,39 @@
         <item
             android:id="@+id/shedule"
             android:enabled="true"
-            android:icon="@android:drawable/ic_menu_today"
+            android:icon="@drawable/shedule"
             android:title="@string/schedule" />
         <item
             android:id="@+id/record_training"
             android:enabled="true"
-            android:icon="@android:drawable/ic_menu_edit"
+            android:icon="@drawable/record_training"
             android:title="@string/record_training" />
         <item
             android:id="@+id/calendar_wod"
             android:enabled="true"
-            android:icon="@android:drawable/ic_menu_agenda"
+            android:icon="@drawable/calendar"
             android:title="@string/calendar_wod" />
         <item
             android:id="@+id/myResults"
             android:enabled="true"
-            android:icon="@android:drawable/ic_menu_myplaces"
+            android:icon="@drawable/my_results"
             android:title="@string/myResults" />
     </group>
     <group >
         <item
             android:id="@+id/definition"
             android:enabled="true"
-            android:icon="@android:drawable/ic_menu_sort_alphabetically"
+            android:icon="@drawable/dictionary"
             android:title="@string/definition" />
         <item
             android:id="@+id/profile"
             android:enabled="true"
-            android:icon="@android:drawable/ic_menu_my_calendar"
+            android:icon="@drawable/profile"
             android:title="@string/profile" />
         <item
             android:id="@+id/contacts"
             android:enabled="true"
-            android:icon="@android:drawable/ic_menu_call"
+            android:icon="@drawable/contacts"
             android:title="@string/contacts" />
     </group>
 
