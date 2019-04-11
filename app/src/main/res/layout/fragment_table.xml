@@ -19,7 +19,6 @@
         android:id="@+id/Layout_Button_Day_of_Week"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:orientation="horizontal">
 
         <Button

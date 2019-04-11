@@ -51,12 +51,14 @@ import ru.lizzzi.crossfit_rekord.services.LoadNotificationsService;
 import ru.lizzzi.crossfit_rekord.fragments.NotificationFragment;
 
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, InterfaceChangeTitle, InterfaceChangeToggleStatus {
+public class MainActivity extends AppCompatActivity implements
+        NavigationView.OnNavigationItemSelectedListener,
+        InterfaceChangeTitle,
+        InterfaceChangeToggleStatus {
 
     private AuthDataCheck checkAuthData = new AuthDataCheck();
 
-    private BroadcastReceiver br;
+    private BroadcastReceiver broadcastReceiver;
     private final int LOAD_NOTIFICATION = 1;
     private final int UPDATE_NOTIFICATION = 2;
 
@@ -71,12 +73,12 @@ public class MainActivity extends AppCompatActivity
     private static final String APPLICATION_IDB = "215CF2B1-C44E-E365-FFB6-9C35DD6A9300";
     private static final String API_KEYB = "8764616E-C5FE-CE43-FF54-17B4A8026F00";
 
-    private NotificationDBHelper mDBHelper;
+    private NotificationDBHelper notificationDBHelper;
 
     private TextView tvNotificationCounter;
     private NavigationView navigationView;
-    private int iOpenFragment = 1;
-    private int iSelectFragment = 0;
+    private int openFragment = 1;
+    private int fragmentName = 0;
 
     private static final String APP_PREFERENCES = "audata";
     private static final String APP_PREFERENCES_SELECTEDDAY = "SelectedDay";
@@ -89,9 +91,26 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
+        initToolbar();
+
+        notificationDBHelper = new NotificationDBHelper(getContext());
+        try {
+            notificationDBHelper.createDataBase();
+        } catch (IOException ioe) {
+            throw new Error("Unable to create database");
+        }
+        notificationDBHelper.openDataBase();
+        notificationDBHelper.close();
+
+        initBroadcastReceiver();
+        Backendless.initApp(this, APPLICATION_IDB, API_KEYB);
+    }
+
+    private void initToolbar(){
+
+        Toolbar toolbar = findViewById(R.id.appbar);
+        setSupportActionBar(toolbar);
         drawer = findViewById(R.id.drawer_layout);
 
         toggle = new ActionBarDrawerToggle(
@@ -99,7 +118,7 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onDrawerClosed(View drawerView) {
-                // Code here will be triggered once the drawer closes as we dont want anything to happen so we leave this blank
+                // Code here will be triggered once the drawer closes as we don't want anything to happen so we leave this blank
                 super.onDrawerClosed(drawerView);
                 InputMethodManager inputMethodManager = (InputMethodManager)
                         getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -116,18 +135,13 @@ public class MainActivity extends AppCompatActivity
                 assert inputMethodManager != null;
                 inputMethodManager.hideSoftInputFromWindow(drawerView.getWindowToken(), 0);
             }
-
-
-
         };
-
-
         navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        View headerview = navigationView.getHeaderView(0);
+        View headerView = navigationView.getHeaderView(0);
 
-        LinearLayout llHeader = headerview.findViewById(R.id.llheader);
-        llHeader.setOnClickListener(new View.OnClickListener() {
+        LinearLayout linLayoutNavHeader = headerView.findViewById(R.id.navHeader);
+        linLayoutNavHeader.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 OpenFragment(StartScreenFragment.class);
@@ -136,23 +150,13 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        tvNotificationCounter = (TextView) MenuItemCompat.getActionView(navigationView.getMenu().findItem(R.id.notification));
+        tvNotificationCounter = (TextView) MenuItemCompat.getActionView(
+                navigationView.getMenu().findItem(R.id.notification));
+    }
 
-
-
-        mDBHelper = new NotificationDBHelper(getContext());
-        try {
-            mDBHelper.createDataBase();
-        } catch (IOException ioe) {
-            throw new Error("Unable to create database");
-        }
-        mDBHelper.openDataBase();
-        mDBHelper.close();
-
-        Backendless.initApp(this, APPLICATION_IDB, API_KEYB);
-
+    private void initBroadcastReceiver(){
         // создаем BroadcastReceiver
-        br = new BroadcastReceiver() {
+        broadcastReceiver = new BroadcastReceiver() {
             // действия при получении сообщений
             public void onReceive(Context context, Intent intent) {
                 int status = intent.getIntExtra(PARAM_STATUS, 0);
@@ -171,7 +175,6 @@ public class MainActivity extends AppCompatActivity
                                 toast.show();
                             }
                             break;
-
                         case UPDATE_NOTIFICATION:
                             initializeCountDrawer();
                             break;
@@ -182,66 +185,50 @@ public class MainActivity extends AppCompatActivity
         // создаем фильтр для BroadcastReceiver
         IntentFilter intFilt = new IntentFilter(BROADCAST_ACTION);
         // регистрируем (включаем) BroadcastReceiver
-        registerReceiver(br, intFilt);
-
-
+        registerReceiver(broadcastReceiver, intFilt);
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
         Class fragmentClass = null;
-
-        int id = item.getItemId();
-
-        if (id == R.id.shedule) {
-            iSelectFragment = R.string.title_Table_Fragment;
+        int itemId = item.getItemId();
+        if (itemId == R.id.shedule) {
+            fragmentName = R.string.title_Table_Fragment;
             fragmentClass = TableFragment.class;
-
-        } else if (id == R.id.record_training) {
-            iSelectFragment = R.string.title_RecordForTraining_Fragment;
-            if (checkAuthData.checkAuthData(getContext())){
-                fragmentClass = RecordForTrainingSelectFragment.class;
-            }else {
-                fragmentClass = LoginFragment.class;
-            }
-
-        } else if (id == R.id.definition) {
-            iSelectFragment = R.string.title_Character_Fragment;
+        } else if (itemId == R.id.record_training) {
+            fragmentName = R.string.title_RecordForTraining_Fragment;
+            fragmentClass = RecordForTrainingSelectFragment.class;
+        } else if (itemId == R.id.definition) {
+            fragmentName = R.string.title_Character_Fragment;
             fragmentClass = CharacterFragment.class;
 
-        } else if (id == R.id.contacts) {
-            iSelectFragment = R.string.title_Contacts_Fragment;
+        } else if (itemId == R.id.contacts) {
+            fragmentName = R.string.title_Contacts_Fragment;
             fragmentClass = ContactsFragment.class;
 
-        } else if (id == R.id.profile) {
-            iSelectFragment = R.string.title_AboutMe_Fragment;
-            if (checkAuthData.checkAuthData(getContext())){
-                fragmentClass = AboutMeFragment.class;
-            }else {
-                fragmentClass = LoginFragment.class;
-            }
+        } else if (itemId == R.id.profile) {
+            fragmentName = R.string.title_AboutMe_Fragment;
+            fragmentClass = AboutMeFragment.class;
 
-        } else if (id == R.id.calendar_wod){
-            iSelectFragment = R.string.title_CalendarWod_Fragment;
+        } else if (itemId == R.id.calendar_wod){
+            fragmentName = R.string.title_CalendarWod_Fragment;
             fragmentClass = CalendarWodFragment.class;
 
-        }else if (id == R.id.notification){
+        }else if (itemId == R.id.notification){
             fragmentClass = NotificationFragment.class;
-            iSelectFragment = R.string.title_Notification_Fragment;
+            fragmentName = R.string.title_Notification_Fragment;
 
-        }else if (id == R.id.myResults){
+        }else if (itemId == R.id.myResults){
             fragmentClass = MyResultsFragment.class;
-            iSelectFragment = R.string.title_MyResults_Fragment;
+            fragmentName = R.string.title_MyResults_Fragment;
         }
 
-        if(iSelectFragment != iOpenFragment){
+        if(fragmentName != openFragment){
             OpenFragment(fragmentClass);
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
-
         return true;
     }
 
@@ -351,15 +338,15 @@ public class MainActivity extends AppCompatActivity
     protected void onDestroy() {
         super.onDestroy();
         // выключаем BroadcastReceiver
-        unregisterReceiver(br);
+        unregisterReceiver(broadcastReceiver);
     }
 
     private void initializeCountDrawer() {
         new Thread(new Runnable() {
             public void run() {
-                boolean bCheckTable =  mDBHelper.checkTable();
+                boolean bCheckTable =  notificationDBHelper.checkTable();
                 if(bCheckTable){
-                    int i = mDBHelper.countNotification();
+                    int i = notificationDBHelper.countNotification();
                     String stCounter;
                     if (i > 0 ){
                         stCounter = String.valueOf(i);
@@ -380,8 +367,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void changeTitle(int intNameFragmentTitle, int intNameFragmentSelectNavDraw) {
         setTitle(intNameFragmentTitle);
-        if (iSelectFragment == 0) iSelectFragment=intNameFragmentTitle;
-        iOpenFragment = intNameFragmentTitle;
+        if (fragmentName == 0) fragmentName =intNameFragmentTitle;
+        openFragment = intNameFragmentTitle;
 
         if (intNameFragmentSelectNavDraw == R.string.title_Notification_Fragment){
             navigationView.getMenu().getItem(0).setChecked(true);

@@ -81,10 +81,10 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
         etResultSkill = findViewById(R.id.etResultSkill);
         etResultWoD = findViewById(R.id.etResultWoD);
 
-        pbSaveUpload = findViewById(R.id.pbSaveUpload);
-        btnSave = findViewById(R.id.btnSaveUpload);
+        pbSaveUpload = findViewById(R.id.progressBarSaveUpload);
+        btnSave = findViewById(R.id.buttonSaveUpload);
 
-        rbSC = findViewById(R.id.rbSC);
+        rbSC = findViewById(R.id.rbSc);
         rbRx = findViewById(R.id.rbRx);
         rbRxP = findViewById(R.id.rbRxP);
         RadioGroup rgSelectLevel = findViewById(R.id.rgSelectLevel);
@@ -95,7 +95,7 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId){
-                    case R.id.rbSC:
+                    case R.id.rbSc:
                         stLevel = getResources().getString(R.string.strActivityERLevelSc);
                         break;
                     case R.id.rbRx:
