@@ -91,24 +91,6 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-        initToolbar();
-
-        notificationDBHelper = new NotificationDBHelper(getContext());
-        try {
-            notificationDBHelper.createDataBase();
-        } catch (IOException ioe) {
-            throw new Error("Unable to create database");
-        }
-        notificationDBHelper.openDataBase();
-        notificationDBHelper.close();
-
-        initBroadcastReceiver();
-        Backendless.initApp(this, APPLICATION_IDB, API_KEYB);
-    }
-
-    private void initToolbar(){
-
         Toolbar toolbar = findViewById(R.id.appbar);
         setSupportActionBar(toolbar);
         drawer = findViewById(R.id.drawer_layout);
@@ -152,9 +134,21 @@ public class MainActivity extends AppCompatActivity implements
 
         tvNotificationCounter = (TextView) MenuItemCompat.getActionView(
                 navigationView.getMenu().findItem(R.id.notification));
+
+        notificationDBHelper = new NotificationDBHelper(getContext());
+        try {
+            notificationDBHelper.createDataBase();
+        } catch (IOException ioe) {
+            throw new Error("Unable to create database");
+        }
+        notificationDBHelper.openDataBase();
+        notificationDBHelper.close();
+
+        initBroadcastReceiver();
+        Backendless.initApp(this, APPLICATION_IDB, API_KEYB);
     }
 
-    private void initBroadcastReceiver(){
+    private void initBroadcastReceiver() {
         // создаем BroadcastReceiver
         broadcastReceiver = new BroadcastReceiver() {
             // действия при получении сообщений
@@ -167,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements
                     switch (task) {
                         case LOAD_NOTIFICATION:
                             int result = intent.getIntExtra(PARAM_RESULT, 0);
-                            if (result > 0){
+                            if (result > 0) {
                                 initializeCountDrawer();
                                 drawer.openDrawer(GravityCompat.START   );
                                 Toast toast = Toast.makeText(getContext(), "Появились свежие новости!", Toast.LENGTH_LONG);
@@ -210,20 +204,20 @@ public class MainActivity extends AppCompatActivity implements
             fragmentName = R.string.title_AboutMe_Fragment;
             fragmentClass = AboutMeFragment.class;
 
-        } else if (itemId == R.id.calendar_wod){
+        } else if (itemId == R.id.calendar_wod) {
             fragmentName = R.string.title_CalendarWod_Fragment;
             fragmentClass = CalendarWodFragment.class;
 
-        }else if (itemId == R.id.notification){
+        } else if (itemId == R.id.notification) {
             fragmentClass = NotificationFragment.class;
             fragmentName = R.string.title_Notification_Fragment;
 
-        }else if (itemId == R.id.myResults){
+        } else if (itemId == R.id.myResults) {
             fragmentClass = MyResultsFragment.class;
             fragmentName = R.string.title_MyResults_Fragment;
         }
 
-        if(fragmentName != openFragment){
+        if(fragmentName != openFragment) {
             OpenFragment(fragmentClass);
         }
 
@@ -250,7 +244,11 @@ public class MainActivity extends AppCompatActivity implements
             fragmentManager.popBackStack();
         }
         FragmentTransaction ft = fragmentManager.beginTransaction();
-        ft.setCustomAnimations(R.anim.pull_in_right, R.anim.push_out_left, R.anim.pull_in_left, R.anim.push_out_right);
+        ft.setCustomAnimations(
+                R.anim.pull_in_right,
+                R.anim.push_out_left,
+                R.anim.pull_in_left,
+                R.anim.push_out_right);
         ft.replace(R.id.container, fragment);
         ft.addToBackStack(null);
         ft.commit();
@@ -293,10 +291,9 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void  onStart() {
         super.onStart();
-
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.container);
-        if (checkAuthData.checkAuthData(getContext())){
-            if (!isMyServiceRunning(LoadNotificationsService.class)){
+        if (checkAuthData.checkAuthData(getContext())) {
+            if (!isMyServiceRunning(LoadNotificationsService.class)) {
                 Intent intent;
 
                 // Создаем Intent для вызова сервиса,
@@ -313,7 +310,7 @@ public class MainActivity extends AppCompatActivity implements
                 OpenFragment(StartScreenFragment.class);
             }
 
-        }else {
+        } else {
             if (fragment == null) {
                 changeToggleStatus(false);
                 OpenFragment(LoginFragment.class);
@@ -324,20 +321,8 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-
-    }
-
-    @Override
-    protected void onPause(){
-        super.onPause();
-    }
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
-        // выключаем BroadcastReceiver
         unregisterReceiver(broadcastReceiver);
     }
 
@@ -360,7 +345,6 @@ public class MainActivity extends AppCompatActivity implements
                 }
             }
         }).run();
-
     }
 
     //первый аргумент нужен для смены заголовка, второй для выделения элемента в шторке
@@ -370,58 +354,58 @@ public class MainActivity extends AppCompatActivity implements
         if (fragmentName == 0) fragmentName =intNameFragmentTitle;
         openFragment = intNameFragmentTitle;
 
-        if (intNameFragmentSelectNavDraw == R.string.title_Notification_Fragment){
+        if (intNameFragmentSelectNavDraw == R.string.title_Notification_Fragment) {
             navigationView.getMenu().getItem(0).setChecked(true);
-        }else {
+        } else {
             navigationView.getMenu().getItem(0).setChecked(false);
         }
 
-        if (intNameFragmentSelectNavDraw == R.string.title_Table_Fragment){
+        if (intNameFragmentSelectNavDraw == R.string.title_Table_Fragment) {
             navigationView.getMenu().getItem(1).setChecked(true);
-        }else {
+        } else {
             navigationView.getMenu().getItem(1).setChecked(false);
         }
 
-        if (intNameFragmentSelectNavDraw == R.string.title_RecordForTraining_Fragment){
+        if (intNameFragmentSelectNavDraw == R.string.title_RecordForTraining_Fragment) {
             navigationView.getMenu().getItem(2).setChecked(true);
-        }else {
+        } else {
             navigationView.getMenu().getItem(2).setChecked(false);
         }
 
         if (intNameFragmentSelectNavDraw == R.string.title_CalendarWod_Fragment){
             navigationView.getMenu().getItem(3).setChecked(true);
-        }else {
+        } else {
             navigationView.getMenu().getItem(3).setChecked(false);
         }
 
-        if (intNameFragmentSelectNavDraw == R.string.title_MyResults_Fragment){
+        if (intNameFragmentSelectNavDraw == R.string.title_MyResults_Fragment) {
             navigationView.getMenu().getItem(4).setChecked(true);
-        }else {
+        } else {
             navigationView.getMenu().getItem(4).setChecked(false);
         }
 
-        if (intNameFragmentSelectNavDraw == R.string.title_Character_Fragment){
+        if (intNameFragmentSelectNavDraw == R.string.title_Character_Fragment) {
             navigationView.getMenu().getItem(5).setChecked(true);
-        }else {
+        } else {
             navigationView.getMenu().getItem(5).setChecked(false);
         }
 
-        if (intNameFragmentSelectNavDraw == R.string.title_AboutMe_Fragment){
+        if (intNameFragmentSelectNavDraw == R.string.title_AboutMe_Fragment) {
             navigationView.getMenu().getItem(6).setChecked(true);
-        }else {
+        } else {
             navigationView.getMenu().getItem(6).setChecked(false);
         }
 
-        if (intNameFragmentSelectNavDraw == R.string.title_Contacts_Fragment){
+        if (intNameFragmentSelectNavDraw == R.string.title_Contacts_Fragment) {
             navigationView.getMenu().getItem(7).setChecked(true);
-        }else {
+        } else {
             navigationView.getMenu().getItem(7).setChecked(false);
         }
     }
 
     @Override
     public void changeToggleStatus(boolean toggleVisible) {
-        if (toggleVisible){
+        if (toggleVisible) {
             drawer.addDrawerListener(toggle);
             toggle.syncState();
         }
