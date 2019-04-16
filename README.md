@@ -6,7 +6,7 @@
 
 <p align="center">
 <a> <img src="https://user-images.githubusercontent.com/25584477/55539450-566e5f80-56c9-11e9-8143-e44938a3c1cb.png"  height="283" width="160"> </a>
-<a> <img src="https://user-images.githubusercontent.com/25584477/55539451-566e5f80-56c9-11e9-9373-4c645cad01f1.png"  height="283" width="160"> </a>
+<a> <img src="https://user-images.githubusercontent.com/25584477/56209520-75bba400-605c-11e9-92c3-66420dc50ccc.png"  height="283" width="160"> </a>
 </p>
 
 ### Что уже умеет приложение:
@@ -51,7 +51,7 @@
 * имеется форма для сохранения одноповторных максимумов основных упражнений по тяжелой атлетике;
 
 <p align="center">
-<a> <img src="https://user-images.githubusercontent.com/25584477/55539456-5706f600-56c9-11e9-9ce0-084e932895e7.png"  height="283" width="160"> </a>
+<a> <img src="https://user-images.githubusercontent.com/25584477/56209522-76543a80-605c-11e9-9a2c-436384057fbe.png"  height="283" width="160"> </a>
 </p>
 
 ### В процессе:
