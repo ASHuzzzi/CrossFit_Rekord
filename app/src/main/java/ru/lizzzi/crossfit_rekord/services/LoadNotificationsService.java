@@ -1,6 +1,5 @@
 package ru.lizzzi.crossfit_rekord.services;
 
-import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
@@ -22,10 +21,7 @@ import ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck;
 
 public class LoadNotificationsService extends Service {
 
-    private GregorianCalendar calendarday; //нужна для формирования дат для кнопок
-    private BackendlessQueries queries = new BackendlessQueries();
-    private NotificationDBHelper mDBHelper = new  NotificationDBHelper(this);
-    private NetworkCheck NetworkCheck; //переменная для проврки сети
+    SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.UK);
 
     public LoadNotificationsService() {
     }
@@ -45,69 +41,80 @@ public class LoadNotificationsService extends Service {
     private void loadNotification(final int task) {
         new Thread(new Runnable() {
             public void run() {
-
-                long lLastDateCheck = mDBHelper.datelastcheck();
-                String stLastDateCheck;
-                SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.UK);
-                sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-                if (lLastDateCheck == 0){
-                    calendarday = new GregorianCalendar();
-                    Date today = calendarday.getTime();
-                    long startPeriod = today.getTime() - 2592000000L;
-                    stLastDateCheck = sdf.format(startPeriod);
-
-                }else {
-                    stLastDateCheck = sdf.format(lLastDateCheck);
-                }
-
-                for (int j = 0; j < 5; j++){
-
-                    NetworkCheck = new NetworkCheck(LoadNotificationsService.this);
-                    boolean resultCheck = NetworkCheck.checkInternet();
-
-                    if (resultCheck){
-                        long lTimeNow= System.currentTimeMillis();
-                        String stTimeNow = sdf.format(lTimeNow);
-                        List<Map> data = queries.loadNotification(stLastDateCheck, stTimeNow);
-                        if (data != null && data.size()>0){
-                            for(int i = 0; i < data.size(); i++){
-                                try {
-                                    String header = String.valueOf(data.get(i).get("header"));
-                                    String text = String.valueOf(data.get(i).get("text"));
-                                    String codeNote = String.valueOf(data.get(i).get("codeNote"));
-                                    String dateNote = String.valueOf(data.get(i).get("dateNote"));
-                                    @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf2 = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.UK);
-                                    Date newDate = sdf2.parse(dateNote);
-                                    long mils = newDate.getTime();
-                                    int viewed = 0;
-                                    mDBHelper.saveNotification(mils, header, text, codeNote, viewed);
-
-                                } catch (ParseException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-
-                            // сообщаем об окончании задачи
+                for (int connectionAttempt = 0; connectionAttempt < 5; connectionAttempt++) {
+                    NetworkCheck networkCheck = new NetworkCheck(LoadNotificationsService.this);
+                    boolean checkDone = networkCheck.checkInternet();
+                    if (checkDone) {
+                        String lastDateCheck = getLastDateCheck();
+                        String currentTime = getCurrentTimeMillis();
+                        List<Map> notificationList = getBackendlessQuerie(lastDateCheck, currentTime);
+                        if (notificationList != null && notificationList.size() > 0){
+                            writeNotificationInDB(notificationList);
                             Intent intent = new Intent(MainActivity.BROADCAST_ACTION);
                             intent.putExtra(MainActivity.PARAM_TASK, task);
                             intent.putExtra(MainActivity.PARAM_STATUS, MainActivity.STATUS_FINISH);
-                            intent.putExtra(MainActivity.PARAM_RESULT, data.size());
+                            intent.putExtra(MainActivity.PARAM_RESULT, notificationList.size());
                             sendBroadcast(intent);
                         }
-
                         break;
-                    }else {
+                    } else {
                         try {
                             TimeUnit.SECONDS.sleep(30);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
+                        } catch (InterruptedException exception) {
+                            exception.printStackTrace();
                         }
                     }
                 }
-
                 stopSelf();
             }
         }).start();
+    }
 
+    private String getLastDateCheck() {
+        NotificationDBHelper notificationDBHelper =
+                new  NotificationDBHelper(getBaseContext());
+        long dateLastCheck = notificationDBHelper.datelastcheck();
+        if (dateLastCheck == 0) {
+            GregorianCalendar today = new GregorianCalendar();
+            Date timeNow = today.getTime();
+            dateLastCheck = timeNow.getTime() - 2592000000L;
+        }
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return sdf.format(dateLastCheck);
+    }
+
+    private String getCurrentTimeMillis() {
+        long currentTimeMillis= System.currentTimeMillis();
+        return sdf.format(currentTimeMillis);
+    }
+
+    private List<Map> getBackendlessQuerie(String lastDateCheck, String currentTime) {
+        BackendlessQueries backendlessQuerie = new BackendlessQueries();
+        return backendlessQuerie.loadNotification(lastDateCheck, currentTime);
+    }
+
+    private void writeNotificationInDB(List<Map> notificationList) {
+        NotificationDBHelper notificationDBHelper =
+                new  NotificationDBHelper(getBaseContext());
+        for(int i = 0; i < notificationList.size(); i++) {
+            try {
+                String headerNotification = String.valueOf(notificationList.get(i).get("header"));
+                String textNotification = String.valueOf(notificationList.get(i).get("text"));
+                String codeNotification = String.valueOf(notificationList.get(i).get("codeNote"));
+                String dateNotification = String.valueOf(notificationList.get(i).get("dateNote"));
+                sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.UK);
+                Date notificationDate = sdf.parse(dateNotification);
+                long timeNotification = notificationDate.getTime();
+                int NOT_VIEWED = 0;
+                notificationDBHelper.saveNotification(
+                        timeNotification,
+                        headerNotification,
+                        textNotification,
+                        codeNotification,
+                        NOT_VIEWED);
+            } catch (ParseException exception) {
+                exception.printStackTrace();
+            }
+        }
     }
 }

@@ -75,7 +75,6 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enter_result);
 
-
         stLevel = getResources().getString(R.string.strActivityERLevelSc);
 
         etResultSkill = findViewById(R.id.etResultSkill);

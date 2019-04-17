@@ -30,7 +30,7 @@ public class BackendlessQueries extends Application {
     private static final String APP_PREFERENCES_USERNAME = "Username";
     private static final String APP_PREFERENCES_USERSURNAME = "Usersurname";
     private static final String APP_PREFERENCES_PHONE = "Phone";
-    private SharedPreferences mSettings;
+    private SharedPreferences sharedPreferences;
 
     public void onCreate(){
         MultiDex.install(getApplicationContext());
@@ -42,397 +42,268 @@ public class BackendlessQueries extends Application {
         return BackendlessQueries.context;
     }
 
-    public List<Map> loadCalendarWod(String objectID, String startDay, String nowDay){
-        try
-        {
-            String stUserID = getAppContext().getResources().getString(R.string.bTableResultsUserID);
-            String stDateSession = getAppContext().getResources().getString(R.string.bTableResultsDateSession);
-            String stTableName = getAppContext().getResources().getString(R.string.bTableResultsName);
-            String whereClause = stUserID + " = '" + objectID + "' and " + stDateSession + " >= '" +
-                    startDay + "' and " + stDateSession + " <= '" + nowDay + "'";
-
-            DataQueryBuilder queryBuilder = DataQueryBuilder.create();
-            queryBuilder.setWhereClause(whereClause);
-            queryBuilder.setPageSize(100);
-
-            return Backendless.Data.of(stTableName).find(queryBuilder);
-        }catch( BackendlessException exception )
-        {
-            return null;
-        }
-
-    }
-    public List<Map> loadPeople(int iLoaderId, String dateSelect, String timeSelect, String userName, String userId){
-
+    public List<Map> loadCalendarWod(String objectID, String startDay, String nowDay) {
         try {
-            String stData = getAppContext().getResources().getString(R.string.bTableRecordingData);
-            String stTime = getAppContext().getResources().getString(R.string.bTableRecordingTime);
-            String stUserame = getAppContext().getResources().getString(R.string.bTableRecordingUsername);
-            String stOwnerId = getAppContext().getResources().getString(R.string.bTableRecordingOwnerId);
-            String stObjectId = getAppContext().getResources().getString(R.string.bTableRecordingObjectId);
-            String stTableName = getAppContext().getResources().getString(R.string.bTableRecordingName);
-
-            HashMap<String, String> record = new HashMap<>();
-            if (iLoaderId == 2) {
-                record.put(stData, dateSelect);
-                record.put(stTime, timeSelect);
-                record.put(stUserame, userName);
-                record.put(stOwnerId, userId);
-                Backendless.Persistence.of(stTableName).save(record);
-            }
-
-            if (iLoaderId == 3) {
-                record.put(stObjectId, userId);
-                Backendless.Persistence.of(stTableName).remove(record);
-            }
-
+            String userID = getAppContext().getResources().getString(R.string.bTableResultsUserID);
+            String dateSession = getAppContext().getResources().getString(R.string.bTableResultsDateSession);
+            String tableName = getAppContext().getResources().getString(R.string.bTableResultsName);
             String whereClause =
-                    stData + " = '" + dateSelect + "' and " + stTime + " = '" + timeSelect + "'";
-            DataQueryBuilder queryBuilder = DataQueryBuilder.create();
-            queryBuilder.setWhereClause(whereClause);
-            queryBuilder.setPageSize(20);
-            return Backendless.Data.of(stTableName).find(queryBuilder);
-        }catch( BackendlessException exception )
-        {
-            return null;
-        }
-
-    }
-
-    public List<Map> loadAllTable(String gym){
-
-        //Пока никак не обрабатываю ошибки от сервера. Т.е. если данные есть, то строю список
-        //если данных нет, то список не строится и выскакивает стандартная заглушка.
-
-        try
-        {
-            String stGym = getAppContext().getResources().getString(R.string.bTableScheduleGym);
-            String stDayOfWeek = getAppContext().getResources().getString(R.string.bTableScheduleDayOfWeek);
-            String stStartTime = getAppContext().getResources().getString(R.string.bTableScheduleStartTime);
-            String stTableName = getAppContext().getResources().getString(R.string.bTableScheduleName);
-            String whereClause = stGym + " = '" + gym + "'";
-
-            DataQueryBuilder queryBuilder = DataQueryBuilder.create();
-            queryBuilder.setSortBy(stDayOfWeek);
-            queryBuilder.setSortBy(stStartTime);
-            queryBuilder.setWhereClause(whereClause);
-            queryBuilder.setPageSize(100);
-            return Backendless.Data.of(stTableName).find(queryBuilder);
-        }catch( BackendlessException exception )
-        {
-            return null;
-        }
-    }
-
-    public List<Map> loadWorkoutDetails(String typeQuery, String tableName, String selecteDay, String userId){
-
-        try
-        {
-            String stDateSession = getAppContext().getResources().getString(R.string.bTableResultsDateSession);
-            String stUserID= getAppContext().getResources().getString(R.string.bTableResultsUserID);
-
-            String whereClause;
-            if (typeQuery.equals("all")){
-                whereClause = stDateSession + " = '" + selecteDay + "'" ;
-            }else {
-                whereClause = stDateSession + " = '" + selecteDay + "' and " + stUserID + " = '" + userId + "'" ;
-            }
-
+                    userID + " = '" + objectID + "' and " + dateSession + " >= '" +
+                    startDay + "' and " + dateSession + " <= '" + nowDay + "'";
             DataQueryBuilder queryBuilder = DataQueryBuilder.create();
             queryBuilder.setWhereClause(whereClause);
             queryBuilder.setPageSize(100);
             return Backendless.Data.of(tableName).find(queryBuilder);
-        }catch( BackendlessException exception )
-        {
+        } catch (BackendlessException exception) {
             return null;
         }
-
     }
 
-    public boolean authUser(String eMail, String stPassword){
+    public List<Map> loadAllTable(String selectGym) {
+        //Пока никак не обрабатываю ошибки от сервера. Т.е. если данные есть, то строю список
+        //если данных нет, то список не строится и выскакивает стандартная заглушка.
+        try {
+            String gym = getAppContext().getResources().getString(R.string.bTableScheduleGym);
+            String dayOfWeek = getAppContext().getResources().getString(R.string.bTableScheduleDayOfWeek);
+            String startTime = getAppContext().getResources().getString(R.string.bTableScheduleStartTime);
+            String tableName = getAppContext().getResources().getString(R.string.bTableScheduleName);
+            String whereClause = gym + " = '" + selectGym + "'";
+            DataQueryBuilder queryBuilder = DataQueryBuilder.create();
+            queryBuilder.setSortBy(dayOfWeek);
+            queryBuilder.setSortBy(startTime);
+            queryBuilder.setWhereClause(whereClause);
+            queryBuilder.setPageSize(100);
+            return Backendless.Data.of(tableName).find(queryBuilder);
+        } catch (BackendlessException exception) {
+            return null;
+        }
+    }
 
-        try
-        {
-            Backendless.UserService.login(eMail, stPassword);
+    public List<Map> loadWorkoutDetails(String typeQuery,
+                                        String tableName,
+                                        String selecteDay,
+                                        String userId) {
+        try {
+            String dateSession = getAppContext().getResources().getString(R.string.bTableResultsDateSession);
+            String userID= getAppContext().getResources().getString(R.string.bTableResultsUserID);
+            String whereClause;
+            if (typeQuery.equals("all")) {
+                whereClause = dateSession + " = '" + selecteDay + "'" ;
+            } else {
+                whereClause =
+                        dateSession + " = '" + selecteDay + "' and " + userID + " = '" + userId + "'" ;
+            }
+            DataQueryBuilder queryBuilder = DataQueryBuilder.create();
+            queryBuilder.setWhereClause(whereClause);
+            queryBuilder.setPageSize(100);
+            return Backendless.Data.of(tableName).find(queryBuilder);
+        } catch (BackendlessException exception) {
+            return null;
+        }
+    }
+
+    public boolean authUser(String email, String password) {
+        try {
+            Backendless.UserService.login(email, password);
             BackendlessUser user = Backendless.UserService.CurrentUser();
-            mSettings = getAppContext().getSharedPreferences(APP_PREFERENCES, MODE_PRIVATE);
-            SharedPreferences.Editor editor = mSettings.edit();
+            sharedPreferences = getAppContext().getSharedPreferences(APP_PREFERENCES, MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString(APP_PREFERENCES_OBJECTID, user.getObjectId());
             editor.putString(APP_PREFERENCES_CARDNUMBER, String.valueOf(user.getProperty("cardNumber")));
             editor.putString(APP_PREFERENCES_USERNAME, String.valueOf(user.getProperty("name")));
             editor.putString(APP_PREFERENCES_USERSURNAME, String.valueOf(user.getProperty("surname")));
-            editor.putString(APP_PREFERENCES_PASSWORD, stPassword);
+            editor.putString(APP_PREFERENCES_PASSWORD, password);
             editor.putString(APP_PREFERENCES_EMAIL, String.valueOf(user.getProperty("email")));
             editor.putString(APP_PREFERENCES_PHONE, String.valueOf(user.getProperty("phoneNumber")));
             editor.apply();
             return true;
-        }
-        catch( BackendlessException exception )
-        {
+        } catch (BackendlessException exception) {
             return false;
         }
-
-
     }
 
-    public boolean saveUserData(String eMail, String stPassword, String name, String surname, String phone){
-
-        try
-        {
-            //логин и пас это номер карты
-            BackendlessUser user = Backendless.UserService.login(eMail, stPassword);
-
-            String stName = getAppContext().getResources().getString(R.string.bTableUsersNameT);
-            String stSurname = getAppContext().getResources().getString(R.string.bTableUsersSurname);
-            String stPhoneNumber = getAppContext().getResources().getString(R.string.bTableUsersPhoneNumber);
-
-            user.setProperty(stName, name);
-            user.setProperty(stSurname, surname);
-            user.setProperty(stPhoneNumber, phone);
-            try
-            {
-
+    public boolean saveUserData(String email,
+                                String password,
+                                String name,
+                                String surname,
+                                String phone) {
+        try {
+            BackendlessUser user = Backendless.UserService.login(email, password);
+            String userName = getAppContext().getResources().getString(R.string.bTableUsersNameT);
+            String userSurname = getAppContext().getResources().getString(R.string.bTableUsersSurname);
+            String userPhoneNumber = getAppContext().getResources().getString(R.string.bTableUsersPhoneNumber);
+            user.setProperty(userName, name);
+            user.setProperty(userSurname, surname);
+            user.setProperty(userPhoneNumber, phone);
+            try {
                 Backendless.UserService.update(user);
-                mSettings = getAppContext().getSharedPreferences(APP_PREFERENCES, MODE_PRIVATE);
-                SharedPreferences.Editor editor = mSettings.edit();
+                sharedPreferences = getAppContext().getSharedPreferences(APP_PREFERENCES, MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString(APP_PREFERENCES_USERNAME, name);
                 editor.putString(APP_PREFERENCES_USERSURNAME, surname);
                 editor.putString(APP_PREFERENCES_PHONE, phone);
                 editor.apply();
                 return true;
-
-            }
-            catch( BackendlessException exception )
-            {
+            } catch (BackendlessException exception) {
                 // update failed, to get the error code, call exception.getFault().getCode()
                 return false;
             }
-
-        }
-        catch( BackendlessException exception )
-        {
+        } catch (BackendlessException exception) {
             // login failed, to get the error code, call exception.getFault().getCode()
             return false;
         }
-
-
-
     }
 
-    public boolean saveUserRegData(String eMail, String oldPassword, String newPassword){
-
-        try
-        {
-            //логин и пас это номер карты
-            BackendlessUser user = Backendless.UserService.login(eMail, oldPassword);
-
-            String stPassword = getAppContext().getResources().getString(R.string.bTableUsersPassword);
-
-            user.setProperty(stPassword, newPassword);
-
-            try
-            {
-
+    public boolean saveUserRegData(String email, String oldPassword, String newPassword) {
+        try {
+            BackendlessUser user = Backendless.UserService.login(email, oldPassword);
+            String userPassword = getAppContext().getResources().getString(R.string.bTableUsersPassword);
+            user.setProperty(userPassword, newPassword);
+            try {
                 Backendless.UserService.update(user);
-                mSettings = getAppContext().getSharedPreferences(APP_PREFERENCES, MODE_PRIVATE);
-                SharedPreferences.Editor editor = mSettings.edit();
+                sharedPreferences = getAppContext().getSharedPreferences(APP_PREFERENCES, MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString(APP_PREFERENCES_PASSWORD, newPassword);
                 editor.apply();
                 return true;
-
-            }
-            catch( BackendlessException exception )
-            {
+            } catch (BackendlessException exception) {
                 // update failed, to get the error code, call exception.getFault().getCode()
                 return false;
             }
-
-        }
-        catch( BackendlessException exception )
-        {
+        } catch (BackendlessException exception) {
             // login failed, to get the error code, call exception.getFault().getCode()
             return false;
         }
-
-
-
     }
 
-    public boolean saveChangeEmail(String oldEMail, String newEMail, String password){
-
-        try
-        {
-            //логин и пас это номер карты
-            BackendlessUser user = Backendless.UserService.login(oldEMail, password);
-
-            user.setEmail(newEMail);
-
-            try
-            {
-
-                Backendless.UserService.update(user);
-                mSettings = getAppContext().getSharedPreferences(APP_PREFERENCES, MODE_PRIVATE);
-                SharedPreferences.Editor editor = mSettings.edit();
-                editor.putString(APP_PREFERENCES_EMAIL, newEMail);
+    public boolean saveChangeEmail(String oldEmail, String newEmail, String password) {
+        try {
+            BackendlessUser backendlessUser = Backendless.UserService.login(oldEmail, password);
+            backendlessUser.setEmail(newEmail);
+            try {
+                Backendless.UserService.update(backendlessUser);
+                sharedPreferences = getAppContext().getSharedPreferences(APP_PREFERENCES, MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString(APP_PREFERENCES_EMAIL, newEmail);
                 editor.apply();
                 return true;
-
-            }
-            catch( BackendlessException exception )
-            {
+            } catch (BackendlessException exception) {
                 // update failed, to get the error code, call exception.getFault().getCode()
                 return false;
             }
-
-        }
-        catch( BackendlessException exception )
-        {
+        } catch (BackendlessException exception) {
             // login failed, to get the error code, call exception.getFault().getCode()
             return false;
         }
-
-
-
     }
 
-    public boolean saveEditWorkoutDetails(int iLoaderId, String dateSession, String userId,
-                                          String userName, String userSurname, String userSkill,
-                                          String userWoDLevel, String userWodResult){
-
-        String stTableName = getAppContext().getResources().getString(R.string.bTableResultsName);
-        String stDateSession = getAppContext().getResources().getString(R.string.bTableResultsDateSession);
-        String stOwnerID = getAppContext().getResources().getString(R.string.bTableRecordingOwnerId);
-        String stName = getAppContext().getResources().getString(R.string.bTableResultsNameT);
-        String stSurname = getAppContext().getResources().getString(R.string.bTableResultsSurname);
-        String stSkill = getAppContext().getResources().getString(R.string.bTableResultsSkill);
-        String stWodLevel = getAppContext().getResources().getString(R.string.bTableResultsWodLevel);
-        String stWodResult = getAppContext().getResources().getString(R.string.bTableResultsWodResult);
-
-        boolean resultQueries = false;
-
-        HashMap<String, String> record = new HashMap<>();
+    public boolean saveEditWorkoutDetails(int loaderId,
+                                          String userDateSession,
+                                          String userId,
+                                          String userName,
+                                          String userSurname,
+                                          String userSkill,
+                                          String userWoDLevel,
+                                          String userWodResult) {
+        String tableName = getAppContext().getResources().getString(R.string.bTableResultsName);
+        String dateSession = getAppContext().getResources().getString(R.string.bTableResultsDateSession);
+        String ownerID = getAppContext().getResources().getString(R.string.bTableRecordingOwnerId);
+        String name = getAppContext().getResources().getString(R.string.bTableResultsNameT);
+        String surname = getAppContext().getResources().getString(R.string.bTableResultsSurname);
+        String skill = getAppContext().getResources().getString(R.string.bTableResultsSkill);
+        String wodLevel = getAppContext().getResources().getString(R.string.bTableResultsWodLevel);
+        String wodResult = getAppContext().getResources().getString(R.string.bTableResultsWodResult);
+        boolean resultQuery = false;
         String whereClause;
-
-        switch (iLoaderId){
+        switch (loaderId) {
             case 2:
-                record.put(stDateSession, dateSession);
-                record.put(stOwnerID, userId);
-                record.put(stName, userName);
-                record.put(stSurname, userSurname);
-                record.put(stSkill, userSkill);
-                record.put(stWodLevel, userWoDLevel);
-                record.put(stWodResult, userWodResult);
-
-                try
-                {
-                    Backendless.Persistence.of(stTableName).save(record);
-                    resultQueries = true;
-                }
-                catch( BackendlessException exception )
-                {
+                HashMap<String, String> record = new HashMap<>();
+                record.put(dateSession, userDateSession);
+                record.put(ownerID, userId);
+                record.put(name, userName);
+                record.put(surname, userSurname);
+                record.put(skill, userSkill);
+                record.put(wodLevel, userWoDLevel);
+                record.put(wodResult, userWodResult);
+                try {
+                    Backendless.Persistence.of(tableName).save(record);
+                    resultQuery = true;
+                } catch ( BackendlessException exception ) {
                     // failed, to get the error code, call exception.getFault().getCode()
                 }
                 break;
-
             case 3:
-                whereClause =
-                        stDateSession + " = '" + dateSession + "' and " + stOwnerID + " = '" + userId + "'";
-
-                try
-                {
-                    Backendless.Persistence.of(stTableName).remove(whereClause);
-                    resultQueries = true;
-                }
-                catch( BackendlessException exception )
-                {
+                whereClause = dateSession + " = '" + userDateSession +
+                        "' and " + ownerID + " = '" + userId + "'";
+                try {
+                    Backendless.Persistence.of(tableName).remove(whereClause);
+                    resultQuery = true;
+                } catch (BackendlessException exception) {
                     // failed, to get the error code, call exception.getFault().getCode()
                 }
                 break;
-
             case 4:
                 Map<String, Object> record2 = new HashMap<>();
-                record2.put(stName, userName);
-                record2.put(stSurname, userSurname);
-                record2.put(stSkill, userSkill);
-                record2.put(stWodLevel, userWoDLevel);
-                record2.put(stWodResult, userWodResult);
-                whereClause =
-                        stDateSession + " = '" + dateSession + "' and " + stOwnerID + " = '" + userId + "'";
-
-                try
-                {
-                    Backendless.Persistence.of(stTableName).update(whereClause, record2);
-                    resultQueries = true;
-                }
-                catch( BackendlessException exception )
-                {
+                record2.put(name, userName);
+                record2.put(surname, userSurname);
+                record2.put(skill, userSkill);
+                record2.put(wodLevel, userWoDLevel);
+                record2.put(wodResult, userWodResult);
+                whereClause = dateSession + " = '" + userDateSession +
+                        "' and " + ownerID + " = '" + userId + "'";
+                try {
+                    Backendless.Persistence.of(tableName).update(whereClause, record2);
+                    resultQuery = true;
+                } catch (BackendlessException exception) {
                     // failed, to get the error code, call exception.getFault().getCode()
                 }
                 break;
         }
-
-        return resultQueries;
+        return resultQuery;
     }
 
-    public List<Map> loadNotification (String stDateLastCheck, String stTimeNow){
-
-        try
-        {
-            String stDateNote = getAppContext().getResources().getString(R.string.bTableNotificationDateNote);
-            String stTableName = getAppContext().getResources().getString(R.string.bTableNotificationName);
-            String whereClause = stDateNote + " > '" + stDateLastCheck + "' and " +
-                    stDateNote + " < '" + stTimeNow + "'";
-
+    public List<Map> loadNotification (String dateLastCheck, String timeNow) {
+        try {
+            String dateNote = getAppContext().getResources().getString(R.string.bTableNotificationDateNote);
+            String tableName = getAppContext().getResources().getString(R.string.bTableNotificationName);
+            String whereClause = dateNote + " > '" + dateLastCheck + "' and " +
+                    dateNote + " < '" + timeNow + "'";
             DataQueryBuilder queryBuilder = DataQueryBuilder.create();
             queryBuilder.setWhereClause(whereClause);
             queryBuilder.setPageSize(100);
-            queryBuilder.setSortBy(stDateNote);
-
-            return Backendless.Data.of(stTableName).find(queryBuilder);
-        }
-        catch( BackendlessException exception )
-        {
+            queryBuilder.setSortBy(dateNote);
+            return Backendless.Data.of(tableName).find(queryBuilder);
+        } catch (BackendlessException exception) {
             return null;
         }
-
     }
 
-    public boolean regUser(String stUserName, String stEmail, String stPassword){
+    public boolean regUser(String userName, String email, String password) {
+        try {
+            BackendlessUser backendlessUser = new BackendlessUser();
+            backendlessUser.setEmail(email);
+            backendlessUser.setPassword(password);
+            backendlessUser.setProperty("name", userName);
+            backendlessUser = Backendless.UserService.register(backendlessUser);
 
-        try
-        {
-            BackendlessUser user = new BackendlessUser();
-            user.setEmail( stEmail );
-            user.setPassword( stPassword );
-            user.setProperty( "name", stUserName);
-
-            user = Backendless.UserService.register(user);
-
-            mSettings = getAppContext().getSharedPreferences(APP_PREFERENCES, MODE_PRIVATE);
-            SharedPreferences.Editor editor = mSettings.edit();
-            editor.putString(APP_PREFERENCES_USERNAME, stUserName);
-            editor.putString(APP_PREFERENCES_EMAIL, stEmail);
-            editor.putString(APP_PREFERENCES_PASSWORD, stPassword);
-            editor.putString(APP_PREFERENCES_OBJECTID, user.getObjectId());
+            sharedPreferences = getAppContext().getSharedPreferences(APP_PREFERENCES, MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString(APP_PREFERENCES_USERNAME, userName);
+            editor.putString(APP_PREFERENCES_EMAIL, email);
+            editor.putString(APP_PREFERENCES_PASSWORD, password);
+            editor.putString(APP_PREFERENCES_OBJECTID, backendlessUser.getObjectId());
             editor.apply();
-
             return true;
-        }
-        catch( BackendlessException exception )
-        {
+        } catch (BackendlessException exception) {
             return false;
         }
-
     }
 
-    public boolean recoverPassword(String stEmail){
-        try
-        {
-            Backendless.UserService.restorePassword(stEmail);
+    public boolean recoverPassword(String email) {
+        try {
+            Backendless.UserService.restorePassword(email);
             return true;
-        }
-        catch( BackendlessException exception )
-        {
+        } catch (BackendlessException exception) {
             return false;
         }
     }
