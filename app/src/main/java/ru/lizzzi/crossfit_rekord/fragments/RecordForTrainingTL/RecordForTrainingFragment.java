@@ -35,7 +35,7 @@ import java.util.Objects;
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterRecordForTrainingSelect;
 import ru.lizzzi.crossfit_rekord.inspectionСlasses.ConstructorLinks;
-import ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck;
+import ru.lizzzi.crossfit_rekord.inspectionСlasses.Network;
 import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeTitle;
 import ru.lizzzi.crossfit_rekord.interfaces.ListenerRecordForTrainingSelect;
 import ru.lizzzi.crossfit_rekord.loaders.TableFragmentLoader;
@@ -52,8 +52,6 @@ public class RecordForTrainingFragment extends Fragment implements LoaderManager
 
     private int dayOfWeekSelectedDay; // выбранный пользователем день
     private final static int LOADER_ID = 1; //идентефикатор loader'а
-
-    private NetworkCheck networkCheck;//переменная для проврки сети
 
     private Handler handlerOpenFragment;
     private Thread threadOpenFragment;
@@ -119,10 +117,10 @@ public class RecordForTrainingFragment extends Fragment implements LoaderManager
         runnableOpenFragment = new Runnable() {
             @Override
             public void run() {
-                networkCheck = new NetworkCheck(getContext());
-                boolean resultCheck = networkCheck.checkInternet();
+                Network network = new Network(getContext());
                 Bundle bundle = new Bundle();
-                if (resultCheck) {
+                boolean checkDone = network.checkConnection();
+                if (checkDone) {
                     dayOfWeekSelectedDay = numberDayOfWeek.get(Calendar.DAY_OF_WEEK)-1;
                     if (dayOfWeekSelectedDay == 0){
                         dayOfWeekSelectedDay = 7;

@@ -31,7 +31,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck;
+import ru.lizzzi.crossfit_rekord.inspectionСlasses.Network;
 import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeTitle;
 import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeToggleStatus;
 import ru.lizzzi.crossfit_rekord.loaders.LoginLoader;
@@ -42,12 +42,10 @@ import ru.lizzzi.crossfit_rekord.services.LoadNotificationsService;
 
 public class LoginFragment extends Fragment implements LoaderManager.LoaderCallbacks<Boolean> {
 
-    private ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck NetworkCheck; //переменная для проврки сети
-
-    private Button btnComeIn;
-    private ProgressBar pbLogin;
-    private EditText etEmail;
-    private EditText etPassword;
+    private Button buttonLogin;
+    private ProgressBar progressBar;
+    private EditText editTextEmail;
+    private EditText editTextPassword;
 
     private Handler handlerLoginFragment;
     private Thread threadLoginFragment;
@@ -60,15 +58,13 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState){
         View v = inflater.inflate(R.layout.fragment_login, container, false);
-
-        etEmail = v.findViewById(R.id.editText4);
-        etPassword = v.findViewById(R.id.editText5);
-        btnComeIn = v.findViewById(R.id.button2);
-        pbLogin = v.findViewById(R.id.pbLogin);
-        Button btnContacts = v.findViewById(R.id.btContacts);
-        Button btnRegisration = v.findViewById(R.id.btnRegisration);
-        TextView tvRecPas = v.findViewById(R.id.tvRecPas);
-
+        editTextEmail = v.findViewById(R.id.editText4);
+        editTextPassword = v.findViewById(R.id.editText5);
+        buttonLogin = v.findViewById(R.id.button2);
+        progressBar = v.findViewById(R.id.pbLogin);
+        Button buttonContacts = v.findViewById(R.id.btContacts);
+        Button buttonRegisration = v.findViewById(R.id.btnRegisration);
+        TextView textRecoveryPassword = v.findViewById(R.id.tvRecPas);
 
         //хэндлер для потока runnableOpenFragment
         handlerLoginFragment = new Handler() {
@@ -78,15 +74,16 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
                     TransactionFragment(StartScreenFragment.class);
                 }else {
                     Bundle bundle = msg.getData();
-                    String result_check = bundle.getString("result");
-                    if (result_check != null && result_check.equals("true")){
-                        startAsyncTaskLoader(etEmail.getText().toString(), etPassword.getText().toString());
-                    }else{
+                    boolean checkDone = bundle.getBoolean("result");
+                    if (checkDone) {
+                        startAsyncTaskLoader(
+                                editTextEmail.getText().toString(),
+                                editTextPassword.getText().toString());
+                    } else {
                         ChangeUIElements(0);
                         Toast.makeText(getContext(), "Нет подключения", Toast.LENGTH_SHORT).show();
                     }
                 }
-
             }
         };
 
@@ -94,44 +91,37 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
         runnableLoginFragment = new Runnable() {
             @Override
             public void run() {
-
-                NetworkCheck = new NetworkCheck(getContext());
-                boolean resultCheck = NetworkCheck.checkInternet();
+                Network network = new Network(getContext());
                 Bundle bundle = new Bundle();
-                if (resultCheck){
-                    bundle.putString("result", String.valueOf(true));
-
-                }else {
-                    bundle.putString("result", String.valueOf(false));
-                }
+                boolean checkDone = network.checkConnection();
+                bundle.putBoolean("result", checkDone);
                 Message msg = handlerLoginFragment.obtainMessage();
                 msg.setData(bundle);
                 handlerLoginFragment.sendMessage(msg);
             }
         };
 
-        btnComeIn.setOnClickListener(new View.OnClickListener() {
+        buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                String stCheckSpace = etEmail.getText().toString();
-                if(stCheckSpace.endsWith(" ")){
-                    stCheckSpace = stCheckSpace.substring(0, stCheckSpace.length() - 1);
-                    etEmail.setText(stCheckSpace);
+                String UserEmail = editTextEmail.getText().toString();
+                if (UserEmail.endsWith(" ")) {
+                    UserEmail = UserEmail.substring(0, UserEmail.length() - 1);
+                    editTextEmail.setText(UserEmail);
                 }
 
-                if (etEmail.getText().length()== 0 || isEmailValid(etEmail.getText().toString())){
-                    etEmail.setFocusableInTouchMode(true);
-                    etEmail.setFocusable(true);
-                    etEmail.requestFocus();
+                if (editTextEmail.getText().length() == 0 || isEmailValid(editTextEmail.getText().toString())) {
+                    editTextEmail.setFocusableInTouchMode(true);
+                    editTextEmail.setFocusable(true);
+                    editTextEmail.requestFocus();
                     Toast.makeText(getContext(), "Введите почту!", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                if(etPassword.getText().length()== 0){
-                    etPassword.setFocusableInTouchMode(true);
-                    etPassword.setFocusable(true);
-                    etPassword.requestFocus();
+                if (editTextPassword.getText().length()== 0){
+                    editTextPassword.setFocusableInTouchMode(true);
+                    editTextPassword.setFocusable(true);
+                    editTextPassword.requestFocus();
                     Toast.makeText(getContext(), "Введите пароль", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -150,21 +140,21 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
             }
         });
 
-        btnContacts.setOnClickListener(new View.OnClickListener() {
+        buttonContacts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 TransactionFragment(ContactsFragment.class);
             }
         });
 
-        btnRegisration.setOnClickListener(new View.OnClickListener() {
+        buttonRegisration.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 TransactionFragment(RegistryFragment.class);
             }
         });
 
-        tvRecPas.setOnClickListener(new View.OnClickListener() {
+        textRecoveryPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 TransactionFragment(PasswordRecoveryFragment.class);
@@ -177,19 +167,19 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
     @Override
     public  void onStart() {
         super.onStart();
-        if (getActivity() instanceof InterfaceChangeTitle){
+        if (getActivity() instanceof InterfaceChangeTitle) {
             InterfaceChangeTitle listernerChangeTitle = (InterfaceChangeTitle) getActivity();
             listernerChangeTitle.changeTitle(R.string.title_Login_Fragment, R.string.title_Login_Fragment);
         }
     }
 
-    private void ChangeUIElements(int status){
-        if (status == 1){
-            pbLogin.setVisibility(View.VISIBLE);
-            btnComeIn.setPressed(true);
-        }else{
-            pbLogin.setVisibility(View.INVISIBLE);
-            btnComeIn.setPressed(false);
+    private void ChangeUIElements(int status) {
+        if (status == 1) {
+            progressBar.setVisibility(View.VISIBLE);
+            buttonLogin.setPressed(true);
+        } else {
+            progressBar.setVisibility(View.INVISIBLE);
+            buttonLogin.setPressed(false);
         }
     }
 
@@ -197,22 +187,20 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
         Bundle bundle = new Bundle();
         bundle.putString("e_mail" , stEmail);
         bundle.putString("password" , stPassword);
-        int LOADERID = 1;
-        getLoaderManager().initLoader(LOADERID, bundle,this).forceLoad();
+        int LOADER_ID = 1;
+        getLoaderManager().initLoader(LOADER_ID, bundle,this).forceLoad();
     }
 
     @NonNull
     @Override
     public Loader<Boolean> onCreateLoader(int id, Bundle args) {
-        LoginLoader loader;
-        loader = new LoginLoader(getContext(), args);
-        return loader;
+        return new LoginLoader(getContext(), args);
     }
 
     @Override
     public void onLoadFinished(@NonNull Loader<Boolean> loader, Boolean data) {
-        if (data){
-            StartService();
+        if (data) {
+            startService();
             InterfaceChangeToggleStatus interfaceChangeToggleStatus = (InterfaceChangeToggleStatus) getActivity();
             interfaceChangeToggleStatus.changeToggleStatus(true);
             handlerLoginFragment.sendEmptyMessage(openFragment);
@@ -220,16 +208,14 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
             ChangeUIElements(0);
             Toast.makeText(getContext(), "Неверный логин или пароль!", Toast.LENGTH_SHORT).show();
         }
-
     }
 
     @Override
     public void onLoaderReset(@NonNull Loader<Boolean> loader) {
-
     }
 
-    private void StartService(){
-        if (!isMyServiceRunning(LoadNotificationsService.class)){
+    private void startService() {
+        if (!isMyServiceRunning(LoadNotificationsService.class)) {
             Intent intent;
 
             // Создаем Intent для вызова сервиса,

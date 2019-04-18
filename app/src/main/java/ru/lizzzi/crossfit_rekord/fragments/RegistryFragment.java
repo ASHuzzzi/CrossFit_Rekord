@@ -32,7 +32,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck;
+import ru.lizzzi.crossfit_rekord.inspectionСlasses.Network;
 import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeTitle;
 import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeToggleStatus;
 import ru.lizzzi.crossfit_rekord.loaders.RegistryLoader;
@@ -53,8 +53,6 @@ public class RegistryFragment extends Fragment implements LoaderManager.LoaderCa
     private Runnable runnableRegistryFragment;
 
     private int openFragment = 1;
-
-    private ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck NetworkCheck; //переменная для проврки сети
 
     public RegistryFragment() {
         // Required empty public constructor
@@ -102,10 +100,10 @@ public class RegistryFragment extends Fragment implements LoaderManager.LoaderCa
             @Override
             public void run() {
 
-                NetworkCheck = new NetworkCheck(getContext());
-                boolean resultCheck = NetworkCheck.checkInternet();
+                Network network = new Network(getContext());
                 Bundle bundle = new Bundle();
-                if (resultCheck){
+                boolean checkDone = network.checkConnection();
+                if (checkDone) {
                     bundle.putString("result", String.valueOf(true));
 
                 }else {

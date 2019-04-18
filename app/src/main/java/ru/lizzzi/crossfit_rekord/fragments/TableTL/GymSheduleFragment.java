@@ -37,12 +37,12 @@ import java.util.Objects;
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterTable;
 import ru.lizzzi.crossfit_rekord.inspectionСlasses.ConstructorLinks;
-import ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck;
+import ru.lizzzi.crossfit_rekord.inspectionСlasses.Network;
 import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeTitle;
 import ru.lizzzi.crossfit_rekord.interfaces.ListenerRecordForTrainingSelect;
 import ru.lizzzi.crossfit_rekord.loaders.TableFragmentLoader;
 
-public class TableFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<List<Map>>> {
+public class GymSheduleFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<List<Map>>> {
     private ProgressBar progressBar;
     private RecyclerView itemsInTable;
     private Button buttonMonday;
@@ -59,8 +59,6 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
 
     private Handler handlerOpenFragment;
     private Thread threadOpenFragment;
-
-    private NetworkCheck networkCheck; //переменная для проврки сети
 
     private RecyclerAdapterTable adapter; //адаптер для списка тренировок
 
@@ -122,16 +120,13 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
         runnableOpenFragment = new Runnable() {
             @Override
             public void run() {
-
-                networkCheck = new NetworkCheck(getContext());
-                boolean checkDone = networkCheck.checkInternet();
+                Network network = new Network(getContext());
                 Bundle bundle = new Bundle();
+                boolean checkDone = network.checkConnection();
                 if (checkDone) {
                     selectDay = Calendar.MONDAY;
-                    bundle.putBoolean("result", true);
-                } else {
-                    bundle.putBoolean("result", false);
                 }
+                bundle.putBoolean("result", checkDone);
                 Message msg = handlerOpenFragment.obtainMessage();
                 msg.setData(bundle);
                 handlerOpenFragment.sendMessage(msg);
@@ -241,9 +236,7 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
     @NonNull
     @Override
     public Loader<List<List<Map>>> onCreateLoader(int id, Bundle args) {
-        Loader<List<List<Map>>> loader;
-        loader = new TableFragmentLoader(getContext(), args);
-        return loader;
+        return new TableFragmentLoader(getContext(), args);
     }
 
     @Override
@@ -379,7 +372,7 @@ public class TableFragment extends Fragment implements LoaderManager.LoaderCallb
         }
 
         int backgroungImage;
-        if (iSelectGym ==1) {
+        if (iSelectGym == 1) {
             backgroungImage = R.drawable.backgroundfotovrtical;
         } else {
             backgroungImage = R.drawable.backgroundfotovrtical2;

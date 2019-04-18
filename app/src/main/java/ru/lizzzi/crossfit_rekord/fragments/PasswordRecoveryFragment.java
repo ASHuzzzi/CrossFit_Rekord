@@ -24,7 +24,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck;
+import ru.lizzzi.crossfit_rekord.inspectionСlasses.Network;
 import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeTitle;
 import ru.lizzzi.crossfit_rekord.loaders.RecoveryEmailLoader;
 
@@ -33,8 +33,6 @@ public class PasswordRecoveryFragment extends Fragment implements LoaderManager.
     private EditText etRecPasEmail;
     private Button btnRecPasSend;
     private ProgressBar pbRecPas;
-
-    private ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck NetworkCheck; //переменная для проврки сети
 
     private Handler handlerPasswordRecoveryFragment;
     private Thread threadPasswordRecoveryFragment;
@@ -77,10 +75,10 @@ public class PasswordRecoveryFragment extends Fragment implements LoaderManager.
             @Override
             public void run() {
 
-                NetworkCheck = new NetworkCheck(getActivity());
-                boolean resultCheck = NetworkCheck.checkInternet();
+                Network network = new Network(getContext());
                 Bundle bundle = new Bundle();
-                if (resultCheck){
+                boolean checkDone = network.checkConnection();
+                if (checkDone) {
                     bundle.putString("result", String.valueOf(true));
 
                 }else {

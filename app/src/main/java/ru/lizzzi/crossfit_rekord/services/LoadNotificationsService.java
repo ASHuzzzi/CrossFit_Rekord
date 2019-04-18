@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 import ru.lizzzi.crossfit_rekord.activity.MainActivity;
 import ru.lizzzi.crossfit_rekord.backendless.BackendlessQueries;
 import ru.lizzzi.crossfit_rekord.data.NotificationDBHelper;
-import ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck;
+import ru.lizzzi.crossfit_rekord.inspectionСlasses.Network;
 
 public class LoadNotificationsService extends Service {
 
@@ -42,8 +42,8 @@ public class LoadNotificationsService extends Service {
         new Thread(new Runnable() {
             public void run() {
                 for (int connectionAttempt = 0; connectionAttempt < 5; connectionAttempt++) {
-                    NetworkCheck networkCheck = new NetworkCheck(LoadNotificationsService.this);
-                    boolean checkDone = networkCheck.checkInternet();
+                    Network network = new Network(LoadNotificationsService.this);
+                    boolean checkDone = network.checkConnection();
                     if (checkDone) {
                         String lastDateCheck = getLastDateCheck();
                         String currentTime = getCurrentTimeMillis();

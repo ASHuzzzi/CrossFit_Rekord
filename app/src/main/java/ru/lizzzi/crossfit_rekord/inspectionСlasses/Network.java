@@ -6,20 +6,26 @@ import android.net.NetworkInfo;
 
 import java.io.IOException;
 
-public class NetworkCheck {
+import ru.lizzzi.crossfit_rekord.interfaces.CheckNetwork;
+
+public class Network implements CheckNetwork {
+
     private Context context;
 
-    public NetworkCheck(Context context) {
+    public Network (Context context) {
         this.context = context;
     }
 
-    public boolean checkInternet() {
-
-        ConnectivityManager cm = (ConnectivityManager)context.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-
-        NetworkInfo activeNetwork = cm != null ? cm.getActiveNetworkInfo() : null;
+    @Override
+    public boolean checkConnection() {
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager)context.
+                        getApplicationContext().
+                        getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork =
+                connectivityManager != null ? connectivityManager.getActiveNetworkInfo() : null;
         // проверка подключения
-        if(activeNetwork != null && activeNetwork.isConnected()){
+        if(activeNetwork != null && activeNetwork.isConnected()) {
             Runtime runtime = Runtime.getRuntime();
             //если сеть есть, то проверяем наличие доступа в сеть
             try {
@@ -31,8 +37,6 @@ public class NetworkCheck {
             catch (InterruptedException e) { e.printStackTrace(); }
             return true;
         }
-
         return false;
-
     }
 }

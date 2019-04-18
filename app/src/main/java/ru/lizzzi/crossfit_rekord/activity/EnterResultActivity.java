@@ -34,12 +34,14 @@ import java.util.Objects;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.data.CalendarWodDBHelper;
-import ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck;
+import ru.lizzzi.crossfit_rekord.inspectionСlasses.Network;
 import ru.lizzzi.crossfit_rekord.loaders.SaveLoadResultLoader;
 
-public class EnterResultActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Boolean> {
+public class EnterResultActivity
+        extends AppCompatActivity
+        implements LoaderManager.LoaderCallbacks<Boolean> {
 
-    private NetworkCheck networkCheck; //переменная для проврки сети
+    private Network network;
 
     private Handler handlerOpenFragment;
     private Thread threadClickOnbuttonSave;
@@ -176,11 +178,10 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
         runnableClickOnbuttonSave = new Runnable() {
             @Override
             public void run() {
-
-                networkCheck = new NetworkCheck(EnterResultActivity.this);
+                network = new Network(EnterResultActivity.this);
                 Bundle bundle = new Bundle();
-                boolean resultCheck = networkCheck.checkInternet();
-                if (resultCheck) {
+                boolean checkDone = network.checkConnection();
+                if (checkDone) {
                     bundle.putBoolean("networkCheck", true);
                 } else {
                     bundle.putBoolean("networkCheck", false);
@@ -196,17 +197,6 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
     }
 
     private void initActionBar() {
-        /*Toolbar toolbar = findViewById(R.id.toolbarER);
-        setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-            }
-        });*/
-
         this.setSupportActionBar((Toolbar) findViewById(R.id.toolbarER));
         final ActionBar actionBar = this.getSupportActionBar();
         if (actionBar != null) {
@@ -226,7 +216,7 @@ public class EnterResultActivity extends AppCompatActivity implements LoaderMana
 
         Intent intent = getIntent();
         flag = intent.getBooleanExtra("flag", false);
-        if (flag){
+        if (flag) {
             etResultSkill.setText(intent.getStringExtra("skill"));
 
             //создаем флаг для проверки чтобы точно какая-то кнопка была выбрана

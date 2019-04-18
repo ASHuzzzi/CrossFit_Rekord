@@ -25,7 +25,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck;
+import ru.lizzzi.crossfit_rekord.inspectionСlasses.Network;
 import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeTitle;
 import ru.lizzzi.crossfit_rekord.loaders.ChangeEmailLoader;
 
@@ -40,8 +40,6 @@ public class ChangeEmailFragment extends Fragment implements LoaderManager.Loade
     private EditText etChangeEmail;
     private ProgressBar pbChangeEmail;
     private Button btnChangeEmail;
-
-    private ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck NetworkCheck; //переменная для проврки сети
 
     private Handler handlerChangeEmailFragment;
     private Thread threadChangeEmailFragment;
@@ -85,10 +83,10 @@ public class ChangeEmailFragment extends Fragment implements LoaderManager.Loade
             @Override
             public void run() {
 
-                NetworkCheck = new NetworkCheck(getContext());
-                boolean resultCheck = NetworkCheck.checkInternet();
+                Network network = new Network(getContext());
                 Bundle bundle = new Bundle();
-                if (resultCheck){
+                boolean checkDone = network.checkConnection();
+                if (checkDone){
                     bundle.putString("result", String.valueOf(true));
 
                 }else {

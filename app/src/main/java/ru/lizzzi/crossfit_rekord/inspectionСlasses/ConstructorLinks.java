@@ -1,43 +1,22 @@
 package ru.lizzzi.crossfit_rekord.inspectionСlasses;
 
+import android.support.annotation.NonNull;
+
 //класс создает ссылку для переадресации на сайт
 public class ConstructorLinks {
 
-    public String constructorLinks (int iSelectGym, int iSelectDay, String stStartTime, String stTypesItem){
-
-        if (!stTypesItem.equals("CrossFit")){
-            switch (stTypesItem){
-
-                case "Open Gym":
-                    stTypesItem = "Open%20Gym";
-                    break;
-
-                case "CrossFit Kids":
-                    stTypesItem = "CF%20kids";
-                    break;
-
-                case "Lady class":
-                    stTypesItem = "Lady%20Class";
-                    break;
-
-                case "bjj kids":
-                    stTypesItem = "bjj%20kids";
-                    break;
-
-                case "Muay Thai kids":
-                    stTypesItem = "Muay%20Thai%20kids";
-                    break;
-
-                case "Muay Thai":
-                    stTypesItem = "Muay%20Thai";
-            }
+    public String constructorLinks (int selectGym,
+                                    int selectDay,
+                                    String startTime,
+                                    String selectTrainigType) {
+        String workoutType = selectTrainigType;
+        if (!workoutType.equals("CrossFit")) {
+            workoutType = getWorkoutType(selectTrainigType);
         }
 
-        String stSelectGym;
-        if (iSelectGym == 2){
+        String stSelectGym = "";
+        if (selectGym == 2) {
             stSelectGym = "2";
-        }else {
-            stSelectGym = "";
         }
 
         String stURL = "http://i.crossfitrekord.ru/rec";
@@ -45,10 +24,38 @@ public class ConstructorLinks {
         return stURL
                 + stSelectGym
                 + ".php?day="
-                + String.valueOf(iSelectDay)
+                + selectDay
                 + "&time="
-                + stStartTime
+                + startTime
                 + "%20"
-                + stTypesItem;
+                + workoutType;
+    }
+
+    private String getWorkoutType(@NonNull String workoutType) {
+        switch (workoutType) {
+            case "Open Gym":
+                workoutType = "Open%20Gym";
+                break;
+
+            case "CrossFit Kids":
+                workoutType = "CF%20kids";
+                break;
+
+            case "Lady class":
+                workoutType = "Lady%20Class";
+                break;
+
+            case "bjj kids":
+                workoutType = "bjj%20kids";
+                break;
+
+            case "Muay Thai kids":
+                workoutType = "Muay%20Thai%20kids";
+                break;
+
+            case "Muay Thai":
+                workoutType = "Muay%20Thai";
+        }
+        return workoutType;
     }
 }

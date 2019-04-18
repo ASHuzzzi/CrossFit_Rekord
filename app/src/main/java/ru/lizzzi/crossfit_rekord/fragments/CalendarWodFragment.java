@@ -35,10 +35,9 @@ import java.util.List;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.data.CalendarWodDBHelper;
-import ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck;
+import ru.lizzzi.crossfit_rekord.inspectionСlasses.Network;
 import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeTitle;
 import ru.lizzzi.crossfit_rekord.loaders.CalendarWodLoader;
-
 
 public class CalendarWodFragment extends Fragment implements  OnDateSelectedListener,
         OnMonthChangedListener, LoaderManager.LoaderCallbacks<List<Date>> {
@@ -47,7 +46,7 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
 
     private final int LOADER_ID = 1; //идентефикатор loader'а
 
-    private CalendarWodDBHelper mDBHelper;
+    private CalendarWodDBHelper calendarWodDBHelper;
 
     private static final String APP_PREFERENCES = "audata";
     private static final String APP_PREFERENCES_OBJECTID = "ObjectId";
@@ -58,55 +57,55 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
     private int month;
 
     private LinearLayout layoutErrorCalendarWod;
-    private MaterialCalendarView mcv;
-    private ProgressBar pbCalendarWod;
+    private MaterialCalendarView calendarView;
+    private ProgressBar progressBar;
 
-    private long timenow;
-    private long interval;
     private long timeStart;
+    private long timeInterval;
+    private long timeFinish;
 
-    private List<Date> loadDates;
-
+    private List<Date> selectDates;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
     }
 
     @SuppressLint("HandlerLeak")
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState){
-        View v = inflater.inflate(R.layout.fragment_calendar_wod, container, false);
+        View view = inflater.inflate(R.layout.fragment_calendar_wod, container, false);
 
-        mcv = v.findViewById(R.id.calendarView);
-        layoutErrorCalendarWod = v.findViewById(R.id.Layout_Error_Calendar_Wod);
-        Button btErrorCalendarWod = v.findViewById(R.id.bt_error_calendar_wod);
-        pbCalendarWod = v.findViewById(R.id.pb_calendar_wod);
+        calendarView = view.findViewById(R.id.calendarView);
+        layoutErrorCalendarWod = view.findViewById(R.id.Layout_Error_Calendar_Wod);
+        Button buttonErrorCalendarWod = view.findViewById(R.id.bt_error_calendar_wod);
+        progressBar = view.findViewById(R.id.pb_calendar_wod);
 
-        mcv.setVisibility(View.INVISIBLE);
+        mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+
+        calendarView.setVisibility(View.INVISIBLE);
         layoutErrorCalendarWod.setVisibility(View.INVISIBLE);
-        pbCalendarWod.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
 
-        mDBHelper = new CalendarWodDBHelper(getContext());
+        calendarWodDBHelper = new CalendarWodDBHelper(getContext());
         try {
-            mDBHelper.createDataBase();
+            calendarWodDBHelper.createDataBase();
         } catch (IOException ioe) {
             throw new Error("Unable to create database");
         }
 
         Calendar c = Calendar.getInstance();
-        int mcvMaximumDateYear = c.get(Calendar.YEAR);
-        int mcvMaximumDateMonth = c.get(Calendar.MONTH);
-        int mcvMaximumDateDay = c.getActualMaximum(Calendar.DAY_OF_MONTH);
+        int maximumDateYear = c.get(Calendar.YEAR);
+        int maximumDateMonth = c.get(Calendar.MONTH);
+        int maximumDateDay = c.getActualMaximum(Calendar.DAY_OF_MONTH);
 
-        mcv.state().edit()
+        calendarView.state().edit()
                 .setMinimumDate(CalendarDay.from(2019, 0, 1))
-                .setMaximumDate(CalendarDay.from(mcvMaximumDateYear, mcvMaximumDateMonth, mcvMaximumDateDay))
+                .setMaximumDate(CalendarDay.from(maximumDateYear, maximumDateMonth, maximumDateDay))
                 .commit();
-        mcv.setOnDateChangedListener(this);
-        mcv.setOnMonthChangedListener(this);
-        mcv.setSaveEnabled(true);
+        calendarView.setOnDateChangedListener(this);
+        calendarView.setOnMonthChangedListener(this);
+        calendarView.setSaveEnabled(true);
 
         getLoaderManager().initLoader(LOADER_ID, null,this);
 
@@ -115,99 +114,93 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
             @Override
             public void handleMessage(Message msg) {
                 Bundle bundle = msg.getData();
-                String resultCheck = bundle.getString("result");
+
+                boolean checkDone = bundle.getBoolean("result");
                 String status = bundle.getString("status");
-                if (resultCheck != null && resultCheck.equals("false")){
+                if (checkDone) {
                     layoutErrorCalendarWod.setVisibility(View.VISIBLE);
-                    pbCalendarWod.setVisibility(View.INVISIBLE);
-                }else {
-                    if (status != null && status.equals("load")){
-                        mcv.setVisibility(View.INVISIBLE);
-                        layoutErrorCalendarWod.setVisibility(View.INVISIBLE);
-                        pbCalendarWod.setVisibility(View.VISIBLE);
-                        startAsyncTaskLoader(timeStart, timenow);
-                    }else {
-                        mcv.setVisibility(View.VISIBLE);
-                        layoutErrorCalendarWod.setVisibility(View.INVISIBLE);
-                        pbCalendarWod.setVisibility(View.INVISIBLE);
+                    progressBar.setVisibility(View.INVISIBLE);
+                } else {
+                    layoutErrorCalendarWod.setVisibility(View.INVISIBLE);
+                    if (status != null && status.equals("load")) {
+                        calendarView.setVisibility(View.INVISIBLE);
+                        progressBar.setVisibility(View.VISIBLE);
+                        startAsyncTaskLoader(timeStart, timeFinish);
+                    } else {
+                        calendarView.setVisibility(View.VISIBLE);
+                        progressBar.setVisibility(View.INVISIBLE);
                     }
                 }
             }
         };
 
-        btErrorCalendarWod.setOnClickListener(new View.OnClickListener() {
+        buttonErrorCalendarWod.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 layoutErrorCalendarWod.setVisibility(View.INVISIBLE);
-                pbCalendarWod.setVisibility(View.VISIBLE);
-                startAsyncTaskLoader(timeStart, timenow);
+                progressBar.setVisibility(View.VISIBLE);
+                startAsyncTaskLoader(timeStart, timeFinish);
             }
         });
-
-        return v;
+        return view;
     }
-
-
 
     @Override
     public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
         String selectedDate;
-        String forMemoryDate; //дата которая запишется в файл, чтобы потом использовать ее при открытии календаря
+        String dateForOpenCalendar; //дата которая запишется в файл, чтобы потом использовать ее при открытии календаря
         Date convertSelectDate;
         String Day;
         String Month;
         @SuppressLint("SimpleDateFormat") SimpleDateFormat sdfCheckTime2 = new SimpleDateFormat("MM/dd/yyyy");
 
-        mcv.setDateSelected(date, false);
-        if (date.getDay() <10){
+        calendarView.setDateSelected(date, false);
+        if (date.getDay() < 10) {
             Day = "0" + date.getDay();
-        }else{
+        } else {
             Day = String.valueOf(date.getDay());
         }
 
-        if (date.getMonth() <10){
+        if (date.getMonth() < 10) {
             Month = "0" + (date.getMonth() + 1);
-        }else{
+        } else {
             Month = String.valueOf((date.getMonth() + 1));
         }
 
         selectedDate = Month + "/" + Day + "/" + date.getYear();
-        forMemoryDate = Month + "/01/" + date.getYear();
+        dateForOpenCalendar = Month + "/01/" + date.getYear();
 
         try {
             convertSelectDate = sdfCheckTime2.parse(selectedDate);
             GregorianCalendar calendarday = new GregorianCalendar();
             Date today = calendarday.getTime();
-            if (convertSelectDate.getTime() <= today.getTime()){
-                SharedPreferences mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+            if (convertSelectDate.getTime() <= today.getTime()) {
+                //SharedPreferences mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = mSettings.edit();
                 editor.putString(APP_PREFERENCES_SELECTEDDAY, selectedDate);
-                editor.putString(APP_PREFERENCES_SELECTEDDAYMONTH, forMemoryDate);
+                editor.putString(APP_PREFERENCES_SELECTEDDAYMONTH, dateForOpenCalendar);
                 editor.apply();
 
-                WorkoutDetailsFragment yfc = new WorkoutDetailsFragment();
+                WorkoutDetailsFragment fragment = new WorkoutDetailsFragment();
                 Bundle bundle = new Bundle();
                 bundle.putString("tag", selectedDate);
-                yfc.setArguments(bundle);
+                fragment.setArguments(bundle);
 
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction ft = fragmentManager.beginTransaction();
                 ft.setCustomAnimations(R.anim.pull_in_right, R.anim.push_out_left, R.anim.pull_in_left, R.anim.push_out_right);
-                ft.replace(R.id.container, yfc);
+                ft.replace(R.id.container, fragment);
                 ft.addToBackStack(null);
-
                 ft.commit();
-            }else {
-                for (int i = 0; i <loadDates.size(); i++){
-                    mcv.setDateSelected(CalendarDay.from(loadDates.get(i)), true);
+            } else {
+                for (int i = 0; i < selectDates.size(); i++) {
+                    calendarView.setDateSelected(CalendarDay.from(selectDates.get(i)), true);
                 }
                 Toast.makeText(getContext(), "Тренировки еще не было", Toast.LENGTH_SHORT).show();
             }
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
-
     }
 
     @Override
@@ -217,32 +210,32 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
         int checkMonth = month - swipeMonth;
         if ((checkMonth == 2) || (checkMonth == -2) || (checkMonth == -10) || (checkMonth == 10)){
             timeStart = date.getDate().getTime() - 2592000000L ;
-            interval = 2592000000L + 2592000000L;
-            timenow = date.getDate().getTime() + interval;
+            timeInterval = 2592000000L + 2592000000L;
+            timeFinish = date.getDate().getTime() + timeInterval;
 
-            mcv.setVisibility(View.INVISIBLE);
+            calendarView.setVisibility(View.INVISIBLE);
             layoutErrorCalendarWod.setVisibility(View.INVISIBLE);
-            pbCalendarWod.setVisibility(View.VISIBLE);
-            loadDates(timeStart, timenow);
+            progressBar.setVisibility(View.VISIBLE);
+            getDates(timeStart, timeFinish);
 
             month = date.getMonth();
         }
 
     }
 
-    private void startAsyncTaskLoader(long timeStart, long timenow){
+    private void startAsyncTaskLoader(long timeStart, long timeFinish){
         if(isAdded()){
             if (getLoaderManager().hasRunningLoaders()) {
                 getLoaderManager().destroyLoader(LOADER_ID);
             }
 
             @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf2 = new SimpleDateFormat("MM.dd.yyyy");
-            String stNowDate = sdf2.format(timenow);
-            String stStartDate = sdf2.format(timeStart);
+            String finishDate = sdf2.format(timeFinish);
+            String startDate = sdf2.format(timeStart);
 
             Bundle bundle = new Bundle();
-            bundle.putString("startDay", stStartDate);
-            bundle.putString("nowDay", stNowDate);
+            bundle.putString("startDay", startDate);
+            bundle.putString("nowDay", finishDate);
             getLoaderManager().restartLoader(LOADER_ID, bundle,this).forceLoad();
         }
     }
@@ -250,27 +243,23 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
     @NonNull
     @Override
     public Loader<List<Date>> onCreateLoader(int id, Bundle args) {
-        Loader<List<Date>> loader;
-        loader = new CalendarWodLoader(getContext(), args);
-        return loader;
+        return new CalendarWodLoader(getContext(), args);
     }
 
     @Override
-    public void onLoadFinished(@NonNull Loader<List<Date>> loader, List<Date> data) {
-
-        if (data != null){
-            for (int i = 0; i <data.size(); i++){
-                long lDate = data.get(i).getTime();
+    public void onLoadFinished(@NonNull Loader<List<Date>> loader, List<Date> dates) {
+        if (dates != null) {
+            for (int i = 0; i <dates.size(); i++) {
+                long time = dates.get(i).getTime();
                 mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-                mDBHelper.saveDates(mSettings.getString(APP_PREFERENCES_OBJECTID, ""), lDate);
+                calendarWodDBHelper.saveDates(mSettings.getString(APP_PREFERENCES_OBJECTID, ""), time);
             }
-            showDates(data);
+            showSelectedDates(dates);
 
-        }else{
-
+        } else {
             layoutErrorCalendarWod.setVisibility(View.VISIBLE);
-            pbCalendarWod.setVisibility(View.INVISIBLE);
-            mcv.setVisibility(View.INVISIBLE);
+            progressBar.setVisibility(View.INVISIBLE);
+            calendarView.setVisibility(View.INVISIBLE);
             Toast.makeText(getContext(), "Нет данных", Toast.LENGTH_SHORT).show();
         }
     }
@@ -283,42 +272,36 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
     @Override
     public  void onStart() {
         super.onStart();
+        if(layoutErrorCalendarWod.getVisibility() == View.INVISIBLE ){
+            String selectedDay = mSettings.getString(APP_PREFERENCES_SELECTEDDAY, "");
 
-        if(layoutErrorCalendarWod.getVisibility() == View.INVISIBLE){
-            SharedPreferences mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-            //String stDay = mSettings.getString(APP_PREFERENCES_SELECTEDDAYMONTH, "");
-            String stDay = mSettings.getString(APP_PREFERENCES_SELECTEDDAY, "");
-
-            Calendar cal = Calendar.getInstance();
-            if(stDay.equals("0") || stDay.equals("")){
-
-                timenow = cal.getTimeInMillis();
-                interval = 7776000000L;
-                timeStart = timenow - interval;
-                month = cal.get(Calendar.MONTH);
+            Calendar calendar = Calendar.getInstance();
+            if(selectedDay.equals("0") || selectedDay.equals("")){
+                timeFinish = calendar.getTimeInMillis();
+                timeInterval = 7776000000L;
+                timeStart = timeFinish - timeInterval;
+                month = calendar.get(Calendar.MONTH);
             }else {
                 try {
                     @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf3 = new SimpleDateFormat("MM/dd/yyyy");
-                    Date date = sdf3.parse(stDay);
-                    mcv.setCurrentDate(date);
-                    cal.setTime(date);
-                    month = cal.get(Calendar.MONTH);
-                    timenow = date.getTime();
-                    interval = 3024000000L;
-                    //interval = 2592000000L;
-                    //interval = 7776000000L;
-                    timeStart = timenow - interval;
-                    timenow = timenow + interval;
+                    Date date = sdf3.parse(selectedDay);
+                    calendarView.setCurrentDate(date);
+                    calendar.setTime(date);
+                    month = calendar.get(Calendar.MONTH);
+                    timeFinish = date.getTime();
+                    timeInterval = 3024000000L;
+                    timeStart = timeFinish - timeInterval;
+                    timeFinish = timeFinish + timeInterval;
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
             }
 
-            mcv.setVisibility(View.INVISIBLE);
+            calendarView.setVisibility(View.INVISIBLE);
             layoutErrorCalendarWod.setVisibility(View.INVISIBLE);
-            pbCalendarWod.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.VISIBLE);
 
-            loadDates(timeStart, timenow);
+            getDates(timeStart, timeFinish);
         }
 
 
@@ -340,63 +323,50 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
         if (getLoaderManager().hasRunningLoaders()) {
             getLoaderManager().destroyLoader(LOADER_ID);
         }
-        mDBHelper.close();
+        calendarWodDBHelper.close();
     }
 
-    public void loadDates(final long ltimeStart, final long ltimenow){
+    public void getDates(final long timeStart, final long timeFinish){
         mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-        List<Date> dates = mDBHelper.selectDates(
+        List<Date> selectDates = calendarWodDBHelper.selectDates(
                 mSettings.getString(APP_PREFERENCES_OBJECTID, ""),
-                ltimeStart,
-                ltimenow);
+                timeStart,
+                timeFinish);
 
-        if (dates.size() > 0) {
-            showDates(dates);
-        }else {
-
-            //поток запускаемый при создании экрана (запуск происходит из onResume)
+        if (selectDates.size() > 0) {
+            showSelectedDates(selectDates);
+        } else {
             Runnable runnableOpenFragment = new Runnable() {
 
                 @Override
                 public void run() {
-                    NetworkCheck networkCheck = new NetworkCheck(getContext());
-                    boolean resultCheck = networkCheck.checkInternet();
-
+                    Network network = new Network(getContext());
                     Bundle bundle = new Bundle();
-                    if (resultCheck) {
-                        timeStart = ltimeStart;
-                        timenow = ltimenow;
-
-                        bundle.putString("result", String.valueOf(true));
+                    boolean checkDone = network.checkConnection();
+                    if (checkDone) {
+                        CalendarWodFragment.this.timeStart = timeStart;
+                        CalendarWodFragment.this.timeFinish = timeFinish;
                         bundle.putString("status", "load");
-
-                    } else {
-                        bundle.putString("result", String.valueOf(false));
-
                     }
-
+                    bundle.putBoolean("result", checkDone);
                     Message msg = handlerOpenFragment.obtainMessage();
                     msg.setData(bundle);
                     handlerOpenFragment.sendMessage(msg);
-
                 }
             };
-
             Thread threadOpenFragment = new Thread(runnableOpenFragment);
             threadOpenFragment.setDaemon(true);
             threadOpenFragment.start();
         }
-
     }
 
-    public void showDates(List<Date> dates){
-        loadDates = dates;
-        for (int i = 0; i <dates.size(); i++){
-            mcv.setDateSelected(CalendarDay.from(dates.get(i)), true);
+    public void showSelectedDates(List<Date> dates) {
+        selectDates = dates;
+        for (int i = 0; i < selectDates.size(); i++) {
+            calendarView.setDateSelected(CalendarDay.from(selectDates.get(i)), true);
         }
-
-        mcv.setVisibility(View.VISIBLE);
+        calendarView.setVisibility(View.VISIBLE);
         layoutErrorCalendarWod.setVisibility(View.INVISIBLE);
-        pbCalendarWod.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.INVISIBLE);
     }
 }

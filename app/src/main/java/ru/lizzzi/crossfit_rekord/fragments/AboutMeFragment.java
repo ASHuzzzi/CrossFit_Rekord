@@ -25,7 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck;
+import ru.lizzzi.crossfit_rekord.inspectionСlasses.Network;
 import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeTitle;
 import ru.lizzzi.crossfit_rekord.loaders.AboutMeLoader;
 
@@ -50,8 +50,6 @@ public class AboutMeFragment extends Fragment implements LoaderManager.LoaderCal
     private EditText etPhone;
     private Button btChangeUserData;
     private ProgressBar pbAboutMe;
-
-    private ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck NetworkCheck; //переменная для проврки сети
 
     private Handler handlerAboutMeFragment;
     private Thread threadAboutMeFragment;
@@ -101,10 +99,10 @@ public class AboutMeFragment extends Fragment implements LoaderManager.LoaderCal
             @Override
             public void run() {
 
-                NetworkCheck = new NetworkCheck(getContext());
-                boolean resultCheck = NetworkCheck.checkInternet();
+                Network network = new Network(getContext());
                 Bundle bundle = new Bundle();
-                if (resultCheck){
+                boolean checkDone = network.checkConnection();
+                if (checkDone){
                     bundle.putString("result", String.valueOf(true));
 
                 }else {

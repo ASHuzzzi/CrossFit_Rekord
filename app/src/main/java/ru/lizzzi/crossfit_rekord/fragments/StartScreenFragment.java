@@ -26,38 +26,35 @@ import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeTitle;
 
 public class StartScreenFragment extends Fragment {
 
-    private LinearLayout llStartScreenDots;
-    private PageAdapterStartScreenSlider vpAdapterStartScrenSlider;
-    private int iNumberOfPage = 0;
-    private ViewPager vpStartScreenSlider;
+    private LinearLayout linLayStartScreenDots;
+    private PageAdapterStartScreenSlider adapterStartScreenSlider;
+    private int numberOfPage = 0;
+    private ViewPager viewPager;
     private Handler handlerStartScreen;
-    private int iDelay = 2000; //milliseconds
+    private int delay = 2000; //milliseconds
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_start_screen, container, false);
 
-        Button btSchedule = v.findViewById(R.id.button_schedule);
-        Button btRecordTraining = v.findViewById(R.id.button_record_training);
-        Button btDescription = v.findViewById(R.id.button_definition);
-        Button btContactsSS = v.findViewById(R.id.button_contss);
-        Button btCalendarWod = v.findViewById(R.id.button_calendar_wod);
+        Button buttonSchedule = v.findViewById(R.id.button_schedule);
+        Button buttonRecordTraining = v.findViewById(R.id.button_record_training);
+        Button buttonDescription = v.findViewById(R.id.button_definition);
+        Button buttonContacts = v.findViewById(R.id.button_contss);
+        Button buttonCalendarWod = v.findViewById(R.id.button_calendar_wod);
 
         handlerStartScreen = new Handler();
-        vpStartScreenSlider = v.findViewById(R.id.vpStart_Screen_Slider);
-        llStartScreenDots = v.findViewById(R.id.llStart_Screen_Dots);
+        viewPager = v.findViewById(R.id.vpStart_Screen_Slider);
+        linLayStartScreenDots = v.findViewById(R.id.llStart_Screen_Dots);
 
-        //добавляем точки
         addBottomDots(0);
 
-        vpAdapterStartScrenSlider = new PageAdapterStartScreenSlider(getChildFragmentManager());
-        vpStartScreenSlider.setAdapter(vpAdapterStartScrenSlider);
-        vpStartScreenSlider.addOnPageChangeListener(viewPagerPageChangeListener);
+        adapterStartScreenSlider = new PageAdapterStartScreenSlider(getChildFragmentManager());
+        viewPager.setAdapter(adapterStartScreenSlider);
+        viewPager.addOnPageChangeListener(viewPagerPageChangeListener);
 
-
-
-        btSchedule.setOnClickListener(new View.OnClickListener() {
+        buttonSchedule.setOnClickListener(new View.OnClickListener() {
             //@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onClick(View view) {
@@ -65,14 +62,14 @@ public class StartScreenFragment extends Fragment {
             }
         });
 
-        btRecordTraining.setOnClickListener(new View.OnClickListener() {
+        buttonRecordTraining.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 openFragment(RecordForTrainingSelectFragment.class);
             }
         });
 
-        btDescription.setOnClickListener(new View.OnClickListener() {
+        buttonDescription.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onClick(View view) {
@@ -80,25 +77,23 @@ public class StartScreenFragment extends Fragment {
             }
         });
 
-        btCalendarWod.setOnClickListener(new View.OnClickListener() {
+        buttonCalendarWod.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 openFragment(CalendarWodFragment.class);
             }
         });
 
-        btContactsSS.setOnClickListener(new View.OnClickListener() {
+        buttonContacts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 openFragment(ContactsFragment.class);
             }
         });
-
         return v;
     }
 
     private void openFragment(Class fragmentClass) {
-
         Fragment fragment = null;
         try {
             fragment = (Fragment) fragmentClass.newInstance();
@@ -111,7 +106,6 @@ public class StartScreenFragment extends Fragment {
         ft.replace(R.id.container, fragment);
         ft.addToBackStack(null);
         ft.commit();
-
     }
 
 
@@ -122,11 +116,11 @@ public class StartScreenFragment extends Fragment {
             InterfaceChangeTitle listernerChangeTitle = (InterfaceChangeTitle) getActivity();
             listernerChangeTitle.changeTitle(R.string.app_name, R.string.app_name);
         }
-
     }
+
     public void onResume() {
         super.onResume();
-            handlerStartScreen.postDelayed(runnable, iDelay);
+            handlerStartScreen.postDelayed(runnable, delay);
     }
 
     @Override
@@ -135,24 +129,21 @@ public class StartScreenFragment extends Fragment {
         handlerStartScreen.removeCallbacks(runnable);
     }
 
-    //метод рисующий точки
     private void addBottomDots(int iCurrentPage) {
         TextView[] arrDots = new TextView[4];
 
-        llStartScreenDots.removeAllViews();
+        linLayStartScreenDots.removeAllViews();
         for (int i = 0; i < arrDots.length; i++) {
             arrDots[i] = new TextView(getContext());
             arrDots[i].setText(Html.fromHtml("&#8226;"));
             arrDots[i].setTextSize(40);
             arrDots[i].setTextColor(
                     ContextCompat.getColor(Objects.requireNonNull(getContext()), R.color.colorWhite));
-            llStartScreenDots.addView(arrDots[i]);
+            linLayStartScreenDots.addView(arrDots[i]);
         }
-
         arrDots[iCurrentPage].setTextColor(
                 ContextCompat.getColor(Objects.requireNonNull(getContext()), R.color.colorRedPrimary));
     }
-
 
     //  viewpager change listener
     ViewPager.OnPageChangeListener viewPagerPageChangeListener = new ViewPager.OnPageChangeListener() {
@@ -161,30 +152,26 @@ public class StartScreenFragment extends Fragment {
         public void onPageSelected(int position) {
             addBottomDots(position);
             handlerStartScreen.removeCallbacks(runnable);
-
         }
 
         @Override
         public void onPageScrolled(int arg0, float arg1, int arg2) {
-
         }
 
         @Override
         public void onPageScrollStateChanged(int arg0) {
-
         }
     };
 
     Runnable runnable = new Runnable() {
         public void run() {
-            if (vpAdapterStartScrenSlider.getCount() == iNumberOfPage) {
-                iNumberOfPage = 0;
+            if (adapterStartScreenSlider.getCount() == numberOfPage) {
+                numberOfPage = 0;
             } else {
-                iNumberOfPage++;
+                numberOfPage++;
             }
-            vpStartScreenSlider.setCurrentItem(iNumberOfPage, true);
-            handlerStartScreen.postDelayed(this, iDelay);
+            viewPager.setCurrentItem(numberOfPage, true);
+            handlerStartScreen.postDelayed(this, delay);
         }
     };
-
 }

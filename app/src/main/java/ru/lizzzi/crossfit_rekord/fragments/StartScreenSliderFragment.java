@@ -14,7 +14,7 @@ import ru.lizzzi.crossfit_rekord.R;
 public class StartScreenSliderFragment extends Fragment {
     static final String ARGUMENT_PAGE_NUMBER = "arg_page_number";
 
-    private Drawable backImage;
+    private Drawable backgroundImage;
 
     public static StartScreenSliderFragment newInstance(int page) {
         StartScreenSliderFragment pageFragment = new StartScreenSliderFragment();
@@ -31,20 +31,20 @@ public class StartScreenSliderFragment extends Fragment {
             int pageNumber = getArguments().getInt(ARGUMENT_PAGE_NUMBER);
             switch (pageNumber){
                 case 0:
-                    backImage = getResources().getDrawable(R.drawable.ss1);
+                    backgroundImage = getResources().getDrawable(R.drawable.ss1);
                     break;
                 case 1:
-                    backImage = getResources().getDrawable(R.drawable.ss2);
+                    backgroundImage = getResources().getDrawable(R.drawable.ss2);
                     break;
                 case 2:
-                    backImage = getResources().getDrawable(R.drawable.ss3);
+                    backgroundImage = getResources().getDrawable(R.drawable.ss3);
                     break;
                 case 3:
-                    backImage = getResources().getDrawable(R.drawable.ss4);
+                    backgroundImage = getResources().getDrawable(R.drawable.ss4);
                     break;
             }
         }else {
-            backImage = getResources().getDrawable(R.drawable.ss1);
+            backgroundImage = getResources().getDrawable(R.drawable.ss1);
         }
     }
 
@@ -54,8 +54,7 @@ public class StartScreenSliderFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_start_screen_slider, container, false);
 
         ImageView imBackgroundImage = v.findViewById(R.id.ivSlider);
-        imBackgroundImage.setImageDrawable(backImage);
-
+        imBackgroundImage.setImageDrawable(backgroundImage);
         return v;
     }
 }

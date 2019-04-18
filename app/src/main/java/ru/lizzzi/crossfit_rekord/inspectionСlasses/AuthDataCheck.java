@@ -9,9 +9,9 @@ public class AuthDataCheck {
     private static final String APP_PREFERENCES = "audata";
     private static final String APP_PREFERENCES_OBJECTID = "ObjectId";
 
-    public boolean checkAuthData(Context context){
-
-        SharedPreferences mSettings = context.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-        return mSettings.contains(APP_PREFERENCES_OBJECTID);
+    public boolean checkAuthData(Context context) {
+        SharedPreferences sharedPreferences =
+                context.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        return sharedPreferences.contains(APP_PREFERENCES_OBJECTID);
     }
 }
