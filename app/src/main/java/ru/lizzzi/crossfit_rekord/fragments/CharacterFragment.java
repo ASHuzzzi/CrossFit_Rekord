@@ -22,19 +22,17 @@ import ru.lizzzi.crossfit_rekord.interfaces.ListernerCharacter;
 
 public class CharacterFragment extends Fragment {
 
-    private ArrayList<String> itemListCharacter = new ArrayList<>();
-    private RecyclerView rvCharacter;
+    private ArrayList<String> listCharacter = new ArrayList<>();
+    private RecyclerView recViewCharacter;
 
     public CharacterFragment() {
-        // Required empty public constructor
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_character, container, false);
-        rvCharacter = view.findViewById(R.id.rvCharacter);
-
+        recViewCharacter = view.findViewById(R.id.rvCharacter);
         return  view;
     }
 
@@ -46,39 +44,42 @@ public class CharacterFragment extends Fragment {
             listernerChangeTitle.changeTitle(R.string.title_Character_Fragment, R.string.title_Character_Fragment);
         }
 
-        DefinitionDBHelper mDbHelper = new DefinitionDBHelper(getContext());
+        DefinitionDBHelper definitionDBHelper = new DefinitionDBHelper(getContext());
 
         try {
-            mDbHelper.createDataBase();
+            definitionDBHelper.createDataBase();
         } catch (IOException ioe) {
             throw new Error("Unable to create database");
         }
 
-        mDbHelper.openDataBase();
+        //definitionDBHelper.openDataBase();
 
-        itemListCharacter.clear();
-        itemListCharacter = mDbHelper.selectCharacter();
-        mDbHelper.close();
-        RecyclerAdapterCharacter adapterCharacter = new RecyclerAdapterCharacter(itemListCharacter, new ListernerCharacter() {
+        listCharacter.clear();
+        listCharacter = definitionDBHelper.getListCharacters();
+        //definitionDBHelper.close();
+        RecyclerAdapterCharacter adapter = new RecyclerAdapterCharacter(listCharacter, new ListernerCharacter() {
             @Override
-            public void SelectCharacter(String stCharacter) {
-                DefinitionFragment yfc = new DefinitionFragment();
+            public void SelectCharacter(String selectCharacter) {
+                DefinitionFragment fragment = new DefinitionFragment();
                 Bundle bundle = new Bundle();
-                bundle.putString("tag", stCharacter);
-                yfc.setArguments(bundle);
+                bundle.putString("tag", selectCharacter);
+                fragment.setArguments(bundle);
                 FragmentManager fragmentManager = getFragmentManager();
-                FragmentTransaction ft = fragmentManager.beginTransaction();
-                ft.setCustomAnimations(R.anim.pull_in_right, R.anim.push_out_left, R.anim.pull_in_left, R.anim.push_out_right);
-                ft.replace(R.id.container, yfc);
-                ft.addToBackStack(null);
-                ft.commit();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.setCustomAnimations(
+                        R.anim.pull_in_right,
+                        R.anim.push_out_left,
+                        R.anim.pull_in_left,
+                        R.anim.push_out_right);
+                fragmentTransaction.replace(R.id.container, fragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
             }
         });
 
-        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
-        rvCharacter.setLayoutManager(mLayoutManager);
-        rvCharacter.setAdapter(adapterCharacter);
-
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        recViewCharacter.setLayoutManager(layoutManager);
+        recViewCharacter.setAdapter(adapter);
     }
 
     @Override

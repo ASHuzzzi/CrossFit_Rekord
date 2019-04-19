@@ -33,66 +33,62 @@ import ru.lizzzi.crossfit_rekord.loaders.WorkoutDetailsLoaders;
 
 public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Map>>{
 
-
     private static final int RESULT_OK = -1;
-    private LinearLayout ll1;
-    private RecyclerView rvItemsInWod;
+    private LinearLayout linLayMain;
+    private RecyclerView recViewItemsInWod;
 
-    private Handler handlerOpenFragmentTL2;
+    private Handler handlerOpenFragment;
     private Thread threadUpdateFragment;
 
     private static final String APP_PREFERENCES = "audata";
     private static final String APP_PREFERENCES_SELECTEDDAY = "SelectedDay";
     private static final String APP_PREFERENCES_OBJECTID = "ObjectId";
-    private SharedPreferences mSettings;
+    private SharedPreferences sharedPreferences;
 
-    private LinearLayout llLayoutError;
-    private ProgressBar pbProgressBar;
-    private Button buttonEnterReult;
+    private LinearLayout linLayError;
+    private ProgressBar progressBar;
+    private Button buttonSaveReult;
 
     static final private int CHOOSE_THIEF = 0;
 
-    private String stSkill;
-    private String stWoDLevel;
-    private String stWoDResults;
-    private boolean flag;
+    private String skill;
+    private String wodLevel;
+    private String wodResults;
+    private boolean haveCurrentUserResult;
 
     private RecyclerAdapterWorkoutDetails adapter;
     private Runnable runnableOpenFragment;
 
-
     public TL2ResultFragment() {
-        // Required empty public constructor
     }
-
 
     @SuppressLint("HandlerLeak")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View v = inflater.inflate(R.layout.fragment_tl2result, container, false);
+        final View view = inflater.inflate(R.layout.fragment_tl2result, container, false);
 
-        ll1 = v.findViewById(R.id.ll1);
-        rvItemsInWod = v.findViewById(R.id.lvWodResult);
-        buttonEnterReult = v.findViewById(R.id.btnOpenEnterResult);
-        llLayoutError = v.findViewById(R.id.Layout_Error);
-        pbProgressBar = v.findViewById(R.id.progressBar4);
-        Button buttonError = v.findViewById(R.id.button5);
+        linLayMain = view.findViewById(R.id.linLayMain);
+        recViewItemsInWod = view.findViewById(R.id.lvWodResult);
+        buttonSaveReult = view.findViewById(R.id.btnOpenEnterResult);
+        linLayError = view.findViewById(R.id.Layout_Error);
+        progressBar = view.findViewById(R.id.progressBar4);
+        Button buttonError = view.findViewById(R.id.button5);
 
-        mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        sharedPreferences = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        buttonSaveReult.setText(R.string.strEnterResult);
 
-        handlerOpenFragmentTL2 = new Handler() {
+        handlerOpenFragment = new Handler() {
             @Override
             public void handleMessage(Message msg) {
                 Bundle bundle = msg.getData();
-                String result_check = bundle.getString("result");
-                if (result_check != null && result_check.equals("true")){
-                    loadSessionAsyncTaskLoader();
-
-                }else {
-                    ll1.setVisibility(View.INVISIBLE);
-                    llLayoutError.setVisibility(View.VISIBLE);
-                    pbProgressBar.setVisibility(View.INVISIBLE);
+                boolean checkDone = bundle.getBoolean("result");
+                if (checkDone) {
+                    getTrainingResults();
+                } else {
+                    linLayMain.setVisibility(View.INVISIBLE);
+                    linLayError.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.INVISIBLE);
                 }
             }
         };
@@ -101,33 +97,25 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
         runnableOpenFragment = new Runnable() {
             @Override
             public void run() {
-
                 Network network = new Network(getContext());
                 Bundle bundle = new Bundle();
                 boolean checkDone = network.checkConnection();
                 if (checkDone) {
-                    bundle.putString("status", String.valueOf("start"));
-                    bundle.putString("result", String.valueOf(true));
-
-                }else {
-                    bundle.putString("result", String.valueOf(false));
-
+                    bundle.putString("status", "start");
                 }
-                Message msg = handlerOpenFragmentTL2.obtainMessage();
-
+                bundle.putBoolean("result", checkDone);
+                Message msg = handlerOpenFragment.obtainMessage();
                 msg.setData(bundle);
-                handlerOpenFragmentTL2.sendMessage(msg);
-
+                handlerOpenFragment.sendMessage(msg);
             }
         };
 
         buttonError.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                ll1.setVisibility(View.INVISIBLE);
-                llLayoutError.setVisibility(View.INVISIBLE);
-                pbProgressBar.setVisibility(View.VISIBLE);
+                linLayMain.setVisibility(View.INVISIBLE);
+                linLayError.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.VISIBLE);
 
                 threadUpdateFragment = new Thread(runnableOpenFragment);
                 threadUpdateFragment.setDaemon(true);
@@ -135,31 +123,29 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
             }
         });
 
-        buttonEnterReult.setOnClickListener(new View.OnClickListener() {
+        buttonSaveReult.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(v.getContext(), EnterResultActivity.class);
-                if (flag){
+                Intent intent = new Intent(view.getContext(), EnterResultActivity.class);
+                if (haveCurrentUserResult) {
                     intent.putExtra("flag", true);
-                    intent.putExtra("skill", stSkill);
-                    intent.putExtra("level", stWoDLevel);
-                    intent.putExtra("results", stWoDResults);
-                }else {
+                    intent.putExtra("skill", skill);
+                    intent.putExtra("level", wodLevel);
+                    intent.putExtra("results", wodResults);
+                } else {
                     intent.putExtra("flag", false);
                 }
                 startActivityForResult(intent, CHOOSE_THIEF);
-                Objects.requireNonNull(getActivity()).overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
-
-
+                Objects.requireNonNull(getActivity()).overridePendingTransition(
+                        R.anim.pull_in_right,
+                        R.anim.push_out_left);
             }
         });
-
-        return v;
+        return view;
     }
 
-    private void loadSessionAsyncTaskLoader(){
-
-        String selectedDay =  mSettings.getString(APP_PREFERENCES_SELECTEDDAY, "");
+    private void getTrainingResults(){
+        String selectedDay =  sharedPreferences.getString(APP_PREFERENCES_SELECTEDDAY, "");
 
         Bundle bundle = new Bundle();
         bundle.putString("Selected_day", selectedDay);
@@ -178,41 +164,33 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
 
     @Override
     public void onLoadFinished(@NonNull Loader<List<Map>> loader, List<Map> data) {
-        flag = false;
-
-        pbProgressBar.setVisibility(View.INVISIBLE);
-        if (data != null && data.size() > 0){
-            for (int i = 0; i < data.size(); i++){
-                String stObjectId =  mSettings.getString(APP_PREFERENCES_OBJECTID, "");
-
-                if(data.get(i).containsValue(stObjectId)){
-                    stSkill = String.valueOf(data.get(i).get("skill"));
-                    stWoDLevel = String.valueOf(data.get(i).get("wod_level"));
-                    stWoDResults = String.valueOf(data.get(i).get("wod_result"));
-                    flag = true;
+        haveCurrentUserResult = false;
+        progressBar.setVisibility(View.INVISIBLE);
+        if (data != null && data.size() > 0) {
+            for (int i = 0; i < data.size(); i++) {
+                String currentUserId =  sharedPreferences.getString(APP_PREFERENCES_OBJECTID, "");
+                if (data.get(i).containsValue(currentUserId)) {
+                    skill = String.valueOf(data.get(i).get("skill"));
+                    wodLevel = String.valueOf(data.get(i).get("wod_level"));
+                    wodResults = String.valueOf(data.get(i).get("wod_result"));
+                    haveCurrentUserResult = true;
+                    buttonSaveReult.setText(R.string.strEditDeleteResult);
                 }
             }
-
-            if (flag){
-                buttonEnterReult.setText(R.string.strEditDeleteResult);
-            }else {
-                buttonEnterReult.setText(R.string.strEnterResult);
-            }
-
             adapter = new RecyclerAdapterWorkoutDetails(getContext(), data);
             LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
-            rvItemsInWod.setLayoutManager(mLayoutManager);
-            rvItemsInWod.setAdapter(adapter);
+            recViewItemsInWod.setLayoutManager(mLayoutManager);
+            recViewItemsInWod.setAdapter(adapter);
 
-        }else {
-            if (adapter != null){
+        } else {
+            if (adapter != null) {
                 LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
-                rvItemsInWod.setLayoutManager(mLayoutManager);
-                rvItemsInWod.setAdapter(null);
+                recViewItemsInWod.setLayoutManager(mLayoutManager);
+                recViewItemsInWod.setAdapter(null);
             }
         }
-        llLayoutError.setVisibility(View.INVISIBLE);
-        ll1.setVisibility(View.VISIBLE);
+        linLayError.setVisibility(View.INVISIBLE);
+        linLayMain.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -222,12 +200,12 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
     @Override
     public  void onStart() {
         super.onStart();
-        if (adapter == null){
-            llLayoutError.setVisibility(View.INVISIBLE);
-            ll1.setVisibility(View.INVISIBLE);
-            pbProgressBar.setVisibility(View.VISIBLE);
+        if (adapter == null) {
+            linLayError.setVisibility(View.INVISIBLE);
+            linLayMain.setVisibility(View.INVISIBLE);
+            progressBar.setVisibility(View.VISIBLE);
 
-            if (Thread.currentThread() != threadUpdateFragment){
+            if (Thread.currentThread() != threadUpdateFragment) {
                 threadUpdateFragment = new Thread(runnableOpenFragment);
                 threadUpdateFragment.setDaemon(true);
                 threadUpdateFragment.start();
@@ -236,22 +214,14 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == CHOOSE_THIEF) {
             if (resultCode == RESULT_OK) {
-                ll1.setVisibility(View.INVISIBLE);
-                pbProgressBar.setVisibility(View.VISIBLE);
+                linLayMain.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.VISIBLE);
                 threadUpdateFragment.run();
-
             }
         }
     }
-
 }

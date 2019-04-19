@@ -22,6 +22,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -33,17 +34,17 @@ import ru.lizzzi.crossfit_rekord.loaders.WorkoutDetailsLoaders;
 
 public class TL1WodFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Map>>{
 
-    private TextView tvWarmUp;
-    private TextView tvSkill;
-    private TextView tvWOD;
-    private TextView tvLevelSc;
-    private TextView tvLevelRx;
-    private TextView tvLevelRxPlus;
-    private LinearLayout llMain;
-    private LinearLayout llLayoutError;
-    private LinearLayout llEmptyData;
-    private TextView tvTL1ED1;
-    private ProgressBar pbProgressBar;
+    private TextView textWarmUp;
+    private TextView textSkill;
+    private TextView textWOD;
+    private TextView textLevelSc;
+    private TextView textLevelRx;
+    private TextView textLevelRxPlus;
+    private LinearLayout linLayMain;
+    private LinearLayout linLayError;
+    private LinearLayout linLayEmptyData;
+    private TextView textEmptyData;
+    private ProgressBar progressBar;
 
     private Handler handlerOpenFragment;
     private Thread threadOpenFragment;
@@ -60,33 +61,33 @@ public class TL1WodFragment extends Fragment implements LoaderManager.LoaderCall
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_tl1wod, container, false);
-        tvWarmUp = v.findViewById(R.id.tvWarmUp);
-        tvSkill = v.findViewById(R.id.tvSkill);
-        tvWOD = v.findViewById(R.id.tvWOD);
-        tvLevelSc = v.findViewById(R.id.tvLevelSc);
-        tvLevelRx = v.findViewById(R.id.tvLevelRx);
-        tvLevelRxPlus = v.findViewById(R.id.tvLevelRxplus);
-        tvTL1ED1 = v.findViewById(R.id.tvTL1ED1);
+        View view = inflater.inflate(R.layout.fragment_tl1wod, container, false);
+        textWarmUp = view.findViewById(R.id.tvWarmUp);
+        textSkill = view.findViewById(R.id.tvSkill);
+        textWOD = view.findViewById(R.id.tvWOD);
+        textLevelSc = view.findViewById(R.id.tvLevelSc);
+        textLevelRx = view.findViewById(R.id.tvLevelRx);
+        textLevelRxPlus = view.findViewById(R.id.tvLevelRxplus);
+        textEmptyData = view.findViewById(R.id.tvTL1ED1);
 
-        llMain = v.findViewById(R.id.llMain);
-        Button buttonError = v.findViewById(R.id.button5);
-        llLayoutError = v.findViewById(R.id.Layout_Error);
-        llEmptyData = v.findViewById(R.id.llEmptyData);
-        pbProgressBar = v.findViewById(R.id.progressBar3);
+        linLayMain = view.findViewById(R.id.llMain);
+        Button buttonError = view.findViewById(R.id.button5);
+        linLayError = view.findViewById(R.id.Layout_Error);
+        linLayEmptyData = view.findViewById(R.id.llEmptyData);
+        progressBar = view.findViewById(R.id.progressBar3);
 
 
         //хэндлер для потока runnableOpenFragment
         handlerOpenFragment = new Handler() {
             @Override
-            public void handleMessage(Message msg) {
-                Bundle bundle = msg.getData();
-                String result_check = bundle.getString("result");
-                if (result_check != null && result_check.equals("true")){
-                    loadExerciseAsyncTaskLoader();
-                }else {
-                    llLayoutError.setVisibility(View.VISIBLE);
-                    pbProgressBar.setVisibility(View.INVISIBLE);
+            public void handleMessage(Message message) {
+                Bundle bundle = message.getData();
+                boolean checkDone = bundle.getBoolean("result");
+                if (checkDone) {
+                    getExercise();
+                } else {
+                    linLayError.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.INVISIBLE);
                 }
             }
         };
@@ -95,153 +96,134 @@ public class TL1WodFragment extends Fragment implements LoaderManager.LoaderCall
             @Override
             public void run() {
                 Network network = new Network(getContext());
-                Bundle bundle = new Bundle();
                 boolean checkDone = network.checkConnection();
-                if (checkDone) {
-                    bundle.putString("result", String.valueOf(true));
-
-                }else {
-                    bundle.putString("result", String.valueOf(false));
-
-                }
-
-                Message msg = handlerOpenFragment.obtainMessage();
-                msg.setData(bundle);
-                handlerOpenFragment.sendMessage(msg);
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("result", checkDone);
+                Message message = handlerOpenFragment.obtainMessage();
+                message.setData(bundle);
+                handlerOpenFragment.sendMessage(message);
             }
         };
 
         buttonError.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                pbProgressBar.setVisibility(View.VISIBLE);
-                llLayoutError.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.VISIBLE);
+                linLayError.setVisibility(View.INVISIBLE);
                 threadOpenFragment = new Thread(runnableOpenFragment);
                 threadOpenFragment.setDaemon(true);
                 threadOpenFragment.start();
             }
         });
 
-        return v;
+        return view;
     }
 
-    private void loadExerciseAsyncTaskLoader(){
-
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-            SharedPreferences mSettings = Objects.requireNonNull(getContext()).getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-            String selectedDay =  mSettings.getString(APP_PREFERENCES_SELECTEDDAY, "");
-            Bundle bundle = new Bundle();
-            bundle.putString("Selected_day", selectedDay);
-            bundle.putString("Table", "exercises");
-            int LOADER_ID2 = 2;
-            getLoaderManager().initLoader(LOADER_ID2, bundle, this).forceLoad();
-        }
+    private void getExercise(){
+        SharedPreferences sharedPreferences = Objects.requireNonNull(
+                getContext()).getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        String selectedDay =  sharedPreferences.getString(APP_PREFERENCES_SELECTEDDAY, "");
+        Bundle bundle = new Bundle();
+        bundle.putString("Selected_day", selectedDay);
+        bundle.putString("Table", "exercises");
+        int LOADER_GET_EXERCISE = 2;
+        getLoaderManager().initLoader(LOADER_GET_EXERCISE, bundle, this).forceLoad();
     }
 
     @NonNull
     @Override
     public Loader<List<Map>> onCreateLoader(int id, Bundle args) {
-        Loader<List<Map>> loader;
-        loader = new WorkoutDetailsLoaders(getContext(), args);
-        return loader;
+        return new WorkoutDetailsLoaders(getContext(), args);
     }
 
     @Override
-    public void onLoadFinished(@NonNull Loader<List<Map>> loader, List<Map> data) {
-        pbProgressBar.setVisibility(View.INVISIBLE);
-        if (data != null && data.size() > 0){
-            if(!String.valueOf(data.get(0).get("warmup")).equals("null")){
-                tvWarmUp.setText(String.valueOf(data.get(0).get("warmup")));
+    public void onLoadFinished(@NonNull Loader<List<Map>> loader, List<Map> wodOfDay) {
+        progressBar.setVisibility(View.INVISIBLE);
+        if (wodOfDay != null && wodOfDay.size() > 0){
+            if(!String.valueOf(wodOfDay.get(0).get("warmup")).equals("null")){
+                textWarmUp.setText(String.valueOf(wodOfDay.get(0).get("warmup")));
             }else {
-                tvWarmUp.setText("—");
+                textWarmUp.setText("—");
             }
-            if(!String.valueOf(data.get(0).get("skill")).equals("null")){
-                tvSkill.setText(String.valueOf(data.get(0).get("skill")));
+            if(!String.valueOf(wodOfDay.get(0).get("skill")).equals("null")){
+                textSkill.setText(String.valueOf(wodOfDay.get(0).get("skill")));
             }else {
-                tvSkill.setText("—");
+                textSkill.setText("—");
             }
-            if(!String.valueOf(data.get(0).get("wod")).equals("null")){
-                tvWOD.setText(String.valueOf(data.get(0).get("wod")));
+            if(!String.valueOf(wodOfDay.get(0).get("wod")).equals("null")){
+                textWOD.setText(String.valueOf(wodOfDay.get(0).get("wod")));
             }else {
-                tvWOD.setText("—");
+                textWOD.setText("—");
             }
-            if(!String.valueOf(data.get(0).get("Sc")).equals("null")){
-                tvLevelSc.setText(String.valueOf(data.get(0).get("Sc")));
+            if(!String.valueOf(wodOfDay.get(0).get("Sc")).equals("null")){
+                textLevelSc.setText(String.valueOf(wodOfDay.get(0).get("Sc")));
             }else {
-                tvLevelSc.setText("—");
+                textLevelSc.setText("—");
             }
-            if(!String.valueOf(data.get(0).get("Rx")).equals("null")){
-                tvLevelRx.setText(String.valueOf(data.get(0).get("Rx")));
+            if(!String.valueOf(wodOfDay.get(0).get("Rx")).equals("null")){
+                textLevelRx.setText(String.valueOf(wodOfDay.get(0).get("Rx")));
             }else {
-                tvLevelRx.setText("—");
+                textLevelRx.setText("—");
             }
-            if(!String.valueOf(data.get(0).get("Rxplus")).equals("null")){
-                tvLevelRxPlus.setText(String.valueOf(data.get(0).get("Rxplus")));
+            if(!String.valueOf(wodOfDay.get(0).get("Rxplus")).equals("null")){
+                textLevelRxPlus.setText(String.valueOf(wodOfDay.get(0).get("Rxplus")));
             }else {
-                tvLevelRxPlus.setText("—");
+                textLevelRxPlus.setText("—");
             }
-            llMain.setVisibility(View.VISIBLE);
+            linLayMain.setVisibility(View.VISIBLE);
         }else {
-            tvTL1ED1.setText(getResources().getText(R.string.TL1NoData1));
-            llEmptyData.setVisibility(View.VISIBLE);
-
+            textEmptyData.setText(getResources().getText(R.string.TL1NoData1));
+            linLayEmptyData.setVisibility(View.VISIBLE);
         }
-
     }
 
     @Override
     public void onLoaderReset(@NonNull Loader<List<Map>> loader) {
-
     }
 
     @Override
     public void onStart(){
         super.onStart();
 
-        if (tvWarmUp.length() < 1){
-            llLayoutError.setVisibility(View.INVISIBLE);
-            llMain.setVisibility(View.INVISIBLE);
-            llEmptyData.setVisibility(View.INVISIBLE);
+        if (textWarmUp.length() < 1) {
+            linLayError.setVisibility(View.INVISIBLE);
+            linLayMain.setVisibility(View.INVISIBLE);
+            linLayEmptyData.setVisibility(View.INVISIBLE);
 
             try {
-                SharedPreferences mSettings = Objects.requireNonNull(getContext()).getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-                String ri =  mSettings.getString(APP_PREFERENCES_SELECTEDDAY, "");
+                SharedPreferences sharedPreferences = Objects.requireNonNull(
+                        getContext()).getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+                String savedDay =  sharedPreferences.getString(APP_PREFERENCES_SELECTEDDAY, "");
 
-                @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-                @SuppressLint("SimpleDateFormat") SimpleDateFormat sdfMonthDay = new SimpleDateFormat("MMdd");
-                @SuppressLint("SimpleDateFormat") SimpleDateFormat sdfHourToday = new SimpleDateFormat("HH");
-
-                Date ddd = sdf.parse(ri);
-                int iSelectedDay = Integer.parseInt(sdfMonthDay.format(ddd));
-                int iDayToday = Integer.parseInt(sdfMonthDay.format(new Date()));
-                int iHourToday = Integer.parseInt(sdfHourToday.format(new Date()));
+                SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
+                SimpleDateFormat sdfMonthDay = new SimpleDateFormat("MMdd", Locale.getDefault());
+                SimpleDateFormat sdfHourToday = new SimpleDateFormat("HH", Locale.getDefault());
+                Date savedDayForParse = sdf.parse(savedDay);
+                int selectedDay = Integer.parseInt(sdfMonthDay.format(savedDayForParse));
+                int currentDay = Integer.parseInt(sdfMonthDay.format(new Date()));
+                int currentHour = Integer.parseInt(sdfHourToday.format(new Date()));
 
                 //не показваю комплекс только если дата = сегодня, а время до 21 часа
-                if(iSelectedDay != iDayToday || iHourToday > 20){
-                    pbProgressBar.setVisibility(View.VISIBLE);
+                if (selectedDay != currentDay || currentHour > 20) {
+                    progressBar.setVisibility(View.VISIBLE);
                     threadOpenFragment = new Thread(runnableOpenFragment);
                     threadOpenFragment.setDaemon(true);
                     threadOpenFragment.start();
-                }else {
-                    tvTL1ED1.setText(getResources().getText(R.string.TL1NoTime1));
-                    pbProgressBar.setVisibility(View.INVISIBLE);
-                    llEmptyData.setVisibility(View.VISIBLE);
+                } else {
+                    textEmptyData.setText(getResources().getText(R.string.TL1NoTime1));
+                    progressBar.setVisibility(View.INVISIBLE);
+                    linLayEmptyData.setVisibility(View.VISIBLE);
                 }
             } catch (ParseException e) {
                 e.printStackTrace();
-                llLayoutError.setVisibility(View.VISIBLE);
-                pbProgressBar.setVisibility(View.INVISIBLE);
+                linLayError.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.INVISIBLE);
             }
         }
 
-        if (getActivity() instanceof InterfaceChangeTitle){
+        if (getActivity() instanceof InterfaceChangeTitle) {
             InterfaceChangeTitle listernerChangeTitle = (InterfaceChangeTitle) getActivity();
             listernerChangeTitle.changeTitle(R.string.title_WorkoutDetails_Fragment, R.string.title_CalendarWod_Fragment);
         }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
     }
 }

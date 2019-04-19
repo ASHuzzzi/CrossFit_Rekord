@@ -279,5 +279,9 @@
     <string name="strWorkoutDetailsWod">Wod</string>
     <string name="strWorkoutDetailsResult">Результаты</string>
 
+    <!-- Значения для фрагмента DefinitionFragment -->
+    <string name="termin">termin</string>
+    <string name="description">description</string>
+
 
 </resources>

@@ -91,7 +91,6 @@ public class RegistryFragment extends Fragment implements LoaderManager.LoaderCa
                         Toast.makeText(getContext(), "Нет подключения", Toast.LENGTH_SHORT).show();
                     }
                 }
-
             }
         };
 

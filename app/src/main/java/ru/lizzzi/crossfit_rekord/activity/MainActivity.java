@@ -185,36 +185,40 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         Class fragmentClass = null;
-        int itemId = item.getItemId();
-        if (itemId == R.id.shedule) {
-            fragmentName = R.string.title_Table_Fragment;
-            fragmentClass = TableFragment.class;
-        } else if (itemId == R.id.record_training) {
-            fragmentName = R.string.title_RecordForTraining_Fragment;
-            fragmentClass = RecordForTrainingSelectFragment.class;
-        } else if (itemId == R.id.definition) {
-            fragmentName = R.string.title_Character_Fragment;
-            fragmentClass = CharacterFragment.class;
-
-        } else if (itemId == R.id.contacts) {
-            fragmentName = R.string.title_Contacts_Fragment;
-            fragmentClass = ContactsFragment.class;
-
-        } else if (itemId == R.id.profile) {
-            fragmentName = R.string.title_AboutMe_Fragment;
-            fragmentClass = AboutMeFragment.class;
-
-        } else if (itemId == R.id.calendar_wod) {
-            fragmentName = R.string.title_CalendarWod_Fragment;
-            fragmentClass = CalendarWodFragment.class;
-
-        } else if (itemId == R.id.notification) {
-            fragmentClass = NotificationFragment.class;
-            fragmentName = R.string.title_Notification_Fragment;
-
-        } else if (itemId == R.id.myResults) {
-            fragmentClass = MyResultsFragment.class;
-            fragmentName = R.string.title_MyResults_Fragment;
+        int selectedMenuItem = item.getItemId();
+        switch (selectedMenuItem) {
+            case (R.id.shedule):
+                fragmentName = R.string.title_Table_Fragment;
+                fragmentClass = TableFragment.class;
+                break;
+            case (R.id.record_training):
+                fragmentName = R.string.title_RecordForTraining_Fragment;
+                fragmentClass = RecordForTrainingSelectFragment.class;
+                break;
+            case (R.id.definition):
+                fragmentName = R.string.title_Character_Fragment;
+                fragmentClass = CharacterFragment.class;
+                break;
+            case (R.id.contacts):
+                fragmentName = R.string.title_Contacts_Fragment;
+                fragmentClass = ContactsFragment.class;
+                break;
+            case (R.id.profile):
+                fragmentName = R.string.title_AboutMe_Fragment;
+                fragmentClass = AboutMeFragment.class;
+                break;
+            case (R.id.calendar_wod):
+                fragmentName = R.string.title_CalendarWod_Fragment;
+                fragmentClass = CalendarWodFragment.class;
+                break;
+            case (R.id.notification):
+                fragmentClass = NotificationFragment.class;
+                fragmentName = R.string.title_Notification_Fragment;
+                break;
+            case (R.id.myResults):
+                fragmentClass = MyResultsFragment.class;
+                fragmentName = R.string.title_MyResults_Fragment;
+                break;
         }
 
         if(fragmentName != openFragment) {
@@ -252,7 +256,6 @@ public class MainActivity extends AppCompatActivity implements
         ft.replace(R.id.container, fragment);
         ft.addToBackStack(null);
         ft.commit();
-
     }
 
     @Override
@@ -349,57 +352,45 @@ public class MainActivity extends AppCompatActivity implements
 
     //первый аргумент нужен для смены заголовка, второй для выделения элемента в шторке
     @Override
-    public void changeTitle(int intNameFragmentTitle, int intNameFragmentSelectNavDraw) {
-        setTitle(intNameFragmentTitle);
-        if (fragmentName == 0) fragmentName =intNameFragmentTitle;
-        openFragment = intNameFragmentTitle;
+    public void changeTitle(int nameFotTitle, int nameForNavigationDraw) {
+        setTitle(nameFotTitle);
+        if (fragmentName == 0) fragmentName = nameFotTitle;
+        openFragment = nameFotTitle;
 
-        if (intNameFragmentSelectNavDraw == R.string.title_Notification_Fragment) {
-            navigationView.getMenu().getItem(0).setChecked(true);
-        } else {
-            navigationView.getMenu().getItem(0).setChecked(false);
+        for (int index = 0; index < navigationView.getMenu().size(); index++) {
+            navigationView.getMenu().getItem(index).setChecked(false);
         }
 
-        if (intNameFragmentSelectNavDraw == R.string.title_Table_Fragment) {
-            navigationView.getMenu().getItem(1).setChecked(true);
-        } else {
-            navigationView.getMenu().getItem(1).setChecked(false);
+        int navigationViewIndex = -1;
+        switch (nameForNavigationDraw) {
+            case (R.string.title_Notification_Fragment):
+                navigationViewIndex = 0;
+                break;
+            case (R.string.title_Table_Fragment):
+                navigationViewIndex = 1;
+                break;
+            case (R.string.title_RecordForTraining_Fragment):
+                navigationViewIndex = 2;
+                break;
+            case (R.string.title_CalendarWod_Fragment):
+                navigationViewIndex = 3;
+                break;
+            case (R.string.title_MyResults_Fragment):
+                navigationViewIndex = 4;
+                break;
+            case (R.string.title_Character_Fragment):
+                navigationViewIndex = 5;
+                break;
+            case (R.string.title_AboutMe_Fragment):
+                navigationViewIndex = 6;
+                break;
+            case (R.string.title_Contacts_Fragment):
+                navigationViewIndex = 7;
+                break;
         }
 
-        if (intNameFragmentSelectNavDraw == R.string.title_RecordForTraining_Fragment) {
-            navigationView.getMenu().getItem(2).setChecked(true);
-        } else {
-            navigationView.getMenu().getItem(2).setChecked(false);
-        }
-
-        if (intNameFragmentSelectNavDraw == R.string.title_CalendarWod_Fragment){
-            navigationView.getMenu().getItem(3).setChecked(true);
-        } else {
-            navigationView.getMenu().getItem(3).setChecked(false);
-        }
-
-        if (intNameFragmentSelectNavDraw == R.string.title_MyResults_Fragment) {
-            navigationView.getMenu().getItem(4).setChecked(true);
-        } else {
-            navigationView.getMenu().getItem(4).setChecked(false);
-        }
-
-        if (intNameFragmentSelectNavDraw == R.string.title_Character_Fragment) {
-            navigationView.getMenu().getItem(5).setChecked(true);
-        } else {
-            navigationView.getMenu().getItem(5).setChecked(false);
-        }
-
-        if (intNameFragmentSelectNavDraw == R.string.title_AboutMe_Fragment) {
-            navigationView.getMenu().getItem(6).setChecked(true);
-        } else {
-            navigationView.getMenu().getItem(6).setChecked(false);
-        }
-
-        if (intNameFragmentSelectNavDraw == R.string.title_Contacts_Fragment) {
-            navigationView.getMenu().getItem(7).setChecked(true);
-        } else {
-            navigationView.getMenu().getItem(7).setChecked(false);
+        if (navigationViewIndex != -1) {
+            navigationView.getMenu().getItem(navigationViewIndex).setChecked(true);
         }
     }
 
