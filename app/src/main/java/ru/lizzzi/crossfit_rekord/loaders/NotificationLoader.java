@@ -10,7 +10,7 @@ import ru.lizzzi.crossfit_rekord.data.NotificationDBHelper;
 
 public class NotificationLoader extends AsyncTaskLoader<List<Map<String, Object>>> {
 
-    private NotificationDBHelper mDBHelper = new NotificationDBHelper(getContext());
+    private NotificationDBHelper dbHelper = new NotificationDBHelper(getContext());
 
     public NotificationLoader(Context context) {
         super(context);
@@ -19,7 +19,7 @@ public class NotificationLoader extends AsyncTaskLoader<List<Map<String, Object>
     @Override
     public List<Map<String, Object>> loadInBackground() {
         List<Map<String, Object>> notification;
-        notification = mDBHelper.loadNotification();
+        notification = dbHelper.loadNotification();
         return notification;
     }
 }

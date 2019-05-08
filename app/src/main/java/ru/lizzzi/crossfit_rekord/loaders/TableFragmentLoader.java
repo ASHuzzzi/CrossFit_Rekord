@@ -12,82 +12,78 @@ import ru.lizzzi.crossfit_rekord.backendless.BackendlessQueries;
 
 public class TableFragmentLoader extends AsyncTaskLoader<List<List<Map>>> {
 
-    private String stGym;
-    private BackendlessQueries queries = new BackendlessQueries();
+    private String selectedGym;
+    private BackendlessQueries backendlessQuery = new BackendlessQueries();
 
-    public TableFragmentLoader(Context context, Bundle args) {
+    public TableFragmentLoader(Context context, Bundle bundle) {
         super(context);
-        if (args != null){
-            stGym = args.getString("SelectedGym");
+        if (bundle != null) {
+            selectedGym = bundle.getString("SelectedGym");
         }
     }
 
     @Override
     public List<List<Map>> loadInBackground() {
-
-        List<Map> data = queries.loadAllTable(stGym);
-
-        if (data != null){
-            List<Map> scheduleMon = new ArrayList<>();
-            List<Map> scheduleTue = new ArrayList<>();
-            List<Map> scheduleWen = new ArrayList<>();
-            List<Map> scheduleThu = new ArrayList<>();
-            List<Map> scheduleFri = new ArrayList<>();
-            List<Map> scheduleSat = new ArrayList<>();
-            List<Map> scheduleSun = new ArrayList<>();
-            int k;
-            for (int i = 0; i < data.size(); i++) {
-                k = Integer.valueOf(String.valueOf(data.get(i).get("day_of_week")));
-                switch (k){
+        List<Map> loadedSchedule = backendlessQuery.loadSchedule(selectedGym);
+        if (loadedSchedule != null) {
+            List<Map> scheduleMonday = new ArrayList<>();
+            List<Map> scheduleTuesday = new ArrayList<>();
+            List<Map> scheduleWednesday = new ArrayList<>();
+            List<Map> scheduleThusday = new ArrayList<>();
+            List<Map> scheduleFriday = new ArrayList<>();
+            List<Map> scheduleSaturday = new ArrayList<>();
+            List<Map> scheduleSunday = new ArrayList<>();
+            int numberOfWeekday;
+            for (int i = 0; i < loadedSchedule.size(); i++) {
+                numberOfWeekday = Integer.valueOf(String.valueOf(loadedSchedule.get(i).get("day_of_week")));
+                switch (numberOfWeekday){
                     case 1:
-                        scheduleMon.add(data.get(i));
+                        scheduleMonday.add(loadedSchedule.get(i));
                         break;
                     case 2:
-                        scheduleTue.add(data.get(i));
+                        scheduleTuesday.add(loadedSchedule.get(i));
                         break;
                     case 3:
-                        scheduleWen.add(data.get(i));
+                        scheduleWednesday.add(loadedSchedule.get(i));
                         break;
                     case 4:
-                        scheduleThu.add(data.get(i));
+                        scheduleThusday.add(loadedSchedule.get(i));
                         break;
                     case 5:
-                        scheduleFri.add(data.get(i));
+                        scheduleFriday.add(loadedSchedule.get(i));
                         break;
                     case 6:
-                        scheduleSat.add(data.get(i));
+                        scheduleSaturday.add(loadedSchedule.get(i));
                         break;
                     case 7:
-                        scheduleSun.add(data.get(i));
+                        scheduleSunday.add(loadedSchedule.get(i));
                         break;
                 }
             }
-            List<List<Map>> allWeekSchedule = new ArrayList<>();
-            if (scheduleMon.size()>0){
-                allWeekSchedule.add(scheduleMon);
+            List<List<Map>> weeklySchedule = new ArrayList<>();
+            if (scheduleMonday.size()>0) {
+                weeklySchedule.add(scheduleMonday);
             }
-            if (scheduleTue.size()>0){
-                allWeekSchedule.add(scheduleTue);
+            if (scheduleTuesday.size()>0) {
+                weeklySchedule.add(scheduleTuesday);
             }
-            if (scheduleWen.size()>0){
-                allWeekSchedule.add(scheduleWen);
+            if (scheduleWednesday.size()>0) {
+                weeklySchedule.add(scheduleWednesday);
             }
-            if (scheduleThu.size()>0){
-                allWeekSchedule.add(scheduleThu);
+            if (scheduleThusday.size()>0) {
+                weeklySchedule.add(scheduleThusday);
             }
-            if (scheduleFri.size()>0){
-                allWeekSchedule.add(scheduleFri);
+            if (scheduleFriday.size()>0) {
+                weeklySchedule.add(scheduleFriday);
             }
-            if (scheduleSat.size()>0){
-                allWeekSchedule.add(scheduleSat);
+            if (scheduleSaturday.size()>0) {
+                weeklySchedule.add(scheduleSaturday);
             }
-            if (scheduleSun.size()>0){
-                allWeekSchedule.add(scheduleSun);
+            if (scheduleSunday.size()>0) {
+                weeklySchedule.add(scheduleSunday);
             }
-
-            return allWeekSchedule;
-
-        }else {
+            return weeklySchedule;
+        } else {
             return null;
         }
 

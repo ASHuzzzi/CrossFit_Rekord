@@ -8,20 +8,18 @@ import ru.lizzzi.crossfit_rekord.backendless.BackendlessQueries;
 
 public class RecoveryEmailLoader extends AsyncTaskLoader<Boolean> {
 
-    private BackendlessQueries user = new BackendlessQueries();
+    private BackendlessQueries backendlessQuery = new BackendlessQueries();
+    private String userEmail;
 
-    private String stOldEmail;
-
-    public RecoveryEmailLoader(Context context, Bundle arg) {
+    public RecoveryEmailLoader(Context context, Bundle bundle) {
         super(context);
-        if (arg != null){
-            stOldEmail = arg.getString("e_mailOld");
+        if (bundle != null) {
+            userEmail = bundle.getString("e_mailOld");
         }
     }
 
     @Override
     public Boolean loadInBackground() {
-        //return  true;
-        return user.recoverPassword(stOldEmail);
+        return backendlessQuery.recoverPassword(userEmail);
     }
 }

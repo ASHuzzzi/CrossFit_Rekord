@@ -11,29 +11,27 @@ import ru.lizzzi.crossfit_rekord.backendless.BackendlessQueries;
 
 public class WorkoutDetailsLoaders extends AsyncTaskLoader<List<Map>> {
 
-    private String tableName;
-    private String selecteDay;
-    private BackendlessQueries queries = new BackendlessQueries();
+    private String tableNameToLoad;
+    private String selectedDay;
+    private BackendlessQueries backendlessQuery = new BackendlessQueries();
 
-    public WorkoutDetailsLoaders(Context context, Bundle args) {
+    public WorkoutDetailsLoaders(Context context, Bundle bundle) {
         super(context);
-        if (args != null){
-            tableName = args.getString("Table");
-            selecteDay = args.getString("Selected_day");
+        if (bundle != null) {
+            tableNameToLoad = bundle.getString("Table");
+            selectedDay = bundle.getString("Selected_day");
         }
-
     }
 
     @Override
     public List<Map> loadInBackground() {
         String typeQuery = "all";
-        List<Map> data = queries.loadWorkoutDetails(typeQuery, tableName, selecteDay, null);
-        if(data != null){
-            return data;
-        }else {
+        List<Map> resultQuery =
+                backendlessQuery.loadWorkoutDetails(typeQuery, tableNameToLoad, selectedDay, null);
+        if(resultQuery != null) {
+            return resultQuery;
+        } else {
             return null;
         }
-
-
     }
 }

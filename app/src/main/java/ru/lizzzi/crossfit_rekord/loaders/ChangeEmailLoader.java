@@ -8,23 +8,22 @@ import ru.lizzzi.crossfit_rekord.backendless.BackendlessQueries;
 
 public class ChangeEmailLoader extends AsyncTaskLoader<Boolean> {
 
-    private final BackendlessQueries user = new BackendlessQueries();
+    private final BackendlessQueries backendlessQuery = new BackendlessQueries();
+    private String userOldEmail;
+    private String userNewEmail;
+    private String userPassword;
 
-    private String stOldEmail;
-    private String stNewEmail;
-    private String stPassword;
-
-    public ChangeEmailLoader(Context context, Bundle arg) {
+    public ChangeEmailLoader(Context context, Bundle bundle) {
         super(context);
-        if (arg != null){
-            stOldEmail = arg.getString("e_mailOld");
-            stNewEmail = arg.getString("e_mailNew");
-            stPassword = arg.getString("password");
+        if (bundle != null) {
+            userOldEmail = bundle.getString("e_mailOld");
+            userNewEmail = bundle.getString("e_mailNew");
+            userPassword = bundle.getString("password");
         }
     }
 
     @Override
     public Boolean loadInBackground() {
-        return user.saveChangeEmail(stOldEmail, stNewEmail, stPassword);
+        return backendlessQuery.changeEmail(userOldEmail, userNewEmail, userPassword);
     }
 }

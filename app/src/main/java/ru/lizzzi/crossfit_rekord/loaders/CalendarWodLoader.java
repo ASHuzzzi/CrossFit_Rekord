@@ -17,45 +17,47 @@ import ru.lizzzi.crossfit_rekord.backendless.BackendlessQueries;
 
 public class CalendarWodLoader extends AsyncTaskLoader<List<Date>> {
 
-    private final BackendlessQueries queries = new BackendlessQueries();
+    private final BackendlessQueries backendlessQuery = new BackendlessQueries();
     private static final String APP_PREFERENCES = "audata";
     private static final String APP_PREFERENCES_OBJECTID = "ObjectId";
+    private String startDate;
+    private String finishDate;
 
-    private String stStartDate;
-    private String stNowDate;
-
-    public CalendarWodLoader(Context context, Bundle args) {
+    public CalendarWodLoader(Context context, Bundle bundle) {
         super(context);
-        if (args != null){
-            stStartDate = args.getString("startDay");
-            stNowDate = args.getString("nowDay");
+        if (bundle != null) {
+            startDate = bundle.getString("startDay");
+            finishDate = bundle.getString("nowDay");
         }
     }
 
     @Override
     public List<Date> loadInBackground() {
-        SharedPreferences mSettings =  getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-        String objectID = mSettings.getString(APP_PREFERENCES_OBJECTID, "");
-        List<Map> data;
-        data = queries.loadCalendarWod(objectID, stStartDate, stNowDate);
+        SharedPreferences mSettings =
+                getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        String userObjectID = mSettings.getString(APP_PREFERENCES_OBJECTID, "");
+        List<Map> datesDownloadedFromServer = backendlessQuery.loadCalendarWod(
+                userObjectID,
+                startDate,
+                finishDate);
 
-        if(data != null){
-            ArrayList<Date> dates = new ArrayList<>();
-            Date dateFromDb;
-            SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
+        if (datesDownloadedFromServer != null) {
+            ArrayList<Date> datesForLoadInLocalDb = new ArrayList<>();
+            Date parseDate;
+            SimpleDateFormat simpleDateFormat =
+                    new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
 
-            for (int i = 0; i < data.size(); i++){
-                String sr = String.valueOf(data.get(i).get("date_session"));
-
+            for (int i = 0; i < datesDownloadedFromServer.size(); i++) {
+                String dateInStringFormat =
+                        String.valueOf(datesDownloadedFromServer.get(i).get("date_session"));
                 try {
-                    dateFromDb = sdf.parse(sr);
-                    dates.add(dateFromDb);
-
+                    parseDate = simpleDateFormat.parse(dateInStringFormat);
+                    datesForLoadInLocalDb.add(parseDate);
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
             }
-            return dates;
+            return datesForLoadInLocalDb;
         }else{
             return null;
         }

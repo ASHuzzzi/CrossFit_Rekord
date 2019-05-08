@@ -59,7 +59,7 @@ public class BackendlessQueries extends Application {
         }
     }
 
-    public List<Map> loadAllTable(String selectGym) {
+    public List<Map> loadSchedule(String selectGym) {
         //Пока никак не обрабатываю ошибки от сервера. Т.е. если данные есть, то строю список
         //если данных нет, то список не строится и выскакивает стандартная заглушка.
         try {
@@ -154,7 +154,7 @@ public class BackendlessQueries extends Application {
         }
     }
 
-    public boolean saveUserRegData(String email, String oldPassword, String newPassword) {
+    public boolean changePassword(String email, String oldPassword, String newPassword) {
         try {
             BackendlessUser user = Backendless.UserService.login(email, oldPassword);
             String userPassword = getAppContext().getResources().getString(R.string.bTableUsersPassword);
@@ -176,7 +176,7 @@ public class BackendlessQueries extends Application {
         }
     }
 
-    public boolean saveChangeEmail(String oldEmail, String newEmail, String password) {
+    public boolean changeEmail(String oldEmail, String newEmail, String password) {
         try {
             BackendlessUser backendlessUser = Backendless.UserService.login(oldEmail, password);
             backendlessUser.setEmail(newEmail);
@@ -278,7 +278,7 @@ public class BackendlessQueries extends Application {
         }
     }
 
-    public boolean regUser(String userName, String email, String password) {
+    public boolean userRegistration(String userName, String email, String password) {
         try {
             BackendlessUser backendlessUser = new BackendlessUser();
             backendlessUser.setEmail(email);

@@ -267,9 +267,9 @@ public class EnterResultActivity
 
         switch (loaderId){
             case LOADER_START_SAVE:
-                bundle.putString(String.valueOf(SaveLoadResultLoader.ARG_USERSKIL), String.valueOf(etResultSkill.getText()));
-                bundle.putString(String.valueOf(SaveLoadResultLoader.ARG_USERWODLEVEL), stLevel);
-                bundle.putString(String.valueOf(SaveLoadResultLoader.ARG_USERWODRESULT), String.valueOf(etResultWoD.getText()));
+                bundle.putString(String.valueOf(SaveLoadResultLoader.USER_SKILL), String.valueOf(etResultSkill.getText()));
+                bundle.putString(String.valueOf(SaveLoadResultLoader.USER_WOD_LEVEL), stLevel);
+                bundle.putString(String.valueOf(SaveLoadResultLoader.USER_WOD_RESULT), String.valueOf(etResultWoD.getText()));
                 mLoader = getSupportLoaderManager().restartLoader(loaderId, bundle, this);
                 mLoader.forceLoad();
                 break;
@@ -280,9 +280,9 @@ public class EnterResultActivity
                 break;
 
             case LOADER_START_UPLOAD:
-                bundle.putString(String.valueOf(SaveLoadResultLoader.ARG_USERSKIL), String.valueOf(etResultSkill.getText()));
-                bundle.putString(String.valueOf(SaveLoadResultLoader.ARG_USERWODLEVEL), stLevel);
-                bundle.putString(String.valueOf(SaveLoadResultLoader.ARG_USERWODRESULT), String.valueOf(etResultWoD.getText()));
+                bundle.putString(String.valueOf(SaveLoadResultLoader.USER_SKILL), String.valueOf(etResultSkill.getText()));
+                bundle.putString(String.valueOf(SaveLoadResultLoader.USER_WOD_LEVEL), stLevel);
+                bundle.putString(String.valueOf(SaveLoadResultLoader.USER_WOD_RESULT), String.valueOf(etResultWoD.getText()));
                 mLoader = getSupportLoaderManager().restartLoader(loaderId, bundle, this);
                 mLoader.forceLoad();
                 break;

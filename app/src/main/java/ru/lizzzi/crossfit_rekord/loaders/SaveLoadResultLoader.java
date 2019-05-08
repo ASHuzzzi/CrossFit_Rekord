@@ -9,15 +9,15 @@ import ru.lizzzi.crossfit_rekord.backendless.BackendlessQueries;
 
 public class SaveLoadResultLoader extends AsyncTaskLoader<Boolean> {
 
-    public static final int ARG_USERSKIL = 4;
-    public static final int ARG_USERWODLEVEL = 5;
-    public static final int ARG_USERWODRESULT = 6;
+    public static final int USER_SKILL = 4;
+    public static final int USER_WOD_LEVEL = 5;
+    public static final int USER_WOD_RESULT = 6;
 
-    private int iLoaderId;
+    private int loaderId;
     private String userSkill;
     private String userWoDLevel;
     private String userWodResult;
-    private BackendlessQueries queries = new BackendlessQueries();
+    private BackendlessQueries backendlessQuery = new BackendlessQueries();
 
     private static final String APP_PREFERENCES = "audata";
     private static final String APP_PREFERENCES_SELECTEDDAY = "SelectedDay";
@@ -25,28 +25,33 @@ public class SaveLoadResultLoader extends AsyncTaskLoader<Boolean> {
     private static final String APP_PREFERENCES_USERNAME = "Username";
     private static final String APP_PREFERENCES_USERSURNAME = "Usersurname";
 
-
-    public SaveLoadResultLoader(Context context, Bundle args, int id) {
+    public SaveLoadResultLoader(Context context, Bundle bundle, int loaderId) {
         super(context);
-        iLoaderId = id;
-        if (args != null){
-            userSkill = args.getString(String.valueOf(ARG_USERSKIL));
-            userWoDLevel= args.getString(String.valueOf(ARG_USERWODLEVEL));
-            userWodResult = args.getString(String.valueOf(ARG_USERWODRESULT));
+        this.loaderId = loaderId;
+        if (bundle != null) {
+            userSkill = bundle.getString(String.valueOf(USER_SKILL));
+            userWoDLevel= bundle.getString(String.valueOf(USER_WOD_LEVEL));
+            userWodResult = bundle.getString(String.valueOf(USER_WOD_RESULT));
         }
     }
 
     @Override
     public Boolean loadInBackground() {
-
-        SharedPreferences mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-        String dateSession = mSettings.getString(APP_PREFERENCES_SELECTEDDAY, "");
-        String userId = mSettings.getString(APP_PREFERENCES_OBJECTID, "");
+        SharedPreferences mSettings =
+                getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        String selectedDay = mSettings.getString(APP_PREFERENCES_SELECTEDDAY, "");
+        String userObjectId = mSettings.getString(APP_PREFERENCES_OBJECTID, "");
         String userName = mSettings.getString(APP_PREFERENCES_USERNAME, "");
         String userSurname = mSettings.getString(APP_PREFERENCES_USERSURNAME, "");
 
-        return queries.saveEditWorkoutDetails(iLoaderId, dateSession, userId,
-                userName, userSurname, userSkill, userWoDLevel, userWodResult);
-
+        return backendlessQuery.saveEditWorkoutDetails(
+                loaderId,
+                selectedDay,
+                userObjectId,
+                userName,
+                userSurname,
+                userSkill,
+                userWoDLevel,
+                userWodResult);
     }
 }

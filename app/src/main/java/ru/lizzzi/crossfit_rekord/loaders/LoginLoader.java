@@ -8,22 +8,20 @@ import ru.lizzzi.crossfit_rekord.backendless.BackendlessQueries;
 
 public class LoginLoader extends AsyncTaskLoader<Boolean> {
 
-    private BackendlessQueries user = new BackendlessQueries();
-    private String stEmail;
-    private String password;
+    private BackendlessQueries backendlessQuery = new BackendlessQueries();
+    private String userEmail;
+    private String userPassword;
 
-    public LoginLoader(Context context, Bundle args) {
+    public LoginLoader(Context context, Bundle bundle) {
         super(context);
-        if (args != null){
-            stEmail = args.getString("e_mail");
-            password = args.getString("password");
+        if (bundle != null) {
+            userEmail = bundle.getString("e_mail");
+            userPassword = bundle.getString("password");
         }
     }
 
     @Override
     public Boolean loadInBackground() {
-
-        return user.authUser(stEmail, password);
-
+        return backendlessQuery.authUser(userEmail, userPassword);
     }
 }

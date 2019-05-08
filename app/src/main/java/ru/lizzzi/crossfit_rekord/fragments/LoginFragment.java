@@ -51,7 +51,7 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
     private Thread threadLoginFragment;
     private Runnable runnableLoginFragment;
 
-    private int openFragment = 1;
+    private int openThisFragment = 1;
 
     @SuppressLint("HandlerLeak")
     @Override
@@ -69,11 +69,11 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
         //хэндлер для потока runnableOpenFragment
         handlerLoginFragment = new Handler() {
             @Override
-            public void handleMessage(Message msg) {
-                if(msg.what == openFragment){
+            public void handleMessage(Message message) {
+                if(message.what == openThisFragment){
                     TransactionFragment(StartScreenFragment.class);
                 }else {
-                    Bundle bundle = msg.getData();
+                    Bundle bundle = message.getData();
                     boolean checkDone = bundle.getBoolean("result");
                     if (checkDone) {
                         startAsyncTaskLoader(
@@ -203,7 +203,7 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
             startService();
             InterfaceChangeToggleStatus interfaceChangeToggleStatus = (InterfaceChangeToggleStatus) getActivity();
             interfaceChangeToggleStatus.changeToggleStatus(true);
-            handlerLoginFragment.sendEmptyMessage(openFragment);
+            handlerLoginFragment.sendEmptyMessage(openThisFragment);
         }else{
             ChangeUIElements(0);
             Toast.makeText(getContext(), "Неверный логин или пароль!", Toast.LENGTH_SHORT).show();
