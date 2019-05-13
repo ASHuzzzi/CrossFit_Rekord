@@ -28,7 +28,7 @@ import java.util.Objects;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.inspectionСlasses.Network;
-import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeTitle;
+import ru.lizzzi.crossfit_rekord.interfaces.ChangeTitle;
 import ru.lizzzi.crossfit_rekord.loaders.WorkoutDetailsLoaders;
 
 
@@ -221,8 +221,8 @@ public class TL1WodFragment extends Fragment implements LoaderManager.LoaderCall
             }
         }
 
-        if (getActivity() instanceof InterfaceChangeTitle) {
-            InterfaceChangeTitle listernerChangeTitle = (InterfaceChangeTitle) getActivity();
+        if (getActivity() instanceof ChangeTitle) {
+            ChangeTitle listernerChangeTitle = (ChangeTitle) getActivity();
             listernerChangeTitle.changeTitle(R.string.title_WorkoutDetails_Fragment, R.string.title_CalendarWod_Fragment);
         }
     }

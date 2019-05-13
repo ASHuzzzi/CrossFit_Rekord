@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.adapters.PageAdapterTable;
-import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeTitle;
+import ru.lizzzi.crossfit_rekord.interfaces.ChangeTitle;
 
 public class TableFragment extends Fragment{
 
@@ -58,8 +58,8 @@ public class TableFragment extends Fragment{
     public  void onStart() {
         super.onStart();
 
-        if (getActivity() instanceof InterfaceChangeTitle){
-            InterfaceChangeTitle listernerChangeTitle = (InterfaceChangeTitle) getActivity();
+        if (getActivity() instanceof ChangeTitle){
+            ChangeTitle listernerChangeTitle = (ChangeTitle) getActivity();
             listernerChangeTitle.changeTitle(R.string.title_Table_Fragment, R.string.title_Table_Fragment);
         }
 

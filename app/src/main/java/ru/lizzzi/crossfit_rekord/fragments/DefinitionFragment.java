@@ -16,7 +16,7 @@ import java.util.Map;
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterDefinition;
 import ru.lizzzi.crossfit_rekord.data.DefinitionDBHelper;
-import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeTitle;
+import ru.lizzzi.crossfit_rekord.interfaces.ChangeTitle;
 
 
 public class DefinitionFragment extends Fragment {
@@ -47,8 +47,8 @@ public class DefinitionFragment extends Fragment {
     @Override
     public  void onStart() {
         super.onStart();
-        if (getActivity() instanceof InterfaceChangeTitle) {
-            InterfaceChangeTitle listernerChangeTitle = (InterfaceChangeTitle) getActivity();
+        if (getActivity() instanceof ChangeTitle) {
+            ChangeTitle listernerChangeTitle = (ChangeTitle) getActivity();
             listernerChangeTitle.changeTitle(R.string.title_Definition_Fragment, R.string.title_Character_Fragment);
         }
         termsOfSelectedCharacter = new ArrayList<>();

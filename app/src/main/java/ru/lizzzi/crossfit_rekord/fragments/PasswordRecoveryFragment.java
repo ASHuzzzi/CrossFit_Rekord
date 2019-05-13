@@ -25,45 +25,46 @@ import java.util.regex.Pattern;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.inspectionСlasses.Network;
-import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeTitle;
+import ru.lizzzi.crossfit_rekord.interfaces.ChangeTitle;
 import ru.lizzzi.crossfit_rekord.loaders.RecoveryEmailLoader;
 
 public class PasswordRecoveryFragment extends Fragment implements LoaderManager.LoaderCallbacks<Boolean>{
 
-    private EditText etRecPasEmail;
-    private Button btnRecPasSend;
-    private ProgressBar pbRecPas;
+    private EditText editTextEmailForRecovery;
+    private Button buttonRecoveryPassword;
+    private ProgressBar progressBar;
 
-    private Handler handlerPasswordRecoveryFragment;
-    private Thread threadPasswordRecoveryFragment;
-    private Runnable runnablePasswordRecoveryFragment;
+    private Handler handlerPasswordRecovery;
+    private Thread threadPasswordRecovery;
+    private Runnable runnablePasswordRecovery;
 
-    private int openFragment = 1;
+    private final static int LOGIN_IS_DONE = 1;
+    private final static int WAIT_STATE = 0;
+    private final static int LOAD_STATE = 1;
 
     @SuppressLint("HandlerLeak")
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_email, container, false);
-
-        etRecPasEmail = v.findViewById(R.id.etRecPasEmail);
-        btnRecPasSend = v.findViewById(R.id.btnRecPasSend);
-        pbRecPas = v.findViewById(R.id.pbRecPas);
+        View view = inflater.inflate(R.layout.fragment_email, container, false);
+        editTextEmailForRecovery = view.findViewById(R.id.etRecPasEmail);
+        buttonRecoveryPassword = view.findViewById(R.id.btnRecPasSend);
+        progressBar = view.findViewById(R.id.pbRecPas);
 
         //хэндлер для потока runnableOpenFragment
-        handlerPasswordRecoveryFragment = new Handler() {
+        handlerPasswordRecovery = new Handler() {
             @Override
             public void handleMessage(Message msg) {
-                if(msg.what == openFragment){
-                    TransactionFragment(LoginFragment.class);
-                }else {
+                if (msg.what == LOGIN_IS_DONE) {
+                    openLoginFragment();
+                } else {
                     Bundle bundle = msg.getData();
-                    String result_check = bundle.getString("result");
-                    if (result_check != null && result_check.equals("true")){
-                        ChangeUIElements(1);
-                        startAsyncTaskLoader(etRecPasEmail.getText().toString());
+                    boolean checkDone = bundle.getBoolean("result");
+                    if (checkDone) {
+                        changeUIOnState(LOAD_STATE);
+                        startRecoveryPasswordLoader(editTextEmailForRecovery.getText().toString());
 
-                    }else{
-                        ChangeUIElements(0);
+                    } else {
+                        changeUIOnState(WAIT_STATE);
                         Toast.makeText(getActivity(), "Нет подключения", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -71,39 +72,33 @@ public class PasswordRecoveryFragment extends Fragment implements LoaderManager.
         };
 
         //поток запускаемый при создании экрана (запуск происходит из onStart)
-        runnablePasswordRecoveryFragment = new Runnable() {
+        runnablePasswordRecovery = new Runnable() {
             @Override
             public void run() {
-
                 Network network = new Network(getContext());
-                Bundle bundle = new Bundle();
                 boolean checkDone = network.checkConnection();
-                if (checkDone) {
-                    bundle.putString("result", String.valueOf(true));
-
-                }else {
-                    bundle.putString("result", String.valueOf(false));
-                }
-                Message msg = handlerPasswordRecoveryFragment.obtainMessage();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("result", checkDone);
+                Message msg = handlerPasswordRecovery.obtainMessage();
                 msg.setData(bundle);
-                handlerPasswordRecoveryFragment.sendMessage(msg);
+                handlerPasswordRecovery.sendMessage(msg);
             }
         };
 
-        btnRecPasSend.setOnClickListener(new View.OnClickListener() {
+        buttonRecoveryPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                String stCheckSpace = etRecPasEmail.getText().toString();
-                if(stCheckSpace.endsWith(" ")){
-                    stCheckSpace = stCheckSpace.substring(0, stCheckSpace.length() - 1);
-                    etRecPasEmail.setText(stCheckSpace);
+                String userEmail = editTextEmailForRecovery.getText().toString();
+                if (userEmail.endsWith(" ")) {
+                    userEmail = userEmail.substring(0, userEmail.length() - 1);
+                    editTextEmailForRecovery.setText(userEmail);
                 }
 
-                if (etRecPasEmail.getText().length()== 0 || isEmailValid(etRecPasEmail.getText().toString())){
-                    etRecPasEmail.setFocusableInTouchMode(true);
-                    etRecPasEmail.setFocusable(true);
-                    etRecPasEmail.requestFocus();
+                boolean userEmailIsCorrect = isEmailCorrect(userEmail);
+                if (editTextEmailForRecovery.getText().length()== 0 || userEmailIsCorrect) {
+                    editTextEmailForRecovery.setFocusableInTouchMode(true);
+                    editTextEmailForRecovery.setFocusable(true);
+                    editTextEmailForRecovery.requestFocus();
                     Toast.makeText(getActivity(), "Введите почту!", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -113,94 +108,88 @@ public class PasswordRecoveryFragment extends Fragment implements LoaderManager.
                 if (imm != null) {
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 }
-
-                threadPasswordRecoveryFragment = new Thread(runnablePasswordRecoveryFragment);
-                threadPasswordRecoveryFragment.setDaemon(true);
-                threadPasswordRecoveryFragment.start();
+                threadPasswordRecovery = new Thread(runnablePasswordRecovery);
+                threadPasswordRecovery.setDaemon(true);
+                threadPasswordRecovery.start();
             }
         });
-
-        return v;
+        return view;
     }
 
     @Override
     public  void onStart() {
         super.onStart();
-        if (getActivity() instanceof InterfaceChangeTitle){
-            InterfaceChangeTitle listernerChangeTitle = (InterfaceChangeTitle) getActivity();
+        if (getActivity() instanceof ChangeTitle) {
+            ChangeTitle listernerChangeTitle = (ChangeTitle) getActivity();
             listernerChangeTitle.changeTitle(R.string.title_PasswordRecovery_Fragment, R.string.title_AboutMe_Fragment);
         }
-
     }
 
-    private void startAsyncTaskLoader(String e_mailOld) {
+    private void startRecoveryPasswordLoader(String oldUserEmail) {
         Bundle bundle = new Bundle();
-        bundle.putString("e_mailOld", e_mailOld);
-        int LOADERID = 1;
-        getLoaderManager().restartLoader(LOADERID, bundle, this).forceLoad();
+        bundle.putString("e_mailOld", oldUserEmail);
+        int RECOVERY_LOADER = 1;
+        getLoaderManager().restartLoader(RECOVERY_LOADER, bundle, this).forceLoad();
     }
 
 
     @NonNull
     @Override
-    public Loader<Boolean> onCreateLoader(int id, Bundle args) {
-        RecoveryEmailLoader loader;
-        loader = new RecoveryEmailLoader(getActivity(), args);
-        return loader;
+    public Loader<Boolean> onCreateLoader(int id, Bundle bundle) {
+        return new RecoveryEmailLoader(getActivity(), bundle);
     }
 
     @Override
-    public void onLoadFinished(@NonNull Loader<Boolean> loader, Boolean data) {
-
-        if (data){
-
+    public void onLoadFinished(@NonNull Loader<Boolean> loader, Boolean recoveryIsGone) {
+        if (recoveryIsGone) {
             Toast.makeText(getActivity(), "Ожидайте письма", Toast.LENGTH_SHORT).show();
-            handlerPasswordRecoveryFragment.sendEmptyMessage(openFragment);
-        }else {
+            handlerPasswordRecovery.sendEmptyMessage(LOGIN_IS_DONE);
+        } else {
             Toast.makeText(getActivity(), "Повторите попытку", Toast.LENGTH_SHORT).show();
         }
-        ChangeUIElements(0);
-
+        changeUIOnState(WAIT_STATE);
     }
 
     @Override
     public void onLoaderReset(@NonNull Loader<Boolean> loader) {
-
     }
 
-    private void ChangeUIElements(int status){
-        if (status == 1){
-            pbRecPas.setVisibility(View.VISIBLE);
-            btnRecPasSend.setPressed(true);
-        }else{
-            pbRecPas.setVisibility(View.INVISIBLE);
-            btnRecPasSend.setPressed(false);
+    private void changeUIOnState(int state) {
+        if (state == LOAD_STATE) {
+            progressBar.setVisibility(View.VISIBLE);
+            buttonRecoveryPassword.setPressed(true);
+        } else {
+            progressBar.setVisibility(View.INVISIBLE);
+            buttonRecoveryPassword.setPressed(false);
         }
     }
 
-    private static boolean isEmailValid(String email) {
+    private static boolean isEmailCorrect(String email) {
         String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
         Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(email);
         return !matcher.matches();
     }
 
-    private void TransactionFragment(Class fragmentClass) {
-
+    private void openLoginFragment() {
         Fragment fragment = null;
         try {
-            fragment = (Fragment) fragmentClass.newInstance();
+            fragment = LoginFragment.class.newInstance();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         FragmentManager fragmentManager = getFragmentManager();
-        for(int i = 0; i < (fragmentManager.getBackStackEntryCount()-1); i++) {
+        for (int i = 0; i < (fragmentManager.getBackStackEntryCount()-1); i++) {
             fragmentManager.popBackStack();
         }
-        FragmentTransaction ft = fragmentManager.beginTransaction();
-        ft.setCustomAnimations(R.anim.pull_in_right, R.anim.push_out_left, R.anim.pull_in_left, R.anim.push_out_right);
-        ft.replace(R.id.container, fragment);
-        ft.commit();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setCustomAnimations(
+                R.anim.pull_in_right,
+                R.anim.push_out_left,
+                R.anim.pull_in_left,
+                R.anim.push_out_right);
+        fragmentTransaction.replace(R.id.container, fragment);
+        fragmentTransaction.commit();
     }
 }

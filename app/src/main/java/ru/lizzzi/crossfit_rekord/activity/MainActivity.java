@@ -45,16 +45,16 @@ import ru.lizzzi.crossfit_rekord.fragments.LoginFragment;
 import ru.lizzzi.crossfit_rekord.fragments.RecordForTrainingSelectFragment;
 import ru.lizzzi.crossfit_rekord.fragments.StartScreenFragment;
 import ru.lizzzi.crossfit_rekord.fragments.TableFragment;
-import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeTitle;
-import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeToggleStatus;
+import ru.lizzzi.crossfit_rekord.interfaces.ChangeTitle;
+import ru.lizzzi.crossfit_rekord.interfaces.ChangeToggleStatus;
 import ru.lizzzi.crossfit_rekord.services.LoadNotificationsService;
 import ru.lizzzi.crossfit_rekord.fragments.NotificationFragment;
 
 
 public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
-        InterfaceChangeTitle,
-        InterfaceChangeToggleStatus {
+        ChangeTitle,
+        ChangeToggleStatus {
 
     private AuthDataCheck checkAuthData = new AuthDataCheck();
 

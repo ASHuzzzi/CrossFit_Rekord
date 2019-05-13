@@ -25,12 +25,12 @@ public class Network implements CheckNetwork {
         NetworkInfo activeNetwork =
                 connectivityManager != null ? connectivityManager.getActiveNetworkInfo() : null;
         // проверка подключения
-        if(activeNetwork != null && activeNetwork.isConnected()) {
+        if (activeNetwork != null && activeNetwork.isConnected()) {
             Runtime runtime = Runtime.getRuntime();
             //если сеть есть, то проверяем наличие доступа в сеть
             try {
                 Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
-                int     exitValue = ipProcess.waitFor();
+                int exitValue = ipProcess.waitFor();
                 return (exitValue == 0);
             }
             catch (IOException e)          { e.printStackTrace(); }

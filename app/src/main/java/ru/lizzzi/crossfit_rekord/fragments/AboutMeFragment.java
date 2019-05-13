@@ -26,7 +26,7 @@ import android.widget.Toast;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.inspectionСlasses.Network;
-import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeTitle;
+import ru.lizzzi.crossfit_rekord.interfaces.ChangeTitle;
 import ru.lizzzi.crossfit_rekord.loaders.AboutMeLoader;
 
 /**
@@ -184,8 +184,8 @@ public class AboutMeFragment extends Fragment implements LoaderManager.LoaderCal
     @Override
     public  void onStart() {
         super.onStart();
-        if (getActivity() instanceof InterfaceChangeTitle){
-            InterfaceChangeTitle listernerChangeTitle = (InterfaceChangeTitle) getActivity();
+        if (getActivity() instanceof ChangeTitle){
+            ChangeTitle listernerChangeTitle = (ChangeTitle) getActivity();
             listernerChangeTitle.changeTitle(R.string.title_AboutMe_Fragment, R.string.title_AboutMe_Fragment);
         }
 
