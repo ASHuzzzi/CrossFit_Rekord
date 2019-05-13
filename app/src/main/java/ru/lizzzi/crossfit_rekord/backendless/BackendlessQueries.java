@@ -104,8 +104,7 @@ public class BackendlessQueries extends Application {
 
     public boolean authUser(String email, String password) {
         try {
-            Backendless.UserService.login(email, password);
-            BackendlessUser user = Backendless.UserService.CurrentUser();
+            BackendlessUser user = Backendless.UserService.login(email, password);
             sharedPreferences = getAppContext().getSharedPreferences(APP_PREFERENCES, MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString(APP_PREFERENCES_OBJECTID, user.getObjectId());

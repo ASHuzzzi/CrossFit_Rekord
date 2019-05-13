@@ -6,8 +6,6 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -33,61 +31,58 @@ import java.util.regex.Pattern;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.inspectionСlasses.Network;
-import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeTitle;
-import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeToggleStatus;
+import ru.lizzzi.crossfit_rekord.interfaces.ChangeTitle;
+import ru.lizzzi.crossfit_rekord.interfaces.ChangeToggleStatus;
 import ru.lizzzi.crossfit_rekord.loaders.RegistryLoader;
 import ru.lizzzi.crossfit_rekord.services.LoadNotificationsService;
 
 
 public class RegistryFragment extends Fragment implements LoaderManager.LoaderCallbacks<Boolean> {
 
-    private EditText etUserName;
-    private EditText etPassword;
-    private EditText etCheckPassword;
-    private EditText etEmail;
-    private ProgressBar pbRegistry;
-    private Button btnRegister;
+    private EditText editTextUserName;
+    private EditText editTextUserPassword;
+    private EditText editTextCheckUserPassword;
+    private EditText editTextUserEmail;
+    private ProgressBar progressBar;
+    private Button buttonRegister;
 
-    private Handler handlerRegistryFragment;
-    private Thread threadRegistryFragment;
-    private Runnable runnableRegistryFragment;
+    private Handler handlerRegistry;
+    private Thread threadRegistry;
+    private Runnable runnableRegistry;
 
-    private int openFragment = 1;
-
-    public RegistryFragment() {
-        // Required empty public constructor
-    }
-
+    private final static int LOGIN_IS_DONE = 1;
+    private final static int WAIT_STATE = 0;
+    private final static int LOAD_STATE = 1;
 
     @SuppressLint("HandlerLeak")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.fragment_registry, container, false);
-        etUserName = v.findViewById(R.id.username);
-        etPassword = v.findViewById(R.id.password);
-        etCheckPassword = v.findViewById(R.id.checkpassword);
-        etEmail = v.findViewById(R.id.email);
-        pbRegistry = v.findViewById(R.id.pbRegistry);
-        btnRegister = v.findViewById(R.id.btnRegister);
+        View view = inflater.inflate(R.layout.fragment_registry, container, false);
+        editTextUserName = view.findViewById(R.id.username);
+        editTextUserPassword = view.findViewById(R.id.password);
+        editTextCheckUserPassword = view.findViewById(R.id.checkpassword);
+        editTextUserEmail = view.findViewById(R.id.email);
+        progressBar = view.findViewById(R.id.pbRegistry);
+        buttonRegister = view.findViewById(R.id.btnRegister);
 
         //хэндлер для потока runnableOpenFragment
-        handlerRegistryFragment = new Handler() {
+        handlerRegistry = new Handler() {
             @Override
             public void handleMessage(Message msg) {
-                if(msg.what == openFragment){
-                    TransactionFragment();
-                }else {
+                if (msg.what == LOGIN_IS_DONE) {
+                    openStartScreenFragment();
+                } else {
                     Bundle bundle = msg.getData();
-                    String result_check = bundle.getString("result");
-                    if (result_check != null && result_check.equals("true")){
-                        startAsyncTaskLoader(
-                                etUserName.getText().toString(),
-                                etEmail.getText().toString(),
-                                etPassword.getText().toString());
-                    }else{
-                        ChangeUIElements(0);
+                    boolean checkDone = bundle.getBoolean("result");
+                    if (checkDone) {
+                        startRegistryLoader(
+                                editTextUserName.getText().toString(),
+                                editTextUserEmail.getText().toString(),
+                                editTextUserPassword.getText().toString());
+                    } else {
+                        changeUIOnState(WAIT_STATE);
                         Toast.makeText(getContext(), "Нет подключения", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -95,151 +90,124 @@ public class RegistryFragment extends Fragment implements LoaderManager.LoaderCa
         };
 
         //поток запускаемый при создании экрана (запуск происходит из onStart)
-        runnableRegistryFragment = new Runnable() {
+        runnableRegistry = new Runnable() {
             @Override
             public void run() {
-
                 Network network = new Network(getContext());
-                Bundle bundle = new Bundle();
                 boolean checkDone = network.checkConnection();
-                if (checkDone) {
-                    bundle.putString("result", String.valueOf(true));
-
-                }else {
-                    bundle.putString("result", String.valueOf(false));
-                }
-                Message msg = handlerRegistryFragment.obtainMessage();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("result", checkDone);
+                Message msg = handlerRegistry.obtainMessage();
                 msg.setData(bundle);
-                handlerRegistryFragment.sendMessage(msg);
+                handlerRegistry.sendMessage(msg);
             }
         };
 
-        btnRegister.setOnClickListener(new View.OnClickListener() {
+        buttonRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                String stCheckSpace = etUserName.getText().toString();
-                if(stCheckSpace.endsWith(" ")){
-                    stCheckSpace = stCheckSpace.substring(0, stCheckSpace.length() - 1);
-                    etUserName.setText(stCheckSpace);
+                String userName = editTextUserName.getText().toString();
+                if (userName.endsWith(" ")) {
+                    userName = userName.substring(0, userName.length() - 1);
+                    editTextUserName.setText(userName);
                 }
 
-                if (etUserName.getText().length()== 0){
-                    etUserName.setFocusableInTouchMode(true);
-                    etUserName.setFocusable(true);
-                    etUserName.requestFocus();
+                if (editTextUserName.getText().length() == 0) {
+                    editTextUserName.setFocusableInTouchMode(true);
+                    editTextUserName.setFocusable(true);
+                    editTextUserName.requestFocus();
                     Toast.makeText(getContext(), "Введите имя!", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-
-                stCheckSpace = etEmail.getText().toString();
-                if(stCheckSpace.endsWith(" ")){
-                    stCheckSpace = stCheckSpace.substring(0, stCheckSpace.length() - 1);
-                    etEmail.setText(stCheckSpace);
-                }
-
-                if (etEmail.getText().length()== 0 || !isEmailValid(etEmail.getText().toString())){
-                    etEmail.setFocusableInTouchMode(true);
-                    etEmail.setFocusable(true);
-                    etEmail.requestFocus();
+                String userEmail = editTextUserEmail.getText().toString();
+                boolean userEmailIsCorrect = isEmailCorrect(userEmail);
+                if (editTextUserEmail.getText().length() == 0 || userEmailIsCorrect) {
+                    editTextUserEmail.setFocusableInTouchMode(true);
+                    editTextUserEmail.setFocusable(true);
+                    editTextUserEmail.requestFocus();
                     Toast.makeText(getContext(), "Введите почту!", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                if(etPassword.getText().length()== 0 || etCheckPassword.getText().length()==0){
-                    if(etPassword.getText().length()== 0){
-                        etPassword.setFocusableInTouchMode(true);
-                        etPassword.setFocusable(true);
-                        etPassword.requestFocus();
+                if (editTextUserPassword.getText().length() == 0 || editTextCheckUserPassword.getText().length() == 0) {
+                    if (editTextUserPassword.getText().length()== 0) {
+                        editTextUserPassword.setFocusableInTouchMode(true);
+                        editTextUserPassword.setFocusable(true);
+                        editTextUserPassword.requestFocus();
                         Toast.makeText(getContext(), "Введите пароль", Toast.LENGTH_SHORT).show();
-                    }else {
-                        etCheckPassword.setFocusableInTouchMode(true);
-                        etCheckPassword.setFocusable(true);
-                        etCheckPassword.requestFocus();
+                    } else {
+                        editTextCheckUserPassword.setFocusableInTouchMode(true);
+                        editTextCheckUserPassword.setFocusable(true);
+                        editTextCheckUserPassword.requestFocus();
                         Toast.makeText(getContext(), "Повторите пароль", Toast.LENGTH_SHORT).show();
                     }
                     return;
-                }
-
-                if(!etPassword.getText().toString().equals(etCheckPassword.getText().toString())){
-                    Toast.makeText(getContext(), "Пароли не совпадают!", Toast.LENGTH_SHORT).show();
-                    return;
+                } else {
+                    if (!editTextUserPassword.getText().toString().equals(editTextCheckUserPassword.getText().toString())) {
+                        Toast.makeText(getContext(), "Пароли не совпадают!", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                 }
 
                 //убираем клавиатуру после нажатия на кнопку
-                InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
-                if (imm != null) {
-                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                InputMethodManager inputManager = (InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
+                if (inputManager != null) {
+                    inputManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 }
 
-                ChangeUIElements(1);
-                threadRegistryFragment = new Thread(runnableRegistryFragment);
-                threadRegistryFragment.setDaemon(true);
-                threadRegistryFragment.start();
+                changeUIOnState(LOAD_STATE);
+                threadRegistry = new Thread(runnableRegistry);
+                threadRegistry.setDaemon(true);
+                threadRegistry.start();
             }
         });
-
-        return v;
-    }
-
-    public boolean checkInternet() {
-
-        ConnectivityManager cm = (ConnectivityManager)getActivity().getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-
-        NetworkInfo activeNetwork = cm != null ? cm.getActiveNetworkInfo() : null;
-        // проверка подключения
-        return activeNetwork != null && activeNetwork.isConnected();
-
+        return view;
     }
 
     @Override
-    public  void onStart() {
+    public void onStart() {
         super.onStart();
-        if (getActivity() instanceof InterfaceChangeTitle){
-            InterfaceChangeTitle listernerChangeTitle = (InterfaceChangeTitle) getActivity();
+        if (getActivity() instanceof ChangeTitle) {
+            ChangeTitle listernerChangeTitle = (ChangeTitle) getActivity();
             listernerChangeTitle.changeTitle(R.string.title_Regystry_Fragment, R.string.title_Regystry_Fragment);
         }
     }
 
-    private void ChangeUIElements(int status){
-        if (status == 1){
-            pbRegistry.setVisibility(View.VISIBLE);
-            btnRegister.setPressed(true);
-        }else{
-            pbRegistry.setVisibility(View.INVISIBLE);
-            btnRegister.setPressed(false);
+    private void changeUIOnState(int state) {
+        if (state == LOAD_STATE) {
+            progressBar.setVisibility(View.VISIBLE);
+            buttonRegister.setPressed(true);
+        } else {
+            progressBar.setVisibility(View.INVISIBLE);
+            buttonRegister.setPressed(false);
         }
     }
 
-
-
-    private void startAsyncTaskLoader(String stName,  String stEmail, String stPassword) {
+    private void startRegistryLoader(String userName, String userEmail, String userPassword) {
         Bundle bundle = new Bundle();
-        bundle.putString("userName", stName);
-        bundle.putString("e_mail" , stEmail);
-        bundle.putString("password" , stPassword);
-        int LOADERID = 1;
-        getLoaderManager().initLoader(LOADERID, bundle,this).forceLoad();
+        bundle.putString("userName", userName);
+        bundle.putString("e_mail" , userEmail);
+        bundle.putString("password" , userPassword);
+        int REGISTRY_LOADER = 1;
+        getLoaderManager().initLoader(REGISTRY_LOADER, bundle,this).forceLoad();
     }
 
     @NonNull
     @Override
-    public Loader<Boolean> onCreateLoader(int id, Bundle args) {
-        RegistryLoader loader;
-        loader = new RegistryLoader(getContext(), args);
-        return loader;
+    public Loader<Boolean> onCreateLoader(int id, Bundle bundle) {
+        return new RegistryLoader(getContext(), bundle);
     }
 
     @Override
-    public void onLoadFinished(@NonNull Loader<Boolean> loader, Boolean data) {
-        if (data){
-            StartService();
-            InterfaceChangeToggleStatus interfaceChangeToggleStatus = (InterfaceChangeToggleStatus) getActivity();
-            interfaceChangeToggleStatus.changeToggleStatus(true);
-            handlerRegistryFragment.sendEmptyMessage(openFragment);
-        }else{
-            ChangeUIElements(0);
+    public void onLoadFinished(@NonNull Loader<Boolean> loader, Boolean userIsLoggined) {
+        if (userIsLoggined) {
+            loadNotification();
+            ChangeToggleStatus changeToggleStatus = (ChangeToggleStatus) getActivity();
+            changeToggleStatus.changeToggleStatus(true);
+            handlerRegistry.sendEmptyMessage(LOGIN_IS_DONE);
+        } else {
+            changeUIOnState(WAIT_STATE);
             Toast.makeText(getContext(), "Неверный логин или пароль!", Toast.LENGTH_SHORT).show();
         }
 
@@ -247,13 +215,11 @@ public class RegistryFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public void onLoaderReset(@NonNull Loader<Boolean> loader) {
-
     }
 
-    private void StartService(){
-        if (!isMyServiceRunning(LoadNotificationsService.class)){
+    private void loadNotification() {
+        if (!isServiceRunning(LoadNotificationsService.class)) {
             Intent intent;
-
             // Создаем Intent для вызова сервиса,
             // кладем туда параметр времени и код задачи
             int LOAD_NOTIFICATION = 1;
@@ -266,7 +232,7 @@ public class RegistryFragment extends Fragment implements LoaderManager.LoaderCa
         }
     }
 
-    private boolean isMyServiceRunning(Class<?> serviceClass) {
+    private boolean isServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             for (ActivityManager.RunningServiceInfo service : Objects.requireNonNull(manager).getRunningServices(Integer.MAX_VALUE)) {
@@ -278,7 +244,7 @@ public class RegistryFragment extends Fragment implements LoaderManager.LoaderCa
         return false;
     }
 
-    private void TransactionFragment() {
+    private void openStartScreenFragment() {
 
         Fragment fragment = null;
         try {
@@ -291,17 +257,21 @@ public class RegistryFragment extends Fragment implements LoaderManager.LoaderCa
         for(int i = 0; i < (fragmentManager.getBackStackEntryCount()-1); i++) {
             fragmentManager.popBackStack();
         }
-        FragmentTransaction ft = fragmentManager.beginTransaction();
-        ft.setCustomAnimations(R.anim.pull_in_right, R.anim.push_out_left, R.anim.pull_in_left, R.anim.push_out_right);
-        ft.replace(R.id.container, fragment);
-        ft.commit();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setCustomAnimations(
+                R.anim.pull_in_right,
+                R.anim.push_out_left,
+                R.anim.pull_in_left,
+                R.anim.push_out_right);
+        fragmentTransaction.replace(R.id.container, fragment);
+        fragmentTransaction.commit();
     }
 
-    private static boolean isEmailValid(String email) {
+    private static boolean isEmailCorrect(String userEmail) {
         String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
         Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
-        Matcher matcher = pattern.matcher(email);
-        return matcher.matches();
+        Matcher matcher = pattern.matcher(userEmail);
+        return !matcher.matches();
     }
 
 }

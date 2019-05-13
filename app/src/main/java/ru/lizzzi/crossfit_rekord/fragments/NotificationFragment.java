@@ -29,7 +29,7 @@ import ru.lizzzi.crossfit_rekord.activity.MainActivity;
 import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterNotification;
 import ru.lizzzi.crossfit_rekord.data.NotificationDBHelper;
 import ru.lizzzi.crossfit_rekord.loaders.NotificationLoader;
-import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeTitle;
+import ru.lizzzi.crossfit_rekord.interfaces.ChangeTitle;
 import ru.lizzzi.crossfit_rekord.interfaces.ListernerNotification;
 
 public class NotificationFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Map<String, Object>>> {
@@ -190,8 +190,8 @@ public class NotificationFragment extends Fragment implements LoaderManager.Load
     public  void onStart() {
         super.onStart();
 
-        if (getActivity() instanceof InterfaceChangeTitle){
-            InterfaceChangeTitle listernerChangeTitle = (InterfaceChangeTitle) getActivity();
+        if (getActivity() instanceof ChangeTitle){
+            ChangeTitle listernerChangeTitle = (ChangeTitle) getActivity();
             listernerChangeTitle.changeTitle(R.string.title_Notification_Fragment, R.string.title_Notification_Fragment);
         }
 

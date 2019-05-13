@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.inspectionСlasses.Network;
-import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeTitle;
+import ru.lizzzi.crossfit_rekord.interfaces.ChangeTitle;
 import ru.lizzzi.crossfit_rekord.loaders.ChangeEmailLoader;
 
 public class ChangeEmailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Boolean>{
@@ -134,8 +134,8 @@ public class ChangeEmailFragment extends Fragment implements LoaderManager.Loade
     @Override
     public  void onStart() {
         super.onStart();
-        if (getActivity() instanceof InterfaceChangeTitle){
-            InterfaceChangeTitle listernerChangeTitle = (InterfaceChangeTitle) getActivity();
+        if (getActivity() instanceof ChangeTitle){
+            ChangeTitle listernerChangeTitle = (ChangeTitle) getActivity();
             listernerChangeTitle.changeTitle(R.string.title_ChangeEmail_Fragment, R.string.title_AboutMe_Fragment);
         }
 

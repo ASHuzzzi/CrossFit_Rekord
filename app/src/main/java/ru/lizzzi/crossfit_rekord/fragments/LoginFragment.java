@@ -32,8 +32,8 @@ import java.util.regex.Pattern;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.inspectionСlasses.Network;
-import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeTitle;
-import ru.lizzzi.crossfit_rekord.interfaces.InterfaceChangeToggleStatus;
+import ru.lizzzi.crossfit_rekord.interfaces.ChangeTitle;
+import ru.lizzzi.crossfit_rekord.interfaces.ChangeToggleStatus;
 import ru.lizzzi.crossfit_rekord.loaders.LoginLoader;
 import ru.lizzzi.crossfit_rekord.services.LoadNotificationsService;
 
@@ -44,43 +44,46 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
 
     private Button buttonLogin;
     private ProgressBar progressBar;
-    private EditText editTextEmail;
-    private EditText editTextPassword;
+    private EditText editTextUserEmail;
+    private EditText editTextUserPassword;
 
-    private Handler handlerLoginFragment;
-    private Thread threadLoginFragment;
-    private Runnable runnableLoginFragment;
+    private Handler handlerLogin;
+    private Thread threadLogin;
+    private Runnable runnableLogin;
 
-    private int openThisFragment = 1;
+    private final static int LOGIN_IS_DONE = 1;
+    private final static int WAIT_STATE = 0;
+    private final static int LOAD_STATE = 1;
+
 
     @SuppressLint("HandlerLeak")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState){
-        View v = inflater.inflate(R.layout.fragment_login, container, false);
-        editTextEmail = v.findViewById(R.id.editText4);
-        editTextPassword = v.findViewById(R.id.editText5);
-        buttonLogin = v.findViewById(R.id.button2);
-        progressBar = v.findViewById(R.id.pbLogin);
-        Button buttonContacts = v.findViewById(R.id.btContacts);
-        Button buttonRegisration = v.findViewById(R.id.btnRegisration);
-        TextView textRecoveryPassword = v.findViewById(R.id.tvRecPas);
+        View view = inflater.inflate(R.layout.fragment_login, container, false);
+        editTextUserEmail = view.findViewById(R.id.editText4);
+        editTextUserPassword = view.findViewById(R.id.editText5);
+        buttonLogin = view.findViewById(R.id.button2);
+        progressBar = view.findViewById(R.id.pbLogin);
+        Button buttonContacts = view.findViewById(R.id.btContacts);
+        Button buttonRegisration = view.findViewById(R.id.btnRegisration);
+        TextView textRecoveryPassword = view.findViewById(R.id.tvRecPas);
 
         //хэндлер для потока runnableOpenFragment
-        handlerLoginFragment = new Handler() {
+        handlerLogin = new Handler() {
             @Override
             public void handleMessage(Message message) {
-                if(message.what == openThisFragment){
-                    TransactionFragment(StartScreenFragment.class);
-                }else {
+                if (message.what == LOGIN_IS_DONE) {
+                    openNewFragment(StartScreenFragment.class);
+                } else {
                     Bundle bundle = message.getData();
                     boolean checkDone = bundle.getBoolean("result");
                     if (checkDone) {
-                        startAsyncTaskLoader(
-                                editTextEmail.getText().toString(),
-                                editTextPassword.getText().toString());
+                        startLoginLoader(
+                                editTextUserEmail.getText().toString(),
+                                editTextUserPassword.getText().toString());
                     } else {
-                        ChangeUIElements(0);
+                        changeUIOnState(WAIT_STATE);
                         Toast.makeText(getContext(), "Нет подключения", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -88,40 +91,41 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
         };
 
         //поток запускаемый при создании экрана (запуск происходит из onStart)
-        runnableLoginFragment = new Runnable() {
+        runnableLogin = new Runnable() {
             @Override
             public void run() {
                 Network network = new Network(getContext());
-                Bundle bundle = new Bundle();
                 boolean checkDone = network.checkConnection();
+                Bundle bundle = new Bundle();
                 bundle.putBoolean("result", checkDone);
-                Message msg = handlerLoginFragment.obtainMessage();
+                Message msg = handlerLogin.obtainMessage();
                 msg.setData(bundle);
-                handlerLoginFragment.sendMessage(msg);
+                handlerLogin.sendMessage(msg);
             }
         };
 
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String UserEmail = editTextEmail.getText().toString();
-                if (UserEmail.endsWith(" ")) {
-                    UserEmail = UserEmail.substring(0, UserEmail.length() - 1);
-                    editTextEmail.setText(UserEmail);
+                String userEmail = editTextUserEmail.getText().toString();
+                if (userEmail.endsWith(" ")) {
+                    userEmail = userEmail.substring(0, userEmail.length() - 1);
+                    editTextUserEmail.setText(userEmail);
                 }
 
-                if (editTextEmail.getText().length() == 0 || isEmailValid(editTextEmail.getText().toString())) {
-                    editTextEmail.setFocusableInTouchMode(true);
-                    editTextEmail.setFocusable(true);
-                    editTextEmail.requestFocus();
+                boolean userEmailIsCorrect = isEmailCorrect(userEmail);
+                if (editTextUserEmail.getText().length() == 0 || userEmailIsCorrect) {
+                    editTextUserEmail.setFocusableInTouchMode(true);
+                    editTextUserEmail.setFocusable(true);
+                    editTextUserEmail.requestFocus();
                     Toast.makeText(getContext(), "Введите почту!", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                if (editTextPassword.getText().length()== 0){
-                    editTextPassword.setFocusableInTouchMode(true);
-                    editTextPassword.setFocusable(true);
-                    editTextPassword.requestFocus();
+                if (editTextUserPassword.getText().length() == 0) {
+                    editTextUserPassword.setFocusableInTouchMode(true);
+                    editTextUserPassword.setFocusable(true);
+                    editTextUserPassword.requestFocus();
                     Toast.makeText(getContext(), "Введите пароль", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -132,10 +136,10 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
                     imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 }
 
-                ChangeUIElements(1);
-                threadLoginFragment = new Thread(runnableLoginFragment);
-                threadLoginFragment.setDaemon(true);
-                threadLoginFragment.start();
+                changeUIOnState(LOAD_STATE);
+                threadLogin = new Thread(runnableLogin);
+                threadLogin.setDaemon(true);
+                threadLogin.start();
 
             }
         });
@@ -143,38 +147,37 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
         buttonContacts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TransactionFragment(ContactsFragment.class);
+                openNewFragment(ContactsFragment.class);
             }
         });
 
         buttonRegisration.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TransactionFragment(RegistryFragment.class);
+                openNewFragment(RegistryFragment.class);
             }
         });
 
         textRecoveryPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TransactionFragment(PasswordRecoveryFragment.class);
+                openNewFragment(PasswordRecoveryFragment.class);
             }
         });
-
-        return  v;
+        return view;
     }
 
     @Override
     public  void onStart() {
         super.onStart();
-        if (getActivity() instanceof InterfaceChangeTitle) {
-            InterfaceChangeTitle listernerChangeTitle = (InterfaceChangeTitle) getActivity();
-            listernerChangeTitle.changeTitle(R.string.title_Login_Fragment, R.string.title_Login_Fragment);
+        if (getActivity() instanceof ChangeTitle) {
+            ChangeTitle listerner = (ChangeTitle) getActivity();
+            listerner.changeTitle(R.string.title_Login_Fragment, R.string.title_Login_Fragment);
         }
     }
 
-    private void ChangeUIElements(int status) {
-        if (status == 1) {
+    private void changeUIOnState(int state) {
+        if (state == LOAD_STATE) {
             progressBar.setVisibility(View.VISIBLE);
             buttonLogin.setPressed(true);
         } else {
@@ -183,29 +186,29 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
         }
     }
 
-    private void startAsyncTaskLoader(String stEmail, String stPassword) {
+    private void startLoginLoader(String userEmail, String userPassword) {
         Bundle bundle = new Bundle();
-        bundle.putString("e_mail" , stEmail);
-        bundle.putString("password" , stPassword);
-        int LOADER_ID = 1;
-        getLoaderManager().initLoader(LOADER_ID, bundle,this).forceLoad();
+        bundle.putString("e_mail" , userEmail);
+        bundle.putString("password" , userPassword);
+        int LOGIN_LOADER = 1;
+        getLoaderManager().initLoader(LOGIN_LOADER, bundle,this).forceLoad();
     }
 
     @NonNull
     @Override
-    public Loader<Boolean> onCreateLoader(int id, Bundle args) {
-        return new LoginLoader(getContext(), args);
+    public Loader<Boolean> onCreateLoader(int id, Bundle bundle) {
+        return new LoginLoader(getContext(), bundle);
     }
 
     @Override
-    public void onLoadFinished(@NonNull Loader<Boolean> loader, Boolean data) {
-        if (data) {
+    public void onLoadFinished(@NonNull Loader<Boolean> loader, Boolean userIsLoggined) {
+        if (userIsLoggined) {
             startService();
-            InterfaceChangeToggleStatus interfaceChangeToggleStatus = (InterfaceChangeToggleStatus) getActivity();
-            interfaceChangeToggleStatus.changeToggleStatus(true);
-            handlerLoginFragment.sendEmptyMessage(openThisFragment);
-        }else{
-            ChangeUIElements(0);
+            ChangeToggleStatus changeToggleStatus = (ChangeToggleStatus) getActivity();
+            changeToggleStatus.changeToggleStatus(true);
+            handlerLogin.sendEmptyMessage(LOGIN_IS_DONE);
+        } else {
+            changeUIOnState(WAIT_STATE);
             Toast.makeText(getContext(), "Неверный логин или пароль!", Toast.LENGTH_SHORT).show();
         }
     }
@@ -215,7 +218,7 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
     }
 
     private void startService() {
-        if (!isMyServiceRunning(LoadNotificationsService.class)) {
+        if (!isServiceRunning(LoadNotificationsService.class)) {
             Intent intent;
 
             // Создаем Intent для вызова сервиса,
@@ -230,7 +233,7 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
         }
     }
 
-    private boolean isMyServiceRunning(Class<?> serviceClass) {
+    private boolean isServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             for (ActivityManager.RunningServiceInfo service : Objects.requireNonNull(manager).getRunningServices(Integer.MAX_VALUE)) {
@@ -242,8 +245,7 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
         return false;
     }
 
-    private void TransactionFragment(Class fragmentClass) {
-
+    private void openNewFragment(Class fragmentClass) {
         Fragment fragment = null;
         try {
             fragment = (Fragment) fragmentClass.newInstance();
@@ -251,22 +253,26 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
             e.printStackTrace();
         }
         FragmentManager fragmentManager = getFragmentManager();
-        if (fragmentClass == StartScreenFragment.class){
-            for(int i = 0; i < (fragmentManager.getBackStackEntryCount()); i++) {
+        if (fragmentClass == StartScreenFragment.class) {
+            for (int i = 0; i < (fragmentManager.getBackStackEntryCount()); i++) {
                 fragmentManager.popBackStack();
             }
         }
-        FragmentTransaction ft = fragmentManager.beginTransaction();
-        ft.setCustomAnimations(R.anim.pull_in_right, R.anim.push_out_left, R.anim.pull_in_left, R.anim.push_out_right);
-        ft.replace(R.id.container, fragment);
-        ft.addToBackStack(null);
-        ft.commit();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setCustomAnimations(
+                R.anim.pull_in_right,
+                R.anim.push_out_left,
+                R.anim.pull_in_left,
+                R.anim.push_out_right);
+        fragmentTransaction.replace(R.id.container, fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 
-    private static boolean isEmailValid(String email) {
+    private static boolean isEmailCorrect(String userEmail) {
         String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
         Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
-        Matcher matcher = pattern.matcher(email);
+        Matcher matcher = pattern.matcher(userEmail);
         return !matcher.matches();
     }
 }

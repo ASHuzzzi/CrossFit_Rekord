@@ -1,5 +1,5 @@
 package ru.lizzzi.crossfit_rekord.interfaces;
 
-public interface InterfaceChangeToggleStatus {
+public interface ChangeToggleStatus {
     void changeToggleStatus(boolean toggleVisible);
 }
