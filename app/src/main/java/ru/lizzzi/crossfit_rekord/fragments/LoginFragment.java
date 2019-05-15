@@ -61,13 +61,13 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.fragment_login, container, false);
-        editTextUserEmail = view.findViewById(R.id.editText4);
-        editTextUserPassword = view.findViewById(R.id.editText5);
-        buttonLogin = view.findViewById(R.id.button2);
-        progressBar = view.findViewById(R.id.pbLogin);
-        Button buttonContacts = view.findViewById(R.id.btContacts);
-        Button buttonRegisration = view.findViewById(R.id.btnRegisration);
-        TextView textRecoveryPassword = view.findViewById(R.id.tvRecPas);
+        editTextUserEmail = view.findViewById(R.id.editTextEmail);
+        editTextUserPassword = view.findViewById(R.id.editTextPassword);
+        buttonLogin = view.findViewById(R.id.buttonLogin);
+        progressBar = view.findViewById(R.id.progressbar);
+        TextView textContacts = view.findViewById(R.id.textContacts);
+        Button buttonRegistration = view.findViewById(R.id.buttonRegistration);
+        TextView textRecoveryPassword = view.findViewById(R.id.textRecoveryPassword);
 
         //хэндлер для потока runnableOpenFragment
         handlerLogin = new Handler() {
@@ -144,14 +144,14 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
             }
         });
 
-        buttonContacts.setOnClickListener(new View.OnClickListener() {
+        textContacts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 openNewFragment(ContactsFragment.class);
             }
         });
 
-        buttonRegisration.setOnClickListener(new View.OnClickListener() {
+        buttonRegistration.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 openNewFragment(RegistryFragment.class);

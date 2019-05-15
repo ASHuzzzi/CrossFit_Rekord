@@ -7,7 +7,7 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/llLogo"
+        android:id="@+id/linLayLogo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="2"
@@ -23,8 +23,8 @@
             tools:ignore="ContentDescription" />
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/llEnterData"
+    <RelativeLayout
+        android:id="@+id/relativeLayEnterData"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="10dp"
@@ -44,24 +44,26 @@
             android:textColor="@color/colorRedPrimary" />
 
         <EditText
-            android:id="@+id/editText4"
+            android:id="@+id/editTextEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/textView10"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:layout_marginBottom="10dp"
+            android:autofillHints="@string/empty"
             android:gravity="start"
             android:inputType="textWebEmailAddress"
             android:textColor="@color/colorRedPrimary"
             android:theme="@style/Theme.App.Base"
             tools:ignore="LabelFor"
-            android:autofillHints="@string/empty"
             tools:targetApi="o" />
 
         <TextView
             android:id="@+id/textView11"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/editTextEmail"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:gravity="start"
@@ -69,28 +71,31 @@
             android:textColor="@color/colorRedPrimary" />
 
         <EditText
-            android:id="@+id/editText5"
+            android:id="@+id/editTextPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/textView11"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:layout_marginBottom="10dp"
+            android:autofillHints="@string/empty"
             android:gravity="start"
             android:inputType="textPassword"
             android:maxLines="1"
             android:textColor="@color/colorRedPrimary"
             android:theme="@style/Theme.App.Base"
             tools:ignore="LabelFor"
-            android:autofillHints="@string/empty"
             tools:targetApi="o" />
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/buttonLogin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="40dp"
+            android:layout_below="@id/editTextPassword"
+            android:layout_alignStart="@id/buttonRegistration"
+            android:layout_alignEnd="@id/buttonRegistration"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp"
-            android:layout_marginRight="40dp"
             android:paddingStart="20dp"
             android:paddingLeft="20dp"
             android:paddingEnd="20dp"
@@ -98,9 +103,11 @@
             android:text="@string/strButtonEnter" />
 
         <Button
-            android:id="@+id/btnRegisration"
+            android:id="@+id/buttonRegistration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@id/buttonLogin"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="25dp"
             android:paddingStart="20dp"
             android:paddingLeft="20dp"
@@ -109,24 +116,26 @@
             android:text="@string/strButtonRegistration" />
 
         <TextView
-            android:id="@+id/tvRecPas"
-            android:layout_width="match_parent"
+            android:id="@+id/textRecoveryPassword"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@id/buttonRegistration"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp"
             android:gravity="center"
             android:text="@string/strRecoveryPas"
             android:textColor="@color/colorRedPrimary" />
 
-    </LinearLayout>
+    </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/rlContacts"
+        android:id="@+id/relativeLayContacts"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="2">
 
         <ProgressBar
-            android:id="@+id/pbLogin"
+            android:id="@+id/progressbar"
             style="?android:attr/progressBarStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -135,16 +144,19 @@
             android:layout_gravity="center"
             android:visibility="invisible" />
 
-        <Button
-            android:id="@+id/btContacts"
+        <TextView
+            android:id="@+id/textContacts"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="false"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_margin="20dp"
-            android:background="@color/colorPrimary"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
             android:padding="10dp"
+            android:gravity="center"
             android:text="@string/contacts"
             android:textColor="@color/colorRedPrimary" />
     </RelativeLayout>

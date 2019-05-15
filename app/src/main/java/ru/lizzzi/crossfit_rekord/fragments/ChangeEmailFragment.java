@@ -52,10 +52,10 @@ public class ChangeEmailFragment extends Fragment implements LoaderManager.Loade
 
         mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
-        tvOldEmail = v.findViewById(R.id.tvOldEmail);
-        etChangeEmail = v.findViewById(R.id.etChangeEmail);
-        pbChangeEmail = v.findViewById(R.id.pbChangeEmail);
-        btnChangeEmail = v.findViewById(R.id.btnChangeEmail);
+        tvOldEmail = v.findViewById(R.id.textOldEmail);
+        etChangeEmail = v.findViewById(R.id.editTextNewEmail);
+        pbChangeEmail = v.findViewById(R.id.progressbar);
+        btnChangeEmail = v.findViewById(R.id.buttonChangeEmail);
 
         //хэндлер для потока runnableOpenFragment
         handlerChangeEmailFragment = new Handler() {
