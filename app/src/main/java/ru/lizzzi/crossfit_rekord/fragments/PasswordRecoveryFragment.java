@@ -46,9 +46,9 @@ public class PasswordRecoveryFragment extends Fragment implements LoaderManager.
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_email, container, false);
-        editTextEmailForRecovery = view.findViewById(R.id.etRecPasEmail);
-        buttonRecoveryPassword = view.findViewById(R.id.btnRecPasSend);
-        progressBar = view.findViewById(R.id.pbRecPas);
+        editTextEmailForRecovery = view.findViewById(R.id.editTextEmailForRecovery);
+        buttonRecoveryPassword = view.findViewById(R.id.buttonRecoveryEmail);
+        progressBar = view.findViewById(R.id.progressbar);
 
         //хэндлер для потока runnableOpenFragment
         handlerPasswordRecovery = new Handler() {
