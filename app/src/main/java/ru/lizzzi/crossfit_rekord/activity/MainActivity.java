@@ -56,8 +56,6 @@ public class MainActivity extends AppCompatActivity implements
         ChangeTitle,
         ChangeToggleStatus {
 
-    private AuthDataCheck checkAuthData = new AuthDataCheck();
-
     private BroadcastReceiver broadcastReceiver;
     private final int LOAD_NOTIFICATION = 1;
     private final int UPDATE_NOTIFICATION = 2;
@@ -70,33 +68,30 @@ public class MainActivity extends AppCompatActivity implements
     public final static String PARAM_STATUS = "status";
     public final static String BROADCAST_ACTION = "ru.lizzzi.crossfit_rekord.activity";
 
-    private static final String APPLICATION_IDB = "215CF2B1-C44E-E365-FFB6-9C35DD6A9300";
-    private static final String API_KEYB = "8764616E-C5FE-CE43-FF54-17B4A8026F00";
-
     private NotificationDBHelper notificationDBHelper;
 
-    private TextView tvNotificationCounter;
+    private TextView textNotificationCounter;
     private NavigationView navigationView;
     private int openFragment = 1;
     private int fragmentName = 0;
 
-    private static final String APP_PREFERENCES = "audata";
-    private static final String APP_PREFERENCES_SELECTEDDAY = "SelectedDay";
-
     private DrawerLayout drawer;
-    private ActionBarDrawerToggle toggle;
+    private ActionBarDrawerToggle actionBarToggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        initNavigationView();
+        initNotificationCounter();
+    }
 
+    private void initNavigationView() {
         Toolbar toolbar = findViewById(R.id.appbar);
         setSupportActionBar(toolbar);
         drawer = findViewById(R.id.drawer_layout);
-
-        toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close){
+        actionBarToggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
 
             @Override
             public void onDrawerClosed(View drawerView) {
@@ -121,7 +116,6 @@ public class MainActivity extends AppCompatActivity implements
         navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         View headerView = navigationView.getHeaderView(0);
-
         LinearLayout linLayoutNavHeader = headerView.findViewById(R.id.navHeader);
         linLayoutNavHeader.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,20 +125,61 @@ public class MainActivity extends AppCompatActivity implements
                 drawer.closeDrawer(GravityCompat.START);
             }
         });
+    }
 
-        tvNotificationCounter = (TextView) MenuItemCompat.getActionView(
+    private void initNotificationCounter() {
+        textNotificationCounter = (TextView) MenuItemCompat.getActionView(
                 navigationView.getMenu().findItem(R.id.notification));
+    }
 
+    @Override
+    protected void  onStart() {
+        super.onStart();
         notificationDBHelper = new NotificationDBHelper(getContext());
         try {
             notificationDBHelper.createDataBase();
         } catch (IOException ioe) {
             throw new Error("Unable to create database");
         }
-        notificationDBHelper.openDataBase();
-        notificationDBHelper.close();
-
+        initBackendlessApi();
         initBroadcastReceiver();
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.container);
+        AuthDataCheck checkAuthData = new AuthDataCheck();
+        boolean checkIsDone = checkAuthData.checkAuthData(getContext());
+        if (checkIsDone) {
+            if (!isServiceLoadNotificationRunning()) {
+                Intent intent;
+
+                // Создаем Intent для вызова сервиса,
+                // кладем туда параметр времени и код задачи
+                intent = new Intent(this, LoadNotificationsService.class).putExtra(PARAM_TIME, 7)
+                        .putExtra(PARAM_TASK, LOAD_NOTIFICATION);
+                // стартуем сервис
+                startService(intent);
+            }
+            changeToggleStatus(true);
+            if (fragment == null) {
+                initializeCountDrawer();
+                OpenFragment(StartScreenFragment.class);
+            }
+        } else {
+            if (fragment == null) {
+                changeToggleStatus(false);
+                OpenFragment(LoginFragment.class);
+            }
+
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(broadcastReceiver);
+    }
+
+    private void initBackendlessApi() {
+        final String APPLICATION_IDB = "215CF2B1-C44E-E365-FFB6-9C35DD6A9300";
+        final String API_KEYB = "8764616E-C5FE-CE43-FF54-17B4A8026F00";
         Backendless.initApp(this, APPLICATION_IDB, API_KEYB);
     }
 
@@ -180,6 +215,69 @@ public class MainActivity extends AppCompatActivity implements
         IntentFilter intFilt = new IntentFilter(BROADCAST_ACTION);
         // регистрируем (включаем) BroadcastReceiver
         registerReceiver(broadcastReceiver, intFilt);
+    }
+
+    private void initializeCountDrawer() {
+        new Thread(new Runnable() {
+            public void run() {
+                boolean bCheckTable =  notificationDBHelper.checkTable();
+                if(bCheckTable){
+                    int i = notificationDBHelper.countNotification();
+                    String stCounter;
+                    if (i > 0 ){
+                        stCounter = String.valueOf(i);
+                    }else {
+                        stCounter = "";
+                    }
+                    textNotificationCounter.setGravity(Gravity.CENTER_VERTICAL);
+                    textNotificationCounter.setTypeface(null, Typeface.BOLD);
+                    textNotificationCounter.setTextColor(getResources().getColor(R.color.colorAccent));
+                    textNotificationCounter.setText(stCounter);
+                }
+            }
+        }).run();
+    }
+
+    private void OpenFragment(Class fragmentClass){
+        try {
+            Fragment fragment = (Fragment) fragmentClass.newInstance();
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            for(int i = 0; i < (fragmentManager.getBackStackEntryCount()-1); i++) {
+                fragmentManager.popBackStack();
+            }
+            FragmentTransaction ft = fragmentManager.beginTransaction();
+            ft.setCustomAnimations(
+                    R.anim.pull_in_right,
+                    R.anim.push_out_left,
+                    R.anim.pull_in_left,
+                    R.anim.push_out_right);
+            ft.replace(R.id.container, fragment);
+            ft.addToBackStack(null);
+            ft.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private boolean isServiceLoadNotificationRunning() {
+        Class<?> serviceClass = LoadNotificationsService.class;
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            for (ActivityManager.RunningServiceInfo service : Objects.requireNonNull(manager).getRunningServices(Integer.MAX_VALUE)) {
+                if (serviceClass.getName().equals(service.service.getClassName())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void changeToggleStatus(boolean toggleVisible) {
+        if (toggleVisible) {
+            drawer.addDrawerListener(actionBarToggle);
+            actionBarToggle.syncState();
+        }
     }
 
     @Override
@@ -234,40 +332,16 @@ public class MainActivity extends AppCompatActivity implements
         return this;
     }
 
-    private void OpenFragment(Class fragmentClass){
-
-        Fragment fragment = null;
-        try {
-            fragment = (Fragment) fragmentClass.newInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        for(int i = 0; i < (fragmentManager.getBackStackEntryCount()-1); i++) {
-            fragmentManager.popBackStack();
-        }
-        FragmentTransaction ft = fragmentManager.beginTransaction();
-        ft.setCustomAnimations(
-                R.anim.pull_in_right,
-                R.anim.push_out_left,
-                R.anim.pull_in_left,
-                R.anim.push_out_right);
-        ft.replace(R.id.container, fragment);
-        ft.addToBackStack(null);
-        ft.commit();
-    }
-
     @Override
-    public void onBackPressed(){
-
+    public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        if(drawer.isDrawerOpen(GravityCompat.START)){
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        }
-        else{
+        } else {
             int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
             if (backStackEntryCount == 1) {
+                final String APP_PREFERENCES = "audata";
+                final String APP_PREFERENCES_SELECTEDDAY = "SelectedDay";
                 SharedPreferences mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = mSettings.edit();
                 editor.putString(APP_PREFERENCES_SELECTEDDAY, "0");
@@ -279,78 +353,6 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-    private boolean isMyServiceRunning(Class<?> serviceClass) {
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            for (ActivityManager.RunningServiceInfo service : Objects.requireNonNull(manager).getRunningServices(Integer.MAX_VALUE)) {
-                if (serviceClass.getName().equals(service.service.getClassName())) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    @Override
-    protected void  onStart() {
-        super.onStart();
-        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.container);
-        if (checkAuthData.checkAuthData(getContext())) {
-            if (!isMyServiceRunning(LoadNotificationsService.class)) {
-                Intent intent;
-
-                // Создаем Intent для вызова сервиса,
-                // кладем туда параметр времени и код задачи
-                intent = new Intent(this, LoadNotificationsService.class).putExtra(PARAM_TIME, 7)
-                        .putExtra(PARAM_TASK, LOAD_NOTIFICATION);
-                // стартуем сервис
-                startService(intent);
-            }
-
-            changeToggleStatus(true);
-            if (fragment == null) {
-                initializeCountDrawer();
-                OpenFragment(StartScreenFragment.class);
-            }
-
-        } else {
-            if (fragment == null) {
-                changeToggleStatus(false);
-                OpenFragment(LoginFragment.class);
-            }
-
-        }
-
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        unregisterReceiver(broadcastReceiver);
-    }
-
-    private void initializeCountDrawer() {
-        new Thread(new Runnable() {
-            public void run() {
-                boolean bCheckTable =  notificationDBHelper.checkTable();
-                if(bCheckTable){
-                    int i = notificationDBHelper.countNotification();
-                    String stCounter;
-                    if (i > 0 ){
-                        stCounter = String.valueOf(i);
-                    }else {
-                        stCounter = "";
-                    }
-                    tvNotificationCounter.setGravity(Gravity.CENTER_VERTICAL);
-                    tvNotificationCounter.setTypeface(null, Typeface.BOLD);
-                    tvNotificationCounter.setTextColor(getResources().getColor(R.color.colorAccent));
-                    tvNotificationCounter.setText(stCounter);
-                }
-            }
-        }).run();
-    }
-
-    //первый аргумент нужен для смены заголовка, второй для выделения элемента в шторке
     @Override
     public void changeTitle(int nameFotTitle, int nameForNavigationDraw) {
         setTitle(nameFotTitle);
@@ -391,14 +393,6 @@ public class MainActivity extends AppCompatActivity implements
 
         if (navigationViewIndex != -1) {
             navigationView.getMenu().getItem(navigationViewIndex).setChecked(true);
-        }
-    }
-
-    @Override
-    public void changeToggleStatus(boolean toggleVisible) {
-        if (toggleVisible) {
-            drawer.addDrawerListener(toggle);
-            toggle.syncState();
         }
     }
 }

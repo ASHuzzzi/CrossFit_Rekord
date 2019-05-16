@@ -28,7 +28,7 @@
             android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/username"
+            android:id="@+id/editTextUserName"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"

@@ -30,7 +30,7 @@ public class RecyclerAdapterRecord extends RecyclerView.Adapter<RecyclerAdapterR
 
         ViewHolder(View view) {
             super(view);
-            usernameItem = view.findViewById(R.id.username);
+            usernameItem = view.findViewById(R.id.editTextUserName);
             userCountItem = view.findViewById(R.id.number);
 
         }

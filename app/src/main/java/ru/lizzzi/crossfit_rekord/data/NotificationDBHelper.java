@@ -61,6 +61,7 @@ public class NotificationDBHelper extends SQLiteOpenHelper {
         try{
             String myPath = DB_PATH + DB_NAME;
             checkDB = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
+            checkDB.disableWriteAheadLogging();
         }catch(SQLiteException e){
             //база еще не существует
         }

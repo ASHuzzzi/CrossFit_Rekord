@@ -60,12 +60,12 @@ public class RegistryFragment extends Fragment implements LoaderManager.LoaderCa
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_registry, container, false);
-        editTextUserName = view.findViewById(R.id.username);
-        editTextUserPassword = view.findViewById(R.id.password);
-        editTextCheckUserPassword = view.findViewById(R.id.checkpassword);
-        editTextUserEmail = view.findViewById(R.id.email);
-        progressBar = view.findViewById(R.id.pbRegistry);
-        buttonRegister = view.findViewById(R.id.btnRegister);
+        editTextUserName = view.findViewById(R.id.editTextUserName);
+        editTextUserPassword = view.findViewById(R.id.EditTextUserPassword);
+        editTextCheckUserPassword = view.findViewById(R.id.editTextUserPassword);
+        editTextUserEmail = view.findViewById(R.id.editTextUserEmail);
+        progressBar = view.findViewById(R.id.progressbar);
+        buttonRegister = view.findViewById(R.id.buttonRegisterNewUser);
 
         //хэндлер для потока runnableOpenFragment
         handlerRegistry = new Handler() {

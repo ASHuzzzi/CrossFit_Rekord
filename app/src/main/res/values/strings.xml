@@ -19,11 +19,11 @@
     <string name="username">username</string>
 
     <!-- Значения для фрагмента Registry -->
-    <string name="strUserNameR">Имя пользователя</string>
+    <string name="strUserNameR">Ваше имя</string>
     <string name="email">Email</string>
     <string name="password">Пароль</string>
     <string name="passwordRep">Повторите пароль</string>
-    <string name="btnRegistered">Зарегистрировать</string>
+    <string name="btnRegistered">Зарегистрироваться</string>
 
     <!-- Hint'ы полей  для фрагмента Login-->
     <string name="hint_user_name">Введите имя пользователя</string>
