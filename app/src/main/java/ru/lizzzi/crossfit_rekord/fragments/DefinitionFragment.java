@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -18,15 +17,10 @@ import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterDefinition;
 import ru.lizzzi.crossfit_rekord.data.DefinitionDBHelper;
 import ru.lizzzi.crossfit_rekord.interfaces.ChangeTitle;
 
-
 public class DefinitionFragment extends Fragment {
 
-    private List<Map<String, Object>> termsOfSelectedCharacter;
     private String selectCharacter;
     RecyclerView recViewDefinitions;
-
-    public DefinitionFragment() {
-    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -34,7 +28,6 @@ public class DefinitionFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_definition, container, false);
         recViewDefinitions = view.findViewById(R.id.rvDefinition);
-
         Bundle bundle = getArguments();
         if (bundle != null) {
             selectCharacter = bundle.getString("tag");
@@ -51,8 +44,7 @@ public class DefinitionFragment extends Fragment {
             ChangeTitle listernerChangeTitle = (ChangeTitle) getActivity();
             listernerChangeTitle.changeTitle(R.string.title_Definition_Fragment, R.string.title_Character_Fragment);
         }
-        termsOfSelectedCharacter = new ArrayList<>();
-        termsOfSelectedCharacter = getListDefinitions(selectCharacter);
+        List<Map<String, Object>> termsOfSelectedCharacter = getListDefinitions(selectCharacter);
         RecyclerAdapterDefinition adapter = new RecyclerAdapterDefinition(
                 getContext(),
                 termsOfSelectedCharacter);
