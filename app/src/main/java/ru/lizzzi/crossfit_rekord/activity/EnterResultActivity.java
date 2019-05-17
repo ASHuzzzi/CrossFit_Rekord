@@ -315,7 +315,7 @@ public class EnterResultActivity
 
             switch (loader.getId()) {
                 case LOADER_START_SAVE:
-                    mDBHelper.saveDates(mSettings.getString(APP_PREFERENCES_OBJECTID, ""), lDate);
+                    mDBHelper.saveDate(mSettings.getString(APP_PREFERENCES_OBJECTID, ""), lDate);
                     break;
 
                 case LOADER_START_DELETE:
@@ -323,7 +323,7 @@ public class EnterResultActivity
                     break;
 
                 case LOADER_START_UPLOAD:
-                    mDBHelper.saveDates(mSettings.getString(APP_PREFERENCES_OBJECTID, ""), lDate);
+                    mDBHelper.saveDate(mSettings.getString(APP_PREFERENCES_OBJECTID, ""), lDate);
                     break;
             }
             Intent answerIntent = new Intent();

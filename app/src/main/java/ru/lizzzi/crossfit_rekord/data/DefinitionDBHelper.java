@@ -3,7 +3,6 @@ package ru.lizzzi.crossfit_rekord.data;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -14,7 +13,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -35,7 +33,7 @@ public class DefinitionDBHelper  extends SQLiteOpenHelper{
     /**
      * Создает пустую базу данных и перезаписывает ее нашей собственной базой
      * */
-    public void createDataBase() throws IOException {
+    public void createDataBase() {
         if(!checkDataBase()) {
             //вызывая этот метод создаем пустую базу, позже она будет перезаписана
             this.getReadableDatabase();
@@ -56,8 +54,7 @@ public class DefinitionDBHelper  extends SQLiteOpenHelper{
         try {
             String myPath = DB_PATH + DB_NAME;
             database = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
-        } catch(SQLiteException e) {
-            throw new Error("The base does not exist yet");
+        } catch(SQLiteException ignored) {
         }
         if (database != null) {
             database.close();

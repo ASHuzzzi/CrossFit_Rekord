@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -38,7 +37,7 @@ public class CalendarWodDBHelper extends SQLiteOpenHelper {
     /**
      * Создает пустую базу данных и перезаписывает ее нашей собственной базой
      * */
-    public void createDataBase() throws IOException {
+    public void createDataBase() {
 
         if(!checkDataBase()){
             //вызывая этот метод создаем пустую базу, позже она будет перезаписана
@@ -62,6 +61,7 @@ public class CalendarWodDBHelper extends SQLiteOpenHelper {
         try{
             String myPath = DB_PATH + DB_NAME;
             checkDB = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
+            checkDB.disableWriteAheadLogging();
         }catch(SQLiteException e){
             //база еще не существует
         }
@@ -98,13 +98,6 @@ public class CalendarWodDBHelper extends SQLiteOpenHelper {
         myOutput.flush();
         myOutput.close();
         myInput.close();
-    }
-
-    public void openDataBase() throws SQLException {
-        //открываем БД
-        String myPath = DB_PATH + DB_NAME;
-        myDataBase = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
-        myDataBase.disableWriteAheadLogging();
     }
 
     @Override
@@ -164,16 +157,30 @@ public class CalendarWodDBHelper extends SQLiteOpenHelper {
         return arrListDates;
     }
 
-    public void saveDates(String stObjectId, long lDate){
+    public void saveDates(String userId, List<Date> dates) {
         myDataBase = this.getWritableDatabase();
-        ContentValues newValues = new ContentValues();
-
-        newValues.put(dbCaleendarWod.columnObjectId, stObjectId);
-        newValues.put(dbCaleendarWod.columnDateSession, lDate);
-        myDataBase.insert(dbCaleendarWod.TABLE_NAME, null, newValues);
+        ContentValues values = new ContentValues();
+        long time;
+        for (int i = 0; i < dates.size(); i++) {
+            time = dates.get(i).getTime();
+            values.put(dbCaleendarWod.columnObjectId, userId);
+            values.put(dbCaleendarWod.columnDateSession, time);
+            myDataBase.insert(dbCaleendarWod.TABLE_NAME, null, values);
+            values.clear();
+        }
+        myDataBase.close();
     }
 
-    public void deleteDate(String stObjectId, long lDate){
+    public void saveDate(String userId, long date) {
+        myDataBase = this.getWritableDatabase();
+        ContentValues newValues = new ContentValues();
+        newValues.put(dbCaleendarWod.columnObjectId, userId);
+        newValues.put(dbCaleendarWod.columnDateSession, date);
+        myDataBase.insert(dbCaleendarWod.TABLE_NAME, null, newValues);
+        myDataBase.close();
+    }
+
+    public void deleteDate(String stObjectId, long lDate) {
         myDataBase = this.getWritableDatabase();
 
         String selection = dbCaleendarWod.columnObjectId + "= '" + stObjectId + "' AND "
@@ -186,5 +193,6 @@ public class CalendarWodDBHelper extends SQLiteOpenHelper {
                 selection,
                 null
         );
+        myDataBase.close();
     }
 }

@@ -88,11 +88,7 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
         progressBar.setVisibility(View.VISIBLE);
 
         calendarWodDBHelper = new CalendarWodDBHelper(getContext());
-        try {
-            calendarWodDBHelper.createDataBase();
-        } catch (IOException ioe) {
-            throw new Error("Unable to create database");
-        }
+        calendarWodDBHelper.createDataBase();
 
         Calendar c = Calendar.getInstance();
         int maximumDateYear = c.get(Calendar.YEAR);
@@ -244,13 +240,9 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
     @Override
     public void onLoadFinished(@NonNull Loader<List<Date>> loader, List<Date> dates) {
         if (dates != null) {
-            for (int i = 0; i < dates.size(); i++) {
-                long time = dates.get(i).getTime();
-                mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-                calendarWodDBHelper.saveDates(mSettings.getString(APP_PREFERENCES_OBJECTID, ""), time);
-            }
+            String userId = mSettings.getString(APP_PREFERENCES_OBJECTID, "");
+            calendarWodDBHelper.saveDates(userId, dates);
             showSelectedDates(dates);
-
         } else {
             layoutErrorCalendarWod.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.INVISIBLE);
@@ -297,18 +289,10 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
             getDates(timeStart, timeFinish);
         }
 
-
         if (getActivity() instanceof ChangeTitle) {
             ChangeTitle listernerChangeTitle = (ChangeTitle) getActivity();
             listernerChangeTitle.changeTitle(R.string.title_CalendarWod_Fragment, R.string.title_CalendarWod_Fragment);
         }
-    }
-
-    public void onResume(){
-        super.onResume();
-    }
-    public void onPause(){
-        super.onPause();
     }
 
     public void onStop() {
@@ -320,7 +304,7 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
     }
 
     public void getDates(final long timeStart, final long timeFinish) {
-        mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        //mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         List<Date> selectDates = calendarWodDBHelper.selectDates(
                 mSettings.getString(APP_PREFERENCES_OBJECTID, ""),
                 timeStart,

@@ -30,7 +30,6 @@ import android.widget.Toast;
 
 import com.backendless.Backendless;
 
-import java.io.IOException;
 import java.util.Objects;
 
 import ru.lizzzi.crossfit_rekord.R;
@@ -135,17 +134,12 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void  onStart() {
         super.onStart();
-        notificationDBHelper = new NotificationDBHelper(getContext());
-        try {
-            notificationDBHelper.createDataBase();
-        } catch (IOException ioe) {
-            throw new Error("Unable to create database");
-        }
+        checkForAvailabilityDB();
         initBackendlessApi();
         initBroadcastReceiver();
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.container);
-        AuthDataCheck checkAuthData = new AuthDataCheck();
-        boolean checkIsDone = checkAuthData.checkAuthData(getContext());
+        AuthDataCheck authData = new AuthDataCheck();
+        boolean checkIsDone = authData.checkAuthData(getContext());
         if (checkIsDone) {
             if (!isServiceLoadNotificationRunning()) {
                 Intent intent;
@@ -175,6 +169,11 @@ public class MainActivity extends AppCompatActivity implements
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(broadcastReceiver);
+    }
+
+    private void checkForAvailabilityDB() {
+        notificationDBHelper = new NotificationDBHelper(getContext());
+        notificationDBHelper.createDataBase();
     }
 
     private void initBackendlessApi() {

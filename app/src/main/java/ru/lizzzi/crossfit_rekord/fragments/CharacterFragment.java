@@ -44,12 +44,7 @@ public class CharacterFragment extends Fragment {
         }
 
         DefinitionDBHelper definitionDBHelper = new DefinitionDBHelper(getContext());
-
-        try {
-            definitionDBHelper.createDataBase();
-        } catch (IOException ioe) {
-            throw new Error("Unable to create database");
-        }
+        definitionDBHelper.createDataBase();
 
         ArrayList<String> listCharacter = definitionDBHelper.getListCharacters();
         RecyclerAdapterCharacter adapter = new RecyclerAdapterCharacter(listCharacter, new ListernerCharacter() {
