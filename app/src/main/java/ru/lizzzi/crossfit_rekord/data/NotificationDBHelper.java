@@ -37,12 +37,10 @@ public class NotificationDBHelper extends SQLiteOpenHelper {
     /**
      * Создает пустую базу данных и перезаписывает ее нашей собственной базой
      * */
-    public void createDataBase() throws IOException {
-
-        if(!checkDataBase()){
+    public void createDataBase() {
+        if(!checkDataBase()) {
             //вызывая этот метод создаем пустую базу, позже она будет перезаписана
             this.getReadableDatabase();
-
             try {
                 copyDataBase();
             } catch (IOException e) {
@@ -57,7 +55,6 @@ public class NotificationDBHelper extends SQLiteOpenHelper {
      */
     private boolean checkDataBase(){
         SQLiteDatabase checkDB = null;
-
         try{
             String myPath = DB_PATH + DB_NAME;
             checkDB = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);

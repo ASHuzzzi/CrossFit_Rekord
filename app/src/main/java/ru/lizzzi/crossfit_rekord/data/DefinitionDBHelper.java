@@ -24,7 +24,7 @@ public class DefinitionDBHelper  extends SQLiteOpenHelper{
     @SuppressLint("SdCardPath")
     private static final String DB_PATH = "/data/data/ru.lizzzi.crossfit_rekord/databases/";
     private static final String DB_NAME = "DefinitionDirectory.db";
-    private SQLiteDatabase myDataBase;
+    private SQLiteDatabase database;
     private final Context context;
 
     public DefinitionDBHelper(Context context) {
@@ -52,18 +52,17 @@ public class DefinitionDBHelper  extends SQLiteOpenHelper{
      * @return true если существует, false если не существует
      */
     private boolean checkDataBase() {
-        SQLiteDatabase checkDB = null;
-
+        database = null;
         try {
             String myPath = DB_PATH + DB_NAME;
-            checkDB = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
+            database = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
         } catch(SQLiteException e) {
-            //база еще не существует
+            throw new Error("The base does not exist yet");
         }
-        if (checkDB != null) {
-            checkDB.close();
+        if (database != null) {
+            database.close();
         }
-        return checkDB != null;
+        return database != null;
     }
 
     /**
@@ -72,33 +71,33 @@ public class DefinitionDBHelper  extends SQLiteOpenHelper{
      * */
     private void copyDataBase() throws IOException {
         //Открываем локальную БД как входящий поток
-        InputStream myInput = context.getAssets().open("db/" + DB_NAME);
+        InputStream inputStream = context.getAssets().open("db/" + DB_NAME);
 
         //Путь ко вновь созданной БД
-        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
-        String outFileName = sqLiteDatabase.getPath();
-        sqLiteDatabase.close();
+        database = this.getReadableDatabase();
+        String outFileName = database.getPath();
+        database.close();
 
         //Открываем пустую базу данных как исходящий поток
-        OutputStream myOutput = new FileOutputStream(outFileName);
+        OutputStream outputStream = new FileOutputStream(outFileName);
 
         //перемещаем байты из входящего файла в исходящий
         byte[] buffer = new byte[1024];
         int length;
-        while ((length = myInput.read(buffer))>0) {
-            myOutput.write(buffer, 0, length);
+        while ((length = inputStream.read(buffer))>0) {
+            outputStream.write(buffer, 0, length);
         }
 
         //закрываем потоки
-        myOutput.flush();
-        myOutput.close();
-        myInput.close();
+        outputStream.flush();
+        outputStream.close();
+        inputStream.close();
     }
 
     @Override
     public synchronized void close() {
-        if(myDataBase != null)
-            myDataBase.close();
+        if(database != null)
+            database.close();
         super.close();
     }
 
@@ -114,11 +113,10 @@ public class DefinitionDBHelper  extends SQLiteOpenHelper{
     // вы можете возвращать курсоры через "return myDataBase.query(....)", это облегчит их использование
     // в создании адаптеров для ваших view
     public ArrayList<String> getListCharacters() {
-        myDataBase = this.getReadableDatabase();
-
+        database = this.getReadableDatabase();
         ArrayList<String> listCharacter = new ArrayList<>();
         String[] columns = new  String[] {DefinitionDbContarct.DBdefinition.Column_character};
-        Cursor cursor = myDataBase.query(
+        Cursor cursor = database.query(
                 true,
                 DefinitionDbContarct.DBdefinition.TABLE_NAME,
                 columns,
@@ -130,27 +128,27 @@ public class DefinitionDBHelper  extends SQLiteOpenHelper{
                 null);
         if (cursor !=null && cursor.moveToFirst()) {
             do {
-                String name = "";
+                String character = "";
                 for (String cn : cursor.getColumnNames()) {
-                    name = cursor.getString(cursor.getColumnIndex(cn));
+                    character = cursor.getString(cursor.getColumnIndex(cn));
                 }
-                listCharacter.add(name);
+                listCharacter.add(character);
             }while (cursor.moveToNext());
         }
         if (cursor != null) {
             cursor.close();
         }
-        myDataBase.close();
+        database.close();
         return listCharacter;
     }
 
     public List<Map<String, Object>> getTerminsAndDefinitions(String character){
-        myDataBase = this.getReadableDatabase();
+        database = this.getReadableDatabase();
         List<Map<String, Object>> termsOfSelectedCharacter = new ArrayList<>();
         String[] columns = new  String[] {
                 DefinitionDbContarct.DBdefinition.Column_termin,
                 DefinitionDbContarct.DBdefinition.Column_description};
-        Cursor cursor = myDataBase.query(
+        Cursor cursor = database.query(
                 DefinitionDbContarct.DBdefinition.TABLE_NAME,
                 columns,
                 DefinitionDbContarct.DBdefinition.Column_character + "= '" + character + "'",
@@ -173,7 +171,7 @@ public class DefinitionDBHelper  extends SQLiteOpenHelper{
         if (cursor != null) {
             cursor.close();
         }
-        myDataBase.close();
+        database.close();
         return termsOfSelectedCharacter;
     }
 }

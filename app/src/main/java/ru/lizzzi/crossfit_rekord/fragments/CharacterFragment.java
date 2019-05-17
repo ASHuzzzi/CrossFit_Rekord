@@ -22,7 +22,6 @@ import ru.lizzzi.crossfit_rekord.interfaces.ListernerCharacter;
 
 public class CharacterFragment extends Fragment {
 
-    private ArrayList<String> listCharacter = new ArrayList<>();
     private RecyclerView recViewCharacter;
 
     public CharacterFragment() {
@@ -39,7 +38,7 @@ public class CharacterFragment extends Fragment {
     @Override
     public  void onStart() {
         super.onStart();
-        if (getActivity() instanceof ChangeTitle){
+        if (getActivity() instanceof ChangeTitle) {
             ChangeTitle listernerChangeTitle = (ChangeTitle) getActivity();
             listernerChangeTitle.changeTitle(R.string.title_Character_Fragment, R.string.title_Character_Fragment);
         }
@@ -52,11 +51,7 @@ public class CharacterFragment extends Fragment {
             throw new Error("Unable to create database");
         }
 
-        //definitionDBHelper.openDataBase();
-
-        listCharacter.clear();
-        listCharacter = definitionDBHelper.getListCharacters();
-        //definitionDBHelper.close();
+        ArrayList<String> listCharacter = definitionDBHelper.getListCharacters();
         RecyclerAdapterCharacter adapter = new RecyclerAdapterCharacter(listCharacter, new ListernerCharacter() {
             @Override
             public void SelectCharacter(String selectCharacter) {
@@ -76,14 +71,8 @@ public class CharacterFragment extends Fragment {
                 fragmentTransaction.commit();
             }
         });
-
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recViewCharacter.setLayoutManager(layoutManager);
         recViewCharacter.setAdapter(adapter);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
     }
 }
