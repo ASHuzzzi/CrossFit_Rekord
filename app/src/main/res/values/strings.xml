@@ -283,5 +283,9 @@
     <string name="termin">termin</string>
     <string name="description">description</string>
 
+    <string name="channel_id">ru.lizzzi.crossfit_rekord.inspectionСlasses</string>
+    <string name="channel_name">Rekord notification</string>
+    <string name="notification_title">"Rekord'смен!"</string>
+    <string name="notification_text">Пора записаться на тренировку</string>
 
 </resources>

@@ -22,6 +22,7 @@ import java.util.Objects;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.adapters.PageAdapterStartScreenSlider;
+import ru.lizzzi.crossfit_rekord.inspectionСlasses.Notification;
 import ru.lizzzi.crossfit_rekord.interfaces.ChangeTitle;
 
 public class StartScreenFragment extends Fragment {
@@ -121,6 +122,8 @@ public class StartScreenFragment extends Fragment {
     public void onResume() {
         super.onResume();
             handlerStartScreen.postDelayed(runnable, delay);
+        Notification notification = new Notification();
+        notification.sendNotification(getActivity());
     }
 
     @Override
