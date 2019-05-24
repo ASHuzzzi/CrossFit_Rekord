@@ -38,12 +38,14 @@ import ru.lizzzi.crossfit_rekord.fragments.AboutMeFragment;
 import ru.lizzzi.crossfit_rekord.fragments.CalendarWodFragment;
 import ru.lizzzi.crossfit_rekord.fragments.CharacterFragment;
 import ru.lizzzi.crossfit_rekord.fragments.MyResultsFragment;
+import ru.lizzzi.crossfit_rekord.fragments.NotificationSettingsFragment;
 import ru.lizzzi.crossfit_rekord.inspectionСlasses.AuthDataCheck;
 import ru.lizzzi.crossfit_rekord.fragments.ContactsFragment;
 import ru.lizzzi.crossfit_rekord.fragments.LoginFragment;
 import ru.lizzzi.crossfit_rekord.fragments.RecordForTrainingSelectFragment;
 import ru.lizzzi.crossfit_rekord.fragments.StartScreenFragment;
 import ru.lizzzi.crossfit_rekord.fragments.TableFragment;
+import ru.lizzzi.crossfit_rekord.inspectionСlasses.Notification;
 import ru.lizzzi.crossfit_rekord.interfaces.ChangeTitle;
 import ru.lizzzi.crossfit_rekord.interfaces.ChangeToggleStatus;
 import ru.lizzzi.crossfit_rekord.services.LoadNotificationsService;
@@ -316,6 +318,10 @@ public class MainActivity extends AppCompatActivity implements
                 fragmentClass = MyResultsFragment.class;
                 fragmentName = R.string.title_MyResults_Fragment;
                 break;
+            case (R.id.localNotification):
+                fragmentClass = NotificationSettingsFragment.class;
+                fragmentName = R.string.title_NotificationSettings_Fragment;
+                break;
         }
 
         if(fragmentName != openFragment) {
@@ -385,8 +391,11 @@ public class MainActivity extends AppCompatActivity implements
             case (R.string.title_AboutMe_Fragment):
                 navigationViewIndex = 6;
                 break;
-            case (R.string.title_Contacts_Fragment):
+            case (R.string.title_NotificationSettings_Fragment):
                 navigationViewIndex = 7;
+                break;
+            case (R.string.title_Contacts_Fragment):
+                navigationViewIndex = 8;
                 break;
         }
 

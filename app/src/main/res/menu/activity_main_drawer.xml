@@ -47,7 +47,7 @@
         <item
             android:id="@+id/localNotification"
             android:enabled="true"
-            android:icon="@drawable/baseline_notifications_active_black_48dp"
+            android:icon="@drawable/notification"
             android:title="@string/localNotification" />
         <item
             android:id="@+id/contacts"
