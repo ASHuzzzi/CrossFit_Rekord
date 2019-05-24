@@ -56,6 +56,7 @@
     <string name="profile">Мои данные</string>
     <string name="calendar_wod">Результаты тренировок</string>
     <string name="myResults">Мои результаты</string>
+    <string name="localNotification">Уведомления</string>
 
 
     <string name="error_connection1">При загрузке данных произошла ошибка.</string>
@@ -283,5 +284,10 @@
     <string name="termin">termin</string>
     <string name="description">description</string>
 
+    <string-array name="typeOfNotification">
+        <item>Один день</item>
+        <item>Несколько дней</item>
+        <item>Каждый день</item>
+    </string-array>
 
 </resources>
