@@ -3,6 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
     android:orientation="vertical">
 
     <TextView
@@ -10,7 +12,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="Дни недели"
+        style="@style/MainTextStyle"
+        android:text="@string/dayOfWeek"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -25,8 +28,9 @@
             android:layout_gravity="start"
             android:layout_weight="1"
             android:layoutDirection="rtl"
-            android:text="Один день"
-            android:textAlignment="textStart" />
+            android:text="@string/oneDay"
+            android:textAlignment="textStart"
+            style="@style/MainTextStyle"/>
 
         <RadioButton
             android:id="@+id/radioButton2"
@@ -35,8 +39,9 @@
             android:layout_gravity="start"
             android:layout_weight="1"
             android:layoutDirection="rtl"
-            android:text="Каждый день"
-            android:textAlignment="textStart" />
+            android:text="@string/everyday"
+            android:textAlignment="textStart"
+            style="@style/MainTextStyle"/>
 
         <RadioButton
             android:id="@+id/radioButton3"
@@ -45,13 +50,24 @@
             android:layout_gravity="start"
             android:layout_weight="1"
             android:layoutDirection="rtl"
-            android:text="Несколько дней"
-            android:textAlignment="textStart" />
+            android:text="@string/selectedDay"
+            android:textAlignment="textStart"
+            style="@style/MainTextStyle"/>
+
     </RadioGroup>
 
     <Button
         android:id="@+id/buttonCancel"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Отмена" />
+        android:layout_gravity="center_horizontal"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:paddingStart="20dp"
+        android:paddingLeft="20dp"
+        android:paddingEnd="20dp"
+        android:paddingRight="20dp"
+        android:text="@string/strDialogBtnCancel" />
 </android.widget.LinearLayout>

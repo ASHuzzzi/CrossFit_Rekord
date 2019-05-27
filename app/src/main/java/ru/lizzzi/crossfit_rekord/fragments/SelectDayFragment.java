@@ -9,6 +9,9 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RadioButton;
+
+import java.util.Objects;
 
 import ru.lizzzi.crossfit_rekord.R;
 
@@ -22,17 +25,27 @@ public class SelectDayFragment extends DialogFragment {
     }
 
     private View createDialogView() {
-        final LayoutInflater inflater = getActivity().getLayoutInflater();
-        View contentView = inflater.inflate(R.layout.fragment_select_day, null);
+        final LayoutInflater inflater = Objects.requireNonNull(getActivity()).getLayoutInflater();
+        View view = inflater.inflate(R.layout.fragment_select_day, null);
 
-        Button butrtonCanel = contentView.findViewById(R.id.buttonCancel);
+        Button butrtonCanel = view.findViewById(R.id.buttonCancel);
         butrtonCanel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dismiss();
             }
         });
-        return contentView;
+
+        RadioButton radioButton = view.findViewById(R.id.radioButton);
+        radioButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+                DialogFragment newFragment = new SelectTimeFragment();
+                newFragment.show(getFragmentManager(), "missiles");
+            }
+        });
+        return view;
     }
 
     @Override

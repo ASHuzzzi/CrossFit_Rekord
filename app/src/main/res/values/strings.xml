@@ -289,10 +289,12 @@
     <string name="notification_title">"Rekord'смен!"</string>
     <string name="notification_text">Пора записаться на тренировку</string>
 
-    <string-array name="typeOfNotification">
-    <item>Один день</item>
-    <item>Несколько дней</item>
-    <item>Каждый день</item>
-    </string-array>
+
+    <!-- Значения для фрагмента NotificationSettingsFragment -->
+    <string name="dayOfWeek">День недели</string>
+    <string name="oneDay">Один день</string>
+    <string name="everyday">Ежедневно</string>
+    <string name="selectedDay">Несколько дней</string>
+
 
 </resources>

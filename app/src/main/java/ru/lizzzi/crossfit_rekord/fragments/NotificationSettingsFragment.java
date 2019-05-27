@@ -22,11 +22,10 @@ public class NotificationSettingsFragment extends Fragment {
         constraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogFragment newFragment = new SelectDayFragment();
-                newFragment.show(getFragmentManager(), "missiles");
+                DialogFragment selectDayFragment = new SelectDayFragment();
+                selectDayFragment.show(getFragmentManager(), "selectDay");
             }
         });
-
         return view;
     }
 }
