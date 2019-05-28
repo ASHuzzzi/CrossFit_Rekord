@@ -41,7 +41,27 @@ public class SelectDayFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 dismiss();
+                DialogFragment newFragment = new SelectWeekDayFragment();
+                newFragment.show(getFragmentManager(), "missiles");
+            }
+        });
+
+        RadioButton radioButton2 = view.findViewById(R.id.radioButton2);
+        radioButton2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
                 DialogFragment newFragment = new SelectTimeFragment();
+                newFragment.show(getFragmentManager(), "missiles");
+            }
+        });
+
+        RadioButton radioButton3 = view.findViewById(R.id.radioButton3);
+        radioButton3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+                DialogFragment newFragment = new SelectWeekDayFragment();
                 newFragment.show(getFragmentManager(), "missiles");
             }
         });

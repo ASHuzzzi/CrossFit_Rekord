@@ -9,17 +9,12 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TimePicker;
-import android.widget.Toast;
 
-import java.util.Calendar;
+import java.util.Objects;
 
 import ru.lizzzi.crossfit_rekord.R;
 
-public class SelectTimeFragment extends DialogFragment {
-
-    private int selectedHourOfDay = 0;
-    private int selectedMinute = 0;
+public class SelectWeekDayFragment  extends DialogFragment {
 
     @NonNull
     @Override
@@ -30,21 +25,8 @@ public class SelectTimeFragment extends DialogFragment {
     }
 
     private View createDialogView() {
-        final LayoutInflater inflater = getActivity().getLayoutInflater();
-        View view = inflater.inflate(R.layout.fragment_select_time, null);
-
-        TimePicker timePicker = view.findViewById(R.id.timePicker);
-        timePicker.setIs24HourView(true);
-        Calendar calendar = Calendar.getInstance();
-        timePicker.setCurrentHour(calendar.get(Calendar.HOUR_OF_DAY));
-        timePicker.setCurrentMinute(calendar.get(Calendar.MINUTE));
-        timePicker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
-            @Override
-            public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
-                selectedHourOfDay =  hourOfDay;
-                selectedMinute = minute;
-            }
-        });
+        final LayoutInflater inflater = Objects.requireNonNull(getActivity()).getLayoutInflater();
+        View view = inflater.inflate(R.layout.fragment_select_week_day, null);
 
         Button buttonCancel = view.findViewById(R.id.buttonCancel);
         Button buttonSelect = view.findViewById(R.id.buttonSelect);
@@ -60,9 +42,9 @@ public class SelectTimeFragment extends DialogFragment {
         buttonSelect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "Выбранное время:\n " + selectedHourOfDay + ":" + selectedMinute,
-                        Toast.LENGTH_SHORT).show();
                 dismiss();
+                DialogFragment newFragment = new SelectTimeFragment();
+                newFragment.show(getFragmentManager(), "missiles");
             }
         });
         return view;
