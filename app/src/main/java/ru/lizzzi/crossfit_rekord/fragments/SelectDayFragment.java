@@ -1,5 +1,6 @@
 package ru.lizzzi.crossfit_rekord.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
@@ -14,8 +15,13 @@ import android.widget.RadioButton;
 import java.util.Objects;
 
 import ru.lizzzi.crossfit_rekord.R;
+import ru.lizzzi.crossfit_rekord.interfaces.SetSettingNotification;
 
-public class SelectDayFragment extends DialogFragment {
+@SuppressLint("ValidFragment")
+public class SelectDayFragment extends DialogFragment{
+
+    private SetSettingNotification setSettingNotification;
+
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -28,8 +34,8 @@ public class SelectDayFragment extends DialogFragment {
         final LayoutInflater inflater = Objects.requireNonNull(getActivity()).getLayoutInflater();
         View view = inflater.inflate(R.layout.fragment_select_day, null);
 
-        Button butrtonCanel = view.findViewById(R.id.buttonCancel);
-        butrtonCanel.setOnClickListener(new View.OnClickListener() {
+        Button buttonCancel = view.findViewById(R.id.buttonCancel);
+        buttonCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dismiss();
@@ -41,8 +47,8 @@ public class SelectDayFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 dismiss();
-                DialogFragment newFragment = new SelectWeekDayFragment();
-                newFragment.show(getFragmentManager(), "missiles");
+                //setSettingNotification.setRegularity(String.valueOf(R.string.oneDay));
+                showDialogFragment(new SelectWeekDayFragment(), "oneDay");
             }
         });
 
@@ -51,8 +57,8 @@ public class SelectDayFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 dismiss();
-                DialogFragment newFragment = new SelectTimeFragment();
-                newFragment.show(getFragmentManager(), "missiles");
+                //setSettingNotification.setRegularity(String.valueOf(R.string.everyday));
+                showDialogFragment(new SelectTimeFragment(), "everyday");
             }
         });
 
@@ -61,11 +67,15 @@ public class SelectDayFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 dismiss();
-                DialogFragment newFragment = new SelectWeekDayFragment();
-                newFragment.show(getFragmentManager(), "missiles");
+                //setSettingNotification.setRegularity(String.valueOf(R.string.selectedDay));
+                showDialogFragment(new SelectWeekDayFragment(), "selectedDay");
             }
         });
         return view;
+    }
+
+    private void showDialogFragment (DialogFragment dialogFragment, String tag) {
+        dialogFragment.show(getFragmentManager(), tag);
     }
 
     @Override

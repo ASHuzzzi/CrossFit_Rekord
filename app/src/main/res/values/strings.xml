@@ -218,6 +218,7 @@
     <string name="strDialogEmail">Адрес для восстановления пароля</string>
     <string name="strDialogBtnSend">Отправить</string>
     <string name="strDialogBtnCancel">Отмена</string>
+    <string name="strDialogBtnOk">ОК</string>
 
     <!-- Значения для фрагмента Character -->
     <string name="strSelectCharacter">Выберите букву раздела</string>
@@ -295,6 +296,17 @@
     <string name="oneDay">Один день</string>
     <string name="everyday">Ежедневно</string>
     <string name="selectedDay">Несколько дней</string>
+    <string name="selectedTime">Время</string>
+    <string name="colon"> : </string>
+    <string name="repeat">Повтор</string>
+    <string name="monday">Понедельник</string>
+    <string name="tuesday">Вторник</string>
+    <string name="wednesday">Среда</string>
+    <string name="thursday">Четверг</string>
+    <string name="friday">Пятница</string>
+    <string name="saturday">Суббота</string>
+    <string name="sunday">Воскресенье</string>
+
 
 
 </resources>
