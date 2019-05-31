@@ -16,6 +16,8 @@ import ru.lizzzi.crossfit_rekord.R;
 
 public class SelectWeekDayFragment  extends DialogFragment {
 
+    private static final int REQUEST_REGULARITY = 1;
+
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {

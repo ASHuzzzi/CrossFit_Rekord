@@ -1,6 +1,5 @@
 package ru.lizzzi.crossfit_rekord.fragments;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
@@ -17,10 +16,9 @@ import java.util.Objects;
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.interfaces.SetSettingNotification;
 
-@SuppressLint("ValidFragment")
 public class SelectDayFragment extends DialogFragment{
 
-    private SetSettingNotification setSettingNotification;
+    private static final int REQUEST_REGULARITY = 1;
 
     @NonNull
     @Override
@@ -42,36 +40,46 @@ public class SelectDayFragment extends DialogFragment{
             }
         });
 
-        RadioButton radioButton = view.findViewById(R.id.radioButton);
-        radioButton.setOnClickListener(new View.OnClickListener() {
+        RadioButton radioButtonOneDay = view.findViewById(R.id.radioButton);
+        radioButtonOneDay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dismiss();
-                //setSettingNotification.setRegularity(String.valueOf(R.string.oneDay));
-                showDialogFragment(new SelectWeekDayFragment(), "oneDay");
+                String tag = getResources().getString(R.string.oneDay);
+                setRegularity(getTargetRequestCode(), tag);
+                showDialogFragment(new SelectWeekDayFragment(), tag);
             }
         });
 
-        RadioButton radioButton2 = view.findViewById(R.id.radioButton2);
-        radioButton2.setOnClickListener(new View.OnClickListener() {
+        RadioButton radioButtonEveryday = view.findViewById(R.id.radioButton2);
+        radioButtonEveryday.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dismiss();
-                //setSettingNotification.setRegularity(String.valueOf(R.string.everyday));
-                showDialogFragment(new SelectTimeFragment(), "everyday");
+                String tag = getResources().getString(R.string.everyday);
+                setRegularity(getTargetRequestCode(), tag);
+                showDialogFragment(new SelectTimeFragment(), tag);
             }
         });
 
-        RadioButton radioButton3 = view.findViewById(R.id.radioButton3);
-        radioButton3.setOnClickListener(new View.OnClickListener() {
+        RadioButton radioButtonSelectedDay = view.findViewById(R.id.radioButton3);
+        radioButtonSelectedDay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dismiss();
-                //setSettingNotification.setRegularity(String.valueOf(R.string.selectedDay));
-                showDialogFragment(new SelectWeekDayFragment(), "selectedDay");
+                String tag = getResources().getString(R.string.selectedDay);
+                setRegularity(getTargetRequestCode(), tag);
+                showDialogFragment(new SelectWeekDayFragment(), tag);
             }
         });
         return view;
+    }
+
+    private void setRegularity(int targetRequestCode, String regularity) {
+        if (targetRequestCode == REQUEST_REGULARITY) {
+            SetSettingNotification settingNotification = (SetSettingNotification) getTargetFragment();
+            settingNotification.setRegularity(regularity);
+        }
     }
 
     private void showDialogFragment (DialogFragment dialogFragment, String tag) {

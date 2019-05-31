@@ -119,4 +119,11 @@
             app:srcCompat="@android:drawable/ic_media_play" />
     </android.support.constraint.ConstraintLayout>
 
+    <Switch
+        android:id="@+id/switch1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Switch"
+        app:layout_constraintTop_toBottomOf="@id/constLayoutSelectTime" />
+
 </android.support.constraint.ConstraintLayout>

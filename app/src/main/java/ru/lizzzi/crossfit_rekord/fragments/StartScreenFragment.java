@@ -121,9 +121,9 @@ public class StartScreenFragment extends Fragment {
 
     public void onResume() {
         super.onResume();
-            handlerStartScreen.postDelayed(runnable, delay);
-        Notification notification = new Notification();
-        notification.sendNotification(getActivity());
+        handlerStartScreen.postDelayed(runnable, delay);
+        /*Notification notification = new Notification();
+        notification.sendNotification(getActivity());*/
     }
 
     @Override
