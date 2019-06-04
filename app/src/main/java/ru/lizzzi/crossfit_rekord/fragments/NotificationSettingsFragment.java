@@ -1,6 +1,7 @@
 package ru.lizzzi.crossfit_rekord.fragments;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
@@ -13,17 +14,26 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import java.util.Calendar;
+
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.interfaces.SetSettingNotification;
 
-public class NotificationSettingsFragment extends Fragment implements SetSettingNotification, CompoundButton.OnCheckedChangeListener {
+public class NotificationSettingsFragment extends Fragment implements SetSettingNotification, CompoundButton.OnCheckedChangeListener{
 
     private TextView textRegularity;
     private TextView textHour;
     private TextView textMinute;
     private static final int REQUEST_REGULARITY = 1;
 
-    private Context mContext;
+    private Context context;
+
+    private static final String APP_PREFERENCES = "notificationSettings";
+    private static final String APP_PREFERENCES_TYPE = "Type";
+    private static final String APP_PREFERENCES_SELECTED_DAYS = "SelectedDay";
+    private static final String APP_PREFERENCES_SELECTED_HOUR = "Hour";
+    private static final String APP_PREFERENCES_SELECTED_MINUTE = "Minute";
+    private SharedPreferences sharedPreferences;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -45,7 +55,7 @@ public class NotificationSettingsFragment extends Fragment implements SetSetting
         constLayoutSelectDay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showDialogFragment(new SelectDayFragment(), "selectDay");
+                showDialogFragment(new SelectTypeFragment(), "selectDay");
             }
         });
 
@@ -62,12 +72,12 @@ public class NotificationSettingsFragment extends Fragment implements SetSetting
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         if (isChecked) {
-            mContext = getContext();
-            NotificationHelper.scheduleRepeatingRTCNotification(mContext, textHour.getText().toString(), textMinute.getText().toString());
-            NotificationHelper.enableBootReceiver(mContext);
+            context = getContext();
+            NotificationHelper.scheduleRepeatingRTCNotification(context, textHour.getText().toString(), textMinute.getText().toString());
+            NotificationHelper.enableBootReceiver(context);
         } else {
             NotificationHelper.cancelAlarmRTC();
-            NotificationHelper.disableBootReceiver(mContext);
+            NotificationHelper.disableBootReceiver(context);
         }
     }
 
@@ -83,7 +93,39 @@ public class NotificationSettingsFragment extends Fragment implements SetSetting
 
     @Override
     public void setTime(int hour, int minute) {
-        textHour.setText(String.valueOf(hour));
-        textMinute.setText(String.valueOf(minute));
+        textHour.setText(addDigit(hour));
+        textMinute.setText(addDigit(minute));
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        sharedPreferences = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        //String defaultType = getContext().getResources().getResourceEntryName(R.string.oneDay);
+        String defaultType = getContext().getResources().getString(R.string.oneDay);
+        Calendar calendar = Calendar.getInstance();
+        String defaultHour =  addDigit(calendar.get(Calendar.HOUR_OF_DAY));
+        String defaultMinute = addDigit(calendar.get(Calendar.MINUTE));
+        String type = sharedPreferences.getString(APP_PREFERENCES_TYPE, defaultType);
+        String oneDay = "";
+        switch (type){
+            case "oneDay":
+                oneDay = getContext().getResources().getString(R.string.oneDay);
+                break;
+            case "everyday":
+                oneDay = getContext().getResources().getString(R.string.everyday);
+                break;
+            case "selectedDay":
+                oneDay = getContext().getResources().getString(R.string.selectedDay);
+                break;
+
+        }
+        textRegularity.setText(oneDay);
+        textHour.setText(sharedPreferences.getString(APP_PREFERENCES_SELECTED_HOUR, defaultHour));
+        textMinute.setText(sharedPreferences.getString(APP_PREFERENCES_SELECTED_MINUTE, defaultMinute));
+    }
+
+    private String addDigit(int selectedTime) {
+        return String.format("%02d", selectedTime);
     }
 }

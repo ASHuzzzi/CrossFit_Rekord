@@ -22,7 +22,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         //Pending intent to handle launch of Activity in intent above
         PendingIntent pendingIntent =
-                PendingIntent.getActivity(context, NotificationHelper.ALARM_TYPE_RTC, intentToRepeat, PendingIntent.FLAG_UPDATE_CURRENT);
+                PendingIntent.getActivity(context, NotificationHelper.ALARM_TYPE, intentToRepeat, PendingIntent.FLAG_UPDATE_CURRENT);
 
         ru.lizzzi.crossfit_rekord.inspectionСlasses.Notification notification = new ru.lizzzi.crossfit_rekord.inspectionСlasses.Notification();
         notification.sendNotification(context);
@@ -31,7 +31,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         /*Notification repeatedNotification = buildLocalNotification(context, pendingIntent).build();
 
         //Send local notification
-        NotificationHelper.getNotificationManager(context).notify(NotificationHelper.ALARM_TYPE_RTC, repeatedNotification);
+        NotificationHelper.getNotificationManager(context).notify(NotificationHelper.ALARM_TYPE, repeatedNotification);
     }
 
     public NotificationCompat.Builder buildLocalNotification(Context context, PendingIntent pendingIntent) {

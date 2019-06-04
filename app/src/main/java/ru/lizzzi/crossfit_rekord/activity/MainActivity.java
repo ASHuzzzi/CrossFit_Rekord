@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements
         linLayoutNavHeader.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                OpenFragment(StartScreenFragment.class);
+                OpenFragment(StartScreenFragment.class, null);
                 DrawerLayout drawer = findViewById(R.id.drawer_layout);
                 drawer.closeDrawer(GravityCompat.START);
             }
@@ -155,12 +155,12 @@ public class MainActivity extends AppCompatActivity implements
             changeToggleStatus(true);
             if (fragment == null) {
                 initializeCountDrawer();
-                OpenFragment(StartScreenFragment.class);
+                OpenFragment(StartScreenFragment.class, null);
             }
         } else {
             if (fragment == null) {
                 changeToggleStatus(false);
-                OpenFragment(LoginFragment.class);
+                OpenFragment(LoginFragment.class, null);
             }
 
         }
@@ -238,11 +238,11 @@ public class MainActivity extends AppCompatActivity implements
         }).run();
     }
 
-    private void OpenFragment(Class fragmentClass){
+    private void OpenFragment(Class fragmentClass, String tag){
         try {
             Fragment fragment = (Fragment) fragmentClass.newInstance();
             FragmentManager fragmentManager = getSupportFragmentManager();
-            for(int i = 0; i < (fragmentManager.getBackStackEntryCount()-1); i++) {
+            for(int i = 0; i < (fragmentManager.getBackStackEntryCount() - 1); i++) {
                 fragmentManager.popBackStack();
             }
             FragmentTransaction ft = fragmentManager.beginTransaction();
@@ -251,7 +251,7 @@ public class MainActivity extends AppCompatActivity implements
                     R.anim.push_out_left,
                     R.anim.pull_in_left,
                     R.anim.push_out_right);
-            ft.replace(R.id.container, fragment);
+            ft.replace(R.id.container, fragment, tag);
             ft.addToBackStack(null);
             ft.commit();
         } catch (Exception e) {
@@ -284,6 +284,7 @@ public class MainActivity extends AppCompatActivity implements
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         Class fragmentClass = null;
         int selectedMenuItem = item.getItemId();
+        String fragmentTag =  null;
         switch (selectedMenuItem) {
             case (R.id.shedule):
                 fragmentName = R.string.title_Table_Fragment;
@@ -320,11 +321,12 @@ public class MainActivity extends AppCompatActivity implements
             case (R.id.localNotification):
                 fragmentClass = NotificationSettingsFragment.class;
                 fragmentName = R.string.title_NotificationSettings_Fragment;
+                fragmentTag = getResources().getString(R.string.title_NotificationSettings_Fragment);
                 break;
         }
 
         if(fragmentName != openFragment) {
-            OpenFragment(fragmentClass);
+            OpenFragment(fragmentClass, fragmentTag);
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
