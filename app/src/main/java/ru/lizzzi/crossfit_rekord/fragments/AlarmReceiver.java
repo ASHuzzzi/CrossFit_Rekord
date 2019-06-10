@@ -6,6 +6,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import ru.lizzzi.crossfit_rekord.activity.MainActivity;
 
 public class AlarmReceiver extends BroadcastReceiver {

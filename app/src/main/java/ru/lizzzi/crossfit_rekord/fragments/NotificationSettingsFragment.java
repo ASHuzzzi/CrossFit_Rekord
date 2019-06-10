@@ -14,7 +14,10 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.interfaces.SetSettingNotification;
@@ -72,8 +75,10 @@ public class NotificationSettingsFragment extends Fragment implements SetSetting
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         if (isChecked) {
+            int selectedHour = Integer.parseInt(textHour.getText().toString());
+            int selectedMinute = Integer.parseInt(textMinute.getText().toString());
             context = getContext();
-            NotificationHelper.scheduleRepeatingRTCNotification(context, textHour.getText().toString(), textMinute.getText().toString());
+            NotificationHelper.scheduleRepeatingRTCNotification(context, selectedHour, selectedMinute);
             NotificationHelper.enableBootReceiver(context);
         } else {
             NotificationHelper.cancelAlarmRTC();
@@ -98,31 +103,52 @@ public class NotificationSettingsFragment extends Fragment implements SetSetting
     }
 
     @Override
+    public void setSelectedWeekDay(String selectedWeekDay) {
+        textRegularity.setText(selectedWeekDay);
+    }
+
+    @Override
     public void onResume(){
         super.onResume();
+        /*String dddd = "1;2";
+        String[] integerStrings = dddd.split(";");
+        List<Integer> selectedDay = new ArrayList<>();
+        for (int i = 0; i <= integerStrings.length - 1; i++) {
+            selectedDay.add(Integer.valueOf(integerStrings[i]));
+        }*/
         sharedPreferences = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-        //String defaultType = getContext().getResources().getResourceEntryName(R.string.oneDay);
-        String defaultType = getContext().getResources().getString(R.string.oneDay);
+        //String defaultType = getContext().getResources().getResourceEntryName(R.string.typeForShow);
         Calendar calendar = Calendar.getInstance();
-        String defaultHour =  addDigit(calendar.get(Calendar.HOUR_OF_DAY));
+        String defaultType = getContext().getResources().getString(R.string.everyday);
+        String defaultHour = addDigit(calendar.get(Calendar.HOUR_OF_DAY));
         String defaultMinute = addDigit(calendar.get(Calendar.MINUTE));
+
+        String hourForShow =  sharedPreferences.getString(APP_PREFERENCES_SELECTED_HOUR, defaultHour);
+        String minuteForShow = sharedPreferences.getString(APP_PREFERENCES_SELECTED_MINUTE, defaultMinute);
         String type = sharedPreferences.getString(APP_PREFERENCES_TYPE, defaultType);
-        String oneDay = "";
+        String typeForShow = "";
         switch (type){
-            case "oneDay":
-                oneDay = getContext().getResources().getString(R.string.oneDay);
+            case "typeForShow":
+                typeForShow = getContext().getResources().getString(R.string.oneDay);
                 break;
             case "everyday":
-                oneDay = getContext().getResources().getString(R.string.everyday);
+                typeForShow = getContext().getResources().getString(R.string.everyday);
                 break;
             case "selectedDay":
-                oneDay = getContext().getResources().getString(R.string.selectedDay);
+                typeForShow = getContext().getResources().getString(R.string.selectedDay);
                 break;
-
+            default:
+                typeForShow = getContext().getResources().getString(R.string.everyday);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString(
+                        APP_PREFERENCES_TYPE,
+                        getResources().getResourceEntryName(R.string.everyday));
+                editor.apply();
+                break;
         }
-        textRegularity.setText(oneDay);
-        textHour.setText(sharedPreferences.getString(APP_PREFERENCES_SELECTED_HOUR, defaultHour));
-        textMinute.setText(sharedPreferences.getString(APP_PREFERENCES_SELECTED_MINUTE, defaultMinute));
+        textRegularity.setText(typeForShow);
+        textHour.setText(sharedPreferences.getString(APP_PREFERENCES_SELECTED_HOUR, hourForShow));
+        textMinute.setText(sharedPreferences.getString(APP_PREFERENCES_SELECTED_MINUTE, minuteForShow));
     }
 
     private String addDigit(int selectedTime) {

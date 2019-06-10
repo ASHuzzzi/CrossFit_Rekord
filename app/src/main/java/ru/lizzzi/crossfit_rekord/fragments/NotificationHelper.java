@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 
 import java.util.Calendar;
@@ -21,12 +22,13 @@ public class NotificationHelper {
      * This is the real time /wall clock time
      * @param context
      */
-    public static void scheduleRepeatingRTCNotification(Context context, String hour, String min) {
+    public static void scheduleRepeatingRTCNotification(Context context, int hour, int min) {
+
+
         //get calendar instance to be able to select what time notification should be scheduled
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 11);
-        calendar.set(Calendar.MINUTE, 22);
-        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, min);
         calendar.getTimeInMillis();
 
         //Setting intent to class where Alarm broadcast message will be handled
