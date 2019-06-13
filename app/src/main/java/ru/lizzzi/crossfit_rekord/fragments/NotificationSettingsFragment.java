@@ -1,5 +1,6 @@
 package ru.lizzzi.crossfit_rekord.fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -14,10 +15,16 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import java.text.DateFormatSymbols;
+import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.interfaces.SetSettingNotification;
@@ -50,15 +57,11 @@ public class NotificationSettingsFragment extends Fragment implements SetSetting
         switch1.setChecked(false);
         switch1.setOnCheckedChangeListener(this);
 
-        textHour.setText("11");
-        textMinute.setText("34");
-
-
         ConstraintLayout constLayoutSelectDay = view.findViewById(R.id.constLayoutSelectDay);
         constLayoutSelectDay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showDialogFragment(new SelectTypeFragment(), "selectDay");
+                showDialogFragment(new SelectWeekDayFragment(), "selectDay");
             }
         });
 
@@ -104,12 +107,19 @@ public class NotificationSettingsFragment extends Fragment implements SetSetting
 
     @Override
     public void setSelectedWeekDay(String selectedWeekDay) {
-        textRegularity.setText(selectedWeekDay);
+        String result = "";
+        String[] integerStrings = selectedWeekDay.split(",");
+        List<Integer> selectedDay = new ArrayList<>();
+        for (int i = 0; i <= integerStrings.length - 1; i++) {
+            result = result + " " + convertDayOfWeek(Integer.parseInt(integerStrings[i]));
+        }
+
+        textRegularity.setText(result);
     }
 
     @Override
-    public void onResume(){
-        super.onResume();
+    public void onStart(){
+        super.onStart();
         /*String dddd = "1;2";
         String[] integerStrings = dddd.split(";");
         List<Integer> selectedDay = new ArrayList<>();
@@ -117,41 +127,69 @@ public class NotificationSettingsFragment extends Fragment implements SetSetting
             selectedDay.add(Integer.valueOf(integerStrings[i]));
         }*/
         sharedPreferences = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-        //String defaultType = getContext().getResources().getResourceEntryName(R.string.typeForShow);
+        //String defaultSelectedDay = getContext().getResources().getResourceEntryName(R.string.typeForShow);
         Calendar calendar = Calendar.getInstance();
-        String defaultType = getContext().getResources().getString(R.string.everyday);
+        String defaultSelectedDay = String.valueOf(calendar.get(Calendar.DAY_OF_WEEK));
         String defaultHour = addDigit(calendar.get(Calendar.HOUR_OF_DAY));
         String defaultMinute = addDigit(calendar.get(Calendar.MINUTE));
 
         String hourForShow =  sharedPreferences.getString(APP_PREFERENCES_SELECTED_HOUR, defaultHour);
         String minuteForShow = sharedPreferences.getString(APP_PREFERENCES_SELECTED_MINUTE, defaultMinute);
-        String type = sharedPreferences.getString(APP_PREFERENCES_TYPE, defaultType);
-        String typeForShow = "";
-        switch (type){
-            case "typeForShow":
-                typeForShow = getContext().getResources().getString(R.string.oneDay);
-                break;
-            case "everyday":
-                typeForShow = getContext().getResources().getString(R.string.everyday);
-                break;
-            case "selectedDay":
-                typeForShow = getContext().getResources().getString(R.string.selectedDay);
-                break;
-            default:
-                typeForShow = getContext().getResources().getString(R.string.everyday);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString(
-                        APP_PREFERENCES_TYPE,
-                        getResources().getResourceEntryName(R.string.everyday));
-                editor.apply();
-                break;
+        String selectedDayToShow = sharedPreferences.getString(APP_PREFERENCES_SELECTED_DAYS, "");
+        if (selectedDayToShow.length() == 0) {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString(
+                    APP_PREFERENCES_TYPE,
+                    defaultSelectedDay);
+            editor.apply();
+            selectedDayToShow = defaultSelectedDay;
         }
-        textRegularity.setText(typeForShow);
+
+        String result = "";
+        String[] integerStrings = selectedDayToShow.split(",");
+        List<Integer> selectedDay = new ArrayList<>();
+        for (int i = 0; i <= integerStrings.length - 1; i++) {
+            result = result + " " + convertDayOfWeek(Integer.parseInt(integerStrings[i]));
+        }
+
+        textRegularity.setText(result);
         textHour.setText(sharedPreferences.getString(APP_PREFERENCES_SELECTED_HOUR, hourForShow));
         textMinute.setText(sharedPreferences.getString(APP_PREFERENCES_SELECTED_MINUTE, minuteForShow));
     }
 
     private String addDigit(int selectedTime) {
         return String.format("%02d", selectedTime);
+    }
+
+    private String convertDayOfWeek(int dayOfWeek) {
+        Calendar calendar = Calendar.getInstance();
+        String results = "";
+        String[] shortWeekDays = DateFormatSymbols.getInstance(Locale.getDefault()).getShortWeekdays();
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf2 = new SimpleDateFormat("EEE");
+        //calendar.set(Calendar.DAY_OF_WEEK, dayOfWeek);
+        switch(dayOfWeek) {
+            case 2:
+                results = shortWeekDays[2];
+                break;
+            case 3:
+                results = shortWeekDays[3];
+                break;
+            case 4:
+                results = shortWeekDays[4];
+                break;
+            case 5:
+                results = shortWeekDays[5];
+                break;
+            case 6:
+                results = shortWeekDays[6];
+                break;
+            case 7:
+                results = shortWeekDays[7];
+                break;
+            case 1:
+                results = shortWeekDays[1];
+                break;
+        }
+        return results;
     }
 }
