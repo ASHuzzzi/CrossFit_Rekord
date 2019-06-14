@@ -1,6 +1,5 @@
 package ru.lizzzi.crossfit_rekord.fragments;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -16,47 +15,56 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import java.text.DateFormatSymbols;
-import java.text.SimpleDateFormat;
-import java.time.DayOfWeek;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.interfaces.SetSettingNotification;
 
-public class NotificationSettingsFragment extends Fragment implements SetSettingNotification, CompoundButton.OnCheckedChangeListener{
+public class NotificationSettingsFragment extends Fragment implements SetSettingNotification{
 
-    private TextView textRegularity;
+    private TextView textSelectedDay;
     private TextView textHour;
     private TextView textMinute;
     private static final int REQUEST_REGULARITY = 1;
-
-    private Context context;
 
     private static final String APP_PREFERENCES = "notificationSettings";
     private static final String APP_PREFERENCES_TYPE = "Type";
     private static final String APP_PREFERENCES_SELECTED_DAYS = "SelectedDay";
     private static final String APP_PREFERENCES_SELECTED_HOUR = "Hour";
     private static final String APP_PREFERENCES_SELECTED_MINUTE = "Minute";
-    private SharedPreferences sharedPreferences;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_notification_settings, container, false);
+        View view = inflater.inflate(
+                R.layout.fragment_notification_settings,
+                container,
+                false);
 
-        textRegularity = view.findViewById(R.id.textRegularity);
+        textSelectedDay = view.findViewById(R.id.textSelectedDay);
         textHour = view.findViewById(R.id.textHour);
         textMinute = view.findViewById(R.id.textMinute);
-        Switch switch1 = view.findViewById(R.id.switch1);
-        switch1.setChecked(false);
-        switch1.setOnCheckedChangeListener(this);
-
+        Switch switchAlarm = view.findViewById(R.id.switchAlarm);
+        switchAlarm.setChecked(false);
+        switchAlarm.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Context context = getContext();
+                if (isChecked) {
+                    int selectedHour = Integer.parseInt(textHour.getText().toString());
+                    int selectedMinute = Integer.parseInt(textMinute.getText().toString());
+                    NotificationHelper.scheduleRepeatingRTCNotification(
+                            context,
+                            selectedHour,
+                            selectedMinute);
+                    NotificationHelper.enableBootReceiver(context);
+                } else {
+                    NotificationHelper.cancelAlarmRTC();
+                    NotificationHelper.disableBootReceiver(context);
+                }
+            }
+        });
         ConstraintLayout constLayoutSelectDay = view.findViewById(R.id.constLayoutSelectDay);
         constLayoutSelectDay.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,7 +72,6 @@ public class NotificationSettingsFragment extends Fragment implements SetSetting
                 showDialogFragment(new SelectWeekDayFragment(), "selectDay");
             }
         });
-
         ConstraintLayout constLayoutSelectTime = view.findViewById(R.id.constLayoutSelectTime);
         constLayoutSelectTime.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,28 +82,16 @@ public class NotificationSettingsFragment extends Fragment implements SetSetting
         return view;
     }
 
-    @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        if (isChecked) {
-            int selectedHour = Integer.parseInt(textHour.getText().toString());
-            int selectedMinute = Integer.parseInt(textMinute.getText().toString());
-            context = getContext();
-            NotificationHelper.scheduleRepeatingRTCNotification(context, selectedHour, selectedMinute);
-            NotificationHelper.enableBootReceiver(context);
-        } else {
-            NotificationHelper.cancelAlarmRTC();
-            NotificationHelper.disableBootReceiver(context);
-        }
-    }
-
     private void showDialogFragment (DialogFragment dialogFragment, String tag) {
-        dialogFragment.setTargetFragment(NotificationSettingsFragment.this, REQUEST_REGULARITY);
+        dialogFragment.setTargetFragment(
+                NotificationSettingsFragment.this,
+                REQUEST_REGULARITY);
         dialogFragment.show(getFragmentManager(), tag);
     }
 
     @Override
     public void setRegularity(String regularity) {
-        textRegularity.setText(regularity);
+        textSelectedDay.setText(regularity);
     }
 
     @Override
@@ -107,52 +102,37 @@ public class NotificationSettingsFragment extends Fragment implements SetSetting
 
     @Override
     public void setSelectedWeekDay(String selectedWeekDay) {
-        String result = "";
-        String[] integerStrings = selectedWeekDay.split(",");
-        List<Integer> selectedDay = new ArrayList<>();
-        for (int i = 0; i <= integerStrings.length - 1; i++) {
-            result = result + " " + convertDayOfWeek(Integer.parseInt(integerStrings[i]));
-        }
-
-        textRegularity.setText(result);
+        String daysOfWeekForShow = prepareDayOfWeek(selectedWeekDay);
+        textSelectedDay.setText(daysOfWeekForShow);
     }
 
     @Override
     public void onStart(){
         super.onStart();
-        /*String dddd = "1;2";
-        String[] integerStrings = dddd.split(";");
-        List<Integer> selectedDay = new ArrayList<>();
-        for (int i = 0; i <= integerStrings.length - 1; i++) {
-            selectedDay.add(Integer.valueOf(integerStrings[i]));
-        }*/
-        sharedPreferences = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-        //String defaultSelectedDay = getContext().getResources().getResourceEntryName(R.string.typeForShow);
+        SharedPreferences sharedPreferences =
+                getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         Calendar calendar = Calendar.getInstance();
-        String defaultSelectedDay = String.valueOf(calendar.get(Calendar.DAY_OF_WEEK));
         String defaultHour = addDigit(calendar.get(Calendar.HOUR_OF_DAY));
         String defaultMinute = addDigit(calendar.get(Calendar.MINUTE));
 
-        String hourForShow =  sharedPreferences.getString(APP_PREFERENCES_SELECTED_HOUR, defaultHour);
-        String minuteForShow = sharedPreferences.getString(APP_PREFERENCES_SELECTED_MINUTE, defaultMinute);
-        String selectedDayToShow = sharedPreferences.getString(APP_PREFERENCES_SELECTED_DAYS, "");
-        if (selectedDayToShow.length() == 0) {
+        String hourForShow =
+                sharedPreferences.getString(APP_PREFERENCES_SELECTED_HOUR, defaultHour);
+        String minuteForShow =
+                sharedPreferences.getString(APP_PREFERENCES_SELECTED_MINUTE, defaultMinute);
+        String selectedDaysOfWeek =
+                sharedPreferences.getString(APP_PREFERENCES_SELECTED_DAYS, "");
+        if (selectedDaysOfWeek == null || selectedDaysOfWeek.isEmpty()) {
+            String defaultSelectedDay = String.valueOf(calendar.get(Calendar.DAY_OF_WEEK));
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString(
                     APP_PREFERENCES_TYPE,
                     defaultSelectedDay);
             editor.apply();
-            selectedDayToShow = defaultSelectedDay;
+            selectedDaysOfWeek = defaultSelectedDay;
         }
+        String selectedDayToShow = prepareDayOfWeek(selectedDaysOfWeek);
 
-        String result = "";
-        String[] integerStrings = selectedDayToShow.split(",");
-        List<Integer> selectedDay = new ArrayList<>();
-        for (int i = 0; i <= integerStrings.length - 1; i++) {
-            result = result + " " + convertDayOfWeek(Integer.parseInt(integerStrings[i]));
-        }
-
-        textRegularity.setText(result);
+        textSelectedDay.setText(selectedDayToShow);
         textHour.setText(sharedPreferences.getString(APP_PREFERENCES_SELECTED_HOUR, hourForShow));
         textMinute.setText(sharedPreferences.getString(APP_PREFERENCES_SELECTED_MINUTE, minuteForShow));
     }
@@ -161,33 +141,53 @@ public class NotificationSettingsFragment extends Fragment implements SetSetting
         return String.format("%02d", selectedTime);
     }
 
-    private String convertDayOfWeek(int dayOfWeek) {
-        Calendar calendar = Calendar.getInstance();
+    private String prepareDayOfWeek(String selectedDay) {
+        selectedDay = moveSundayInEnd(selectedDay);
+        StringBuilder result = new StringBuilder();
+        String[] daysSplited = selectedDay.split(",");
+        if (daysSplited.length == 7) {
+            return getResources().getString(R.string.everyday);
+        }
+        for (int i = 0; i <= daysSplited.length - 1; i++) {
+            String shortNameDayOfWeek = getShortNameDayOfWeek(Integer.parseInt(daysSplited[i]));
+            result.append(" ").append(shortNameDayOfWeek);
+        }
+        return String.valueOf(result);
+    }
+
+    private String moveSundayInEnd(String selectedDay) {
+        if (selectedDay.length() > 1 && selectedDay.startsWith("1")) {
+            String sunday = selectedDay.substring(0, 1);
+            selectedDay = selectedDay.substring(2) + "," + sunday;
+        }
+        return selectedDay;
+    }
+
+    private String getShortNameDayOfWeek(int dayOfWeek) {
         String results = "";
-        String[] shortWeekDays = DateFormatSymbols.getInstance(Locale.getDefault()).getShortWeekdays();
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf2 = new SimpleDateFormat("EEE");
-        //calendar.set(Calendar.DAY_OF_WEEK, dayOfWeek);
+        String[] shortNameWeekDays =
+                DateFormatSymbols.getInstance(Locale.getDefault()).getShortWeekdays();
         switch(dayOfWeek) {
+            case 1:
+                results = shortNameWeekDays[1];
+                break;
             case 2:
-                results = shortWeekDays[2];
+                results = shortNameWeekDays[2];
                 break;
             case 3:
-                results = shortWeekDays[3];
+                results = shortNameWeekDays[3];
                 break;
             case 4:
-                results = shortWeekDays[4];
+                results = shortNameWeekDays[4];
                 break;
             case 5:
-                results = shortWeekDays[5];
+                results = shortNameWeekDays[5];
                 break;
             case 6:
-                results = shortWeekDays[6];
+                results = shortNameWeekDays[6];
                 break;
             case 7:
-                results = shortWeekDays[7];
-                break;
-            case 1:
-                results = shortWeekDays[1];
+                results = shortNameWeekDays[7];
                 break;
         }
         return results;

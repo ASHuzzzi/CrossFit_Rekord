@@ -24,10 +24,16 @@ import ru.lizzzi.crossfit_rekord.R;
 
 public class SelectWeekDayFragment  extends DialogFragment {
 
-    private static final int REQUEST_REGULARITY = 1;
     private static final String APP_PREFERENCES = "notificationSettings";
     private static final String APP_PREFERENCES_SELECTED_DAYS = "SelectedDay";
-    private SharedPreferences sharedPreferences;
+
+    private CheckBox checkBoxMonday;
+    private CheckBox checkBoxTuesday;
+    private CheckBox checkBoxWednesday;
+    private CheckBox checkBoxThursday;
+    private CheckBox checkBoxFriday;
+    private CheckBox checkBoxSaturday;
+    private CheckBox checkBoxSunday;
 
     @NonNull
     @Override
@@ -44,8 +50,6 @@ public class SelectWeekDayFragment  extends DialogFragment {
         final HashMap<Integer, Boolean> selectedWeekDay = new HashMap<>();
 
         Button buttonCancel = view.findViewById(R.id.buttonCancel);
-        Button buttonSelect = view.findViewById(R.id.buttonSelect);
-
         buttonCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -53,34 +57,19 @@ public class SelectWeekDayFragment  extends DialogFragment {
 
             }
         });
-
+        Button buttonSelect = view.findViewById(R.id.buttonSelect);
         buttonSelect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dismiss();
-                if (selectedWeekDay.size() > 0 ) {
-                    StringBuilder result = new StringBuilder();
-                    for (Map.Entry<Integer, Boolean> entry : selectedWeekDay.entrySet()) {
-                        if (entry.getValue().equals(true)) {
-                            if (result.length() > 0 ) {
-                                result.append(",").append(entry.getKey());
-                            } else {
-                                result.append(entry.getKey());
-                            }
-                        }
-                    }
-                    sharedPreferences = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putString(APP_PREFERENCES_SELECTED_DAYS, String.valueOf(result));
-                    editor.apply();
-                    setSelectedWeekDay(String.valueOf(result));
+                if (selectedWeekDay.size() > 0) {
+                    saveSelectedDays(selectedWeekDay);
+                    dismiss();
+                    DialogFragment newFragment = new SelectTimeFragment();
+                    newFragment.show(getFragmentManager(), "missiles");
                 }
-
-                DialogFragment newFragment = new SelectTimeFragment();
-                newFragment.show(getFragmentManager(), "missiles");
             }
         });
-        CheckBox checkBoxMonday = view.findViewById(R.id.checkBoxMonday);
+        checkBoxMonday = view.findViewById(R.id.checkBoxMonday);
         checkBoxMonday.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -91,7 +80,7 @@ public class SelectWeekDayFragment  extends DialogFragment {
                 }
             }
         });
-        CheckBox checkBoxTuesday = view.findViewById(R.id.checkBoxTuesday);
+        checkBoxTuesday = view.findViewById(R.id.checkBoxTuesday);
         checkBoxTuesday.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -102,7 +91,7 @@ public class SelectWeekDayFragment  extends DialogFragment {
                 }
             }
         });
-        CheckBox checkBoxWednesday = view.findViewById(R.id.checkBoxWednesday);
+        checkBoxWednesday = view.findViewById(R.id.checkBoxWednesday);
         checkBoxWednesday.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -113,7 +102,7 @@ public class SelectWeekDayFragment  extends DialogFragment {
                 }
             }
         });
-        CheckBox checkBoxThursday = view.findViewById(R.id.checkBoxThursday);
+        checkBoxThursday = view.findViewById(R.id.checkBoxThursday);
         checkBoxThursday.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -124,7 +113,7 @@ public class SelectWeekDayFragment  extends DialogFragment {
                 }
             }
         });
-        CheckBox checkBoxFriday = view.findViewById(R.id.checkBoxFriday);
+        checkBoxFriday = view.findViewById(R.id.checkBoxFriday);
         checkBoxFriday.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -135,7 +124,7 @@ public class SelectWeekDayFragment  extends DialogFragment {
                 }
             }
         });
-        CheckBox checkBoxSaturday = view.findViewById(R.id.checkBoxSaturday);
+        checkBoxSaturday = view.findViewById(R.id.checkBoxSaturday);
         checkBoxSaturday.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -146,7 +135,7 @@ public class SelectWeekDayFragment  extends DialogFragment {
                 }
             }
         });
-        CheckBox checkBoxSunday = view.findViewById(R.id.checkBoxSunday);
+        checkBoxSunday = view.findViewById(R.id.checkBoxSunday);
         checkBoxSunday.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -157,7 +146,6 @@ public class SelectWeekDayFragment  extends DialogFragment {
                 }
             }
         });
-
         return view;
     }
 
@@ -166,6 +154,7 @@ public class SelectWeekDayFragment  extends DialogFragment {
         super.onStart();
         getDialog().getWindow().setGravity(Gravity.BOTTOM);
         getDialog().setCanceledOnTouchOutside(false);
+        setSelectedDays();
     }
 
     private void setSelectedWeekDay(String selectedWeekDay) {
@@ -177,6 +166,69 @@ public class SelectWeekDayFragment  extends DialogFragment {
             if (notificationSettingsFragment != null) {
                 notificationSettingsFragment.setSelectedWeekDay(selectedWeekDay);
             }
+        }
+    }
+
+    private void saveSelectedDays(HashMap<Integer, Boolean> selectedWeekDay) {
+        String selectedDays = convertHashMaptoString(selectedWeekDay);
+        SharedPreferences sharedPreferences =
+                getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(APP_PREFERENCES_SELECTED_DAYS, selectedDays);
+        editor.apply();
+        setSelectedWeekDay(selectedDays);
+    }
+
+    private String convertHashMaptoString(HashMap<Integer, Boolean> selectedWeekDay) {
+        StringBuilder result = new StringBuilder();
+        for (Map.Entry<Integer, Boolean> entry : selectedWeekDay.entrySet()) {
+            if (entry.getValue().equals(true)) {
+                if (result.length() > 0 ) {
+                    result.append(",").append(entry.getKey());
+                } else {
+                    result.append(entry.getKey());
+                }
+            }
+        }
+        return String.valueOf(result);
+    }
+
+    private void setSelectedDays() {
+        SharedPreferences sharedPreferences =
+                getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        String selectedDaysOfWeek =
+                sharedPreferences.getString(APP_PREFERENCES_SELECTED_DAYS, "");
+        String[] daysSplited = selectedDaysOfWeek.split(",");
+        if (daysSplited.length > 0) {
+            for (int i = 0; i <= daysSplited.length - 1; i++) {
+                setCheckedCheckBox(Integer.parseInt(daysSplited[i]));
+            }
+        }
+    }
+
+    private void setCheckedCheckBox(int numberDayOfWeek) {
+        switch (numberDayOfWeek) {
+            case 1:
+                checkBoxSunday.setChecked(true);
+                break;
+            case 2:
+                checkBoxMonday.setChecked(true);
+                break;
+            case 3:
+                checkBoxTuesday.setChecked(true);
+                break;
+            case 4:
+                checkBoxWednesday.setChecked(true);
+                break;
+            case 5:
+                checkBoxThursday.setChecked(true);
+                break;
+            case 6:
+                checkBoxFriday.setChecked(true);
+                break;
+            case 7:
+                checkBoxSaturday.setChecked(true);
+                break;
         }
     }
 }
