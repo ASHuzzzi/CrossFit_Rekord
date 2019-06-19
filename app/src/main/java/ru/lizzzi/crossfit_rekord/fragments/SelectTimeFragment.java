@@ -2,6 +2,8 @@ package ru.lizzzi.crossfit_rekord.fragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -19,6 +21,9 @@ import ru.lizzzi.crossfit_rekord.R;
 public class SelectTimeFragment extends DialogFragment {
 
     private TimePicker timePicker;
+    private static final String APP_PREFERENCES = "notificationSettings";
+    private static final String APP_PREFERENCES_SELECTED_HOUR = "Hour";
+    private static final String APP_PREFERENCES_SELECTED_MINUTE = "Minute";
 
     @NonNull
     @Override
@@ -38,6 +43,13 @@ public class SelectTimeFragment extends DialogFragment {
             @Override
             public void onTimeChanged(TimePicker view, int selectedHour, int selectedMinute) {
                 setTimeOfNotification(selectedHour, selectedMinute);
+                SharedPreferences sharedPreferences =
+                        getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putInt(APP_PREFERENCES_SELECTED_HOUR, selectedHour);
+                editor.putInt(APP_PREFERENCES_SELECTED_MINUTE, selectedMinute);
+                editor.apply();
+
             }
         });
         Button buttonCancel = view.findViewById(R.id.buttonCancel);
@@ -76,7 +88,15 @@ public class SelectTimeFragment extends DialogFragment {
         getDialog().getWindow().setGravity(Gravity.BOTTOM);
         getDialog().setCanceledOnTouchOutside(false);
         Calendar calendar = Calendar.getInstance();
-        timePicker.setCurrentHour(calendar.get(Calendar.HOUR_OF_DAY));
-        timePicker.setCurrentMinute(calendar.get(Calendar.MINUTE));
+        int defaultHour = calendar.get(Calendar.HOUR_OF_DAY);
+        int defaultMinute = calendar.get(Calendar.MINUTE);
+        SharedPreferences sharedPreferences =
+                getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        int hourForShow =
+                sharedPreferences.getInt(APP_PREFERENCES_SELECTED_HOUR, defaultHour);
+        int minuteForShow =
+                sharedPreferences.getInt(APP_PREFERENCES_SELECTED_MINUTE, defaultMinute);
+        timePicker.setCurrentHour(hourForShow);
+        timePicker.setCurrentMinute(minuteForShow);
     }
 }

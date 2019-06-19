@@ -65,7 +65,7 @@ public class SelectWeekDayFragment  extends DialogFragment {
                     saveSelectedDays(selectedWeekDay);
                     dismiss();
                     DialogFragment newFragment = new SelectTimeFragment();
-                    newFragment.show(getFragmentManager(), "missiles");
+                    newFragment.show(getFragmentManager(), "selectWeekDay");
                 }
             }
         });
@@ -157,6 +157,16 @@ public class SelectWeekDayFragment  extends DialogFragment {
         setSelectedDays();
     }
 
+    private void saveSelectedDays(HashMap<Integer, Boolean> selectedWeekDay) {
+        String selectedDays = convertHashMaptoString(selectedWeekDay);
+        SharedPreferences sharedPreferences =
+                getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(APP_PREFERENCES_SELECTED_DAYS, selectedDays);
+        editor.apply();
+        setSelectedWeekDay(selectedDays);
+    }
+
     private void setSelectedWeekDay(String selectedWeekDay) {
         FragmentManager fragmentManager = getFragmentManager();
         String fragmentTag = getResources().getString(R.string.title_NotificationSettings_Fragment);
@@ -169,24 +179,14 @@ public class SelectWeekDayFragment  extends DialogFragment {
         }
     }
 
-    private void saveSelectedDays(HashMap<Integer, Boolean> selectedWeekDay) {
-        String selectedDays = convertHashMaptoString(selectedWeekDay);
-        SharedPreferences sharedPreferences =
-                getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(APP_PREFERENCES_SELECTED_DAYS, selectedDays);
-        editor.apply();
-        setSelectedWeekDay(selectedDays);
-    }
-
     private String convertHashMaptoString(HashMap<Integer, Boolean> selectedWeekDay) {
         StringBuilder result = new StringBuilder();
-        for (Map.Entry<Integer, Boolean> entry : selectedWeekDay.entrySet()) {
-            if (entry.getValue().equals(true)) {
+        for (Map.Entry<Integer, Boolean> weekDay : selectedWeekDay.entrySet()) {
+            if (weekDay.getValue().equals(true)) {
                 if (result.length() > 0 ) {
-                    result.append(",").append(entry.getKey());
+                    result.append(",").append(weekDay.getKey());
                 } else {
-                    result.append(entry.getKey());
+                    result.append(weekDay.getKey());
                 }
             }
         }
@@ -198,8 +198,8 @@ public class SelectWeekDayFragment  extends DialogFragment {
                 getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         String selectedDaysOfWeek =
                 sharedPreferences.getString(APP_PREFERENCES_SELECTED_DAYS, "");
-        String[] daysSplited = selectedDaysOfWeek.split(",");
-        if (daysSplited.length > 0) {
+        if (selectedDaysOfWeek != null && selectedDaysOfWeek.length() > 0) {
+            String[] daysSplited = selectedDaysOfWeek.split(",");
             for (int i = 0; i <= daysSplited.length - 1; i++) {
                 setCheckedCheckBox(Integer.parseInt(daysSplited[i]));
             }

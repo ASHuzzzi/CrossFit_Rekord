@@ -1,6 +1,8 @@
 package ru.lizzzi.crossfit_rekord.fragments;
 
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -19,6 +21,7 @@ import java.util.Calendar;
 import java.util.Locale;
 
 import ru.lizzzi.crossfit_rekord.R;
+import ru.lizzzi.crossfit_rekord.activity.MainActivity;
 import ru.lizzzi.crossfit_rekord.interfaces.SetSettingNotification;
 
 public class NotificationSettingsFragment extends Fragment implements SetSettingNotification{
@@ -26,10 +29,10 @@ public class NotificationSettingsFragment extends Fragment implements SetSetting
     private TextView textSelectedDay;
     private TextView textHour;
     private TextView textMinute;
+    private Switch switchAlarm;
     private static final int REQUEST_REGULARITY = 1;
 
     private static final String APP_PREFERENCES = "notificationSettings";
-    private static final String APP_PREFERENCES_TYPE = "Type";
     private static final String APP_PREFERENCES_SELECTED_DAYS = "SelectedDay";
     private static final String APP_PREFERENCES_SELECTED_HOUR = "Hour";
     private static final String APP_PREFERENCES_SELECTED_MINUTE = "Minute";
@@ -45,7 +48,7 @@ public class NotificationSettingsFragment extends Fragment implements SetSetting
         textSelectedDay = view.findViewById(R.id.textSelectedDay);
         textHour = view.findViewById(R.id.textHour);
         textMinute = view.findViewById(R.id.textMinute);
-        Switch switchAlarm = view.findViewById(R.id.switchAlarm);
+        switchAlarm = view.findViewById(R.id.switchAlarm);
         switchAlarm.setChecked(false);
         switchAlarm.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -112,20 +115,20 @@ public class NotificationSettingsFragment extends Fragment implements SetSetting
         SharedPreferences sharedPreferences =
                 getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         Calendar calendar = Calendar.getInstance();
-        String defaultHour = addDigit(calendar.get(Calendar.HOUR_OF_DAY));
-        String defaultMinute = addDigit(calendar.get(Calendar.MINUTE));
+        int defaultHour = calendar.get(Calendar.HOUR_OF_DAY);
+        int defaultMinute = calendar.get(Calendar.MINUTE);
 
-        String hourForShow =
-                sharedPreferences.getString(APP_PREFERENCES_SELECTED_HOUR, defaultHour);
-        String minuteForShow =
-                sharedPreferences.getString(APP_PREFERENCES_SELECTED_MINUTE, defaultMinute);
+        int hourForShow =
+                sharedPreferences.getInt(APP_PREFERENCES_SELECTED_HOUR, defaultHour);
+        int minuteForShow =
+                sharedPreferences.getInt(APP_PREFERENCES_SELECTED_MINUTE, defaultMinute);
         String selectedDaysOfWeek =
                 sharedPreferences.getString(APP_PREFERENCES_SELECTED_DAYS, "");
         if (selectedDaysOfWeek == null || selectedDaysOfWeek.isEmpty()) {
             String defaultSelectedDay = String.valueOf(calendar.get(Calendar.DAY_OF_WEEK));
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString(
-                    APP_PREFERENCES_TYPE,
+                    APP_PREFERENCES_SELECTED_DAYS,
                     defaultSelectedDay);
             editor.apply();
             selectedDaysOfWeek = defaultSelectedDay;
@@ -133,12 +136,23 @@ public class NotificationSettingsFragment extends Fragment implements SetSetting
         String selectedDayToShow = prepareDayOfWeek(selectedDaysOfWeek);
 
         textSelectedDay.setText(selectedDayToShow);
-        textHour.setText(sharedPreferences.getString(APP_PREFERENCES_SELECTED_HOUR, hourForShow));
-        textMinute.setText(sharedPreferences.getString(APP_PREFERENCES_SELECTED_MINUTE, minuteForShow));
+        textHour.setText(addDigit(hourForShow));
+        textMinute.setText(addDigit(minuteForShow));
+
+        Intent notificationIntent = new Intent(getContext(), MainActivity.class);
+        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        notificationIntent.putExtra("notification", "RecordForTrainingSelectFragment");
+        boolean alarmUp = (PendingIntent.getActivity(getContext(), 110,
+                notificationIntent,
+                PendingIntent.FLAG_NO_CREATE) != null);
+        if (alarmUp) {
+            switchAlarm.setChecked(true);
+        }
     }
 
     private String addDigit(int selectedTime) {
-        return String.format("%02d", selectedTime);
+        return String.format(Locale.getDefault(), "%02d", selectedTime);
     }
 
     private String prepareDayOfWeek(String selectedDay) {

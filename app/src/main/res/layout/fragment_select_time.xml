@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.widget.RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <TimePicker
         android:id="@+id/timePicker"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:headerBackground="@color/colorAccent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -14,9 +15,10 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <View
-        android:id="@+id/divider"
+        android:id="@+id/divider3"
         android:layout_width="match_parent"
         android:layout_height="2dp"
+        android:layout_below="@id/timePicker"
         android:layout_marginTop="5dp"
         android:background="@drawable/divider"
         app:layout_constraintTop_toBottomOf="@id/timePicker" />
@@ -24,34 +26,35 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/divider3"
         android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@id/divider">
+        app:layout_constraintTop_toBottomOf="@id/divider3">
 
         <Button
             android:id="@+id/buttonCancel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/strDialogBtnCancel"
             android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="20dp"
             android:layout_marginBottom="20dp"
+            android:layout_weight="1"
             android:paddingTop="10dp"
-            android:paddingBottom="10dp"/>
+            android:paddingBottom="10dp"
+            android:text="@string/strDialogBtnCancel" />
 
         <Button
             android:id="@+id/buttonSelect"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/strDialogBtnOk"
             android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="20dp"
             android:layout_marginBottom="20dp"
+            android:layout_weight="1"
             android:paddingTop="10dp"
-            android:paddingBottom="10dp"/>
+            android:paddingBottom="10dp"
+            android:text="@string/strDialogBtnOk" />
     </LinearLayout>
 
-</android.support.constraint.ConstraintLayout>
+</android.widget.RelativeLayout>

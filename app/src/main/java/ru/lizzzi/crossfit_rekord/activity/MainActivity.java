@@ -78,9 +78,12 @@ public class MainActivity extends AppCompatActivity implements
     private DrawerLayout drawer;
     private ActionBarDrawerToggle actionBarToggle;
 
+    String menuFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
         initNavigationView();
         initNotificationCounter();
@@ -135,6 +138,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void  onStart() {
         super.onStart();
+        menuFragment = getIntent().getStringExtra("notification");
         checkForAvailabilityDB();
         initBackendlessApi();
         initBroadcastReceiver();
@@ -153,7 +157,9 @@ public class MainActivity extends AppCompatActivity implements
                 startService(intent);
             }
             changeToggleStatus(true);
-            if (fragment == null) {
+            if (menuFragment != null && menuFragment.equalsIgnoreCase("RecordForTrainingSelectFragment")) {
+                OpenFragment(RecordForTrainingSelectFragment.class, null);
+            } else if (fragment == null) {
                 initializeCountDrawer();
                 OpenFragment(StartScreenFragment.class, null);
             }

@@ -17,6 +17,10 @@ public class NotificationHelper {
     public static int ALARM_TYPE = 100;
     private static AlarmManager alarmManager;
     private static PendingIntent pendingIntent;
+    private static final String APP_PREFERENCES = "notificationSettings";
+    private static final String APP_PREFERENCES_SELECTED_DAYS = "SelectedDay";
+    private static final String APP_PREFERENCES_SELECTED_HOUR = "Hour";
+    private static final String APP_PREFERENCES_SELECTED_MINUTE = "Minute";
 
     /**
      * This is the real time /wall clock time
@@ -27,6 +31,12 @@ public class NotificationHelper {
 
         //get calendar instance to be able to select what time notification should be scheduled
         Calendar calendar = Calendar.getInstance();
+        SharedPreferences sharedPreferences =
+                context.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        int hourForShow =
+                sharedPreferences.getInt(APP_PREFERENCES_SELECTED_HOUR, Calendar.HOUR_OF_DAY);
+        int minuteForShow =
+                sharedPreferences.getInt(APP_PREFERENCES_SELECTED_MINUTE, Calendar.MINUTE);
         calendar.set(Calendar.HOUR_OF_DAY, hour);
         calendar.set(Calendar.MINUTE, min);
         calendar.getTimeInMillis();

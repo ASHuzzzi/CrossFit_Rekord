@@ -11,6 +11,7 @@ import android.support.v4.app.NotificationCompat;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.activity.MainActivity;
+import ru.lizzzi.crossfit_rekord.fragments.RecordForTrainingSelectFragment;
 
 public class Notification {
 
@@ -35,8 +36,9 @@ public class Notification {
             Intent notificationIntent = new Intent(context, MainActivity.class);
             notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
                     | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            notificationIntent.putExtra("notification", "RecordForTrainingSelectFragment");
             PendingIntent contentIntent = PendingIntent.getActivity(context,
-                    0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    110, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             builder.setContentIntent(contentIntent);
         }
         builder.setSmallIcon(R.drawable.logo_cfr)
