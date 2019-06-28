@@ -1,5 +1,6 @@
-package ru.lizzzi.crossfit_rekord.fragments;
+package ru.lizzzi.crossfit_rekord.dialogs;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -7,7 +8,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentManager;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,11 +21,13 @@ import java.util.Map;
 import java.util.Objects;
 
 import ru.lizzzi.crossfit_rekord.R;
+import ru.lizzzi.crossfit_rekord.fragments.AlarmSettingsFragment;
 
-public class SelectWeekDayFragment  extends DialogFragment {
+public class SelectWeekDayDialog extends DialogFragment {
 
     private static final String APP_PREFERENCES = "notificationSettings";
     private static final String APP_PREFERENCES_SELECTED_DAYS = "SelectedDay";
+    private SharedPreferences sharedPreferences;
 
     private CheckBox checkBoxMonday;
     private CheckBox checkBoxTuesday;
@@ -45,8 +47,9 @@ public class SelectWeekDayFragment  extends DialogFragment {
 
     private View createDialogView() {
         final LayoutInflater inflater = Objects.requireNonNull(getActivity()).getLayoutInflater();
+        @SuppressLint("InflateParams")
         View view = inflater.inflate(R.layout.fragment_select_week_day, null);
-
+        @SuppressLint("UseSparseArrays")
         final HashMap<Integer, Boolean> selectedWeekDay = new HashMap<>();
 
         Button buttonCancel = view.findViewById(R.id.buttonCancel);
@@ -64,8 +67,8 @@ public class SelectWeekDayFragment  extends DialogFragment {
                 if (selectedWeekDay.size() > 0) {
                     saveSelectedDays(selectedWeekDay);
                     dismiss();
-                    DialogFragment newFragment = new SelectTimeFragment();
-                    newFragment.show(getFragmentManager(), "selectWeekDay");
+                    DialogFragment selectTimeDialog = new SelectTimeDialog();
+                    selectTimeDialog.show(getFragmentManager(), "selectWeekDay");
                 }
             }
         });
@@ -146,6 +149,8 @@ public class SelectWeekDayFragment  extends DialogFragment {
                 }
             }
         });
+        sharedPreferences =
+                getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         return view;
     }
 
@@ -158,32 +163,30 @@ public class SelectWeekDayFragment  extends DialogFragment {
     }
 
     private void saveSelectedDays(HashMap<Integer, Boolean> selectedWeekDay) {
-        String selectedDays = convertHashMaptoString(selectedWeekDay);
-        SharedPreferences sharedPreferences =
-                getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(APP_PREFERENCES_SELECTED_DAYS, selectedDays);
-        editor.apply();
+        String selectedDays = convertHashMapToString(selectedWeekDay);
+        sharedPreferences.edit()
+                .putString(APP_PREFERENCES_SELECTED_DAYS, selectedDays)
+                .apply();
         setSelectedWeekDay(selectedDays);
     }
 
     private void setSelectedWeekDay(String selectedWeekDay) {
-        FragmentManager fragmentManager = getFragmentManager();
-        String fragmentTag = getResources().getString(R.string.title_NotificationSettings_Fragment);
-        if (fragmentManager != null) {
-            NotificationSettingsFragment notificationSettingsFragment =
-                    (NotificationSettingsFragment) fragmentManager.findFragmentByTag(fragmentTag);
-            if (notificationSettingsFragment != null) {
-                notificationSettingsFragment.setSelectedWeekDay(selectedWeekDay);
+        if (getFragmentManager() != null) {
+            String fragmentTag =
+                    getResources().getString(R.string.title_AlarmSettings_Fragment);
+            AlarmSettingsFragment alarmSettingsFragment =
+                    (AlarmSettingsFragment) getFragmentManager().findFragmentByTag(fragmentTag);
+            if (alarmSettingsFragment != null) {
+                alarmSettingsFragment.setSelectedWeekDays(selectedWeekDay);
             }
         }
     }
 
-    private String convertHashMaptoString(HashMap<Integer, Boolean> selectedWeekDay) {
+    private String convertHashMapToString(HashMap<Integer, Boolean> selectedWeekDay) {
         StringBuilder result = new StringBuilder();
         for (Map.Entry<Integer, Boolean> weekDay : selectedWeekDay.entrySet()) {
             if (weekDay.getValue().equals(true)) {
-                if (result.length() > 0 ) {
+                if ((result.length() > 0)) {
                     result.append(",").append(weekDay.getKey());
                 } else {
                     result.append(weekDay.getKey());
@@ -194,8 +197,6 @@ public class SelectWeekDayFragment  extends DialogFragment {
     }
 
     private void setSelectedDays() {
-        SharedPreferences sharedPreferences =
-                getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         String selectedDaysOfWeek =
                 sharedPreferences.getString(APP_PREFERENCES_SELECTED_DAYS, "");
         if (selectedDaysOfWeek != null && selectedDaysOfWeek.length() > 0) {

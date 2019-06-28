@@ -49,7 +49,7 @@ public class DefinitionDBHelper  extends SQLiteOpenHelper{
      * Проверяет, существует ли уже эта база, чтобы не копировать каждый раз при запуске приложения
      * @return true если существует, false если не существует
      */
-    private boolean checkDataBase() {
+    public boolean checkDataBase() {
         database = null;
         try {
             String myPath = DB_PATH + DB_NAME;
@@ -139,9 +139,9 @@ public class DefinitionDBHelper  extends SQLiteOpenHelper{
         return listCharacter;
     }
 
-    public List<Map<String, Object>> getTerminsAndDefinitions(String character){
+    public List<Map<String, String>> getTerminsAndDefinitions(String character){
         database = this.getReadableDatabase();
-        List<Map<String, Object>> termsOfSelectedCharacter = new ArrayList<>();
+        List<Map<String, String>> termsOfSelectedCharacter = new ArrayList<>();
         String[] columns = new  String[] {
                 DefinitionDbContarct.DBdefinition.Column_termin,
                 DefinitionDbContarct.DBdefinition.Column_description};
@@ -155,7 +155,7 @@ public class DefinitionDBHelper  extends SQLiteOpenHelper{
                 null);
         if (cursor !=null && cursor.moveToFirst()) {
             do {
-                Map<String, Object> itemList = new HashMap<>();
+                Map<String, String> itemList = new HashMap<>();
                 String termin = cursor.getString(
                         cursor.getColumnIndex(DefinitionDbContarct.DBdefinition.Column_termin));
                 String description = cursor.getString(

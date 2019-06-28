@@ -16,10 +16,11 @@ import ru.lizzzi.crossfit_rekord.documentfields.TerminsAndDefinition;
 
 public class RecyclerAdapterDefinition extends RecyclerView.Adapter<RecyclerAdapterDefinition.ViewHolder> {
 
-    private List<Map<String, Object>> termsOfSelectedCharacter;
+    private List<Map<String, String>> termsOfSelectedCharacter;
     private TerminsAndDefinition terminsAndDefinition;
 
-    public RecyclerAdapterDefinition(Context context, @NonNull List<Map<String, Object>> termsOfSelectedCharacter) {
+    public RecyclerAdapterDefinition(Context context,
+                                     @NonNull List<Map<String, String>> termsOfSelectedCharacter) {
         this.termsOfSelectedCharacter = termsOfSelectedCharacter;
         terminsAndDefinition = new TerminsAndDefinition(context);
     }
@@ -37,15 +38,20 @@ public class RecyclerAdapterDefinition extends RecyclerView.Adapter<RecyclerAdap
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_rv_description, parent, false);
-        return new ViewHolder(v);
+        View view = LayoutInflater.from(parent.getContext()).inflate(
+                R.layout.item_rv_description,
+                parent,
+                false);
+        return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        final Map listTermsOfSelectedCharacter = termsOfSelectedCharacter.get(position);
-        String termin = (String) listTermsOfSelectedCharacter.get(terminsAndDefinition.getTerminFields());
-        String definition = (String) listTermsOfSelectedCharacter.get(terminsAndDefinition.getDescriptionFields());
+        final Map mapTermsOfSelectedCharacter = termsOfSelectedCharacter.get(position);
+        String termin =
+                (String) mapTermsOfSelectedCharacter.get(terminsAndDefinition.getTerminFields());
+        String definition =
+                (String) mapTermsOfSelectedCharacter.get(terminsAndDefinition.getDefinitionFields());
         holder.textTermin.setText(termin);
         holder.textDescription.setText(definition);
     }

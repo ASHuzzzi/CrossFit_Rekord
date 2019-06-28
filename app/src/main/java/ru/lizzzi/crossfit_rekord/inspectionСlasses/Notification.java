@@ -11,7 +11,6 @@ import android.support.v4.app.NotificationCompat;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.activity.MainActivity;
-import ru.lizzzi.crossfit_rekord.fragments.RecordForTrainingSelectFragment;
 
 public class Notification {
 

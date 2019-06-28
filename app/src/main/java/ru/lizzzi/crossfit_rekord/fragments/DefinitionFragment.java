@@ -19,22 +19,18 @@ import ru.lizzzi.crossfit_rekord.interfaces.ChangeTitle;
 
 public class DefinitionFragment extends Fragment {
 
-    private String selectCharacter;
-    RecyclerView recViewDefinitions;
+    private String selectedCharacter;
+    private RecyclerView recViewDefinitions;
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container,
                              Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.fragment_definition, container, false);
         recViewDefinitions = view.findViewById(R.id.rvDefinition);
         Bundle bundle = getArguments();
-        if (bundle != null) {
-            selectCharacter = bundle.getString("tag");
-        } else {
-            selectCharacter = "A";
-        }
-        return  view;
+        selectedCharacter = (bundle != null) ? bundle.getString("tag") : "A";
+        return view;
     }
 
     @Override
@@ -44,7 +40,7 @@ public class DefinitionFragment extends Fragment {
             ChangeTitle listernerChangeTitle = (ChangeTitle) getActivity();
             listernerChangeTitle.changeTitle(R.string.title_Definition_Fragment, R.string.title_Character_Fragment);
         }
-        List<Map<String, Object>> termsOfSelectedCharacter = getListDefinitions(selectCharacter);
+        List<Map<String, String>> termsOfSelectedCharacter = getListDefinitions(selectedCharacter);
         RecyclerAdapterDefinition adapter = new RecyclerAdapterDefinition(
                 getContext(),
                 termsOfSelectedCharacter);
@@ -53,12 +49,7 @@ public class DefinitionFragment extends Fragment {
         recViewDefinitions.setAdapter(adapter);
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
-
-    private List<Map<String, Object>> getListDefinitions(String selectCharacter) {
+    private List<Map<String, String>> getListDefinitions(String selectCharacter) {
         DefinitionDBHelper definitionDBHelper = new DefinitionDBHelper(getContext());
         return definitionDBHelper.getTerminsAndDefinitions(selectCharacter);
     }

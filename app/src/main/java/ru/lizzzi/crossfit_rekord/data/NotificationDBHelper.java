@@ -243,7 +243,7 @@ public class NotificationDBHelper extends SQLiteOpenHelper {
                 null);
     }
 
-    public int countNotification() {
+    public int getUnreadNotifications() {
         myDataBase = this.getReadableDatabase();
         int stLastDateCheck = 0;
         String[] columns = new String[]{"COUNT(" +

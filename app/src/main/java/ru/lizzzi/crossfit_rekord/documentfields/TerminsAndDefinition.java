@@ -31,7 +31,7 @@ public class TerminsAndDefinition {
         return context.getString(Fields.termin.getId());
     }
 
-    public String getDescriptionFields() {
+    public String getDefinitionFields() {
         return context.getString(Fields.description.getId());
     }
 }

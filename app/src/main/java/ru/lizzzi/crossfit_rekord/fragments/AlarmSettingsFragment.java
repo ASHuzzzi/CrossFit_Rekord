@@ -1,8 +1,6 @@
 package ru.lizzzi.crossfit_rekord.fragments;
 
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -21,18 +19,22 @@ import java.util.Calendar;
 import java.util.Locale;
 
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.activity.MainActivity;
+import ru.lizzzi.crossfit_rekord.dialogs.SelectTimeDialog;
+import ru.lizzzi.crossfit_rekord.dialogs.SelectWeekDayDialog;
+import ru.lizzzi.crossfit_rekord.inspectionСlasses.alarm.AlarmHelper;
+import ru.lizzzi.crossfit_rekord.interfaces.ChangeTitle;
 import ru.lizzzi.crossfit_rekord.interfaces.SetSettingNotification;
 
-public class NotificationSettingsFragment extends Fragment implements SetSettingNotification{
+public class AlarmSettingsFragment extends Fragment implements SetSettingNotification{
 
     private TextView textSelectedDay;
     private TextView textHour;
     private TextView textMinute;
     private Switch switchAlarm;
-    private static final int REQUEST_REGULARITY = 1;
 
+    private SharedPreferences sharedPreferences;
     private static final String APP_PREFERENCES = "notificationSettings";
+    private static final String APP_PREFERENCES_ALARM_IS_ENABLE = "AlarmIsEnable";
     private static final String APP_PREFERENCES_SELECTED_DAYS = "SelectedDay";
     private static final String APP_PREFERENCES_SELECTED_HOUR = "Hour";
     private static final String APP_PREFERENCES_SELECTED_MINUTE = "Minute";
@@ -49,106 +51,120 @@ public class NotificationSettingsFragment extends Fragment implements SetSetting
         textHour = view.findViewById(R.id.textHour);
         textMinute = view.findViewById(R.id.textMinute);
         switchAlarm = view.findViewById(R.id.switchAlarm);
-        switchAlarm.setChecked(false);
-        switchAlarm.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Context context = getContext();
-                if (isChecked) {
-                    int selectedHour = Integer.parseInt(textHour.getText().toString());
-                    int selectedMinute = Integer.parseInt(textMinute.getText().toString());
-                    NotificationHelper.scheduleRepeatingRTCNotification(
-                            context,
-                            selectedHour,
-                            selectedMinute);
-                    NotificationHelper.enableBootReceiver(context);
-                } else {
-                    NotificationHelper.cancelAlarmRTC();
-                    NotificationHelper.disableBootReceiver(context);
-                }
-            }
-        });
+
         ConstraintLayout constLayoutSelectDay = view.findViewById(R.id.constLayoutSelectDay);
         constLayoutSelectDay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showDialogFragment(new SelectWeekDayFragment(), "selectDay");
+                showDialogFragment(new SelectWeekDayDialog(), "selectDay");
             }
         });
         ConstraintLayout constLayoutSelectTime = view.findViewById(R.id.constLayoutSelectTime);
         constLayoutSelectTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showDialogFragment(new SelectTimeFragment(), "selectTime");
+                showDialogFragment(new SelectTimeDialog(), "selectTime");
             }
         });
+
+        sharedPreferences = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         return view;
     }
 
     private void showDialogFragment (DialogFragment dialogFragment, String tag) {
-        dialogFragment.setTargetFragment(
-                NotificationSettingsFragment.this,
-                REQUEST_REGULARITY);
         dialogFragment.show(getFragmentManager(), tag);
-    }
-
-    @Override
-    public void setRegularity(String regularity) {
-        textSelectedDay.setText(regularity);
     }
 
     @Override
     public void setTime(int hour, int minute) {
         textHour.setText(addDigit(hour));
         textMinute.setText(addDigit(minute));
+        setAlarmOn();
     }
 
     @Override
-    public void setSelectedWeekDay(String selectedWeekDay) {
-        String daysOfWeekForShow = prepareDayOfWeek(selectedWeekDay);
+    public void setSelectedWeekDays(String selectedWeekDays) {
+        String daysOfWeekForShow = prepareDayOfWeek(selectedWeekDays);
         textSelectedDay.setText(daysOfWeekForShow);
+        setAlarmOn();
     }
+
+
 
     @Override
     public void onStart(){
         super.onStart();
-        SharedPreferences sharedPreferences =
-                getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-        Calendar calendar = Calendar.getInstance();
-        int defaultHour = calendar.get(Calendar.HOUR_OF_DAY);
-        int defaultMinute = calendar.get(Calendar.MINUTE);
+        if (getActivity() instanceof ChangeTitle) {
+            ChangeTitle listernerChangeTitle = (ChangeTitle) getActivity();
+            listernerChangeTitle.changeTitle(R.string.title_AlarmSettings_Fragment, R.string.title_AlarmSettings_Fragment);
+        }
 
-        int hourForShow =
-                sharedPreferences.getInt(APP_PREFERENCES_SELECTED_HOUR, defaultHour);
-        int minuteForShow =
-                sharedPreferences.getInt(APP_PREFERENCES_SELECTED_MINUTE, defaultMinute);
+        Calendar calendar = Calendar.getInstance();
+
+        int hourForShow = sharedPreferences.getInt(
+                APP_PREFERENCES_SELECTED_HOUR,
+                calendar.get(Calendar.HOUR_OF_DAY));
+        textHour.setText(addDigit(hourForShow));
+
+        int minuteForShow = sharedPreferences.getInt(
+                APP_PREFERENCES_SELECTED_MINUTE,
+                calendar.get(Calendar.MINUTE));
+        textMinute.setText(addDigit(minuteForShow));
+
         String selectedDaysOfWeek =
                 sharedPreferences.getString(APP_PREFERENCES_SELECTED_DAYS, "");
         if (selectedDaysOfWeek == null || selectedDaysOfWeek.isEmpty()) {
-            String defaultSelectedDay = String.valueOf(calendar.get(Calendar.DAY_OF_WEEK));
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putString(
-                    APP_PREFERENCES_SELECTED_DAYS,
-                    defaultSelectedDay);
-            editor.apply();
-            selectedDaysOfWeek = defaultSelectedDay;
+            String defaultWeekDay = String.valueOf(calendar.get(Calendar.DAY_OF_WEEK));
+            sharedPreferences.edit()
+                    .putString(APP_PREFERENCES_SELECTED_DAYS, defaultWeekDay)
+                    .apply();
+            selectedDaysOfWeek = defaultWeekDay;
         }
-        String selectedDayToShow = prepareDayOfWeek(selectedDaysOfWeek);
+        textSelectedDay.setText(prepareDayOfWeek(selectedDaysOfWeek));
 
-        textSelectedDay.setText(selectedDayToShow);
-        textHour.setText(addDigit(hourForShow));
-        textMinute.setText(addDigit(minuteForShow));
-
-        Intent notificationIntent = new Intent(getContext(), MainActivity.class);
-        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-                | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        notificationIntent.putExtra("notification", "RecordForTrainingSelectFragment");
-        boolean alarmUp = (PendingIntent.getActivity(getContext(), 110,
-                notificationIntent,
-                PendingIntent.FLAG_NO_CREATE) != null);
-        if (alarmUp) {
+        if (isAlarmEnable()) {
             switchAlarm.setChecked(true);
         }
+        switchAlarm.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Context context = getContext();
+                if(isChecked) {
+                    if (!isAlarmEnable()) {
+                        enableAlarm();
+                        AlarmHelper.enableBootReceiver(context);
+                        setAlarmEnable(true);
+                    }
+                } else {
+                    AlarmHelper.cancelAlarm();
+                    AlarmHelper.disableBootReceiver(context);
+                    setAlarmEnable(false);
+                }
+            }
+        });
+    }
+
+    private void setAlarmOn() {
+        enableAlarm();
+        setAlarmEnable(true);
+        switchAlarm.setChecked(true);
+    }
+
+    private void setAlarmEnable(boolean state) {
+        sharedPreferences.edit()
+                .putBoolean(APP_PREFERENCES_ALARM_IS_ENABLE, state)
+                .apply();
+    }
+
+    private void enableAlarm() {
+        AlarmHelper.enableAlarm(
+                getContext(),
+                Integer.parseInt(textHour.getText().toString()),
+                Integer.parseInt(textMinute.getText().toString()));
+    }
+
+    private boolean isAlarmEnable() {
+        return sharedPreferences.getBoolean(APP_PREFERENCES_ALARM_IS_ENABLE, false);
     }
 
     private String addDigit(int selectedTime) {
@@ -206,4 +222,6 @@ public class NotificationSettingsFragment extends Fragment implements SetSetting
         }
         return results;
     }
+
+
 }

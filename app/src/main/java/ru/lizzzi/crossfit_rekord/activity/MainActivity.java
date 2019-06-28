@@ -38,7 +38,7 @@ import ru.lizzzi.crossfit_rekord.fragments.AboutMeFragment;
 import ru.lizzzi.crossfit_rekord.fragments.CalendarWodFragment;
 import ru.lizzzi.crossfit_rekord.fragments.CharacterFragment;
 import ru.lizzzi.crossfit_rekord.fragments.MyResultsFragment;
-import ru.lizzzi.crossfit_rekord.fragments.NotificationSettingsFragment;
+import ru.lizzzi.crossfit_rekord.fragments.AlarmSettingsFragment;
 import ru.lizzzi.crossfit_rekord.inspectionСlasses.AuthDataCheck;
 import ru.lizzzi.crossfit_rekord.fragments.ContactsFragment;
 import ru.lizzzi.crossfit_rekord.fragments.LoginFragment;
@@ -138,7 +138,6 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void  onStart() {
         super.onStart();
-        menuFragment = getIntent().getStringExtra("notification");
         checkForAvailabilityDB();
         initBackendlessApi();
         initBroadcastReceiver();
@@ -148,16 +147,15 @@ public class MainActivity extends AppCompatActivity implements
         if (checkIsDone) {
             if (!isServiceLoadNotificationRunning()) {
                 Intent intent;
-
-                // Создаем Intent для вызова сервиса,
-                // кладем туда параметр времени и код задачи
-                intent = new Intent(this, LoadNotificationsService.class).putExtra(PARAM_TIME, 7)
+                intent = new Intent(this, LoadNotificationsService.class)
+                        .putExtra(PARAM_TIME, 7)
                         .putExtra(PARAM_TASK, LOAD_NOTIFICATION);
-                // стартуем сервис
                 startService(intent);
             }
             changeToggleStatus(true);
-            if (menuFragment != null && menuFragment.equalsIgnoreCase("RecordForTrainingSelectFragment")) {
+            menuFragment = getIntent().getStringExtra("notification");
+            if (menuFragment != null 
+                    && menuFragment.equalsIgnoreCase("RecordForTrainingSelectFragment")) {
                 OpenFragment(RecordForTrainingSelectFragment.class, null);
             } else if (fragment == null) {
                 initializeCountDrawer();
@@ -168,7 +166,6 @@ public class MainActivity extends AppCompatActivity implements
                 changeToggleStatus(false);
                 OpenFragment(LoginFragment.class, null);
             }
-
         }
     }
 
@@ -226,15 +223,11 @@ public class MainActivity extends AppCompatActivity implements
     private void initializeCountDrawer() {
         new Thread(new Runnable() {
             public void run() {
-                boolean bCheckTable =  notificationDBHelper.checkTable();
-                if(bCheckTable){
-                    int i = notificationDBHelper.countNotification();
-                    String stCounter;
-                    if (i > 0 ){
-                        stCounter = String.valueOf(i);
-                    }else {
-                        stCounter = "";
-                    }
+                boolean dbIsAvailable =  notificationDBHelper.checkTable();
+                if(dbIsAvailable){
+                    int unreadNotifications = notificationDBHelper.getUnreadNotifications();
+                    String stCounter =
+                            (unreadNotifications > 0) ? String.valueOf(unreadNotifications) : "";
                     textNotificationCounter.setGravity(Gravity.CENTER_VERTICAL);
                     textNotificationCounter.setTypeface(null, Typeface.BOLD);
                     textNotificationCounter.setTextColor(getResources().getColor(R.color.colorAccent));
@@ -325,9 +318,9 @@ public class MainActivity extends AppCompatActivity implements
                 fragmentName = R.string.title_MyResults_Fragment;
                 break;
             case (R.id.localNotification):
-                fragmentClass = NotificationSettingsFragment.class;
-                fragmentName = R.string.title_NotificationSettings_Fragment;
-                fragmentTag = getResources().getString(R.string.title_NotificationSettings_Fragment);
+                fragmentClass = AlarmSettingsFragment.class;
+                fragmentName = R.string.title_AlarmSettings_Fragment;
+                fragmentTag = getResources().getString(R.string.title_AlarmSettings_Fragment);
                 break;
         }
 
@@ -354,7 +347,8 @@ public class MainActivity extends AppCompatActivity implements
             if (backStackEntryCount == 1) {
                 final String APP_PREFERENCES = "audata";
                 final String APP_PREFERENCES_SELECTEDDAY = "SelectedDay";
-                SharedPreferences mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+                SharedPreferences mSettings = 
+                        getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = mSettings.edit();
                 editor.putString(APP_PREFERENCES_SELECTEDDAY, "0");
                 editor.apply();
@@ -398,7 +392,7 @@ public class MainActivity extends AppCompatActivity implements
             case (R.string.title_AboutMe_Fragment):
                 navigationViewIndex = 6;
                 break;
-            case (R.string.title_NotificationSettings_Fragment):
+            case (R.string.title_AlarmSettings_Fragment):
                 navigationViewIndex = 7;
                 break;
             case (R.string.title_Contacts_Fragment):

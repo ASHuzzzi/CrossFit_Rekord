@@ -46,7 +46,7 @@
             android:exported="false">
         </service>
 
-        <receiver android:name=".fragments.AlarmReceiver"/>
+        <receiver android:name=".inspectionСlasses.alarm.AlarmReceiver"/>
         <receiver android:name=".fragments.AlarmBootReceiver"
             android:enabled="false">
             <intent-filter>

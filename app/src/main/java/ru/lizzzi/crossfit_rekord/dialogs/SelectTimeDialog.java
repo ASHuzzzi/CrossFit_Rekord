@@ -1,13 +1,14 @@
-package ru.lizzzi.crossfit_rekord.fragments;
+package ru.lizzzi.crossfit_rekord.dialogs;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentManager;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,12 +16,15 @@ import android.widget.Button;
 import android.widget.TimePicker;
 
 import java.util.Calendar;
+import java.util.Objects;
 
 import ru.lizzzi.crossfit_rekord.R;
+import ru.lizzzi.crossfit_rekord.fragments.AlarmSettingsFragment;
 
-public class SelectTimeFragment extends DialogFragment {
+public class SelectTimeDialog extends DialogFragment {
 
     private TimePicker timePicker;
+    private SharedPreferences sharedPreferences;
     private static final String APP_PREFERENCES = "notificationSettings";
     private static final String APP_PREFERENCES_SELECTED_HOUR = "Hour";
     private static final String APP_PREFERENCES_SELECTED_MINUTE = "Minute";
@@ -34,26 +38,24 @@ public class SelectTimeFragment extends DialogFragment {
     }
 
     private View createDialogView() {
-        final LayoutInflater inflater = getActivity().getLayoutInflater();
+        final LayoutInflater inflater = Objects.requireNonNull(getActivity()).getLayoutInflater();
+        @SuppressLint("InflateParams")
         View view = inflater.inflate(R.layout.fragment_select_time, null);
-
+        sharedPreferences =
+                getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         timePicker = view.findViewById(R.id.timePicker);
         timePicker.setIs24HourView(true);
         timePicker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
             @Override
             public void onTimeChanged(TimePicker view, int selectedHour, int selectedMinute) {
                 setTimeOfNotification(selectedHour, selectedMinute);
-                SharedPreferences sharedPreferences =
-                        getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putInt(APP_PREFERENCES_SELECTED_HOUR, selectedHour);
-                editor.putInt(APP_PREFERENCES_SELECTED_MINUTE, selectedMinute);
-                editor.apply();
-
+                sharedPreferences.edit()
+                        .putInt(APP_PREFERENCES_SELECTED_HOUR, selectedHour)
+                        .putInt(APP_PREFERENCES_SELECTED_MINUTE, selectedMinute)
+                        .apply();
             }
         });
         Button buttonCancel = view.findViewById(R.id.buttonCancel);
-        Button buttonSelect = view.findViewById(R.id.buttonSelect);
         buttonCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -61,6 +63,7 @@ public class SelectTimeFragment extends DialogFragment {
 
             }
         });
+        Button buttonSelect = view.findViewById(R.id.buttonSelect);
         buttonSelect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,13 +74,13 @@ public class SelectTimeFragment extends DialogFragment {
     }
 
     private void setTimeOfNotification(int selectedHour, int selectedMinute) {
-        FragmentManager fragmentManager = getFragmentManager();
-        String fragmentTag = getResources().getString(R.string.title_NotificationSettings_Fragment);
-        if (fragmentManager != null) {
-            NotificationSettingsFragment notificationSettingsFragment =
-                    (NotificationSettingsFragment) fragmentManager.findFragmentByTag(fragmentTag);
-            if (notificationSettingsFragment != null) {
-                notificationSettingsFragment.setTime(selectedHour, selectedMinute);
+        if (getFragmentManager() != null) {
+            String fragmentTag =
+                    getResources().getString(R.string.title_AlarmSettings_Fragment);
+            AlarmSettingsFragment alarmSettingsFragment =
+                    (AlarmSettingsFragment) getFragmentManager().findFragmentByTag(fragmentTag);
+            if (alarmSettingsFragment != null) {
+                alarmSettingsFragment.setTime(selectedHour, selectedMinute);
             }
         }
     }
@@ -88,15 +91,18 @@ public class SelectTimeFragment extends DialogFragment {
         getDialog().getWindow().setGravity(Gravity.BOTTOM);
         getDialog().setCanceledOnTouchOutside(false);
         Calendar calendar = Calendar.getInstance();
-        int defaultHour = calendar.get(Calendar.HOUR_OF_DAY);
-        int defaultMinute = calendar.get(Calendar.MINUTE);
-        SharedPreferences sharedPreferences =
-                getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-        int hourForShow =
-                sharedPreferences.getInt(APP_PREFERENCES_SELECTED_HOUR, defaultHour);
-        int minuteForShow =
-                sharedPreferences.getInt(APP_PREFERENCES_SELECTED_MINUTE, defaultMinute);
-        timePicker.setCurrentHour(hourForShow);
-        timePicker.setCurrentMinute(minuteForShow);
+        int hourForShow = sharedPreferences.getInt(
+                APP_PREFERENCES_SELECTED_HOUR,
+                calendar.get(Calendar.HOUR_OF_DAY));
+        int minuteForShow = sharedPreferences.getInt(
+                APP_PREFERENCES_SELECTED_MINUTE,
+                calendar.get(Calendar.MINUTE));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            timePicker.setHour(hourForShow);
+            timePicker.setMinute(minuteForShow);
+        }else {
+            timePicker.setCurrentHour(hourForShow);
+            timePicker.setCurrentMinute(minuteForShow);
+        }
     }
 }

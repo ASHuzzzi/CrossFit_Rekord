@@ -1,5 +1,7 @@
 package ru.lizzzi.crossfit_rekord.adapters;
 
+import android.annotation.SuppressLint;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,46 +16,47 @@ import ru.lizzzi.crossfit_rekord.interfaces.ListernerCharacter;
 
 public class RecyclerAdapterCharacter extends RecyclerView.Adapter<RecyclerAdapterCharacter.ViewHolder> {
 
-    private List lCharacter;
-    private ListernerCharacter listernerCharacter;
+    private List listCharacter;
+    private ListernerCharacter listerner;
 
-    public RecyclerAdapterCharacter(List character, ListernerCharacter listernerCharacter){
-        this.lCharacter = character;
-        this.listernerCharacter = listernerCharacter;
-
+    public RecyclerAdapterCharacter(List character, ListernerCharacter listerner){
+        this.listCharacter = character;
+        this.listerner = listerner;
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView tvCharacter;
-        private CardView cvCharacter;
+        private TextView textCharacter;
+        private CardView cardCharacter;
 
         ViewHolder(View view) {
             super(view);
-            tvCharacter = view.findViewById(R.id.tvCharacter);
-            cvCharacter = view.findViewById(R.id.cvCharacter);
+            textCharacter = view.findViewById(R.id.tvCharacter);
+            cardCharacter = view.findViewById(R.id.cvCharacter);
         }
     }
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_rv_character, parent, false);
-
-        return new ViewHolder(v);
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(
+                R.layout.item_rv_character,
+                parent,
+                false);
+        return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        final String stCharacter = (String) lCharacter.get(position);
+    public void onBindViewHolder(
+            @NonNull ViewHolder holder,
+            @SuppressLint("RecyclerView") final int position) {
 
-        holder.tvCharacter.setText(stCharacter);
-
-        holder.cvCharacter.setOnClickListener(new View.OnClickListener() {
+        holder.textCharacter.setText(String.valueOf(listCharacter.get(position)));
+        holder.cardCharacter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listernerCharacter.SelectCharacter(stCharacter);
+                listerner.selectCharacter(String.valueOf(listCharacter.get(position)));
             }
         });
-
     }
 
     @Override
@@ -63,6 +66,6 @@ public class RecyclerAdapterCharacter extends RecyclerView.Adapter<RecyclerAdapt
 
     @Override
     public int getItemCount() {
-        return lCharacter.size();
+        return listCharacter.size();
     }
 }
