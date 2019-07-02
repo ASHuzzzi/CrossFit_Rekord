@@ -26,7 +26,7 @@ public class AlarmHelper {
 
         Intent intent = new Intent(context, AlarmReceiver.class);
         int ALARM_TYPE = 100;
-        int INTERVAL_MILLS = 2*60*60*1000;
+        int INTERVAL_MILLS = 24*60*60*1000;
         pendingIntent = PendingIntent.getBroadcast(
                 context,
                 ALARM_TYPE,

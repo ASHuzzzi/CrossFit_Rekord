@@ -45,7 +45,7 @@
             android:icon="@drawable/profile"
             android:title="@string/profile" />
         <item
-            android:id="@+id/localNotification"
+            android:id="@+id/alarm"
             android:enabled="true"
             android:icon="@drawable/notification"
             android:title="@string/localNotification" />

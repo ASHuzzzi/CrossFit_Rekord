@@ -53,7 +53,10 @@ public class DefinitionDBHelper  extends SQLiteOpenHelper{
         database = null;
         try {
             String myPath = DB_PATH + DB_NAME;
-            database = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
+            database = SQLiteDatabase.openDatabase(
+                    myPath,
+                    null,
+                    SQLiteDatabase.OPEN_READONLY);
         } catch(SQLiteException ignored) {
         }
         if (database != null) {

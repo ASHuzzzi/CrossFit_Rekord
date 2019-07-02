@@ -43,7 +43,7 @@ public class AlarmSettingsFragment extends Fragment implements SetSettingNotific
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                             Bundle savedInstanceState) {
         View view = inflater.inflate(
-                R.layout.fragment_notification_settings,
+                R.layout.fragment_alarm_settings,
                 container,
                 false);
 

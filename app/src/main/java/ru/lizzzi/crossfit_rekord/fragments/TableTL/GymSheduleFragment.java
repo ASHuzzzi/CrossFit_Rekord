@@ -150,7 +150,7 @@ public class GymSheduleFragment extends Fragment implements LoaderManager.Loader
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (adapter != null) {
                     selectDay = Calendar.MONDAY;
-                    createList(schedule.get(selectDay -2));
+                    showShedule(schedule.get(selectDay - 1));
                 }
                 return true ;
             }
@@ -161,7 +161,7 @@ public class GymSheduleFragment extends Fragment implements LoaderManager.Loader
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (adapter != null) {
                     selectDay = Calendar.TUESDAY;
-                    createList(schedule.get(selectDay -2));
+                    showShedule(schedule.get(selectDay - 1));
                 }
                 return true ;
             }
@@ -172,7 +172,7 @@ public class GymSheduleFragment extends Fragment implements LoaderManager.Loader
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (adapter != null) {
                     selectDay = Calendar.WEDNESDAY;
-                    createList(schedule.get(selectDay -2));
+                    showShedule(schedule.get(selectDay - 1));
                 }
                 return true ;
             }
@@ -183,7 +183,7 @@ public class GymSheduleFragment extends Fragment implements LoaderManager.Loader
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (adapter != null) {
                     selectDay = Calendar.THURSDAY;
-                    createList(schedule.get(selectDay -2));
+                    showShedule(schedule.get(selectDay - 1));
                 }
                 return true ;
             }
@@ -194,7 +194,7 @@ public class GymSheduleFragment extends Fragment implements LoaderManager.Loader
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (adapter != null) {
                     selectDay = Calendar.FRIDAY;
-                    createList(schedule.get(selectDay -2));
+                    showShedule(schedule.get(selectDay - 1));
                 }
                 return true ;
             }
@@ -205,7 +205,7 @@ public class GymSheduleFragment extends Fragment implements LoaderManager.Loader
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (adapter != null) {
                     selectDay = Calendar.SATURDAY;
-                    createList(schedule.get(selectDay - 2 ));
+                    showShedule(schedule.get(selectDay - 1));
                 }
                 return true ;
             }
@@ -216,7 +216,7 @@ public class GymSheduleFragment extends Fragment implements LoaderManager.Loader
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (adapter != null) {
                     selectDay = Calendar.SUNDAY;
-                    createList(schedule.get(selectDay + 5));
+                    showShedule(schedule.get(selectDay - 1));
                 }
                 return true ;
             }
@@ -243,7 +243,7 @@ public class GymSheduleFragment extends Fragment implements LoaderManager.Loader
     public void onLoadFinished(@NonNull Loader<List<List<Map>>> loader, List<List<Map>> data) {
         schedule = data;
         if (schedule != null) {
-            createList(schedule.get(selectDay -1));
+            showShedule(schedule.get(selectDay - 1));
             layoutError.setVisibility(View.INVISIBLE);
             progressBar.setVisibility(View.INVISIBLE);
             itemsInTable.setVisibility(View.VISIBLE);
@@ -257,7 +257,7 @@ public class GymSheduleFragment extends Fragment implements LoaderManager.Loader
     public void onLoaderReset(@NonNull Loader<List<List<Map>>> loader) {
     }
 
-    private void createList(final List<Map> dailySchedule){
+    private void showShedule(final List<Map> dailySchedule){
         adapter = new RecyclerAdapterTable(getContext(), dailySchedule, new ListenerRecordForTrainingSelect() {
             @Override
             public void selectTime(String stStartTime, String stTypesItem) {
@@ -269,13 +269,13 @@ public class GymSheduleFragment extends Fragment implements LoaderManager.Loader
                     calendar.clear();
                     calendar = Calendar.getInstance();
                 }
-                boolean recordingIsPossible = daysWhenRecordingIsPossible.contains(selectDay);
-                if (recordingIsPossible){
+                if (daysWhenRecordingIsPossible.contains(selectDay)){
                     try {
-                        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdfCheckTime = new SimpleDateFormat("HH:mm");
+                        @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat =
+                                new SimpleDateFormat("HH:mm");
                         calendar = Calendar.getInstance();
                         int hourNow = calendar.get(Calendar.HOUR_OF_DAY);
-                        Date selectTime = sdfCheckTime.parse(stStartTime);
+                        Date selectTime = dateFormat.parse(stStartTime);
                         int selectHour = selectTime.getHours();
                         boolean selectedToday = daysWhenRecordingIsPossible.get(0).equals(selectDay);
                         if (selectedToday && (selectHour <= hourNow)) { //проверяем чтобы выбранное время было позже чем сейчас
@@ -311,42 +311,42 @@ public class GymSheduleFragment extends Fragment implements LoaderManager.Loader
     }
 
     //метод подготоавливающий состояние кнопок в зависимости от выбранного дня
-    private void preSelectionButtonDay(int iDayOfWeek){
-        if (iDayOfWeek == Calendar.MONDAY){
-            selectButtonDay(true, false, false, false, false, false, false);
-
-        }else if (iDayOfWeek == Calendar.TUESDAY){
-            selectButtonDay(false, true, false, false, false, false, false);
-
-        }else if (iDayOfWeek == Calendar.WEDNESDAY){
-            selectButtonDay(false, false, true, false, false, false, false);
-
-        }else if (iDayOfWeek == Calendar.THURSDAY){
-            selectButtonDay(false, false, false, true, false, false, false);
-
-        }else if (iDayOfWeek == Calendar.FRIDAY){
-            selectButtonDay(false, false, false, false, true, false, false);
-
-        }else if (iDayOfWeek == Calendar.SATURDAY){
-            selectButtonDay(false, false, false, false, false, true, false);
-
-        }else if (iDayOfWeek == Calendar.SUNDAY){
-            selectButtonDay(false, false, false, false, false, false, true);
-
-        }else {
-            selectButtonDay(false, false, false, false, false, false, false);
+    private void preSelectionButtonDay(int selectedDayOfWeek) {
+        setNotPressedButtons();
+        switch (selectedDayOfWeek) {
+            case Calendar.MONDAY:
+                buttonMonday.setPressed(true);
+                break;
+            case Calendar.TUESDAY:
+                buttonTuesday.setPressed(true);
+                break;
+            case Calendar.WEDNESDAY:
+                buttonWednesday.setPressed(true);
+                break;
+            case Calendar.THURSDAY:
+                buttonThursday.setPressed(true);
+                break;
+            case Calendar.FRIDAY:
+                buttonFriday.setPressed(true);
+                break;
+            case Calendar.SATURDAY:
+                buttonSaturday.setPressed(true);
+                break;
+            case Calendar.SUNDAY:
+                buttonSunday.setPressed(true);
+                break;
         }
     }
 
     //метод применяющий выбор кнопок
-    private void selectButtonDay(boolean m, boolean tu, boolean w, boolean th, boolean f, boolean sa, boolean su) {
-        buttonMonday.setPressed(m);
-        buttonTuesday.setPressed(tu);
-        buttonWednesday.setPressed(w);
-        buttonThursday.setPressed(th);
-        buttonFriday.setPressed(f);
-        buttonSaturday.setPressed(sa);
-        buttonSunday.setPressed(su);
+    private void setNotPressedButtons() {
+        buttonMonday.setPressed(false);
+        buttonTuesday.setPressed(false);
+        buttonWednesday.setPressed(false);
+        buttonThursday.setPressed(false);
+        buttonFriday.setPressed(false);
+        buttonSaturday.setPressed(false);
+        buttonSunday.setPressed(false);
     }
 
     //в onStart делаем проверку на наличие данных в адаптаре. При первом запуске адаптер пустой и
@@ -371,17 +371,17 @@ public class GymSheduleFragment extends Fragment implements LoaderManager.Loader
             listernerChangeTitle.changeTitle(R.string.title_Table_Fragment, R.string.title_Table_Fragment);
         }
 
-        int backgroungImage;
+        int backgroundImage;
         if (iSelectGym == 1) {
-            backgroungImage = R.drawable.backgroundfotovrtical;
+            backgroundImage = R.drawable.backgroundfotovrtical;
         } else {
-            backgroungImage = R.drawable.backgroundfotovrtical2;
+            backgroundImage = R.drawable.backgroundfotovrtical2;
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             imageTable.setImageDrawable(getResources().getDrawable(
-                    backgroungImage, Objects.requireNonNull(getContext()).getTheme()));
+                    backgroundImage, Objects.requireNonNull(getContext()).getTheme()));
         } else {
-            imageTable.setImageDrawable(getResources().getDrawable(backgroungImage));
+            imageTable.setImageDrawable(getResources().getDrawable(backgroundImage));
         }
     }
 

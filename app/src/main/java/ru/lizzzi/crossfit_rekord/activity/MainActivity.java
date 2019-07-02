@@ -317,7 +317,7 @@ public class MainActivity extends AppCompatActivity implements
                 fragmentClass = MyResultsFragment.class;
                 fragmentName = R.string.title_MyResults_Fragment;
                 break;
-            case (R.id.localNotification):
+            case (R.id.alarm):
                 fragmentClass = AlarmSettingsFragment.class;
                 fragmentName = R.string.title_AlarmSettings_Fragment;
                 fragmentTag = getResources().getString(R.string.title_AlarmSettings_Fragment);

@@ -5,26 +5,22 @@ import android.support.annotation.NonNull;
 //класс создает ссылку для переадресации на сайт
 public class ConstructorLinks {
 
-    public String constructorLinks (int selectGym,
-                                    int selectDay,
+    public String constructorLinks (int selectedGym,
+                                    int selectedDay,
                                     String startTime,
-                                    String selectTrainigType) {
-        String workoutType = selectTrainigType;
-        if (!workoutType.equals("CrossFit")) {
-            workoutType = getWorkoutType(selectTrainigType);
-        }
+                                    String selectType) {
+        String workoutType = (selectType.equals("CrossFit"))
+                ? selectType
+                : getWorkoutType(selectType);
 
-        String stSelectGym = "";
-        if (selectGym == 2) {
-            stSelectGym = "2";
-        }
+        String selectedGymForURL = (selectedGym != 2) ? "" : "2";
 
         String stURL = "http://i.crossfitrekord.ru/rec";
 
         return stURL
-                + stSelectGym
+                + selectedGymForURL
                 + ".php?day="
-                + selectDay
+                + selectedDay
                 + "&time="
                 + startTime
                 + "%20"
