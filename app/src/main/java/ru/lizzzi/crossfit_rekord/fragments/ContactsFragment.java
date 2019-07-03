@@ -25,6 +25,9 @@ public class ContactsFragment extends Fragment {
     private ImageButton imButtonVk;
     private TextView textAppVersion;
 
+    private String PACKAGE_VK = "com.vkontakte.android";
+    private String PACKAGE_INSTAGRAM = "com.vkontakte.android";
+
     public View onCreateView(@NonNull final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_contacts, container, false);
 
@@ -32,39 +35,14 @@ public class ContactsFragment extends Fragment {
         imButtonInstagram = view.findViewById(R.id.ibInstagram);
         imButtonInstagram.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setAction(Intent.ACTION_VIEW);
-                PackageManager packageManager = getContext().getPackageManager();
-                if (isPackageInstalled("com.instagram.android", packageManager)) {
-                    intent.setPackage("com.instagram.android");
-                } else {
-                    intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                }
-                intent.setData(Uri.parse(getResources().getString(R.string.Instagram)));
-                startActivity(intent);
-                Objects.requireNonNull(getActivity()).overridePendingTransition(
-                        R.anim.pull_in_right,
-                        R.anim.push_out_left);
+                openOtherApplication(PACKAGE_INSTAGRAM);
             }
         });
 
         imButtonVk = view.findViewById(R.id.ibVK);
         imButtonVk.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                Intent intent = new Intent();
-                intent.setAction(Intent.ACTION_VIEW);
-                PackageManager packageManager = getContext().getPackageManager();
-                if (isPackageInstalled("com.vkontakte.android", packageManager)) {
-                    intent.setPackage("com.vkontakte.android");
-                } else {
-                    intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                }
-                intent.setData(Uri.parse(getResources().getString(R.string.groupVK)));
-                startActivity(intent);
-                Objects.requireNonNull(getActivity()).overridePendingTransition(
-                        R.anim.pull_in_right,
-                        R.anim.push_out_left);
-
+                openOtherApplication(PACKAGE_VK);
             }
         });
         return view;
@@ -89,7 +67,9 @@ public class ContactsFragment extends Fragment {
         imButtonVk.getLayoutParams().width = reSizeScreenHeight;
 
         try {
-            PackageInfo packageInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
+            PackageInfo packageInfo = getActivity().getPackageManager().getPackageInfo(
+                    getActivity().getPackageName(),
+                    0);
             String appVersion = getResources().getString(R.string.appVersion) + " " + packageInfo.versionName;
             textAppVersion.setText(appVersion);
         } catch (PackageManager.NameNotFoundException e) {
@@ -97,9 +77,25 @@ public class ContactsFragment extends Fragment {
         }
     }
 
-    private boolean isPackageInstalled(String packagename, PackageManager packageManager) {
+    private void openOtherApplication(String packageName) {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+        if (isPackageInstalled(packageName)) {
+            intent.setPackage(packageName);
+        } else {
+            intent.addCategory(Intent.CATEGORY_BROWSABLE);
+        }
+        intent.setData(Uri.parse(getResources().getString(R.string.groupVK)));
+        startActivity(intent);
+        Objects.requireNonNull(getActivity()).overridePendingTransition(
+                R.anim.pull_in_right,
+                R.anim.push_out_left);
+    }
+
+    private boolean isPackageInstalled(String packageName) {
+        PackageManager packageManager = getContext().getPackageManager();
         try {
-            packageManager.getPackageInfo(packagename, 0);
+            packageManager.getPackageInfo(packageName, 0);
             return true;
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();

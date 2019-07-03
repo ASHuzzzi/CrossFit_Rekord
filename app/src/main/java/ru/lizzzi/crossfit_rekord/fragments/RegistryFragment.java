@@ -94,9 +94,8 @@ public class RegistryFragment extends Fragment implements LoaderManager.LoaderCa
             @Override
             public void run() {
                 Network network = new Network(getContext());
-                boolean checkDone = network.checkConnection();
                 Bundle bundle = new Bundle();
-                bundle.putBoolean("result", checkDone);
+                bundle.putBoolean("result", network.checkConnection());
                 Message msg = handlerRegistry.obtainMessage();
                 msg.setData(bundle);
                 handlerRegistry.sendMessage(msg);

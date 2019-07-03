@@ -15,9 +15,10 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
+import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 import ru.lizzzi.crossfit_rekord.R;
@@ -50,7 +51,7 @@ public class SelectWeekDayDialog extends DialogFragment {
         @SuppressLint("InflateParams")
         View view = inflater.inflate(R.layout.fragment_select_week_day, null);
         @SuppressLint("UseSparseArrays")
-        final HashMap<Integer, Boolean> selectedWeekDay = new HashMap<>();
+        final List<Integer> selectedWeekDay = new ArrayList<>();
 
         Button buttonCancel = view.findViewById(R.id.buttonCancel);
         buttonCancel.setOnClickListener(new View.OnClickListener() {
@@ -77,9 +78,9 @@ public class SelectWeekDayDialog extends DialogFragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (buttonView.isChecked()) {
-                    selectedWeekDay.put(Calendar.MONDAY, true);
+                    selectedWeekDay.add(Calendar.MONDAY);
                 } else {
-                    selectedWeekDay.put(Calendar.MONDAY, false);
+                    selectedWeekDay.remove(Integer.valueOf(Calendar.MONDAY));
                 }
             }
         });
@@ -88,9 +89,9 @@ public class SelectWeekDayDialog extends DialogFragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (buttonView.isChecked()) {
-                    selectedWeekDay.put(Calendar.TUESDAY, true);
+                    selectedWeekDay.add(Calendar.TUESDAY);
                 } else {
-                    selectedWeekDay.put(Calendar.TUESDAY, false);
+                    selectedWeekDay.remove(Integer.valueOf(Calendar.TUESDAY));
                 }
             }
         });
@@ -99,9 +100,9 @@ public class SelectWeekDayDialog extends DialogFragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (buttonView.isChecked()) {
-                    selectedWeekDay.put(Calendar.WEDNESDAY, true);
+                    selectedWeekDay.add(Calendar.WEDNESDAY);
                 } else {
-                    selectedWeekDay.put(Calendar.WEDNESDAY, false);
+                    selectedWeekDay.remove(Integer.valueOf(Calendar.WEDNESDAY));
                 }
             }
         });
@@ -110,9 +111,9 @@ public class SelectWeekDayDialog extends DialogFragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (buttonView.isChecked()) {
-                    selectedWeekDay.put(Calendar.THURSDAY, true);
+                    selectedWeekDay.add(Calendar.THURSDAY);
                 } else {
-                    selectedWeekDay.put(Calendar.THURSDAY, false);
+                    selectedWeekDay.remove(Integer.valueOf(Calendar.THURSDAY));
                 }
             }
         });
@@ -121,9 +122,9 @@ public class SelectWeekDayDialog extends DialogFragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (buttonView.isChecked()) {
-                    selectedWeekDay.put(Calendar.FRIDAY, true);
+                    selectedWeekDay.add(Calendar.FRIDAY);
                 } else {
-                    selectedWeekDay.put(Calendar.FRIDAY, false);
+                    selectedWeekDay.remove(Integer.valueOf(Calendar.FRIDAY));
                 }
             }
         });
@@ -132,9 +133,9 @@ public class SelectWeekDayDialog extends DialogFragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (buttonView.isChecked()) {
-                    selectedWeekDay.put(Calendar.SATURDAY, true);
+                    selectedWeekDay.add(Calendar.SATURDAY);
                 } else {
-                    selectedWeekDay.put(Calendar.SATURDAY, false);
+                    selectedWeekDay.remove(Integer.valueOf(Calendar.SATURDAY));
                 }
             }
         });
@@ -143,9 +144,9 @@ public class SelectWeekDayDialog extends DialogFragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (buttonView.isChecked()) {
-                    selectedWeekDay.put(Calendar.SUNDAY, true);
+                    selectedWeekDay.add(Calendar.SUNDAY);
                 } else {
-                    selectedWeekDay.put(Calendar.SUNDAY, false);
+                    selectedWeekDay.remove(Integer.valueOf(Calendar.SUNDAY));
                 }
             }
         });
@@ -162,7 +163,7 @@ public class SelectWeekDayDialog extends DialogFragment {
         setSelectedDays();
     }
 
-    private void saveSelectedDays(HashMap<Integer, Boolean> selectedWeekDay) {
+    private void saveSelectedDays(List<Integer> selectedWeekDay) {
         String selectedDays = convertHashMapToString(selectedWeekDay);
         sharedPreferences.edit()
                 .putString(APP_PREFERENCES_SELECTED_DAYS, selectedDays)
@@ -182,18 +183,15 @@ public class SelectWeekDayDialog extends DialogFragment {
         }
     }
 
-    private String convertHashMapToString(HashMap<Integer, Boolean> selectedWeekDay) {
+    private String convertHashMapToString(List<Integer> selectedWeekDay) {
         StringBuilder result = new StringBuilder();
-        for (Map.Entry<Integer, Boolean> weekDay : selectedWeekDay.entrySet()) {
-            if (weekDay.getValue().equals(true)) {
-                if ((result.length() > 0)) {
-                    result.append(",").append(weekDay.getKey());
-                } else {
-                    result.append(weekDay.getKey());
-                }
-            }
+        Collections.sort(selectedWeekDay);
+        for (int i = 0; i < selectedWeekDay.size(); i++) {
+            result = (i > 0)
+                    ? result.append(",").append(selectedWeekDay.get(i))
+                    : result.append(selectedWeekDay.get(i));
         }
-        return String.valueOf(result);
+        return result.toString();
     }
 
     private void setSelectedDays() {
@@ -204,6 +202,8 @@ public class SelectWeekDayDialog extends DialogFragment {
             for (int i = 0; i <= daysSplited.length - 1; i++) {
                 setCheckedCheckBox(Integer.parseInt(daysSplited[i]));
             }
+        } else {
+            setCheckedCheckBox(Calendar.getInstance().get(Calendar.DAY_OF_WEEK));
         }
     }
 
