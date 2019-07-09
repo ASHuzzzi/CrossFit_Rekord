@@ -1,6 +1,5 @@
 package ru.lizzzi.crossfit_rekord.fragments;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
@@ -11,53 +10,36 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.adapters.PageAdapterTable;
+import ru.lizzzi.crossfit_rekord.adapters.PageAdapterSchedule;
 import ru.lizzzi.crossfit_rekord.interfaces.ChangeTitle;
 
-public class TableFragment extends Fragment{
+public class ScheduleFragment extends Fragment{
 
-    @SuppressLint({"HandlerLeak", "ClickableViewAccessibility"})
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         setRetainInstance(true);
 
-        View v = inflater.inflate(R.layout.fragment_tl_table, container, false);
+        View view = inflater.inflate(R.layout.fragment_tl_table, container, false);
         // Find the view pager that will allow the user to swipe between fragments
-        final ViewPager viewPager = v.findViewById(R.id.vp_1_record);
+        final ViewPager viewPager = view.findViewById(R.id.vp_1_record);
 
         // Create an adapter that knows which fragment should be shown on each page
-        PageAdapterTable adapter2 = new PageAdapterTable(getChildFragmentManager(), getContext());
+        PageAdapterSchedule adapterSchedule =
+                new PageAdapterSchedule(getChildFragmentManager(), getContext());
 
         // Set the adapter onto the view pager
-        viewPager.setAdapter(adapter2);
+        viewPager.setAdapter(adapterSchedule);
 
         // Give the TabLayout the ViewPager
-        TabLayout tabLayout = v.findViewById(R.id.sliding_tabs_record);
+        TabLayout tabLayout = view.findViewById(R.id.sliding_tabs_record);
         tabLayout.setupWithViewPager(viewPager);
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
-
-        return v;
+        return view;
     }
 
     @Override
     public  void onStart() {
         super.onStart();
-
         if (getActivity() instanceof ChangeTitle){
             ChangeTitle listernerChangeTitle = (ChangeTitle) getActivity();
             listernerChangeTitle.changeTitle(R.string.title_Table_Fragment, R.string.title_Table_Fragment);

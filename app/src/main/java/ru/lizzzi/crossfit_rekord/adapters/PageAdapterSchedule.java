@@ -9,31 +9,25 @@ import android.support.v4.app.FragmentPagerAdapter;
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.fragments.TableTL.GymSheduleFragment;
 
-public class PageAdapterTable extends FragmentPagerAdapter {
+public class PageAdapterSchedule extends FragmentPagerAdapter {
     private Context context;
 
-    public PageAdapterTable(FragmentManager fragmentManager, Context context) {
+    public PageAdapterSchedule(FragmentManager fragmentManager, Context context) {
         super(fragmentManager);
         this.context = context;
     }
 
     @Override
     public Fragment getItem(int position) {
-        Fragment tableFragment =  new GymSheduleFragment();
+        Fragment gymScheduleFragment =  new GymSheduleFragment();
         Bundle bundle = new Bundle();
-        if (position == 0) {
-            bundle.putInt(
-                    "gym",
-                    context.getResources().getInteger(R.integer.selectSheduleParnas));
-        } else if (position == 1) {
-            bundle.putInt(
-                    "gym",
-                    context.getResources().getInteger(R.integer.selectSheduleMyzhestvo));
-        } else {
-            return null;
+        int gym = context.getResources().getInteger(R.integer.selectSheduleParnas);
+        if (position == 1) {
+            gym = context.getResources().getInteger(R.integer.selectSheduleMyzhestvo);
         }
-        tableFragment.setArguments(bundle);
-        return tableFragment;
+        bundle.putInt("gym", gym);
+        gymScheduleFragment.setArguments(bundle);
+        return gymScheduleFragment;
     }
 
     @Override

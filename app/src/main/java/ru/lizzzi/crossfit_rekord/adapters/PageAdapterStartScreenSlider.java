@@ -8,8 +8,8 @@ import ru.lizzzi.crossfit_rekord.fragments.StartScreenSliderFragment;
 
 public class PageAdapterStartScreenSlider extends FragmentPagerAdapter {
 
-    public PageAdapterStartScreenSlider(FragmentManager fm){
-        super(fm);
+    public PageAdapterStartScreenSlider(FragmentManager fragmentManager){
+        super(fragmentManager);
     }
 
 

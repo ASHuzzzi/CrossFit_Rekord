@@ -325,9 +325,9 @@ public class RecordForTrainingFragment extends Fragment implements LoaderManager
         }
         int backgroungImage;
         if (selectedGym == getResources().getInteger(R.integer.selectSheduleParnas)) {
-            backgroungImage = R.drawable.backgroundfotovrtical;
+            backgroungImage = R.drawable.background_foto_1;
         } else {
-            backgroungImage = R.drawable.backgroundfotovrtical2;
+            backgroungImage = R.drawable.background_foto_2;
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             imageBackground.setImageDrawable(getResources().getDrawable(

@@ -58,7 +58,7 @@ public class StartScreenFragment extends Fragment {
             //@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onClick(View view) {
-                openFragment(TableFragment.class);
+                openFragment(ScheduleFragment.class);
             }
         });
 

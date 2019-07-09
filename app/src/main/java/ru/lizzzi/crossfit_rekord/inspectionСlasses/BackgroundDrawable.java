@@ -3,9 +3,10 @@ package ru.lizzzi.crossfit_rekord.inspectionСlasses;
 import ru.lizzzi.crossfit_rekord.R;
 
 //класс для выбора заднего фона элементов в расписании
-public class TakeBackgroungResourceForAdapter {
+public class BackgroundDrawable {
 
-    public int takeBackgroungResourceForAdapter(String workoutType) {
+    public int getBackgroundDrawable(String workoutType) {
+
         int backgroundColor = R.drawable.table_item_crossfit;
 
         if (!workoutType.equals("CrossFit")) {

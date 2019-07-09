@@ -44,7 +44,7 @@ import ru.lizzzi.crossfit_rekord.fragments.ContactsFragment;
 import ru.lizzzi.crossfit_rekord.fragments.LoginFragment;
 import ru.lizzzi.crossfit_rekord.fragments.RecordForTrainingSelectFragment;
 import ru.lizzzi.crossfit_rekord.fragments.StartScreenFragment;
-import ru.lizzzi.crossfit_rekord.fragments.TableFragment;
+import ru.lizzzi.crossfit_rekord.fragments.ScheduleFragment;
 import ru.lizzzi.crossfit_rekord.interfaces.ChangeTitle;
 import ru.lizzzi.crossfit_rekord.interfaces.ChangeToggleStatus;
 import ru.lizzzi.crossfit_rekord.services.LoadNotificationsService;
@@ -287,7 +287,7 @@ public class MainActivity extends AppCompatActivity implements
         switch (selectedMenuItem) {
             case (R.id.shedule):
                 fragmentName = R.string.title_Table_Fragment;
-                fragmentClass = TableFragment.class;
+                fragmentClass = ScheduleFragment.class;
                 break;
             case (R.id.record_training):
                 fragmentName = R.string.title_RecordForTraining_Fragment;

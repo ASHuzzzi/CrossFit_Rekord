@@ -1,13 +1,14 @@
 package ru.lizzzi.crossfit_rekord.documentfields;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import ru.lizzzi.crossfit_rekord.R;
 
-public class DocumentFieldsTable {
+public class DocumentFieldsSchedule {
     private Context context;
 
-    public DocumentFieldsTable(Context context) {
+    public DocumentFieldsSchedule(Context context) {
         this.context = context;
     }
 
@@ -27,11 +28,13 @@ public class DocumentFieldsTable {
 
     }
 
-    public String getStartTimeField() {
+    @NonNull
+    public String getStartTime() {
         return context.getString(Fields.start_time.getNameId());
     }
 
-    public String getTypeField() {
+    @NonNull
+    public String getType() {
         return context.getString(Fields.type.getNameId());
     }
 }

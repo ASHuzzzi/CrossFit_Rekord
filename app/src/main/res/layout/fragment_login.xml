@@ -21,7 +21,7 @@
             android:layout_marginTop="10dp"
             android:layout_gravity="center_horizontal"
             android:scaleType="centerInside"
-            app:srcCompat="@drawable/logo_cfr"
+            app:srcCompat="@drawable/logo_rekord_main"
             tools:ignore="ContentDescription" />
     </LinearLayout>
 

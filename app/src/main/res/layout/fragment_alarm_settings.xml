@@ -74,7 +74,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/chevron_right"
+            app:srcCompat="@drawable/ic_chevron_right"
             tools:ignore="RtlSymmetry" />
     </android.support.constraint.ConstraintLayout>
 
@@ -146,7 +146,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/chevron_right"
+            app:srcCompat="@drawable/ic_chevron_right"
             tools:ignore="RtlSymmetry" />
     </android.support.constraint.ConstraintLayout>
 

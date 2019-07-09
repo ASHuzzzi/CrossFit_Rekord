@@ -49,9 +49,9 @@ public class RecyclerAdapterDefinition extends RecyclerView.Adapter<RecyclerAdap
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final Map mapTermsOfSelectedCharacter = termsOfSelectedCharacter.get(position);
         String termin =
-                (String) mapTermsOfSelectedCharacter.get(terminsAndDefinition.getTerminFields());
+                mapTermsOfSelectedCharacter.get(terminsAndDefinition.getTerminFields()).toString();
         String definition =
-                (String) mapTermsOfSelectedCharacter.get(terminsAndDefinition.getDefinitionFields());
+                mapTermsOfSelectedCharacter.get(terminsAndDefinition.getDefinitionFields()).toString();
         holder.textTermin.setText(termin);
         holder.textDescription.setText(definition);
     }

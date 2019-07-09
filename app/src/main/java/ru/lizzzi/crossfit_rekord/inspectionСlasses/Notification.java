@@ -40,8 +40,8 @@ public class Notification {
                     110, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             builder.setContentIntent(contentIntent);
         }
-        builder.setSmallIcon(R.drawable.logo_cfr)
-                .setLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.logo_cfr))
+        builder.setSmallIcon(R.drawable.logo_rekord_main)
+                .setLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.logo_rekord_black))
                 .setTicker(resources.getString(R.string.app_name))
                 .setWhen(System.currentTimeMillis())
                 .setAutoCancel(true)

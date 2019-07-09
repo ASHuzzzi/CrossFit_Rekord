@@ -373,9 +373,9 @@ public class GymSheduleFragment extends Fragment implements LoaderManager.Loader
 
         int backgroundImage;
         if (iSelectGym == 1) {
-            backgroundImage = R.drawable.backgroundfotovrtical;
+            backgroundImage = R.drawable.background_foto_1;
         } else {
-            backgroundImage = R.drawable.backgroundfotovrtical2;
+            backgroundImage = R.drawable.background_foto_2;
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             imageTable.setImageDrawable(getResources().getDrawable(

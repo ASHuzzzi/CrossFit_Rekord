@@ -31,20 +31,20 @@ public class StartScreenSliderFragment extends Fragment {
             int pageNumber = getArguments().getInt(ARGUMENT_PAGE_NUMBER);
             switch (pageNumber){
                 case 0:
-                    backgroundImage = getResources().getDrawable(R.drawable.ss1);
+                    backgroundImage = getResources().getDrawable(R.drawable.foto_for_star_screen_1);
                     break;
                 case 1:
-                    backgroundImage = getResources().getDrawable(R.drawable.ss2);
+                    backgroundImage = getResources().getDrawable(R.drawable.foto_for_star_screen_2);
                     break;
                 case 2:
-                    backgroundImage = getResources().getDrawable(R.drawable.ss3);
+                    backgroundImage = getResources().getDrawable(R.drawable.foto_for_star_screen_3);
                     break;
                 case 3:
-                    backgroundImage = getResources().getDrawable(R.drawable.ss4);
+                    backgroundImage = getResources().getDrawable(R.drawable.foto_for_star_screen_4);
                     break;
             }
         }else {
-            backgroundImage = getResources().getDrawable(R.drawable.ss1);
+            backgroundImage = getResources().getDrawable(R.drawable.foto_for_star_screen_1);
         }
     }
 

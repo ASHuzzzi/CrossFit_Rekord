@@ -13,18 +13,18 @@ import java.util.List;
 import java.util.Map;
 
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.documentfields.DocumentFieldsTable;
-import ru.lizzzi.crossfit_rekord.inspectionСlasses.TakeBackgroungResourceForAdapter;
+import ru.lizzzi.crossfit_rekord.documentfields.DocumentFieldsSchedule;
+import ru.lizzzi.crossfit_rekord.inspectionСlasses.BackgroundDrawable;
 import ru.lizzzi.crossfit_rekord.interfaces.ListenerRecordForTrainingSelect;
 
 public class RecyclerAdapterTable extends RecyclerView.Adapter<RecyclerAdapterTable.ViewHolder> {
     private List<Map> shediletems;
-    private DocumentFieldsTable fields;
+    private DocumentFieldsSchedule fields;
     private ListenerRecordForTrainingSelect mlistener;
 
     public RecyclerAdapterTable(Context context, @NonNull List<Map> shediletems, ListenerRecordForTrainingSelect listener) {
         this.shediletems = shediletems;
-        fields = new DocumentFieldsTable(context);
+        fields = new DocumentFieldsSchedule(context);
         mlistener = listener;
     }
 
@@ -51,21 +51,21 @@ public class RecyclerAdapterTable extends RecyclerView.Adapter<RecyclerAdapterTa
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position){
         final Map documentInfo = shediletems.get(position);
-        String start_time = (String) documentInfo.get(fields.getStartTimeField());
-        String type = (String) documentInfo.get(fields.getTypeField());
+        String start_time = (String) documentInfo.get(fields.getStartTime());
+        String type = (String) documentInfo.get(fields.getType());
 
         holder.StartTimeItem.setText(start_time);
         holder.TypesItem.setText(type);
 
-        TakeBackgroungResourceForAdapter takeBackgroungResourceForAdapter = new TakeBackgroungResourceForAdapter();
-        int iResource = takeBackgroungResourceForAdapter.takeBackgroungResourceForAdapter(type);
+        BackgroundDrawable backgroundDrawable = new BackgroundDrawable();
+        int iResource = backgroundDrawable.getBackgroundDrawable(type);
         holder.TypesItem.setBackgroundResource(iResource);
 
         holder.ll_item_table.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mlistener.selectTime((String) documentInfo.get(fields.getStartTimeField()),
-                        (String) documentInfo.get(fields.getTypeField()));
+                mlistener.selectTime((String) documentInfo.get(fields.getStartTime()),
+                        (String) documentInfo.get(fields.getType()));
             }
         });
     }

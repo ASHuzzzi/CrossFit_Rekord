@@ -5,14 +5,13 @@
     <!-- focused -->
     <item
         android:state_focused="true"
-        android:drawable="@drawable/button_select_training_focused" />
+        android:drawable="@drawable/button_start_screen_focused" />
 
     <!-- pressed -->
     <item
         android:state_pressed="true"
-        android:drawable="@drawable/button_select_training_pressed" />
+        android:drawable="@drawable/button_start_screen_pressed" />
 
     <!-- default -->
-    <item
-        android:drawable="@drawable/button_select_training_normal" />
+    <item android:drawable="@drawable/button_start_screen_normal" />
 </selector>

@@ -27,7 +27,7 @@
         <item name="android:textColor">@color/colorWhite</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">@dimen/button_text_size</item>
-        <item name="android:background">@drawable/startscreen_button</item>
+        <item name="android:background">@drawable/button_start_screen</item>
         <item name="android:textAppearance">?android:attr/textAppearanceSmallInverse</item>
         <item name="android:gravity">center_vertical|center_horizontal</item>
     </style>
@@ -39,7 +39,7 @@
 
     <!-- Стиль кнопок для экрана с расписанием тренировок -->
     <style name="TableButtonStyle" parent="MainStyleButton">
-        <item name="android:background">@drawable/table_button</item>
+        <item name="android:background">@drawable/button_schedule</item>
         <item name="android:textColor">@drawable/button_text_color</item>
     </style>
 
@@ -70,7 +70,7 @@
         <item name="android:textSize">16sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:typeface">sans</item>
-        <item name="android:textColor">@color/calendar_day</item>
+        <item name="android:textColor">@color/buttons_for_calendar_style</item>
     </style>
 
     <style name="calendarHeaderStyle" parent="AppTheme">
