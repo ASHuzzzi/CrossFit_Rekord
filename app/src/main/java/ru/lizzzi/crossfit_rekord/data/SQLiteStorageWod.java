@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.provider.BaseColumns;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -17,21 +18,20 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
-import ru.lizzzi.crossfit_rekord.data.CalendarWodDBContract.dbCaleendarWod;
-
-public class CalendarWodDBHelper extends SQLiteOpenHelper {
+public class SQLiteStorageWod extends SQLiteOpenHelper {
 
     // путь к базе данных вашего приложения
     @SuppressLint("SdCardPath")
     private static final String DB_PATH = "/data/data/ru.lizzzi.crossfit_rekord/databases/";
     private static final String DB_NAME = "CalendarWod.db";
-    private SQLiteDatabase myDataBase;
-    private final Context mContext;
+    private SQLiteDatabase database;
+    private final Context context;
 
-    public CalendarWodDBHelper(Context context) {
+    public SQLiteStorageWod(Context context) {
         super(context, DB_NAME, null, 1);
-        this.mContext = context;
+        this.context = context;
     }
 
     /**
@@ -77,7 +77,7 @@ public class CalendarWodDBHelper extends SQLiteOpenHelper {
      * */
     private void copyDataBase() throws IOException{
         //Открываем локальную БД как входящий поток
-        InputStream myInput = mContext.getAssets().open("db/" + DB_NAME);
+        InputStream myInput = context.getAssets().open("db/" + DB_NAME);
 
         //Путь ко вновь созданной БД
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
@@ -102,8 +102,8 @@ public class CalendarWodDBHelper extends SQLiteOpenHelper {
 
     @Override
     public synchronized void close() {
-        if(myDataBase != null)
-            myDataBase.close();
+        if(database != null)
+            database.close();
         super.close();
     }
 
@@ -117,16 +117,16 @@ public class CalendarWodDBHelper extends SQLiteOpenHelper {
 
     }
 
-    public List<Date> selectDates(String objectId, long timestart, long timenow){
-        myDataBase = this.getReadableDatabase();
+    public List<Date> selectDates(String objectId, long timeStart, long timeNow){
+        database = this.getReadableDatabase();
 
         ArrayList<Date> arrListDates = new ArrayList<>();
-        String[] columns = new String[]{dbCaleendarWod.columnDateSession};
-        String selection = dbCaleendarWod.columnObjectId + "= '" + objectId + "' AND "
-                + dbCaleendarWod.columnDateSession + " BETWEEN " + timestart + " AND "
-                + timenow;
-        Cursor cursor = myDataBase.query(
-                dbCaleendarWod.TABLE_NAME,
+        String[] columns = new String[]{dbCalendarWod.columnDateSession};
+        String selection = dbCalendarWod.columnObjectId + "= '" + objectId + "' AND "
+                + dbCalendarWod.columnDateSession + " BETWEEN " + timeStart + " AND "
+                + timeNow;
+        Cursor cursor = database.query(
+                dbCalendarWod.TABLE_NAME,
                 columns,
                 selection,
                 null,
@@ -136,7 +136,7 @@ public class CalendarWodDBHelper extends SQLiteOpenHelper {
         if (cursor !=null && cursor.moveToFirst()){
             do {
                 Date dateFromDb = null;
-                @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+                SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
 
                 for (String cn : cursor.getColumnNames()) {
                     long sDates = Long.parseLong(cursor.getString(cursor.getColumnIndex(cn)));
@@ -158,41 +158,59 @@ public class CalendarWodDBHelper extends SQLiteOpenHelper {
     }
 
     public void saveDates(String userId, List<Date> dates) {
-        myDataBase = this.getWritableDatabase();
+        database = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         long time;
         for (int i = 0; i < dates.size(); i++) {
             time = dates.get(i).getTime();
-            values.put(dbCaleendarWod.columnObjectId, userId);
-            values.put(dbCaleendarWod.columnDateSession, time);
-            myDataBase.insert(dbCaleendarWod.TABLE_NAME, null, values);
+            values.put(dbCalendarWod.columnObjectId, userId);
+            values.put(dbCalendarWod.columnDateSession, time);
+            database.insert(dbCalendarWod.TABLE_NAME, null, values);
             values.clear();
         }
-        myDataBase.close();
+        database.close();
     }
 
     public void saveDate(String userId, long date) {
-        myDataBase = this.getWritableDatabase();
+        database = this.getWritableDatabase();
         ContentValues newValues = new ContentValues();
-        newValues.put(dbCaleendarWod.columnObjectId, userId);
-        newValues.put(dbCaleendarWod.columnDateSession, date);
-        myDataBase.insert(dbCaleendarWod.TABLE_NAME, null, newValues);
-        myDataBase.close();
+        newValues.put(dbCalendarWod.columnObjectId, userId);
+        newValues.put(dbCalendarWod.columnDateSession, date);
+        database.insert(dbCalendarWod.TABLE_NAME, null, newValues);
+        database.close();
     }
 
     public void deleteDate(String stObjectId, long lDate) {
-        myDataBase = this.getWritableDatabase();
+        database = this.getWritableDatabase();
 
-        String selection = dbCaleendarWod.columnObjectId + "= '" + stObjectId + "' AND "
-                + dbCaleendarWod.columnDateSession + "= '" + lDate + "'";
+        String selection =
+                dbCalendarWod.columnObjectId +
+                "= '" +
+                stObjectId +
+                "' AND " +
+                dbCalendarWod.columnDateSession +
+                "= '" +
+                lDate +
+                "'";
 
-        //String[] columns = new String[]{dbCaleendarWod.columnDateSession};
-
-        myDataBase.delete(
-                dbCaleendarWod.TABLE_NAME,
+        database.delete(
+                dbCalendarWod.TABLE_NAME,
                 selection,
                 null
         );
-        myDataBase.close();
+        database.close();
+    }
+
+    public static final class dbCalendarWod implements BaseColumns {
+
+        final static String TABLE_NAME = "calendarWod";
+        final static String columnDateSession = "dateSession";
+        final static String columnSc = "Sc";
+        final static String columnRx = "Rx";
+        final static String columnRxPlus = "Rx+";
+        final static String columnWarmup = "warmup";
+        final static String columnSkill = "skill";
+        final static String columnWod = "wod";
+        final static String columnObjectId = "objectId";
     }
 }

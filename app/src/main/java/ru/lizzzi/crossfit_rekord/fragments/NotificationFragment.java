@@ -27,7 +27,7 @@ import java.util.Map;
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.activity.MainActivity;
 import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterNotification;
-import ru.lizzzi.crossfit_rekord.data.NotificationDBHelper;
+import ru.lizzzi.crossfit_rekord.data.SQLiteStorageNotification;
 import ru.lizzzi.crossfit_rekord.loaders.NotificationLoader;
 import ru.lizzzi.crossfit_rekord.interfaces.ChangeTitle;
 import ru.lizzzi.crossfit_rekord.interfaces.ListernerNotification;
@@ -140,7 +140,7 @@ public class NotificationFragment extends Fragment implements LoaderManager.Load
                                         public void onClick(DialogInterface dialogInterface, int i) {
                                             long lDateNote = Long.valueOf(stdateNote);
 
-                                            NotificationDBHelper mDBHelper = new NotificationDBHelper(getContext());
+                                            SQLiteStorageNotification mDBHelper = new SQLiteStorageNotification(getContext());
                                             mDBHelper.deleteNotification(lDateNote);
 
                                             rvNotoficationList.setVisibility(View.INVISIBLE);

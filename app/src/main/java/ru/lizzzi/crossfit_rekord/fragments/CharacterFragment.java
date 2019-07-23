@@ -15,7 +15,7 @@ import java.util.List;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterCharacter;
-import ru.lizzzi.crossfit_rekord.data.DefinitionDBHelper;
+import ru.lizzzi.crossfit_rekord.data.SQLiteStorageDefinition;
 import ru.lizzzi.crossfit_rekord.interfaces.ChangeTitle;
 import ru.lizzzi.crossfit_rekord.interfaces.ListernerCharacter;
 
@@ -41,12 +41,12 @@ public class CharacterFragment extends Fragment {
             listernerChangeTitle.changeTitle(R.string.title_Character_Fragment, R.string.title_Character_Fragment);
         }
 
-        DefinitionDBHelper definitionDBHelper = new DefinitionDBHelper(getContext());
-        if (!definitionDBHelper.checkDataBase()) {
-            definitionDBHelper.createDataBase();
+        SQLiteStorageDefinition dbStorage = new SQLiteStorageDefinition(getContext());
+        if (!dbStorage.checkDataBase()) {
+            dbStorage.createDataBase();
         }
 
-        List<String> listCharacter = definitionDBHelper.getListCharacters();
+        List<String> listCharacter = dbStorage.getListCharacters();
         RecyclerAdapterCharacter adapter = new RecyclerAdapterCharacter(
                 listCharacter,
                 new ListernerCharacter() {

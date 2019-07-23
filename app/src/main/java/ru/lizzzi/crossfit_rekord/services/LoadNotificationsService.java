@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 
 import ru.lizzzi.crossfit_rekord.activity.MainActivity;
 import ru.lizzzi.crossfit_rekord.backendless.BackendlessQueries;
-import ru.lizzzi.crossfit_rekord.data.NotificationDBHelper;
+import ru.lizzzi.crossfit_rekord.data.SQLiteStorageNotification;
 import ru.lizzzi.crossfit_rekord.inspectionСlasses.Network;
 
 public class LoadNotificationsService extends Service {
@@ -71,9 +71,9 @@ public class LoadNotificationsService extends Service {
     }
 
     private String getLastDateCheck() {
-        NotificationDBHelper notificationDBHelper =
-                new  NotificationDBHelper(getBaseContext());
-        long dateLastCheck = notificationDBHelper.datelastcheck();
+        SQLiteStorageNotification SQLiteStorageNotification =
+                new SQLiteStorageNotification(getBaseContext());
+        long dateLastCheck = SQLiteStorageNotification.datelastcheck();
         if (dateLastCheck == 0) {
             GregorianCalendar today = new GregorianCalendar();
             Date timeNow = today.getTime();
@@ -94,8 +94,8 @@ public class LoadNotificationsService extends Service {
     }
 
     private void writeNotificationInDB(List<Map> notificationList) {
-        NotificationDBHelper notificationDBHelper =
-                new  NotificationDBHelper(getBaseContext());
+        SQLiteStorageNotification SQLiteStorageNotification =
+                new SQLiteStorageNotification(getBaseContext());
         for(int i = 0; i < notificationList.size(); i++) {
             try {
                 String headerNotification = String.valueOf(notificationList.get(i).get("header"));
@@ -106,7 +106,7 @@ public class LoadNotificationsService extends Service {
                 Date notificationDate = sdf.parse(dateNotification);
                 long timeNotification = notificationDate.getTime();
                 int NOT_VIEWED = 0;
-                notificationDBHelper.saveNotification(
+                SQLiteStorageNotification.saveNotification(
                         timeNotification,
                         headerNotification,
                         textNotification,

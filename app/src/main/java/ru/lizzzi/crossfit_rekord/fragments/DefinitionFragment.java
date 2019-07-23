@@ -14,7 +14,7 @@ import java.util.Map;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterDefinition;
-import ru.lizzzi.crossfit_rekord.data.DefinitionDBHelper;
+import ru.lizzzi.crossfit_rekord.data.SQLiteStorageDefinition;
 import ru.lizzzi.crossfit_rekord.interfaces.ChangeTitle;
 
 public class DefinitionFragment extends Fragment {
@@ -49,8 +49,8 @@ public class DefinitionFragment extends Fragment {
         recViewDefinitions.setAdapter(adapter);
     }
 
-    private List<Map<String, String>> getListDefinitions(String selectCharacter) {
-        DefinitionDBHelper definitionDBHelper = new DefinitionDBHelper(getContext());
-        return definitionDBHelper.getTerminsAndDefinitions(selectCharacter);
+    private List<Map<String, String>> getListDefinitions(String selectedCharacter) {
+        SQLiteStorageDefinition dbStorage = new SQLiteStorageDefinition(getContext());
+        return dbStorage.getTerminsAndDefinitions(selectedCharacter);
     }
 }

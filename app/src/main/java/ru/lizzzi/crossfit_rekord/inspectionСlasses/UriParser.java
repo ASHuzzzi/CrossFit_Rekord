@@ -1,30 +1,30 @@
 package ru.lizzzi.crossfit_rekord.inspectionСlasses;
 
+import android.net.Uri;
 import android.support.annotation.NonNull;
 
 //класс создает ссылку для переадресации на сайт
-public class ConstructorLinks {
+public class UriParser {
 
-    public String constructorLinks (int selectedGym,
-                                    int selectedDay,
-                                    String startTime,
-                                    String selectType) {
+    public Uri getURI(int selectedGym,
+                      int selectedDay,
+                      String startTime,
+                      String selectType) {
         String workoutType = (selectType.equals("CrossFit"))
                 ? selectType
                 : getWorkoutType(selectType);
 
         String selectedGymForURL = (selectedGym != 2) ? "" : "2";
 
-        String stURL = "http://i.crossfitrekord.ru/rec";
-
-        return stURL
+        return Uri.parse(
+                "http://i.crossfitrekord.ru/rec"
                 + selectedGymForURL
                 + ".php?day="
                 + selectedDay
                 + "&time="
                 + startTime
                 + "%20"
-                + workoutType;
+                + workoutType);
     }
 
     private String getWorkoutType(@NonNull String workoutType) {
@@ -51,6 +51,7 @@ public class ConstructorLinks {
 
             case "Muay Thai":
                 workoutType = "Muay%20Thai";
+                break;
         }
         return workoutType;
     }

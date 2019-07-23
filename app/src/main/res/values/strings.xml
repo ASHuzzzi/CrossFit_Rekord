@@ -31,7 +31,7 @@
     <string name="hint_password">Введите пароль</string>
     <string name="hint_check_password">Введите пароль еще раз</string>
 
-    <!-- Значения для поля GymSheduleFragment -->
+    <!-- Значения для поля GymScheduleFragment -->
     <string name="gymNameParnas">Парнас</string>
     <string name="gymNameMyzhestvo">Мужества</string>
     <integer name="selectSheduleParnas">1</integer>

@@ -34,7 +34,7 @@ import java.util.Locale;
 import java.util.Objects;
 
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.data.CalendarWodDBHelper;
+import ru.lizzzi.crossfit_rekord.data.SQLiteStorageWod;
 import ru.lizzzi.crossfit_rekord.inspectionСlasses.Network;
 import ru.lizzzi.crossfit_rekord.loaders.SaveLoadResultLoader;
 
@@ -292,7 +292,7 @@ public class EnterResultActivity
                 e.printStackTrace();
             }
 
-            CalendarWodDBHelper dbHelper = new CalendarWodDBHelper(this);
+            SQLiteStorageWod dbHelper = new SQLiteStorageWod(this);
             switch (loader.getId()) {
                 
                 case LOADER_START_SAVE:

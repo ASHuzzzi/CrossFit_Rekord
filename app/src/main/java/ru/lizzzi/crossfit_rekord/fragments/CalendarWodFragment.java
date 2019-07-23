@@ -25,7 +25,6 @@ import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
 
-import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -35,7 +34,7 @@ import java.util.List;
 import java.util.Locale;
 
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.data.CalendarWodDBHelper;
+import ru.lizzzi.crossfit_rekord.data.SQLiteStorageWod;
 import ru.lizzzi.crossfit_rekord.inspectionСlasses.Network;
 import ru.lizzzi.crossfit_rekord.interfaces.ChangeTitle;
 import ru.lizzzi.crossfit_rekord.loaders.CalendarWodLoader;
@@ -47,7 +46,7 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
 
     private final static int LOADER_ID = 1; //идентефикатор loader'а
 
-    private CalendarWodDBHelper calendarWodDBHelper;
+    private SQLiteStorageWod dbStorage;
 
     private static final String APP_PREFERENCES = "audata";
     private static final String APP_PREFERENCES_OBJECTID = "ObjectId";
@@ -88,8 +87,8 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
         layoutErrorCalendarWod.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
 
-        calendarWodDBHelper = new CalendarWodDBHelper(getContext());
-        calendarWodDBHelper.createDataBase();
+        dbStorage = new SQLiteStorageWod(getContext());
+        dbStorage.createDataBase();
 
         Calendar c = Calendar.getInstance();
         int maximumDateYear = c.get(Calendar.YEAR);
@@ -235,7 +234,7 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
     public void onLoadFinished(@NonNull Loader<List<Date>> loader, List<Date> dates) {
         if (dates != null) {
             String userId = sharedPreferences.getString(APP_PREFERENCES_OBJECTID, "");
-            calendarWodDBHelper.saveDates(userId, dates);
+            dbStorage.saveDates(userId, dates);
             showSelectedDates(dates);
         } else {
             layoutErrorCalendarWod.setVisibility(View.VISIBLE);
@@ -294,11 +293,11 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
         if (getLoaderManager().hasRunningLoaders()) {
             getLoaderManager().destroyLoader(LOADER_ID);
         }
-        calendarWodDBHelper.close();
+        dbStorage.close();
     }
 
     public void getDates(final long timeStart, final long timeFinish) {
-        List<Date> selectDates = calendarWodDBHelper.selectDates(
+        List<Date> selectDates = dbStorage.selectDates(
                 sharedPreferences.getString(APP_PREFERENCES_OBJECTID, ""),
                 timeStart,
                 timeFinish);

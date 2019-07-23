@@ -33,7 +33,7 @@ import com.backendless.Backendless;
 import java.util.Objects;
 
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.data.NotificationDBHelper;
+import ru.lizzzi.crossfit_rekord.data.SQLiteStorageNotification;
 import ru.lizzzi.crossfit_rekord.fragments.AboutMeFragment;
 import ru.lizzzi.crossfit_rekord.fragments.CalendarWodFragment;
 import ru.lizzzi.crossfit_rekord.fragments.CharacterFragment;
@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements
     public final static String PARAM_STATUS = "status";
     public final static String BROADCAST_ACTION = "ru.lizzzi.crossfit_rekord.activity";
 
-    private NotificationDBHelper notificationDBHelper;
+    private SQLiteStorageNotification dbStorage;
 
     private TextView textNotificationCounter;
     private NavigationView navigationView;
@@ -176,8 +176,8 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void checkForAvailabilityDB() {
-        notificationDBHelper = new NotificationDBHelper(getContext());
-        notificationDBHelper.createDataBase();
+        dbStorage = new SQLiteStorageNotification(getContext());
+        dbStorage.createDataBase();
     }
 
     private void initBackendlessApi() {
@@ -223,9 +223,9 @@ public class MainActivity extends AppCompatActivity implements
     private void initializeCountDrawer() {
         new Thread(new Runnable() {
             public void run() {
-                boolean dbIsAvailable =  notificationDBHelper.checkTable();
+                boolean dbIsAvailable =  dbStorage.checkTable();
                 if(dbIsAvailable){
-                    int unreadNotifications = notificationDBHelper.getUnreadNotifications();
+                    int unreadNotifications = dbStorage.getUnreadNotifications();
                     String stCounter =
                             (unreadNotifications > 0) ? String.valueOf(unreadNotifications) : "";
                     textNotificationCounter.setGravity(Gravity.CENTER_VERTICAL);

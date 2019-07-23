@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.fragments.RecordForTrainingTL.RecordForTrainingFragment;
+import ru.lizzzi.crossfit_rekord.fragments.RecordForTrainingFragment;
 
 public class PageAdapterRecord extends FragmentPagerAdapter {
     private Context context;

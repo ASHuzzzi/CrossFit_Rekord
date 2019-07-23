@@ -8,6 +8,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.provider.BaseColumns;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -18,20 +19,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import ru.lizzzi.crossfit_rekord.data.NotificationDBContract.Notification;
-
-public class NotificationDBHelper extends SQLiteOpenHelper {
+public class SQLiteStorageNotification extends SQLiteOpenHelper {
 
     // путь к базе данных вашего приложения
     @SuppressLint("SdCardPath")
     private static String DB_PATH = "/data/data/ru.lizzzi.crossfit_rekord/databases/";
     private static String DB_NAME = "Notification.db";
-    private SQLiteDatabase myDataBase;
-    private final Context mContext;
+    private SQLiteDatabase database;
+    private final Context context;
 
-    public NotificationDBHelper(Context context) {
+    public SQLiteStorageNotification(Context context) {
         super(context, DB_NAME, null, 1);
-        this.mContext = context;
+        this.context = context;
     }
 
     /**
@@ -74,7 +73,7 @@ public class NotificationDBHelper extends SQLiteOpenHelper {
      * */
     private void copyDataBase() throws IOException{
         //Открываем локальную БД как входящий поток
-        InputStream myInput = mContext.getAssets().open("db/" + DB_NAME);
+        InputStream myInput = context.getAssets().open("db/" + DB_NAME);
 
         //Путь ко вновь созданной БД
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
@@ -100,14 +99,14 @@ public class NotificationDBHelper extends SQLiteOpenHelper {
     public void openDataBase() throws SQLException {
         //открываем БД
         String myPath = DB_PATH + DB_NAME;
-        myDataBase = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
-        myDataBase.disableWriteAheadLogging();
+        database = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
+        database.disableWriteAheadLogging();
     }
 
     @Override
     public synchronized void close() {
-        if(myDataBase != null)
-            myDataBase.close();
+        if(database != null)
+            database.close();
         super.close();
     }
 
@@ -122,12 +121,12 @@ public class NotificationDBHelper extends SQLiteOpenHelper {
     }
 
     public long datelastcheck(){
-        myDataBase = this.getReadableDatabase();
+        database = this.getReadableDatabase();
         long stLastDateCheck = 0;
         String[] columns = new  String[]{"MAX(" +
-                NotificationDBContract.Notification.columnDateNote + ")"};
-        Cursor cursor = myDataBase.query(true,
-                NotificationDBContract.Notification.TABLE_NAME,
+                Notification.columnDateNote + ")"};
+        Cursor cursor = database.query(true,
+                Notification.TABLE_NAME,
                 columns,
                 null,
                 null,
@@ -146,12 +145,12 @@ public class NotificationDBHelper extends SQLiteOpenHelper {
         if (cursor != null) {
             cursor.close();
         }
-        myDataBase.close();
+        database.close();
         return stLastDateCheck;
     }
 
     public void saveNotification(long dateNote, String header, String text, String codeNote, int viewed){
-        myDataBase = this.getWritableDatabase();
+        database = this.getWritableDatabase();
         ContentValues newValues = new ContentValues();
 
         newValues.put(Notification.columnDateNote, dateNote);
@@ -159,15 +158,15 @@ public class NotificationDBHelper extends SQLiteOpenHelper {
         newValues.put(Notification.columnText, text);
         newValues.put(Notification.columnCodeNote, codeNote);
         newValues.put(Notification.columnViewed, viewed);
-        myDataBase.insert(Notification.TABLE_NAME, null, newValues);
-        myDataBase.close();
+        database.insert(Notification.TABLE_NAME, null, newValues);
+        database.close();
     }
 
     public List<Map<String, Object>> loadNotification() {
-        myDataBase = this.getReadableDatabase();
+        database = this.getReadableDatabase();
         List<Map<String, Object>> listNotification = new ArrayList<>();
 
-        Cursor cursor = myDataBase.query(true,
+        Cursor cursor = database.query(true,
                 Notification.TABLE_NAME,
                 null,
                 null,
@@ -204,11 +203,11 @@ public class NotificationDBHelper extends SQLiteOpenHelper {
     }
 
     public ArrayList<String> selectTextNotification(long date){
-        myDataBase = this.getReadableDatabase();
+        database = this.getReadableDatabase();
 
         ArrayList<String> arrListNotification = new ArrayList<>();
         String[]  columns = new  String[]{Notification.columnText, Notification.columnViewed};
-        Cursor cursor = myDataBase.query(Notification.TABLE_NAME,
+        Cursor cursor = database.query(Notification.TABLE_NAME,
                 columns,
                 Notification.columnDateNote + "= '" + date + "'",
                 null,
@@ -233,23 +232,23 @@ public class NotificationDBHelper extends SQLiteOpenHelper {
     }
 
     public void updateStatusNotification(long date, int status){
-        myDataBase = this.getWritableDatabase();
+        database = this.getWritableDatabase();
 
         ContentValues statusNotification = new ContentValues();
         statusNotification.put("viewed", status);
-        myDataBase.update(Notification.TABLE_NAME,
+        database.update(Notification.TABLE_NAME,
                 statusNotification,
                 Notification.columnDateNote + "= '" + date + "'",
                 null);
     }
 
     public int getUnreadNotifications() {
-        myDataBase = this.getReadableDatabase();
+        database = this.getReadableDatabase();
         int stLastDateCheck = 0;
         String[] columns = new String[]{"COUNT(" +
                 Notification.columnViewed + ")"};
-        Cursor cursor = myDataBase.query(true,
-                NotificationDBContract.Notification.TABLE_NAME,
+        Cursor cursor = database.query(true,
+                Notification.TABLE_NAME,
                 columns,
                 Notification.columnViewed + "= '0'",
                 null,
@@ -272,20 +271,20 @@ public class NotificationDBHelper extends SQLiteOpenHelper {
     }
 
     public void deleteNotification(long date){
-        myDataBase = this.getReadableDatabase();
-
-        myDataBase.delete(
+        database = this.getReadableDatabase();
+        database.delete(
                 Notification.TABLE_NAME,
                 Notification.columnDateNote + "= '" + date + "'",
                 null
         );
+        database.close();
     }
 
     //проверяем наличие таблицы в базе. если её нет, то повторяем копирование.
     public boolean checkTable(){
-        myDataBase = this.getReadableDatabase();
+        database = this.getReadableDatabase();
         try {
-            Cursor cursor = myDataBase.query(Notification.TABLE_NAME,
+            Cursor cursor = database.query(Notification.TABLE_NAME,
                     null,
                     null,
                     null,
@@ -296,6 +295,7 @@ public class NotificationDBHelper extends SQLiteOpenHelper {
             if (cursor != null) {
                 cursor.close();
             }
+            database.close();
             return true;
         } catch (SQLException e) {
             try {
@@ -303,7 +303,18 @@ public class NotificationDBHelper extends SQLiteOpenHelper {
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
+            database.close();
             return false;
         }
+    }
+
+    public static final class Notification implements BaseColumns {
+        final static String TABLE_NAME = "notification";
+        final static String columnCodeNote = "codeNote";
+        final static String columnDateNote = "dateNote";
+        final static String columnHeader = "header";
+        final static String columnNumberNote = "numberNote";
+        final static String columnText = "text";
+        final static String columnViewed = "viewed";
     }
 }

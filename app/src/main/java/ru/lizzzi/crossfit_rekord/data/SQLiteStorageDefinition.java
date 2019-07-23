@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.provider.BaseColumns;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -16,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class DefinitionDBHelper  extends SQLiteOpenHelper{
+public class SQLiteStorageDefinition extends SQLiteOpenHelper{
 
     // путь к базе данных вашего приложения
     @SuppressLint("SdCardPath")
@@ -25,7 +26,7 @@ public class DefinitionDBHelper  extends SQLiteOpenHelper{
     private SQLiteDatabase database;
     private final Context context;
 
-    public DefinitionDBHelper(Context context) {
+    public SQLiteStorageDefinition(Context context) {
         super(context, DB_NAME, null, 1);
         this.context = context;
     }
@@ -115,10 +116,10 @@ public class DefinitionDBHelper  extends SQLiteOpenHelper{
     public ArrayList<String> getListCharacters() {
         database = this.getReadableDatabase();
         ArrayList<String> listCharacter = new ArrayList<>();
-        String[] columns = new  String[] {DefinitionDbContarct.DBdefinition.Column_character};
+        String[] columns = new  String[] {DBdefinition.Column_character};
         Cursor cursor = database.query(
                 true,
-                DefinitionDbContarct.DBdefinition.TABLE_NAME,
+                DBdefinition.TABLE_NAME,
                 columns,
                 null,
                 null,
@@ -146,12 +147,12 @@ public class DefinitionDBHelper  extends SQLiteOpenHelper{
         database = this.getReadableDatabase();
         List<Map<String, String>> termsOfSelectedCharacter = new ArrayList<>();
         String[] columns = new  String[] {
-                DefinitionDbContarct.DBdefinition.Column_termin,
-                DefinitionDbContarct.DBdefinition.Column_description};
+                DBdefinition.Column_termin,
+                DBdefinition.Column_description};
         Cursor cursor = database.query(
-                DefinitionDbContarct.DBdefinition.TABLE_NAME,
+                DBdefinition.TABLE_NAME,
                 columns,
-                DefinitionDbContarct.DBdefinition.Column_character + "= '" + character + "'",
+                DBdefinition.Column_character + "= '" + character + "'",
                 null,
                 null,
                 null,
@@ -160,9 +161,9 @@ public class DefinitionDBHelper  extends SQLiteOpenHelper{
             do {
                 Map<String, String> itemList = new HashMap<>();
                 String termin = cursor.getString(
-                        cursor.getColumnIndex(DefinitionDbContarct.DBdefinition.Column_termin));
+                        cursor.getColumnIndex(DBdefinition.Column_termin));
                 String description = cursor.getString(
-                        cursor.getColumnIndex(DefinitionDbContarct.DBdefinition.Column_description));
+                        cursor.getColumnIndex(DBdefinition.Column_description));
                 itemList.put("termin", termin);
                 itemList.put("description", description);
                 termsOfSelectedCharacter.add(itemList);
@@ -173,5 +174,14 @@ public class DefinitionDBHelper  extends SQLiteOpenHelper{
         }
         database.close();
         return termsOfSelectedCharacter;
+    }
+
+    public static final class DBdefinition implements BaseColumns {
+        final static String TABLE_NAME = "definition";
+        final static String Column_termin = "termin";
+        final static String Column_description = "description";
+        final static String Column_character = "character";
+        final static String Column_attribute = "attribute";
+
     }
 }

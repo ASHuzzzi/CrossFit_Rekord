@@ -8,6 +8,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.provider.BaseColumns;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -16,21 +17,19 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import ru.lizzzi.crossfit_rekord.data.MyResultDBContract.dbMyResult;
-
-public class MyResultDBHelper extends SQLiteOpenHelper {
+public class SQLiteStorageUserResult extends SQLiteOpenHelper {
 
     // путь к базе данных вашего приложения
     @SuppressLint("SdCardPath")
     private static String DB_PATH = "/data/data/ru.lizzzi.crossfit_rekord/databases/";
     private static String DB_NAME = "MyResult.db";
-    private SQLiteDatabase myDataBase;
-    private final Context mContext;
+    private SQLiteDatabase database;
+    private final Context context;
     private static final int DB_VERSION = 2;
 
-    public MyResultDBHelper(Context context) {
+    public SQLiteStorageUserResult(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
-        this.mContext = context;
+        this.context = context;
     }
 
     /**
@@ -60,7 +59,7 @@ public class MyResultDBHelper extends SQLiteOpenHelper {
         try{
             String myPath = DB_PATH + DB_NAME;
             checkDB = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
-            myDataBase = this.getReadableDatabase();
+            database = this.getReadableDatabase();
         }catch(SQLiteException e){
             //база еще не существует
         }
@@ -76,7 +75,7 @@ public class MyResultDBHelper extends SQLiteOpenHelper {
      * */
     private void copyDataBase() throws IOException{
         //Открываем локальную БД как входящий поток
-        InputStream myInput = mContext.getAssets().open("db/" + DB_NAME);
+        InputStream myInput = context.getAssets().open("db/" + DB_NAME);
 
         //Путь ко вновь созданной БД
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
@@ -102,14 +101,14 @@ public class MyResultDBHelper extends SQLiteOpenHelper {
     public void openDataBase() throws SQLException {
         //открываем БД
         String myPath = DB_PATH + DB_NAME;
-        myDataBase = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
-        myDataBase.disableWriteAheadLogging();
+        database = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
+        database.disableWriteAheadLogging();
     }
 
     @Override
     public synchronized void close() {
-        if(myDataBase != null)
-            myDataBase.close();
+        if(database != null)
+            database.close();
         super.close();
     }
 
@@ -133,25 +132,24 @@ public class MyResultDBHelper extends SQLiteOpenHelper {
         }
     }
 
-    public void saveResult(String stExercise, String stResult){
-        myDataBase = this.getWritableDatabase();
+    public void setResult(String stExercise, String stResult){
+        database = this.getWritableDatabase();
         ContentValues newValues = new ContentValues();
-
         newValues.put(dbMyResult.columnExercise, stExercise);
         newValues.put(dbMyResult.columnResult, stResult);
-        myDataBase.update(
+        database.update(
                 dbMyResult.TABLE_NAME,
                 newValues,
                 dbMyResult.columnExercise + "= ?",
                 new String[]{stExercise});
-        myDataBase.close();
+        database.close();
     }
 
-    public Map<String, String> loadResult() {
-        myDataBase = this.getReadableDatabase();
-        Map<String, String> listResult = new HashMap<>();
+    public Map<String, String> getResult() {
+        database = this.getReadableDatabase();
+        Map<String, String> result = new HashMap<>();
 
-        Cursor cursor = myDataBase.query(
+        Cursor cursor = database.query(
                 dbMyResult.TABLE_NAME,
                 null,
                 null,
@@ -161,19 +159,23 @@ public class MyResultDBHelper extends SQLiteOpenHelper {
                 null,
                 null);
         if (cursor != null && cursor.moveToFirst()) {
-
             String stExercise;
             String stResult;
-
             do {
                 stExercise = cursor.getString(cursor.getColumnIndex(dbMyResult.columnExercise));
                 stResult = cursor.getString(cursor.getColumnIndex(dbMyResult.columnResult));
 
-                listResult.put(stExercise, stResult);
+                result.put(stExercise, stResult);
             } while (cursor.moveToNext());
             cursor.close();
         }
+        return result;
+    }
 
-        return listResult;
+    public static final class dbMyResult implements BaseColumns {
+
+        final static String TABLE_NAME = "myResult";
+        final static String columnExercise = "Exercise";
+        final static String columnResult = "Result";
     }
 }

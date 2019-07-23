@@ -1,11 +1,10 @@
-package ru.lizzzi.crossfit_rekord.fragments.RecordForTrainingTL;
+package ru.lizzzi.crossfit_rekord.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -24,17 +23,19 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterRecordForTrainingSelect;
-import ru.lizzzi.crossfit_rekord.inspectionСlasses.ConstructorLinks;
+import ru.lizzzi.crossfit_rekord.inspectionСlasses.UriParser;
 import ru.lizzzi.crossfit_rekord.inspectionСlasses.Network;
 import ru.lizzzi.crossfit_rekord.interfaces.ChangeTitle;
 import ru.lizzzi.crossfit_rekord.interfaces.ListenerRecordForTrainingSelect;
@@ -42,76 +43,60 @@ import ru.lizzzi.crossfit_rekord.loaders.TableFragmentLoader;
 
 public class RecordForTrainingFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<List<Map>>> {
 
+    private final static int LOADER_ID = 1; //идентефикатор loader'а
     private LinearLayout linLayoutError;
-    private LinearLayout linLauoutShedule;
-    private RecyclerView recyclerViewShedule;
+    private LinearLayout linLayoutSchedule;
+    private RecyclerView recyclerViewSchedule;
     private ProgressBar progressBar;
+    private Button buttonToday;
+    private Button buttonTomorrow;
+    private Button buttonAfterTomorrow;
+    private ImageView imageBackground;
 
     private RecyclerAdapterRecordForTrainingSelect adapter;
-    private GregorianCalendar numberDayOfWeek; // для преобразования выбранного дня в int
 
-    private int dayOfWeekSelectedDay; // выбранный пользователем день
-    private final static int LOADER_ID = 1; //идентефикатор loader'а
-
-    private Handler handlerOpenFragment;
     private Thread threadOpenFragment;
     private Runnable runnableOpenFragment;
 
     private boolean todayOrNot;
     private List<List<Map>> schedule;
-    private int selectDay;
-
-    private Button buttontToday;
-    private Button buttontTommorow;
-    private Button buttontAftertommorow;
-
-    private ImageView imageBackground;
+    private int selectedDayOfWeek; // выбранный пользователем день
+    private int selectedDayForUri;
     private int selectedGym;
 
-    @SuppressLint({"HandlerLeak", "ClickableViewAccessibility"})
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.fragment_record_for_training_select, container, false);
+        View view = inflater.inflate(R.layout.fragment_record_for_training_select, container, false);
         Objects.requireNonNull(getActivity()).setTitle(R.string.title_RecordForTraining_Fragment);
 
-        buttontToday = v.findViewById(R.id.btToday);
-        buttontTommorow = v.findViewById(R.id.btTommorow);
-        buttontAftertommorow = v.findViewById(R.id.btAftertommorow);
-        Button buttonError = v.findViewById(R.id.button6);
-        recyclerViewShedule = v.findViewById(R.id.rvTrainingTime);
-        linLayoutError = v.findViewById(R.id.llEror_RfTS);
-        linLauoutShedule = v.findViewById(R.id.llListTime);
-        progressBar = v.findViewById(R.id.pbRfTS);
-        imageBackground = v.findViewById(R.id.iv_RfTS);
+        buttonToday = view.findViewById(R.id.btToday);
+        buttonTomorrow = view.findViewById(R.id.btTommorow);
+        buttonAfterTomorrow = view.findViewById(R.id.btAftertommorow);
+        Button buttonError = view.findViewById(R.id.button6);
+        recyclerViewSchedule = view.findViewById(R.id.rvTrainingTime);
+        linLayoutError = view.findViewById(R.id.llEror_RfTS);
+        linLayoutSchedule = view.findViewById(R.id.llListTime);
+        progressBar = view.findViewById(R.id.pbRfTS);
+        imageBackground = view.findViewById(R.id.iv_RfTS);
 
-        numberDayOfWeek = new GregorianCalendar();
+        //получаю значения для кнопок
+        final Date today = new Date();
+        final GregorianCalendar gregorianCalendar = new GregorianCalendar();
+        gregorianCalendar.add(Calendar.DAY_OF_YEAR, 1);
+        final Date tomorrow = gregorianCalendar.getTime();
+        gregorianCalendar.add(Calendar.DAY_OF_YEAR, 1);
+        final Date afterTomorrow = gregorianCalendar.getTime();
 
         Bundle bundle = getArguments();
-        if (bundle != null) {
-            selectedGym = bundle.getInt("gym");
-        } else {
-            selectedGym = Objects.requireNonNull(
-                    getContext()).getResources().getInteger(R.integer.selectSheduleParnas);
-        }
+        selectedGym = (bundle != null)
+                ? bundle.getInt("gym")
+                : Objects.requireNonNull(
+                        getContext()).getResources().getInteger(R.integer.selectSheduleParnas);
 
-        handlerOpenFragment = new Handler() {
-            @SuppressLint("ShowToast")
-            @Override
-            public void handleMessage(Message msg) {
-                Bundle bundle = msg.getData();
-                boolean resultCheck = bundle.getBoolean("open");
-                if (resultCheck) {
-                    linLayoutError.setVisibility(View.INVISIBLE);
-                    progressBar.setVisibility(View.VISIBLE);
-                    startAsyncTaskLoader();
-                } else {
-                    linLayoutError.setVisibility(View.VISIBLE);
-                    progressBar.setVisibility(View.INVISIBLE);
-                }
-            }
-        };
+        final Handler handler = new Handler(RecordForTrainingFragment.this);
 
         //поток запускаемый при создании экрана (запуск происходит из onStart)
         runnableOpenFragment = new Runnable() {
@@ -121,40 +106,25 @@ public class RecordForTrainingFragment extends Fragment implements LoaderManager
                 Bundle bundle = new Bundle();
                 boolean checkDone = network.checkConnection();
                 if (checkDone) {
-                    dayOfWeekSelectedDay = numberDayOfWeek.get(Calendar.DAY_OF_WEEK)-1;
-                    if (dayOfWeekSelectedDay == 0){
-                        dayOfWeekSelectedDay = 7;
-                    }
+                    gregorianCalendar.setTime(today);
+                    selectedDayOfWeek = gregorianCalendar.get(Calendar.DAY_OF_WEEK);
                     todayOrNot = true;
-                    selectDay = 0;
-                    bundle.putBoolean("open", true);
-
+                    selectedDayForUri = 0;
+                    bundle.putBoolean("checkConnection", true);
                 } else {
-                    bundle.putBoolean("open", false);
+                    bundle.putBoolean("checkConnection", false);
                 }
-                Message msg = handlerOpenFragment.obtainMessage();
-                msg.setData(bundle);
-                handlerOpenFragment.sendMessage(msg);
+                Message message = handler.obtainMessage();
+                message.setData(bundle);
+                handler.sendMessage(message);
             }
         };
 
-        //получаю значения для кнопок
-        final Date today = new Date();
-        final GregorianCalendar gregorianCalendar = new GregorianCalendar();
-        gregorianCalendar.add(Calendar.DAY_OF_YEAR, 1);
-        final Date tomorrow = gregorianCalendar.getTime();
-        gregorianCalendar.add(Calendar.DAY_OF_YEAR, 1);
-        final Date aftertomorrow = gregorianCalendar.getTime();
-
-        @SuppressLint("SimpleDateFormat")
-        final SimpleDateFormat sdf = new SimpleDateFormat("EEE.\n d MMMM");
-        final String currentToday = sdf.format(today);
-        final String currentTomorrow = sdf.format(tomorrow);
-        final String currentAftertommorow = sdf.format(aftertomorrow);
-
-        buttontToday.setText(currentToday);
-        buttontTommorow.setText(currentTomorrow);
-        buttontAftertommorow.setText(currentAftertommorow);
+        final SimpleDateFormat simpleDateFormat =
+                new SimpleDateFormat("EEE.\n d MMMM", Locale.getDefault());
+        buttonToday.setText(simpleDateFormat.format(today));
+        buttonTomorrow.setText(simpleDateFormat.format(tomorrow));
+        buttonAfterTomorrow.setText(simpleDateFormat.format(afterTomorrow));
 
         buttonError.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -168,54 +138,48 @@ public class RecordForTrainingFragment extends Fragment implements LoaderManager
             }
         });
 
-        buttontToday.setOnTouchListener(new View.OnTouchListener() {
+        buttonToday.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (adapter != null) {
                     gregorianCalendar.setTime(today);
-                    dayOfWeekSelectedDay = numberDayOfWeek.get(Calendar.DAY_OF_WEEK)-1;
-                    if (dayOfWeekSelectedDay == 0) {
-                        dayOfWeekSelectedDay = 7;
-                    }
+                    selectedDayOfWeek = gregorianCalendar.get(Calendar.DAY_OF_WEEK);
                     todayOrNot = true;
-                    selectDay = 0;
-                    drawList(schedule.get(dayOfWeekSelectedDay -1));
+                    selectedDayForUri = 0;
+                    drawList(schedule.get(selectedDayOfWeek -1));
                 }
                 return true ;
             }
         });
 
-        buttontTommorow.setOnTouchListener(new View.OnTouchListener() {
+        buttonTomorrow.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (adapter != null) {
                     gregorianCalendar.setTime(tomorrow);
-                    dayOfWeekSelectedDay = numberDayOfWeek.get(Calendar.DAY_OF_WEEK);
+                    selectedDayOfWeek = gregorianCalendar.get(Calendar.DAY_OF_WEEK);
                     todayOrNot = false;
-                    selectDay = 1;
-                    drawList(schedule.get(dayOfWeekSelectedDay -1));
+                    selectedDayForUri = 1;
+                    drawList(schedule.get(selectedDayOfWeek -1));
                 }
                 return true ;
             }
         });
 
-        buttontAftertommorow.setOnTouchListener(new View.OnTouchListener() {
+        buttonAfterTomorrow.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (adapter != null) {
-                    gregorianCalendar.setTime(aftertomorrow);
-                    dayOfWeekSelectedDay = numberDayOfWeek.get(Calendar.DAY_OF_WEEK)+1;
-                    if (dayOfWeekSelectedDay == 8) {
-                        dayOfWeekSelectedDay = 1;
-                    }
+                    gregorianCalendar.setTime(afterTomorrow);
+                    selectedDayOfWeek = gregorianCalendar.get(Calendar.DAY_OF_WEEK);
                     todayOrNot = false;
-                    selectDay = 2;
-                    drawList(schedule.get(dayOfWeekSelectedDay -1));
+                    selectedDayForUri = 2;
+                    drawList(schedule.get(selectedDayOfWeek -1));
                 }
                 return true ;
             }
         });
-        return v;
+        return view;
     }
 
     private void startAsyncTaskLoader() {
@@ -236,15 +200,14 @@ public class RecordForTrainingFragment extends Fragment implements LoaderManager
     public void onLoadFinished(@NonNull Loader<List<List<Map>>> loader, List<List<Map>> data) {
         if (data != null) {
             schedule = data;
-            drawList(schedule.get(dayOfWeekSelectedDay -1));
-
+            drawList(schedule.get(selectedDayOfWeek -1));
             linLayoutError.setVisibility(View.INVISIBLE);
             progressBar.setVisibility(View.INVISIBLE);
-            linLauoutShedule.setVisibility(View.VISIBLE);
+            linLayoutSchedule.setVisibility(View.VISIBLE);
         } else {
             linLayoutError.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.INVISIBLE);
-            linLauoutShedule.setVisibility(View.INVISIBLE);
+            linLayoutSchedule.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -253,52 +216,59 @@ public class RecordForTrainingFragment extends Fragment implements LoaderManager
     }
 
     private void drawList(List<Map> dailySchedule){
-        adapter = new RecyclerAdapterRecordForTrainingSelect(getContext(), dailySchedule,
-                todayOrNot, new ListenerRecordForTrainingSelect() {
+        adapter = new RecyclerAdapterRecordForTrainingSelect(
+                getContext(),
+                dailySchedule,
+                todayOrNot,
+                new ListenerRecordForTrainingSelect() {
             @Override
             public void selectTime(String startTime, String typesItem) {
                 if (startTime.equals("outTime") && typesItem.equals("outTime")) {
-                    Toast toast = Toast.makeText(getContext(), "Тренировка уже прошла. Выбери более позднее время!", Toast.LENGTH_LONG);
+                    Toast toast = Toast.makeText(
+                            getContext(),
+                            "Тренировка уже прошла. Выбери более позднее время!",
+                            Toast.LENGTH_LONG);
                     toast.setGravity(Gravity.CENTER, 0, 0);
                     toast.show();
                 } else {
-                    ConstructorLinks constructorLinks = new ConstructorLinks();
-                    String stOpenURL = constructorLinks.constructorLinks(selectedGym,selectDay, startTime, typesItem);
+                    UriParser uriParser = new UriParser();
+                    Uri uri = uriParser.getURI(selectedGym, selectedDayForUri, startTime, typesItem);
                     Intent intent = new Intent();
                     intent.setAction(Intent.ACTION_VIEW);
                     intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                    intent.setData(Uri.parse(stOpenURL));
+                    intent.setData(uri);
                     startActivity(intent);
-                    Objects.requireNonNull(getActivity()).overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+                    Objects.requireNonNull(getActivity()).
+                            overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
                 }
             }
         });
 
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
-        recyclerViewShedule.setLayoutManager(mLayoutManager);
-        recyclerViewShedule.setAdapter(adapter);
-        preSelectionButtonDay(selectDay);
+        recyclerViewSchedule.setLayoutManager(mLayoutManager);
+        recyclerViewSchedule.setAdapter(adapter);
+        setPressedButtons(selectedDayForUri);
     }
 
-    private void preSelectionButtonDay(int selectedDay){
+    private void setPressedButtons(int selectedDay) {
         switch (selectedDay) {
             case 0:
-                selectButtonDay(true, false, false);
+                pushButtons(true, false, false);
                 break;
             case 1:
-                selectButtonDay(false, true, false);
+                pushButtons(false, true, false);
                 break;
             case 2:
-                selectButtonDay(false, false, true);
+                pushButtons(false, false, true);
                 break;
         }
     }
 
     //метод применяющий выбор кнопок
-    private void selectButtonDay(boolean today, boolean tommorow, boolean aftertommorow) {
-        buttontToday.setPressed(today);
-        buttontTommorow.setPressed(tommorow);
-        buttontAftertommorow.setPressed(aftertommorow);
+    private void pushButtons(boolean today, boolean tomorrow, boolean afterTomorrow) {
+        buttonToday.setPressed(today);
+        buttonTomorrow.setPressed(tomorrow);
+        buttonAfterTomorrow.setPressed(afterTomorrow);
     }
 
     //в onStart делаем проверку на наличие данных в адаптаре. При первом запуске адаптер пустой и
@@ -306,34 +276,33 @@ public class RecordForTrainingFragment extends Fragment implements LoaderManager
     //при возврате через кнопку back адаптер будет не пустым поток не запуститься. что сохранит
     //состояние адаптера в положении перед открытием нового фрагмента
     @Override
-    public  void onStart() {
+    public void onStart() {
         super.onStart();
         if (adapter == null) {
-            linLauoutShedule.setVisibility(View.INVISIBLE);
+            linLayoutSchedule.setVisibility(View.INVISIBLE);
             linLayoutError.setVisibility(View.INVISIBLE);
             threadOpenFragment = new Thread(runnableOpenFragment);
             threadOpenFragment.setDaemon(true);
             threadOpenFragment.start();
         } else {
-            preSelectionButtonDay(selectDay);
-            linLauoutShedule.setVisibility(View.VISIBLE);
+            setPressedButtons(selectedDayForUri);
+            linLayoutSchedule.setVisibility(View.VISIBLE);
         }
 
         if (getActivity() instanceof ChangeTitle) {
             ChangeTitle listernerChangeTitle = (ChangeTitle) getActivity();
             listernerChangeTitle.changeTitle(R.string.title_RecordForTraining_Fragment, R.string.title_RecordForTraining_Fragment);
         }
-        int backgroungImage;
-        if (selectedGym == getResources().getInteger(R.integer.selectSheduleParnas)) {
-            backgroungImage = R.drawable.background_foto_1;
-        } else {
-            backgroungImage = R.drawable.background_foto_2;
-        }
+        int backgroundImage =
+                (selectedGym == getResources().getInteger(R.integer.selectSheduleParnas))
+                ? R.drawable.background_foto_1
+                : R.drawable.background_foto_2;
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             imageBackground.setImageDrawable(getResources().getDrawable(
-                    backgroungImage, Objects.requireNonNull(getContext()).getTheme()));
+                    backgroundImage, Objects.requireNonNull(getContext()).getTheme()));
         } else {
-            imageBackground.setImageDrawable(getResources().getDrawable(backgroungImage));
+            imageBackground.setImageDrawable(getResources().getDrawable(backgroundImage));
         }
     }
 
@@ -341,6 +310,30 @@ public class RecordForTrainingFragment extends Fragment implements LoaderManager
         super.onStop();
         if (getLoaderManager().hasRunningLoaders()) {
             getLoaderManager().destroyLoader(LOADER_ID);
+        }
+    }
+
+    private static class Handler extends android.os.Handler {
+        private final WeakReference<RecordForTrainingFragment> fragmentWeakReference;
+
+        Handler(RecordForTrainingFragment fragmentInstance) {
+            fragmentWeakReference = new WeakReference<>(fragmentInstance);
+        }
+
+        @Override
+        public void handleMessage(Message message) {
+            RecordForTrainingFragment fragment = fragmentWeakReference.get();
+            if (fragment != null) {
+                boolean resultCheck = message.getData().getBoolean("checkConnection");
+                if (resultCheck) {
+                    fragment.linLayoutError.setVisibility(View.INVISIBLE);
+                    fragment.progressBar.setVisibility(View.VISIBLE);
+                    fragment.startAsyncTaskLoader();
+                } else {
+                    fragment.linLayoutError.setVisibility(View.VISIBLE);
+                    fragment.progressBar.setVisibility(View.INVISIBLE);
+                }
+            }
         }
     }
 }
