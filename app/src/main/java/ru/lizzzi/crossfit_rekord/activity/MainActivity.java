@@ -33,17 +33,18 @@ import com.backendless.Backendless;
 import java.util.Objects;
 
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.data.NotificationDBHelper;
+import ru.lizzzi.crossfit_rekord.data.SQLiteStorageNotification;
 import ru.lizzzi.crossfit_rekord.fragments.AboutMeFragment;
 import ru.lizzzi.crossfit_rekord.fragments.CalendarWodFragment;
 import ru.lizzzi.crossfit_rekord.fragments.CharacterFragment;
 import ru.lizzzi.crossfit_rekord.fragments.MyResultsFragment;
+import ru.lizzzi.crossfit_rekord.fragments.AlarmSettingsFragment;
 import ru.lizzzi.crossfit_rekord.inspectionСlasses.AuthDataCheck;
 import ru.lizzzi.crossfit_rekord.fragments.ContactsFragment;
 import ru.lizzzi.crossfit_rekord.fragments.LoginFragment;
 import ru.lizzzi.crossfit_rekord.fragments.RecordForTrainingSelectFragment;
 import ru.lizzzi.crossfit_rekord.fragments.StartScreenFragment;
-import ru.lizzzi.crossfit_rekord.fragments.TableFragment;
+import ru.lizzzi.crossfit_rekord.fragments.ScheduleFragment;
 import ru.lizzzi.crossfit_rekord.interfaces.ChangeTitle;
 import ru.lizzzi.crossfit_rekord.interfaces.ChangeToggleStatus;
 import ru.lizzzi.crossfit_rekord.services.LoadNotificationsService;
@@ -67,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements
     public final static String PARAM_STATUS = "status";
     public final static String BROADCAST_ACTION = "ru.lizzzi.crossfit_rekord.activity";
 
-    private NotificationDBHelper notificationDBHelper;
+    private SQLiteStorageNotification dbStorage;
 
     private TextView textNotificationCounter;
     private NavigationView navigationView;
@@ -77,9 +78,12 @@ public class MainActivity extends AppCompatActivity implements
     private DrawerLayout drawer;
     private ActionBarDrawerToggle actionBarToggle;
 
+    String menuFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
         initNavigationView();
         initNotificationCounter();
@@ -119,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements
         linLayoutNavHeader.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                OpenFragment(StartScreenFragment.class);
+                OpenFragment(StartScreenFragment.class, null);
                 DrawerLayout drawer = findViewById(R.id.drawer_layout);
                 drawer.closeDrawer(GravityCompat.START);
             }
@@ -143,25 +147,25 @@ public class MainActivity extends AppCompatActivity implements
         if (checkIsDone) {
             if (!isServiceLoadNotificationRunning()) {
                 Intent intent;
-
-                // Создаем Intent для вызова сервиса,
-                // кладем туда параметр времени и код задачи
-                intent = new Intent(this, LoadNotificationsService.class).putExtra(PARAM_TIME, 7)
+                intent = new Intent(this, LoadNotificationsService.class)
+                        .putExtra(PARAM_TIME, 7)
                         .putExtra(PARAM_TASK, LOAD_NOTIFICATION);
-                // стартуем сервис
                 startService(intent);
             }
             changeToggleStatus(true);
-            if (fragment == null) {
+            menuFragment = getIntent().getStringExtra("notification");
+            if (menuFragment != null 
+                    && menuFragment.equalsIgnoreCase("RecordForTrainingSelectFragment")) {
+                OpenFragment(RecordForTrainingSelectFragment.class, null);
+            } else if (fragment == null) {
                 initializeCountDrawer();
-                OpenFragment(StartScreenFragment.class);
+                OpenFragment(StartScreenFragment.class, null);
             }
         } else {
             if (fragment == null) {
                 changeToggleStatus(false);
-                OpenFragment(LoginFragment.class);
+                OpenFragment(LoginFragment.class, null);
             }
-
         }
     }
 
@@ -172,8 +176,8 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void checkForAvailabilityDB() {
-        notificationDBHelper = new NotificationDBHelper(getContext());
-        notificationDBHelper.createDataBase();
+        dbStorage = new SQLiteStorageNotification(getContext());
+        dbStorage.createDataBase();
     }
 
     private void initBackendlessApi() {
@@ -219,15 +223,11 @@ public class MainActivity extends AppCompatActivity implements
     private void initializeCountDrawer() {
         new Thread(new Runnable() {
             public void run() {
-                boolean bCheckTable =  notificationDBHelper.checkTable();
-                if(bCheckTable){
-                    int i = notificationDBHelper.countNotification();
-                    String stCounter;
-                    if (i > 0 ){
-                        stCounter = String.valueOf(i);
-                    }else {
-                        stCounter = "";
-                    }
+                boolean dbIsAvailable =  dbStorage.checkTable();
+                if(dbIsAvailable){
+                    int unreadNotifications = dbStorage.getUnreadNotifications();
+                    String stCounter =
+                            (unreadNotifications > 0) ? String.valueOf(unreadNotifications) : "";
                     textNotificationCounter.setGravity(Gravity.CENTER_VERTICAL);
                     textNotificationCounter.setTypeface(null, Typeface.BOLD);
                     textNotificationCounter.setTextColor(getResources().getColor(R.color.colorAccent));
@@ -237,11 +237,11 @@ public class MainActivity extends AppCompatActivity implements
         }).run();
     }
 
-    private void OpenFragment(Class fragmentClass){
+    private void OpenFragment(Class fragmentClass, String tag){
         try {
             Fragment fragment = (Fragment) fragmentClass.newInstance();
             FragmentManager fragmentManager = getSupportFragmentManager();
-            for(int i = 0; i < (fragmentManager.getBackStackEntryCount()-1); i++) {
+            for(int i = 0; i < (fragmentManager.getBackStackEntryCount() - 1); i++) {
                 fragmentManager.popBackStack();
             }
             FragmentTransaction ft = fragmentManager.beginTransaction();
@@ -250,7 +250,7 @@ public class MainActivity extends AppCompatActivity implements
                     R.anim.push_out_left,
                     R.anim.pull_in_left,
                     R.anim.push_out_right);
-            ft.replace(R.id.container, fragment);
+            ft.replace(R.id.container, fragment, tag);
             ft.addToBackStack(null);
             ft.commit();
         } catch (Exception e) {
@@ -283,10 +283,11 @@ public class MainActivity extends AppCompatActivity implements
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         Class fragmentClass = null;
         int selectedMenuItem = item.getItemId();
+        String fragmentTag =  null;
         switch (selectedMenuItem) {
             case (R.id.shedule):
                 fragmentName = R.string.title_Table_Fragment;
-                fragmentClass = TableFragment.class;
+                fragmentClass = ScheduleFragment.class;
                 break;
             case (R.id.record_training):
                 fragmentName = R.string.title_RecordForTraining_Fragment;
@@ -316,10 +317,15 @@ public class MainActivity extends AppCompatActivity implements
                 fragmentClass = MyResultsFragment.class;
                 fragmentName = R.string.title_MyResults_Fragment;
                 break;
+            case (R.id.alarm):
+                fragmentClass = AlarmSettingsFragment.class;
+                fragmentName = R.string.title_AlarmSettings_Fragment;
+                fragmentTag = getResources().getString(R.string.title_AlarmSettings_Fragment);
+                break;
         }
 
         if(fragmentName != openFragment) {
-            OpenFragment(fragmentClass);
+            OpenFragment(fragmentClass, fragmentTag);
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -341,7 +347,8 @@ public class MainActivity extends AppCompatActivity implements
             if (backStackEntryCount == 1) {
                 final String APP_PREFERENCES = "audata";
                 final String APP_PREFERENCES_SELECTEDDAY = "SelectedDay";
-                SharedPreferences mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+                SharedPreferences mSettings = 
+                        getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = mSettings.edit();
                 editor.putString(APP_PREFERENCES_SELECTEDDAY, "0");
                 editor.apply();
@@ -385,8 +392,11 @@ public class MainActivity extends AppCompatActivity implements
             case (R.string.title_AboutMe_Fragment):
                 navigationViewIndex = 6;
                 break;
-            case (R.string.title_Contacts_Fragment):
+            case (R.string.title_AlarmSettings_Fragment):
                 navigationViewIndex = 7;
+                break;
+            case (R.string.title_Contacts_Fragment):
+                navigationViewIndex = 8;
                 break;
         }
 

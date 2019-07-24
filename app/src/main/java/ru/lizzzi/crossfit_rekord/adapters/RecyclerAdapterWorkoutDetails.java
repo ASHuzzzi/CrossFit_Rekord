@@ -15,53 +15,58 @@ import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.documentfields.DocumentFieldsWorkoutDetails;
 
 
-public class RecyclerAdapterWorkoutDetails extends RecyclerView.Adapter<RecyclerAdapterWorkoutDetails.ViewHolder>{
+public class RecyclerAdapterWorkoutDetails
+        extends RecyclerView.Adapter<RecyclerAdapterWorkoutDetails.ViewHolder>{
 
-    private List<Map> mapWodItems;
-    private DocumentFieldsWorkoutDetails fields;
+    private List<Map> wodItems;
+    private DocumentFieldsWorkoutDetails wordkoutFields;
 
     public RecyclerAdapterWorkoutDetails(Context context, @NonNull List<Map> wodItems){
-        this.mapWodItems = wodItems;
-        fields = new DocumentFieldsWorkoutDetails(context);
+        this.wodItems = wodItems;
+        wordkoutFields = new DocumentFieldsWorkoutDetails(context);
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView Name;
-        private TextView Surname;
-        private TextView Skill;
-        private TextView Wod_level;
-        private TextView Wod_result;
+        private TextView userName;
+        private TextView userSurname;
+        private TextView skillResult;
+        private TextView wodLevel;
+        private TextView wodResult;
 
-        ViewHolder(View view){
+        ViewHolder(View view) {
             super(view);
-            Name = view.findViewById(R.id.tvName);
-            Surname = view.findViewById(R.id.tvSurname);
-            Skill = view.findViewById(R.id.tvSkill);
-            Wod_level = view.findViewById(R.id.tvWod_level);
-            Wod_result = view.findViewById(R.id.tvWod_result);
+            userName = view.findViewById(R.id.tvName);
+            userSurname = view.findViewById(R.id.tvSurname);
+            skillResult = view.findViewById(R.id.tvSkill);
+            wodLevel = view.findViewById(R.id.tvWod_level);
+            wodResult = view.findViewById(R.id.tvWod_result);
         }
     }
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_rv_workout_details, parent, false);
-        return new ViewHolder(v);
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType){
+        View view = LayoutInflater.from(parent.getContext()).inflate(
+                R.layout.item_rv_workout_details,
+                parent,
+                false);
+        return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position){
-        final Map documentInfo = mapWodItems.get(position);
-        String stName = (String) documentInfo.get(fields.getNameField());
-        String stSurname = (String) documentInfo.get(fields.getSurnameField());
-        String stSkill = (String) documentInfo.get(fields.getSkillField());
-        String stWodLevel = (String) documentInfo.get(fields.getWodLevelField());
-        String stWodResult = (String) documentInfo.get(fields.getWodResultField());
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position){
+        final Map wodItem = wodItems.get(position);
+        String userName = wodItem.get(wordkoutFields.getNameField()).toString();
+        String userSurname = wodItem.get(wordkoutFields.getSurnameField()).toString();
+        String skillResult = wodItem.get(wordkoutFields.getSkillField()).toString();
+        String wodLevel = wodItem.get(wordkoutFields.getWodLevelField()).toString();
+        String wodResult = wodItem.get(wordkoutFields.getWodResultField()).toString();
 
-        holder.Name.setText(stName);
-        holder.Surname.setText(stSurname);
-        holder.Skill.setText(stSkill);
-        holder.Wod_level.setText(stWodLevel);
-        holder.Wod_result.setText(stWodResult);
+        holder.userName.setText(userName);
+        holder.userSurname.setText(userSurname);
+        holder.skillResult.setText(skillResult);
+        holder.wodLevel.setText(wodLevel);
+        holder.wodResult.setText(wodResult);
     }
 
     @Override
@@ -71,6 +76,6 @@ public class RecyclerAdapterWorkoutDetails extends RecyclerView.Adapter<Recycler
 
     @Override
     public int getItemCount() {
-        return mapWodItems.size();
+        return wodItems.size();
     }
 }

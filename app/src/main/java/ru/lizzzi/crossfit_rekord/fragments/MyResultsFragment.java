@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.data.MyResultDBHelper;
+import ru.lizzzi.crossfit_rekord.data.SQLiteStorageUserResult;
 import ru.lizzzi.crossfit_rekord.interfaces.ChangeTitle;
 
 public class MyResultsFragment extends Fragment implements View.OnFocusChangeListener {
@@ -210,7 +210,7 @@ public class MyResultsFragment extends Fragment implements View.OnFocusChangeLis
 
     private void prepareEditText(){
         Map<String, String> mapExercise;
-        mapExercise = loadResiltFromDB();
+        mapExercise = loadResultFromDB();
 
         String stExercise;
         String stResult;
@@ -346,22 +346,22 @@ public class MyResultsFragment extends Fragment implements View.OnFocusChangeLis
             }
         }
 
-        MyResultDBHelper mDbHelper = new MyResultDBHelper(getContext());
-        mDbHelper.saveResult(stExercise, stResult);
-        mDbHelper.close();
+        SQLiteStorageUserResult dbStorage = new SQLiteStorageUserResult(getContext());
+        dbStorage.setResult(stExercise, stResult);
+        dbStorage.close();
     }
 
 
-    private Map<String, String> loadResiltFromDB(){
-        MyResultDBHelper mDbHelper = new MyResultDBHelper(getContext());
+    private Map<String, String> loadResultFromDB(){
+        SQLiteStorageUserResult dbStorage = new SQLiteStorageUserResult(getContext());
 
         try {
-            mDbHelper.createDataBase();
+            dbStorage.createDataBase();
         } catch (IOException ioe) {
             throw new Error("Unable to create database");
         }
 
-        return  mDbHelper.loadResult();
+        return  dbStorage.getResult();
     }
 
     @Override

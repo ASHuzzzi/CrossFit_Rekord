@@ -31,13 +31,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="150dp"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/parnasgym2"
+                        android:src="@drawable/background_parnas_gym"
                         tools:ignore="ContentDescription" />
 
                     <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="150dp"
-                        android:background="@drawable/gradient_bg_down" />
+                        android:background="@drawable/gradient_background_down_dark" />
 
                 </FrameLayout>
 
@@ -90,13 +90,13 @@
                         android:layout_height="150dp"
                         android:layout_gravity="center_horizontal"
                         android:scaleType="matrix"
-                        android:src="@drawable/myzhestvogym2"
+                        android:src="@drawable/backgroind_myzhestvo_gym"
                         tools:ignore="ContentDescription" />
 
                     <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="150dp"
-                        android:background="@drawable/gradient_bg_down" />
+                        android:background="@drawable/gradient_background_down_dark" />
 
                 </FrameLayout>
 
@@ -164,7 +164,7 @@
                         android:layout_width="10dp"
                         android:layout_height="10dp"
                         android:layout_margin="20dp"
-                        android:background="@drawable/instagram"
+                        android:background="@drawable/logo_instagram"
                         android:contentDescription="@string/descriptionInstagram" />
 
                     <ImageButton
@@ -172,7 +172,7 @@
                         android:layout_width="10dp"
                         android:layout_height="10dp"
                         android:layout_margin="20dp"
-                        android:background="@drawable/vk"
+                        android:background="@drawable/logo_vk"
                         android:contentDescription="@string/descriptionGroupVK" />
                 </TableRow>
 

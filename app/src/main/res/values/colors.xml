@@ -3,9 +3,9 @@
     <color name="colorPrimary">#141414</color>
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorPrimaryLight">#3A3A3A</color>
-    <color name="colorAccent">#ea0e0e</color>
+    <color name="colorAccent">#EA0E0E</color>
 
-    <color name="colorRedPrimary">#ea0e0e</color>
+    <color name="colorRedPrimary">#EA0E0E</color>
     <color name="colorRedDark">#c20000</color>
     <color name="colorRedLight">#ff5a36</color>
 

@@ -4,7 +4,7 @@
     <style name="MainStyleButton" parent="@android:style/Widget.Button">
         <item name="android:textColor">@color/colorWhite</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:background">@drawable/startscreen_button</item>
+        <item name="android:background">@drawable/button_start_screen</item>
         <item name="android:textAppearance">?android:attr/textAppearanceSmallInverse</item>
         <item name="android:gravity">center_vertical|center_horizontal</item>
         <item name="android:stateListAnimator">@animator/batton_elevation</item>

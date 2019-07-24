@@ -31,7 +31,7 @@
     <string name="hint_password">Введите пароль</string>
     <string name="hint_check_password">Введите пароль еще раз</string>
 
-    <!-- Значения для поля GymSheduleFragment -->
+    <!-- Значения для поля GymScheduleFragment -->
     <string name="gymNameParnas">Парнас</string>
     <string name="gymNameMyzhestvo">Мужества</string>
     <integer name="selectSheduleParnas">1</integer>
@@ -57,7 +57,6 @@
     <string name="calendar_wod">Результаты тренировок</string>
     <string name="myResults">Мои результаты</string>
     <string name="localNotification">Уведомления</string>
-
 
     <string name="error_connection1">При загрузке данных произошла ошибка.</string>
     <string name="error_connection2">Проверьте Ваше подключение к сети.</string>
@@ -107,6 +106,7 @@
     <string name="title_Regystry_Fragment">Регистрация</string>
     <string name="title_PasswordRecovery_Fragment">Восстановление пароля</string>
     <string name="title_MyResults_Fragment">Мои результаты</string>
+    <string name="title_AlarmSettings_Fragment">Уведомления</string>
 
     <!-- Значения для фрагмента AboutMe -->
     <string name="strCardNumber">Номер моей карты</string>
@@ -218,6 +218,7 @@
     <string name="strDialogEmail">Адрес для восстановления пароля</string>
     <string name="strDialogBtnSend">Отправить</string>
     <string name="strDialogBtnCancel">Отмена</string>
+    <string name="strDialogBtnOk">ОК</string>
 
     <!-- Значения для фрагмента Character -->
     <string name="strSelectCharacter">Выберите букву раздела</string>
@@ -284,10 +285,22 @@
     <string name="termin">termin</string>
     <string name="description">description</string>
 
-    <string-array name="typeOfNotification">
-        <item>Один день</item>
-        <item>Несколько дней</item>
-        <item>Каждый день</item>
-    </string-array>
+    <string name="channel_id">ru.lizzzi.crossfit_rekord.inspectionСlasses</string>
+    <string name="channel_name">Общие</string>
+    <string name="notification_title">"Rekord'смен!"</string>
+    <string name="notification_text">Пора записаться на тренировку</string>
 
+    <!-- Значения для фрагмента AlarmSettingsFragment -->
+    <string name="dayOfWeek">Дни недели</string>
+    <string name="everyday">Ежедневно</string>
+    <string name="selectedTime">Время</string>
+    <string name="colon"> : </string>
+    <string name="repeat">Повтор</string>
+    <string name="monday">Понедельник</string>
+    <string name="tuesday">Вторник</string>
+    <string name="wednesday">Среда</string>
+    <string name="thursday">Четверг</string>
+    <string name="friday">Пятница</string>
+    <string name="saturday">Суббота</string>
+    <string name="sunday">Воскресенье</string>
 </resources>

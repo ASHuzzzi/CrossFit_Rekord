@@ -11,21 +11,22 @@ import ru.lizzzi.crossfit_rekord.fragments.WorkoutDetailsTL.TL2ResultFragment;
 
 public class PagerAdapterWorkoutDetails extends FragmentPagerAdapter {
 
-    private Context mContext;
+    private Context context;
 
-    public PagerAdapterWorkoutDetails(FragmentManager fm, Context context) {
-        super(fm);
-        mContext = context;
+    public PagerAdapterWorkoutDetails(FragmentManager fragmentManager, Context context) {
+        super(fragmentManager);
+        this.context = context;
     }
 
     @Override
     public Fragment getItem(int position) {
-        if (position == 0) {
-            return new TL1WodFragment();
-        } else if (position == 1){
-            return new TL2ResultFragment();
-        } else {
-            return null;
+        switch (position) {
+            case 0:
+                return new TL1WodFragment();
+            case 1:
+                return new TL2ResultFragment();
+            default:
+                return null;
         }
     }
 
@@ -40,12 +41,11 @@ public class PagerAdapterWorkoutDetails extends FragmentPagerAdapter {
         // Generate title based on item position
         switch (position) {
             case 0:
-                return mContext.getString(R.string.strWorkoutDetailsWod);
+                return context.getString(R.string.strWorkoutDetailsWod);
             case 1:
-                return mContext.getString(R.string.strWorkoutDetailsResult);
+                return context.getString(R.string.strWorkoutDetailsResult);
             default:
                 return null;
         }
     }
-
 }

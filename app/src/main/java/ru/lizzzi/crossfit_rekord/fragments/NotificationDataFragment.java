@@ -18,7 +18,7 @@ import java.util.List;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.activity.MainActivity;
-import ru.lizzzi.crossfit_rekord.data.NotificationDBHelper;
+import ru.lizzzi.crossfit_rekord.data.SQLiteStorageNotification;
 import ru.lizzzi.crossfit_rekord.interfaces.ChangeTitle;
 
 public class NotificationDataFragment extends Fragment {
@@ -51,7 +51,7 @@ public class NotificationDataFragment extends Fragment {
         stHeader = bundle.getString("headerNote");
         convertTime = Long.valueOf(stTime);
 
-        NotificationDBHelper mDBHelper = new NotificationDBHelper(getContext());
+        SQLiteStorageNotification mDBHelper = new SQLiteStorageNotification(getContext());
         List<String> listDetailNotification = mDBHelper.selectTextNotification(convertTime);
         if (listDetailNotification.size() > 0){
             stText = listDetailNotification.get(0);

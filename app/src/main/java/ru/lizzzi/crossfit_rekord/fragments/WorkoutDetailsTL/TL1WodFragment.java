@@ -53,9 +53,7 @@ public class TL1WodFragment extends Fragment implements LoaderManager.LoaderCall
     private static final String APP_PREFERENCES_SELECTEDDAY = "SelectedDay";
 
     private Runnable runnableOpenFragment;
-
-    public TL1WodFragment() {
-    }
+    private SharedPreferences sharedPreferences;
 
     @SuppressLint("HandlerLeak")
     @Override
@@ -116,12 +114,12 @@ public class TL1WodFragment extends Fragment implements LoaderManager.LoaderCall
             }
         });
 
+        sharedPreferences = Objects.requireNonNull(
+                getContext()).getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         return view;
     }
 
     private void getExercise(){
-        SharedPreferences sharedPreferences = Objects.requireNonNull(
-                getContext()).getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         String selectedDay =  sharedPreferences.getString(APP_PREFERENCES_SELECTEDDAY, "");
         Bundle bundle = new Bundle();
         bundle.putString("Selected_day", selectedDay);
@@ -191,17 +189,18 @@ public class TL1WodFragment extends Fragment implements LoaderManager.LoaderCall
             linLayEmptyData.setVisibility(View.INVISIBLE);
 
             try {
-                SharedPreferences sharedPreferences = Objects.requireNonNull(
-                        getContext()).getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-                String savedDay =  sharedPreferences.getString(APP_PREFERENCES_SELECTEDDAY, "");
-
-                SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
-                SimpleDateFormat sdfMonthDay = new SimpleDateFormat("MMdd", Locale.getDefault());
-                SimpleDateFormat sdfHourToday = new SimpleDateFormat("HH", Locale.getDefault());
-                Date savedDayForParse = sdf.parse(savedDay);
-                int selectedDay = Integer.parseInt(sdfMonthDay.format(savedDayForParse));
-                int currentDay = Integer.parseInt(sdfMonthDay.format(new Date()));
-                int currentHour = Integer.parseInt(sdfHourToday.format(new Date()));
+                SimpleDateFormat dateFormat =
+                        new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
+                SimpleDateFormat dateFormatMonthDay =
+                        new SimpleDateFormat("MMdd", Locale.getDefault());
+                SimpleDateFormat dateFormatHourToday =
+                        new SimpleDateFormat("HH", Locale.getDefault());
+                String savedDay =
+                        sharedPreferences.getString(APP_PREFERENCES_SELECTEDDAY, "");
+                Date savedDayForParse = dateFormat.parse(savedDay);
+                int selectedDay = Integer.parseInt(dateFormatMonthDay.format(savedDayForParse));
+                int currentDay = Integer.parseInt(dateFormatMonthDay.format(new Date()));
+                int currentHour = Integer.parseInt(dateFormatHourToday.format(new Date()));
 
                 //не показваю комплекс только если дата = сегодня, а время до 21 часа
                 if (selectedDay != currentDay || currentHour > 20) {

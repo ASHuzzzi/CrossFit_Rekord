@@ -58,7 +58,7 @@ public class StartScreenFragment extends Fragment {
             //@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onClick(View view) {
-                openFragment(TableFragment.class);
+                openFragment(ScheduleFragment.class);
             }
         });
 
@@ -120,7 +120,7 @@ public class StartScreenFragment extends Fragment {
 
     public void onResume() {
         super.onResume();
-            handlerStartScreen.postDelayed(runnable, delay);
+        handlerStartScreen.postDelayed(runnable, delay);
     }
 
     @Override

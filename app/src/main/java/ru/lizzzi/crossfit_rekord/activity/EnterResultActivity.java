@@ -30,10 +30,11 @@ import android.widget.Toast;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Objects;
 
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.data.CalendarWodDBHelper;
+import ru.lizzzi.crossfit_rekord.data.SQLiteStorageWod;
 import ru.lizzzi.crossfit_rekord.inspectionСlasses.Network;
 import ru.lizzzi.crossfit_rekord.loaders.SaveLoadResultLoader;
 
@@ -47,19 +48,19 @@ public class EnterResultActivity
     private Thread threadClickOnbuttonSave;
     private Runnable runnableClickOnbuttonSave;
 
-    private EditText etResultSkill;
-    private EditText etResultWoD;
-    private ProgressBar pbSaveUpload;
-    private Button btnSave;
+    private EditText ResultOfSkill;
+    private EditText ResultOfWoD;
+    private ProgressBar progressBar;
+    private Button buttonSaveUpload;
 
-    private RadioButton rbSC;
-    private RadioButton rbRx;
-    private RadioButton rbRxP;
+    private RadioButton radioButtonSc;
+    private RadioButton radioButtonRx;
+    private RadioButton radioButtonRxPlus;
 
     private boolean flag; //флаг показывает есть ли данные о тренировки от фрагмента
     private boolean flagDelete =  false; //флаг показывает, что нажата кнопка удалить
 
-    private String stLevel; //переменная для передачи уровня тренировки. По умолчанию Sc.
+    private String wodLevel; //переменная для передачи уровня тренировки. По умолчанию Sc.
 
     private static final String APP_PREFERENCES = "audata";
     private static final String APP_PREFERENCES_OBJECTID = "ObjectId";
@@ -69,7 +70,7 @@ public class EnterResultActivity
     private final int LOADER_START_DELETE = 3;
     private final int LOADER_START_UPLOAD= 4;
 
-    @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf2 = new SimpleDateFormat("MM/dd/yyyy");
+    
 
     @SuppressLint("HandlerLeak")
     @Override
@@ -77,66 +78,66 @@ public class EnterResultActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enter_result);
 
-        stLevel = getResources().getString(R.string.strActivityERLevelSc);
+        wodLevel = getResources().getString(R.string.strActivityERLevelSc);
 
-        etResultSkill = findViewById(R.id.etResultSkill);
-        etResultWoD = findViewById(R.id.etResultWoD);
+        ResultOfSkill = findViewById(R.id.etResultSkill);
+        ResultOfWoD = findViewById(R.id.etResultWoD);
 
-        pbSaveUpload = findViewById(R.id.progressBarSaveUpload);
-        btnSave = findViewById(R.id.buttonSaveUpload);
+        progressBar = findViewById(R.id.progressBarSaveUpload);
+        buttonSaveUpload = findViewById(R.id.buttonSaveUpload);
 
-        rbSC = findViewById(R.id.rbSc);
-        rbRx = findViewById(R.id.rbRx);
-        rbRxP = findViewById(R.id.rbRxP);
-        RadioGroup rgSelectLevel = findViewById(R.id.rgSelectLevel);
+        radioButtonSc = findViewById(R.id.rbSc);
+        radioButtonRx = findViewById(R.id.rbRx);
+        radioButtonRxPlus = findViewById(R.id.rbRxP);
+        RadioGroup radioGroup = findViewById(R.id.rgSelectLevel);
 
         initActionBar();
 
-        rgSelectLevel.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId){
                     case R.id.rbSc:
-                        stLevel = getResources().getString(R.string.strActivityERLevelSc);
+                        wodLevel = getResources().getString(R.string.strActivityERLevelSc);
                         break;
                     case R.id.rbRx:
-                        stLevel = getResources().getString(R.string.strActivityERLevelRx);
+                        wodLevel = getResources().getString(R.string.strActivityERLevelRx);
                         break;
                     case R.id.rbRxP:
-                        stLevel = getResources().getString(R.string.strActivityERLevelRxPlus);
+                        wodLevel = getResources().getString(R.string.strActivityERLevelRxPlus);
                 }
             }
         });
 
-        btnSave.setOnClickListener(new View.OnClickListener() {
+        buttonSaveUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String deleteSpace = etResultSkill.getText().toString();
-                if (deleteSpace.length() > 1) {
-                    if(deleteSpace.endsWith(" ")) {
-                        deleteSpace =  deleteSpace.substring(0, deleteSpace.length() - 1);
-                        etResultSkill.setText(deleteSpace);
+                String forDeleteSpace = ResultOfSkill.getText().toString();
+                if (forDeleteSpace.length() > 1) {
+                    if(forDeleteSpace.endsWith(" ")) {
+                        forDeleteSpace =  forDeleteSpace.substring(0, forDeleteSpace.length() - 1);
+                        ResultOfSkill.setText(forDeleteSpace);
                     }
-                    if (deleteSpace.startsWith(" ")) {
-                        deleteSpace = deleteSpace.substring(1);
-                        etResultSkill.setText(deleteSpace);
-                    }
-                }
-
-                deleteSpace = etResultWoD.getText().toString();
-                if (deleteSpace.length() > 1) {
-                    if(deleteSpace.endsWith(" ")) {
-                        deleteSpace =  deleteSpace.substring(0, deleteSpace.length() - 1);
-                        etResultWoD.setText(deleteSpace);
-                    }
-                    if(deleteSpace.startsWith(" ")) {
-                        deleteSpace = deleteSpace.substring(1);
-                        etResultWoD.setText(deleteSpace);
+                    if (forDeleteSpace.startsWith(" ")) {
+                        forDeleteSpace = forDeleteSpace.substring(1);
+                        ResultOfSkill.setText(forDeleteSpace);
                     }
                 }
 
-                pbSaveUpload.setVisibility(View.VISIBLE);
-                btnSave.setClickable(false);
+                forDeleteSpace = ResultOfWoD.getText().toString();
+                if (forDeleteSpace.length() > 1) {
+                    if(forDeleteSpace.endsWith(" ")) {
+                        forDeleteSpace =  forDeleteSpace.substring(0, forDeleteSpace.length() - 1);
+                        ResultOfWoD.setText(forDeleteSpace);
+                    }
+                    if(forDeleteSpace.startsWith(" ")) {
+                        forDeleteSpace = forDeleteSpace.substring(1);
+                        ResultOfWoD.setText(forDeleteSpace);
+                    }
+                }
+
+                progressBar.setVisibility(View.VISIBLE);
+                buttonSaveUpload.setClickable(false);
                 threadClickOnbuttonSave = new Thread(runnableClickOnbuttonSave);
                 threadClickOnbuttonSave.setDaemon(true);
                 runnableClickOnbuttonSave.run();
@@ -151,25 +152,22 @@ public class EnterResultActivity
                 Bundle bundle = msg.getData();
                 boolean resultCheck = bundle.getBoolean("networkCheck");
                 if (resultCheck) {
-                    pbSaveUpload.setVisibility(View.VISIBLE);
-                    btnSave.setClickable(false);
+                    progressBar.setVisibility(View.VISIBLE);
+                    buttonSaveUpload.setClickable(false);
 
-
-                    int loaderId;
-                    if (flagDelete) {
-                        loaderId = LOADER_START_DELETE;
-                    } else {
-                        if (flag) {
-                            loaderId = LOADER_START_UPLOAD;
-                        } else {
-                            loaderId = LOADER_START_SAVE;
-                        }
-                    }
+                    int loaderId = (flagDelete)
+                            ? LOADER_START_DELETE
+                            : (flag)
+                                ? LOADER_START_UPLOAD
+                                : LOADER_START_SAVE;
                     restartAsyncTaskLoader(loaderId);
                 } else {
-                    pbSaveUpload.setVisibility(View.INVISIBLE);
-                    btnSave.setClickable(true);
-                    Toast.makeText(EnterResultActivity.this, "Нет подключения к сети!", Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.INVISIBLE);
+                    buttonSaveUpload.setClickable(true);
+                    Toast.makeText(
+                            EnterResultActivity.this,
+                            "Нет подключения к сети!",
+                            Toast.LENGTH_SHORT).show();
                 }
             }
         };
@@ -180,20 +178,12 @@ public class EnterResultActivity
             public void run() {
                 network = new Network(EnterResultActivity.this);
                 Bundle bundle = new Bundle();
-                boolean checkDone = network.checkConnection();
-                if (checkDone) {
-                    bundle.putBoolean("networkCheck", true);
-                } else {
-                    bundle.putBoolean("networkCheck", false);
-                }
+                bundle.putBoolean("networkCheck", network.checkConnection());
                 Message msg = handlerOpenFragment.obtainMessage();
                 msg.setData(bundle);
                 handlerOpenFragment.sendMessage(msg);
             }
         };
-
-
-
     }
 
     private void initActionBar() {
@@ -209,7 +199,7 @@ public class EnterResultActivity
     protected void onStart() {
         super.onStart();
 
-        pbSaveUpload.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.INVISIBLE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             Objects.requireNonNull(getSupportActionBar()).setTitle("Мои результаты тренировки");
         }
@@ -217,76 +207,64 @@ public class EnterResultActivity
         Intent intent = getIntent();
         flag = intent.getBooleanExtra("flag", false);
         if (flag) {
-            etResultSkill.setText(intent.getStringExtra("skill"));
+            ResultOfSkill.setText(intent.getStringExtra("skill"));
 
             //создаем флаг для проверки чтобы точно какая-то кнопка была выбрана
             boolean checkLevelFlag = false;
-            stLevel = intent.getStringExtra("level");
-            switch(stLevel){
+            wodLevel = intent.getStringExtra("level");
+            switch(wodLevel) {
                 case "Sc":
-                    rbSC.setChecked(true);
+                    radioButtonSc.setChecked(true);
                     checkLevelFlag = true;
                     break;
                 case "Rx":
-                    rbRx.setChecked(true);
+                    radioButtonRx.setChecked(true);
                     checkLevelFlag = true;
                     break;
                 case "Rx+":
-                    rbRxP.setChecked(true);
+                    radioButtonRxPlus.setChecked(true);
                     checkLevelFlag = true;
                     break;
             }
 
             //если никакая кнопка не была выбрана, то по умолчанию выбираем Sc.
-            if (!checkLevelFlag){
-                rbSC.setChecked(true);
-                stLevel = getResources().getString(R.string.strActivityERLevelSc);
+            if (!checkLevelFlag) {
+                radioButtonSc.setChecked(true);
+                wodLevel = getResources().getString(R.string.strActivityERLevelSc);
             }
 
-            etResultWoD.setText(intent.getStringExtra("results"));
+            ResultOfWoD.setText(intent.getStringExtra("results"));
 
-        }else{
-            etResultSkill.setText("");
-            rbSC.setChecked(true);
-            stLevel = getResources().getString(R.string.strActivityERLevelSc);
-            etResultWoD.setText("");
-
+        } else {
+            ResultOfSkill.setText("");
+            radioButtonSc.setChecked(true);
+            wodLevel = getResources().getString(R.string.strActivityERLevelSc);
+            ResultOfWoD.setText("");
         }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
 
     private void restartAsyncTaskLoader(int loaderId){
-        Loader<Boolean> mLoader;
         Bundle bundle = new Bundle();
-
-        switch (loaderId){
-            case LOADER_START_SAVE:
-                bundle.putString(String.valueOf(SaveLoadResultLoader.USER_SKILL), String.valueOf(etResultSkill.getText()));
-                bundle.putString(String.valueOf(SaveLoadResultLoader.USER_WOD_LEVEL), stLevel);
-                bundle.putString(String.valueOf(SaveLoadResultLoader.USER_WOD_RESULT), String.valueOf(etResultWoD.getText()));
-                mLoader = getSupportLoaderManager().restartLoader(loaderId, bundle, this);
-                mLoader.forceLoad();
-                break;
-
-            case LOADER_START_DELETE:
-                mLoader = getSupportLoaderManager().restartLoader(loaderId,null, this);
-                mLoader.forceLoad();
-                break;
-
-            case LOADER_START_UPLOAD:
-                bundle.putString(String.valueOf(SaveLoadResultLoader.USER_SKILL), String.valueOf(etResultSkill.getText()));
-                bundle.putString(String.valueOf(SaveLoadResultLoader.USER_WOD_LEVEL), stLevel);
-                bundle.putString(String.valueOf(SaveLoadResultLoader.USER_WOD_RESULT), String.valueOf(etResultWoD.getText()));
-                mLoader = getSupportLoaderManager().restartLoader(loaderId, bundle, this);
-                mLoader.forceLoad();
-                break;
+        if (loaderId != LOADER_START_DELETE) {
+            bundle.putString(
+                    String.valueOf(SaveLoadResultLoader.USER_SKILL),
+                    String.valueOf(ResultOfSkill.getText()));
+            bundle.putString(String.valueOf(
+                    SaveLoadResultLoader.USER_WOD_LEVEL),
+                    wodLevel);
+            bundle.putString(String.valueOf(
+                    SaveLoadResultLoader.USER_WOD_RESULT),
+                    String.valueOf(ResultOfWoD.getText()));
         }
+        Loader<Boolean> loader = 
+                getSupportLoaderManager().restartLoader(loaderId, bundle, this);
+        loader.forceLoad();
 
     }
 
@@ -301,43 +279,52 @@ public class EnterResultActivity
     @Override
     public void onLoadFinished(@NonNull Loader<Boolean> loader, Boolean result) {
         if (result){
-            CalendarWodDBHelper mDBHelper = new CalendarWodDBHelper(this);
-            SharedPreferences mSettings = this.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-            String stDay = mSettings.getString(APP_PREFERENCES_SELECTEDDAY, "");
-            Date date;
-            long lDate = 0;
+            SharedPreferences sharedPreferences = 
+                    this.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+            String selectedDay = sharedPreferences.getString(APP_PREFERENCES_SELECTEDDAY, "");
+            long dateForLoader = 0;
             try {
-                date = sdf2.parse(stDay);
-                lDate = date.getTime();
+                SimpleDateFormat dateFormat = 
+                        new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
+                Date date = dateFormat.parse(selectedDay);
+                dateForLoader = date.getTime();
             } catch (ParseException e) {
                 e.printStackTrace();
             }
 
+            SQLiteStorageWod dbHelper = new SQLiteStorageWod(this);
             switch (loader.getId()) {
+                
                 case LOADER_START_SAVE:
-                    mDBHelper.saveDate(mSettings.getString(APP_PREFERENCES_OBJECTID, ""), lDate);
+                    dbHelper.saveDate(
+                            sharedPreferences.getString(APP_PREFERENCES_OBJECTID, ""), 
+                            dateForLoader);
                     break;
 
                 case LOADER_START_DELETE:
-                    mDBHelper.deleteDate(mSettings.getString(APP_PREFERENCES_OBJECTID, ""), lDate);
+                    dbHelper.deleteDate(
+                            sharedPreferences.getString(APP_PREFERENCES_OBJECTID, ""), 
+                            dateForLoader);
                     break;
 
                 case LOADER_START_UPLOAD:
-                    mDBHelper.saveDate(mSettings.getString(APP_PREFERENCES_OBJECTID, ""), lDate);
+                    dbHelper.saveDate(
+                            sharedPreferences.getString(APP_PREFERENCES_OBJECTID, ""), 
+                            dateForLoader);
                     break;
             }
-            Intent answerIntent = new Intent();
-            setResult(RESULT_OK, answerIntent);
+            setResult(RESULT_OK, new Intent());
             finish();
         }else {
-            Toast.makeText(EnterResultActivity.this, "Не удалось! Повторите попытку", Toast.LENGTH_SHORT).show();
+            Toast.makeText(
+                    EnterResultActivity.this, 
+                    "Не удалось! Повторите попытку", 
+                    Toast.LENGTH_SHORT).show();
         }
-
     }
 
     @Override
     public void onLoaderReset(@NonNull Loader<Boolean> loader) {
-
     }
 
     @Override
@@ -355,7 +342,8 @@ public class EnterResultActivity
                 return true;
             case R.id.delete:
                 if (flag) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(EnterResultActivity.this);
+                    AlertDialog.Builder builder = 
+                            new AlertDialog.Builder(EnterResultActivity.this);
                     builder.setTitle("Внимание!")
                             .setMessage("Удалить результаты?")
                             .setCancelable(false)
@@ -364,8 +352,8 @@ public class EnterResultActivity
                                         @Override
                                         public void onClick(DialogInterface dialogInterface, int i) {
                                             flagDelete =  true;
-                                            pbSaveUpload.setVisibility(View.VISIBLE);
-                                            btnSave.setPressed(true);
+                                            progressBar.setVisibility(View.VISIBLE);
+                                            buttonSaveUpload.setPressed(true);
                                             runnableClickOnbuttonSave.run();
                                         }
                                     })
@@ -380,7 +368,10 @@ public class EnterResultActivity
                     alert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.colorAccent));
                     alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.colorPrimary));
                 } else {
-                    Toast.makeText(EnterResultActivity.this, "Нет данных для удаления", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(
+                            EnterResultActivity.this, 
+                            "Нет данных для удаления", 
+                            Toast.LENGTH_SHORT).show();
                 }
                 return true;
             default:

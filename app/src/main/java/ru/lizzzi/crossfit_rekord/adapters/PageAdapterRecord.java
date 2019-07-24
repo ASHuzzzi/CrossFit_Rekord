@@ -7,13 +7,13 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.fragments.RecordForTrainingTL.RecordForTrainingFragment;
+import ru.lizzzi.crossfit_rekord.fragments.RecordForTrainingFragment;
 
 public class PageAdapterRecord extends FragmentPagerAdapter {
     private Context context;
 
-    public PageAdapterRecord(FragmentManager fm, Context context) {
-        super(fm);
+    public PageAdapterRecord(FragmentManager fragmentManager, Context context) {
+        super(fragmentManager);
         this.context = context;
     }
 
@@ -21,17 +21,11 @@ public class PageAdapterRecord extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         Fragment tableFragment =  new RecordForTrainingFragment();
         Bundle bundle = new Bundle();
-        if (position == 0) {
-            bundle.putInt(
-                    "gym",
-                    context.getResources().getInteger(R.integer.selectSheduleParnas));
-        } else if (position == 1) {
-            bundle.putInt(
-                    "gym",
-                    context.getResources().getInteger(R.integer.selectSheduleMyzhestvo));
-        } else {
-            return null;
+        int gym = context.getResources().getInteger(R.integer.selectSheduleParnas);
+        if (position == 1) {
+            gym = context.getResources().getInteger(R.integer.selectSheduleMyzhestvo);
         }
+        bundle.putInt("gym", gym);
         tableFragment.setArguments(bundle);
         return tableFragment;
     }

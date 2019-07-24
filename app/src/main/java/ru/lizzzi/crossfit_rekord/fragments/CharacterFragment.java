@@ -11,12 +11,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterCharacter;
-import ru.lizzzi.crossfit_rekord.data.DefinitionDBHelper;
+import ru.lizzzi.crossfit_rekord.data.SQLiteStorageDefinition;
 import ru.lizzzi.crossfit_rekord.interfaces.ChangeTitle;
 import ru.lizzzi.crossfit_rekord.interfaces.ListernerCharacter;
 
@@ -24,15 +23,14 @@ public class CharacterFragment extends Fragment {
 
     private RecyclerView recViewCharacter;
 
-    public CharacterFragment() {
-    }
-
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(
+            @NonNull LayoutInflater inflater,
+            ViewGroup container,
+            Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_character, container, false);
         recViewCharacter = view.findViewById(R.id.rvCharacter);
-        return  view;
+        return view;
     }
 
     @Override
@@ -43,16 +41,20 @@ public class CharacterFragment extends Fragment {
             listernerChangeTitle.changeTitle(R.string.title_Character_Fragment, R.string.title_Character_Fragment);
         }
 
-        DefinitionDBHelper definitionDBHelper = new DefinitionDBHelper(getContext());
-        definitionDBHelper.createDataBase();
+        SQLiteStorageDefinition dbStorage = new SQLiteStorageDefinition(getContext());
+        if (!dbStorage.checkDataBase()) {
+            dbStorage.createDataBase();
+        }
 
-        ArrayList<String> listCharacter = definitionDBHelper.getListCharacters();
-        RecyclerAdapterCharacter adapter = new RecyclerAdapterCharacter(listCharacter, new ListernerCharacter() {
+        List<String> listCharacter = dbStorage.getListCharacters();
+        RecyclerAdapterCharacter adapter = new RecyclerAdapterCharacter(
+                listCharacter,
+                new ListernerCharacter() {
             @Override
-            public void SelectCharacter(String selectCharacter) {
-                DefinitionFragment fragment = new DefinitionFragment();
+            public void selectCharacter(String selectCharacter) {
                 Bundle bundle = new Bundle();
                 bundle.putString("tag", selectCharacter);
+                DefinitionFragment fragment = new DefinitionFragment();
                 fragment.setArguments(bundle);
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

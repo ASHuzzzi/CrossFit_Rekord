@@ -14,7 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scaleType="centerCrop"
-            android:src="@drawable/backgroundfotovrtical3"
+            android:src="@drawable/background_foto_3"
             tools:ignore="ContentDescription" />
 
         <LinearLayout
@@ -26,7 +26,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/gradient_bg_up">
+                android:background="@drawable/gradient_background_up">
 
             </FrameLayout>
 
@@ -34,7 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/gradient_bg_down">
+                android:background="@drawable/gradient_background_down_dark">
 
             </FrameLayout>
 

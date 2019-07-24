@@ -35,7 +35,7 @@ public class TableFragmentLoader extends AsyncTaskLoader<List<List<Map>>> {
             List<Map> scheduleSunday = new ArrayList<>();
             int numberOfWeekday;
             for (int i = 0; i < loadedSchedule.size(); i++) {
-                numberOfWeekday = Integer.valueOf(String.valueOf(loadedSchedule.get(i).get("day_of_week")));
+                numberOfWeekday = (int) loadedSchedule.get(i).get("day_of_week");
                 switch (numberOfWeekday){
                     case 1:
                         scheduleMonday.add(loadedSchedule.get(i));
@@ -61,26 +61,26 @@ public class TableFragmentLoader extends AsyncTaskLoader<List<List<Map>>> {
                 }
             }
             List<List<Map>> weeklySchedule = new ArrayList<>();
-            if (scheduleMonday.size()>0) {
+            if (scheduleSunday.size() > 0) {
+                weeklySchedule.add(scheduleSunday);
+            }
+            if (scheduleMonday.size() > 0) {
                 weeklySchedule.add(scheduleMonday);
             }
-            if (scheduleTuesday.size()>0) {
+            if (scheduleTuesday.size() > 0) {
                 weeklySchedule.add(scheduleTuesday);
             }
-            if (scheduleWednesday.size()>0) {
+            if (scheduleWednesday.size() > 0) {
                 weeklySchedule.add(scheduleWednesday);
             }
-            if (scheduleThusday.size()>0) {
+            if (scheduleThusday.size() > 0) {
                 weeklySchedule.add(scheduleThusday);
             }
-            if (scheduleFriday.size()>0) {
+            if (scheduleFriday.size() > 0) {
                 weeklySchedule.add(scheduleFriday);
             }
-            if (scheduleSaturday.size()>0) {
+            if (scheduleSaturday.size() > 0) {
                 weeklySchedule.add(scheduleSaturday);
-            }
-            if (scheduleSunday.size()>0) {
-                weeklySchedule.add(scheduleSunday);
             }
             return weeklySchedule;
         } else {

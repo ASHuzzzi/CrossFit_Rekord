@@ -1,6 +1,5 @@
 package ru.lizzzi.crossfit_rekord.adapters;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
@@ -16,108 +15,94 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.documentfields.DocumentFieldsTable;
-import ru.lizzzi.crossfit_rekord.inspectionСlasses.TakeBackgroungResourceForAdapter;
+import ru.lizzzi.crossfit_rekord.documentfields.DocumentFieldsSchedule;
+import ru.lizzzi.crossfit_rekord.inspectionСlasses.BackgroundDrawable;
 import ru.lizzzi.crossfit_rekord.interfaces.ListenerRecordForTrainingSelect;
 
-public class RecyclerAdapterRecordForTrainingSelect extends RecyclerView.Adapter<RecyclerAdapterRecordForTrainingSelect.ViewHolder> {
+public class RecyclerAdapterRecordForTrainingSelect
+        extends RecyclerView.Adapter<RecyclerAdapterRecordForTrainingSelect.ViewHolder> {
 
-    private List<Map> shediletems;
-    private final ThreadLocal<DocumentFieldsTable> fields = new ThreadLocal<>();
-    private ListenerRecordForTrainingSelect mlistener;
-    private boolean flagTodayOrNot;
+    private List<Map> scheduleItems;
+    private boolean isToday;
+    private ListenerRecordForTrainingSelect listener;
+    private final ThreadLocal<DocumentFieldsSchedule> scheduleFields = new ThreadLocal<>();
 
-    public RecyclerAdapterRecordForTrainingSelect(Context context, @NonNull List<Map> shediletems,
-                                                  boolean flag, ListenerRecordForTrainingSelect listener) {
-        this.shediletems = shediletems;
-        fields.set(new DocumentFieldsTable(context));
-        flagTodayOrNot = flag;
-        mlistener = listener;
+    public RecyclerAdapterRecordForTrainingSelect(
+            Context context,
+            @NonNull List<Map> scheduleItems,
+            boolean isToday,
+            ListenerRecordForTrainingSelect listener) {
+        this.scheduleItems = scheduleItems;
+        this.isToday = isToday;
+        this.listener = listener;
+        scheduleFields.set(new DocumentFieldsSchedule(context));
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView startTimeItem;
-        private TextView typesItem;
-        private LinearLayout llItemTable;
+        private TextView startTime;
+        private TextView workoutTypes;
+        private LinearLayout tableLayout;
 
         ViewHolder(View view) {
             super(view);
-            startTimeItem = view.findViewById(R.id.start_time);
-            typesItem = view.findViewById(R.id.type);
-            llItemTable = view.findViewById(R.id.ll_item_table);
+            startTime = view.findViewById(R.id.start_time);
+            workoutTypes = view.findViewById(R.id.type);
+            tableLayout = view.findViewById(R.id.ll_item_table);
         }
     }
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_rv_table, parent, false);
-
-        return new ViewHolder(v);
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(
+                R.layout.item_rv_table,
+                parent,
+                false);
+        return new ViewHolder(view);
     }
 
-
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        final Map documentInfo = shediletems.get(position);
-        final String start_time = (String) documentInfo.get(fields.get().getStartTimeField());
-        final String type = (String) documentInfo.get(fields.get().getTypeField());
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        final Map scheduleItem = scheduleItems.get(position);
+        final String startTime = scheduleItem.get(scheduleFields.get().getStartTime()).toString();
+        final String workoutType = scheduleItem.get(scheduleFields.get().getType()).toString();
 
+        holder.startTime.setText(startTime);
+        holder.workoutTypes.setText(workoutType);
 
-        holder.startTimeItem.setText(start_time);
-        holder.typesItem.setText(type);
-        LinearLayout ll_item_table = holder.llItemTable;
-
-        if (flagTodayOrNot){
-            @SuppressLint("SimpleDateFormat") SimpleDateFormat sdfCheckTime = new SimpleDateFormat("HH:mm");
-            GregorianCalendar calendarday = new GregorianCalendar();
-            Date today = calendarday.getTime();
-            String stTimeNow = sdfCheckTime.format(today);
-            try {
-                Date dTimeNow = sdfCheckTime.parse(stTimeNow);
-                Date dSelectTime = sdfCheckTime.parse(start_time);
-                if (dSelectTime.getTime() > dTimeNow.getTime()){ //проверяем чтобы выбранное время было позже чем сейчас
-
-                    TakeBackgroungResourceForAdapter takeBackgroungResourceForAdapter = new TakeBackgroungResourceForAdapter();
-                    int iResource = takeBackgroungResourceForAdapter.takeBackgroungResourceForAdapter(type);
-                    holder.typesItem.setBackgroundResource(iResource);
-
-                    ll_item_table.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            mlistener.selectTime(start_time, type);
-                        }
-                    });
-                }else{
-                    holder.typesItem.setBackgroundResource(R.drawable.table_item_out_of_time);
-                    holder.startTimeItem.setTextColor(Color.BLACK);
-                    ll_item_table.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            mlistener.selectTime("outTime",
-                                    "outTime");
-                        }
-                    });
-                }
-            } catch (ParseException e) {
-                e.printStackTrace();
+        try {
+            Date today = new GregorianCalendar().getTime();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+            Date timeNow = dateFormat.parse(dateFormat.format(today));
+            Date selectedTime = dateFormat.parse(startTime);
+            if (isToday && (selectedTime.getTime() < timeNow.getTime())) { //проверяем чтобы выбранное время было позже чем сейчас
+                holder.workoutTypes.setBackgroundResource(R.drawable.table_item_out_of_time);
+                holder.startTime.setTextColor(Color.BLACK);
+                holder.tableLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        listener.selectTime("outTime",
+                                "outTime");
+                    }
+                });
+            } else {
+                BackgroundDrawable backgroundDrawable = new BackgroundDrawable();
+                int background = backgroundDrawable.getBackgroundDrawable(workoutType);
+                holder.workoutTypes.setBackgroundResource(background);
+                holder.tableLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        listener.selectTime(startTime, workoutType);
+                    }
+                });
             }
-        }else {
-
-            TakeBackgroungResourceForAdapter takeBackgroungResourceForAdapter = new TakeBackgroungResourceForAdapter();
-            int iResource = takeBackgroungResourceForAdapter.takeBackgroungResourceForAdapter(type);
-            holder.typesItem.setBackgroundResource(iResource);
-
-            ll_item_table.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    mlistener.selectTime(start_time, type);
-                }
-            });
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
-
     }
 
     @Override
@@ -127,6 +112,6 @@ public class RecyclerAdapterRecordForTrainingSelect extends RecyclerView.Adapter
 
     @Override
     public int getItemCount() {
-        return shediletems.size();
+        return scheduleItems.size();
     }
 }

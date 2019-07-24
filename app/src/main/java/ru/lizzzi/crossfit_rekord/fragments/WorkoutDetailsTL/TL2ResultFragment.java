@@ -64,7 +64,8 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
 
     @SuppressLint("HandlerLeak")
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container,
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_tl2result, container, false);
 
@@ -75,7 +76,9 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
         progressBar = view.findViewById(R.id.progressBar4);
         Button buttonError = view.findViewById(R.id.button5);
 
-        sharedPreferences = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        sharedPreferences = Objects.requireNonNull(getContext()).getSharedPreferences(
+                APP_PREFERENCES,
+                Context.MODE_PRIVATE);
         buttonSaveReult.setText(R.string.strEnterResult);
 
         handlerOpenFragment = new Handler() {
@@ -146,7 +149,6 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
 
     private void getTrainingResults(){
         String selectedDay =  sharedPreferences.getString(APP_PREFERENCES_SELECTEDDAY, "");
-
         Bundle bundle = new Bundle();
         bundle.putString("Selected_day", selectedDay);
         bundle.putString("Table", "results");
@@ -157,9 +159,7 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
     @NonNull
     @Override
     public Loader<List<Map>> onCreateLoader(int id, Bundle args) {
-        Loader<List<Map>> loader;
-        loader = new WorkoutDetailsLoaders(getContext(), args);
-        return loader;
+        return new WorkoutDetailsLoaders(getContext(), args);
     }
 
     @Override
@@ -168,7 +168,8 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
         progressBar.setVisibility(View.INVISIBLE);
         if (data != null && data.size() > 0) {
             for (int i = 0; i < data.size(); i++) {
-                String currentUserId =  sharedPreferences.getString(APP_PREFERENCES_OBJECTID, "");
+                String currentUserId =
+                        sharedPreferences.getString(APP_PREFERENCES_OBJECTID, "");
                 if (data.get(i).containsValue(currentUserId)) {
                     skill = String.valueOf(data.get(i).get("skill"));
                     wodLevel = String.valueOf(data.get(i).get("wod_level"));
@@ -178,14 +179,14 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
                 }
             }
             adapter = new RecyclerAdapterWorkoutDetails(getContext(), data);
-            LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
-            recViewItemsInWod.setLayoutManager(mLayoutManager);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+            recViewItemsInWod.setLayoutManager(layoutManager);
             recViewItemsInWod.setAdapter(adapter);
 
         } else {
             if (adapter != null) {
-                LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
-                recViewItemsInWod.setLayoutManager(mLayoutManager);
+                LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+                recViewItemsInWod.setLayoutManager(layoutManager);
                 recViewItemsInWod.setAdapter(null);
             }
         }
