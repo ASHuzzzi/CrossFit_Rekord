@@ -7,18 +7,19 @@
     android:orientation="vertical">
 
     <android.support.v4.view.ViewPager
-        android:id="@+id/vpStart_Screen_Slider"
+        android:id="@+id/viewPagerSlider"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="2" />
 
     <LinearLayout
-        android:id="@+id/llStart_Screen_Dots"
+        android:id="@+id/linLayoutDots"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dots_height"
         android:layout_marginBottom="@dimen/dots_margin_bottom"
         android:gravity="center"
-        android:orientation="horizontal"></LinearLayout>
+        android:orientation="horizontal">
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -32,7 +33,7 @@
         android:orientation="vertical">
 
         <Button
-            android:id="@+id/button_schedule"
+            android:id="@+id/buttonSchedule"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
@@ -43,7 +44,7 @@
             tools:ignore="NestedWeights" />
 
         <Button
-            android:id="@+id/button_record_training"
+            android:id="@+id/buttonRecordTraining"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
@@ -54,7 +55,7 @@
             android:textStyle="bold" />
 
         <Button
-            android:id="@+id/button_calendar_wod"
+            android:id="@+id/buttonCalendarWod"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
@@ -63,7 +64,7 @@
             android:text="@string/button_calendar_wod" />
 
         <Button
-            android:id="@+id/button_definition"
+            android:id="@+id/buttonDefinition"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
@@ -72,7 +73,7 @@
             android:text="@string/button_definition" />
 
         <Button
-            android:id="@+id/button_contss"
+            android:id="@+id/buttonContacts"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"

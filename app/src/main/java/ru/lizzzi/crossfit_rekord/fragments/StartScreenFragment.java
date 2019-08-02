@@ -27,31 +27,28 @@ import ru.lizzzi.crossfit_rekord.interfaces.ChangeTitle;
 public class StartScreenFragment extends Fragment {
 
     private LinearLayout linLayStartScreenDots;
-    private PageAdapterStartScreenSlider adapterStartScreenSlider;
+    private PageAdapterStartScreenSlider adapterSlider;
     private int numberOfPage = 0;
     private ViewPager viewPager;
     private Handler handlerStartScreen;
-    private int delay = 2000; //milliseconds
+    private int DELAY = 2000;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_start_screen, container, false);
+        View view = inflater.inflate(R.layout.fragment_start_screen, container, false);
 
-        Button buttonSchedule = v.findViewById(R.id.button_schedule);
-        Button buttonRecordTraining = v.findViewById(R.id.button_record_training);
-        Button buttonDescription = v.findViewById(R.id.button_definition);
-        Button buttonContacts = v.findViewById(R.id.button_contss);
-        Button buttonCalendarWod = v.findViewById(R.id.button_calendar_wod);
+        Button buttonSchedule = view.findViewById(R.id.buttonSchedule);
+        Button buttonRecordTraining = view.findViewById(R.id.buttonRecordTraining);
+        Button buttonDescription = view.findViewById(R.id.buttonDefinition);
+        Button buttonContacts = view.findViewById(R.id.buttonContacts);
+        Button buttonCalendarWod = view.findViewById(R.id.buttonCalendarWod);
 
-        handlerStartScreen = new Handler();
-        viewPager = v.findViewById(R.id.vpStart_Screen_Slider);
-        linLayStartScreenDots = v.findViewById(R.id.llStart_Screen_Dots);
+        viewPager = view.findViewById(R.id.viewPagerSlider);
+        linLayStartScreenDots = view.findViewById(R.id.linLayoutDots);
 
-        addBottomDots(0);
-
-        adapterStartScreenSlider = new PageAdapterStartScreenSlider(getChildFragmentManager());
-        viewPager.setAdapter(adapterStartScreenSlider);
+        adapterSlider = new PageAdapterStartScreenSlider(getChildFragmentManager());
+        viewPager.setAdapter(adapterSlider);
         viewPager.addOnPageChangeListener(viewPagerPageChangeListener);
 
         buttonSchedule.setOnClickListener(new View.OnClickListener() {
@@ -90,29 +87,37 @@ public class StartScreenFragment extends Fragment {
                 openFragment(ContactsFragment.class);
             }
         });
-        return v;
+        handlerStartScreen = new Handler();
+        addBottomDots(0);
+        return view;
     }
 
     private void openFragment(Class fragmentClass) {
-        Fragment fragment = null;
         try {
-            fragment = (Fragment) fragmentClass.newInstance();
+            Fragment fragment = (Fragment) fragmentClass.newInstance();
+            FragmentManager fragmentManager = getFragmentManager();
+            FragmentTransaction fragmentTransaction;
+            if (fragmentManager != null) {
+                fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.setCustomAnimations(
+                        R.anim.pull_in_right,
+                        R.anim.push_out_left,
+                        R.anim.pull_in_left,
+                        R.anim.push_out_right);
+                fragmentTransaction.replace(R.id.container, fragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction ft = fragmentManager.beginTransaction();
-        ft.setCustomAnimations(R.anim.pull_in_right, R.anim.push_out_left, R.anim.pull_in_left, R.anim.push_out_right);
-        ft.replace(R.id.container, fragment);
-        ft.addToBackStack(null);
-        ft.commit();
     }
 
 
     @Override
     public  void onStart() {
         super.onStart();
-        if (getActivity() instanceof ChangeTitle){
+        if (getActivity() instanceof ChangeTitle) {
             ChangeTitle listernerChangeTitle = (ChangeTitle) getActivity();
             listernerChangeTitle.changeTitle(R.string.app_name, R.string.app_name);
         }
@@ -120,7 +125,7 @@ public class StartScreenFragment extends Fragment {
 
     public void onResume() {
         super.onResume();
-        handlerStartScreen.postDelayed(runnable, delay);
+        handlerStartScreen.postDelayed(runnable, DELAY);
     }
 
     @Override
@@ -130,9 +135,8 @@ public class StartScreenFragment extends Fragment {
     }
 
     private void addBottomDots(int iCurrentPage) {
-        TextView[] arrDots = new TextView[4];
-
         linLayStartScreenDots.removeAllViews();
+        TextView[] arrDots = new TextView[4];
         for (int i = 0; i < arrDots.length; i++) {
             arrDots[i] = new TextView(getContext());
             arrDots[i].setText(Html.fromHtml("&#8226;"));
@@ -145,8 +149,8 @@ public class StartScreenFragment extends Fragment {
                 ContextCompat.getColor(Objects.requireNonNull(getContext()), R.color.colorRedPrimary));
     }
 
-    //  viewpager change listener
-    ViewPager.OnPageChangeListener viewPagerPageChangeListener = new ViewPager.OnPageChangeListener() {
+    ViewPager.OnPageChangeListener viewPagerPageChangeListener =
+            new ViewPager.OnPageChangeListener() {
 
         @Override
         public void onPageSelected(int position) {
@@ -165,13 +169,11 @@ public class StartScreenFragment extends Fragment {
 
     Runnable runnable = new Runnable() {
         public void run() {
-            if (adapterStartScreenSlider.getCount() == numberOfPage) {
-                numberOfPage = 0;
-            } else {
-                numberOfPage++;
-            }
+            numberOfPage = (adapterSlider.getCount() == numberOfPage)
+                    ? 0
+                    : numberOfPage++;
             viewPager.setCurrentItem(numberOfPage, true);
-            handlerStartScreen.postDelayed(this, delay);
+            handlerStartScreen.postDelayed(this, DELAY);
         }
     };
 }

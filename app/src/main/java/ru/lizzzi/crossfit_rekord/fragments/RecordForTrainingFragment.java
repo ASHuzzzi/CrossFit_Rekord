@@ -1,15 +1,16 @@
 package ru.lizzzi.crossfit_rekord.fragments;
 
 import android.annotation.SuppressLint;
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Message;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
@@ -23,11 +24,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -36,14 +33,12 @@ import java.util.Objects;
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterRecordForTrainingSelect;
 import ru.lizzzi.crossfit_rekord.inspectionСlasses.UriParser;
-import ru.lizzzi.crossfit_rekord.inspectionСlasses.Network;
 import ru.lizzzi.crossfit_rekord.interfaces.ChangeTitle;
 import ru.lizzzi.crossfit_rekord.interfaces.ListenerRecordForTrainingSelect;
-import ru.lizzzi.crossfit_rekord.loaders.TableFragmentLoader;
+import ru.lizzzi.crossfit_rekord.model.RecordForTrainingViewModel;
 
-public class RecordForTrainingFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<List<Map>>> {
+public class RecordForTrainingFragment extends Fragment {
 
-    private final static int LOADER_ID = 1; //идентефикатор loader'а
     private LinearLayout linLayoutError;
     private LinearLayout linLayoutSchedule;
     private RecyclerView recyclerViewSchedule;
@@ -54,15 +49,7 @@ public class RecordForTrainingFragment extends Fragment implements LoaderManager
     private ImageView imageBackground;
 
     private RecyclerAdapterRecordForTrainingSelect adapter;
-
-    private Thread threadOpenFragment;
-    private Runnable runnableOpenFragment;
-
-    private boolean todayOrNot;
-    private List<List<Map>> schedule;
-    private int selectedDayOfWeek; // выбранный пользователем день
-    private int selectedDayForUri;
-    private int selectedGym;
+    private RecordForTrainingViewModel viewModel;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -70,6 +57,8 @@ public class RecordForTrainingFragment extends Fragment implements LoaderManager
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_record_for_training_select, container, false);
+        viewModel = ViewModelProviders.of(RecordForTrainingFragment.this).
+                get(RecordForTrainingViewModel.class);
         Objects.requireNonNull(getActivity()).setTitle(R.string.title_RecordForTraining_Fragment);
 
         buttonToday = view.findViewById(R.id.btToday);
@@ -82,59 +71,24 @@ public class RecordForTrainingFragment extends Fragment implements LoaderManager
         progressBar = view.findViewById(R.id.pbRfTS);
         imageBackground = view.findViewById(R.id.iv_RfTS);
 
-        //получаю значения для кнопок
-        final Date today = new Date();
-        final GregorianCalendar gregorianCalendar = new GregorianCalendar();
-        gregorianCalendar.add(Calendar.DAY_OF_YEAR, 1);
-        final Date tomorrow = gregorianCalendar.getTime();
-        gregorianCalendar.add(Calendar.DAY_OF_YEAR, 1);
-        final Date afterTomorrow = gregorianCalendar.getTime();
-
         Bundle bundle = getArguments();
-        selectedGym = (bundle != null)
+        viewModel.setSelectedGym((bundle != null)
                 ? bundle.getInt("gym")
                 : Objects.requireNonNull(
-                        getContext()).getResources().getInteger(R.integer.selectSheduleParnas);
-
-        final Handler handler = new Handler(RecordForTrainingFragment.this);
-
-        //поток запускаемый при создании экрана (запуск происходит из onStart)
-        runnableOpenFragment = new Runnable() {
-            @Override
-            public void run() {
-                Network network = new Network(getContext());
-                Bundle bundle = new Bundle();
-                boolean checkDone = network.checkConnection();
-                if (checkDone) {
-                    gregorianCalendar.setTime(today);
-                    selectedDayOfWeek = gregorianCalendar.get(Calendar.DAY_OF_WEEK);
-                    todayOrNot = true;
-                    selectedDayForUri = 0;
-                    bundle.putBoolean("checkConnection", true);
-                } else {
-                    bundle.putBoolean("checkConnection", false);
-                }
-                Message message = handler.obtainMessage();
-                message.setData(bundle);
-                handler.sendMessage(message);
-            }
-        };
+                        getContext()).getResources().getInteger(R.integer.selectSheduleParnas));
 
         final SimpleDateFormat simpleDateFormat =
                 new SimpleDateFormat("EEE.\n d MMMM", Locale.getDefault());
-        buttonToday.setText(simpleDateFormat.format(today));
-        buttonTomorrow.setText(simpleDateFormat.format(tomorrow));
-        buttonAfterTomorrow.setText(simpleDateFormat.format(afterTomorrow));
+        buttonToday.setText(simpleDateFormat.format(viewModel.getToday()));
+        buttonTomorrow.setText(simpleDateFormat.format(viewModel.getTomorrow()));
+        buttonAfterTomorrow.setText(simpleDateFormat.format(viewModel.getAfterTomorrow()));
 
         buttonError.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                gregorianCalendar.setTime(today);
                 linLayoutError.setVisibility(View.INVISIBLE);
                 progressBar.setVisibility(View.VISIBLE);
-                threadOpenFragment = new Thread(runnableOpenFragment);
-                threadOpenFragment.setDaemon(true);
-                threadOpenFragment.start();
+                checkNetworkConnection();
             }
         });
 
@@ -142,11 +96,7 @@ public class RecordForTrainingFragment extends Fragment implements LoaderManager
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (adapter != null) {
-                    gregorianCalendar.setTime(today);
-                    selectedDayOfWeek = gregorianCalendar.get(Calendar.DAY_OF_WEEK);
-                    todayOrNot = true;
-                    selectedDayForUri = 0;
-                    drawList(schedule.get(selectedDayOfWeek -1));
+                    drawList(viewModel.getSchedule(viewModel.getToday()));
                 }
                 return true ;
             }
@@ -156,11 +106,7 @@ public class RecordForTrainingFragment extends Fragment implements LoaderManager
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (adapter != null) {
-                    gregorianCalendar.setTime(tomorrow);
-                    selectedDayOfWeek = gregorianCalendar.get(Calendar.DAY_OF_WEEK);
-                    todayOrNot = false;
-                    selectedDayForUri = 1;
-                    drawList(schedule.get(selectedDayOfWeek -1));
+                    drawList(viewModel.getSchedule(viewModel.getTomorrow()));
                 }
                 return true ;
             }
@@ -170,11 +116,7 @@ public class RecordForTrainingFragment extends Fragment implements LoaderManager
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (adapter != null) {
-                    gregorianCalendar.setTime(afterTomorrow);
-                    selectedDayOfWeek = gregorianCalendar.get(Calendar.DAY_OF_WEEK);
-                    todayOrNot = false;
-                    selectedDayForUri = 2;
-                    drawList(schedule.get(selectedDayOfWeek -1));
+                    drawList(viewModel.getSchedule(viewModel.getAfterTomorrow()));
                 }
                 return true ;
             }
@@ -182,44 +124,11 @@ public class RecordForTrainingFragment extends Fragment implements LoaderManager
         return view;
     }
 
-    private void startAsyncTaskLoader() {
-        Bundle bundle = new Bundle();
-        bundle.putString("SelectedGym", String.valueOf(selectedGym));
-        getLoaderManager().restartLoader(LOADER_ID, bundle, this).forceLoad();
-    }
-
-    @NonNull
-    @Override
-    public Loader<List<List<Map>>> onCreateLoader(int id, Bundle args) {
-        Loader<List<List<Map>>> loader;
-        loader = new TableFragmentLoader(getContext(), args);
-        return loader;
-    }
-
-    @Override
-    public void onLoadFinished(@NonNull Loader<List<List<Map>>> loader, List<List<Map>> data) {
-        if (data != null) {
-            schedule = data;
-            drawList(schedule.get(selectedDayOfWeek -1));
-            linLayoutError.setVisibility(View.INVISIBLE);
-            progressBar.setVisibility(View.INVISIBLE);
-            linLayoutSchedule.setVisibility(View.VISIBLE);
-        } else {
-            linLayoutError.setVisibility(View.VISIBLE);
-            progressBar.setVisibility(View.INVISIBLE);
-            linLayoutSchedule.setVisibility(View.INVISIBLE);
-        }
-    }
-
-    @Override
-    public void onLoaderReset(@NonNull Loader<List<List<Map>>> loader) {
-    }
-
     private void drawList(List<Map> dailySchedule){
         adapter = new RecyclerAdapterRecordForTrainingSelect(
                 getContext(),
                 dailySchedule,
-                todayOrNot,
+                viewModel.getIsToday(),
                 new ListenerRecordForTrainingSelect() {
             @Override
             public void selectTime(String startTime, String typesItem) {
@@ -232,7 +141,11 @@ public class RecordForTrainingFragment extends Fragment implements LoaderManager
                     toast.show();
                 } else {
                     UriParser uriParser = new UriParser();
-                    Uri uri = uriParser.getURI(selectedGym, selectedDayForUri, startTime, typesItem);
+                    Uri uri = uriParser.getURI(
+                            viewModel.getSelectedGym(),
+                            viewModel.getSelectedDayForUri(),
+                            startTime,
+                            typesItem);
                     Intent intent = new Intent();
                     intent.setAction(Intent.ACTION_VIEW);
                     intent.addCategory(Intent.CATEGORY_BROWSABLE);
@@ -247,7 +160,7 @@ public class RecordForTrainingFragment extends Fragment implements LoaderManager
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         recyclerViewSchedule.setLayoutManager(mLayoutManager);
         recyclerViewSchedule.setAdapter(adapter);
-        setPressedButtons(selectedDayForUri);
+        setPressedButtons(viewModel.getSelectedDayForUri());
     }
 
     private void setPressedButtons(int selectedDay) {
@@ -271,21 +184,15 @@ public class RecordForTrainingFragment extends Fragment implements LoaderManager
         buttonAfterTomorrow.setPressed(afterTomorrow);
     }
 
-    //в onStart делаем проверку на наличие данных в адаптаре. При первом запуске адаптер пустой и
-    //будет запущен поток.
-    //при возврате через кнопку back адаптер будет не пустым поток не запуститься. что сохранит
-    //состояние адаптера в положении перед открытием нового фрагмента
     @Override
     public void onStart() {
         super.onStart();
         if (adapter == null) {
             linLayoutSchedule.setVisibility(View.INVISIBLE);
             linLayoutError.setVisibility(View.INVISIBLE);
-            threadOpenFragment = new Thread(runnableOpenFragment);
-            threadOpenFragment.setDaemon(true);
-            threadOpenFragment.start();
+            checkNetworkConnection();
         } else {
-            setPressedButtons(selectedDayForUri);
+            setPressedButtons(viewModel.getSelectedDayForUri());
             linLayoutSchedule.setVisibility(View.VISIBLE);
         }
 
@@ -294,7 +201,7 @@ public class RecordForTrainingFragment extends Fragment implements LoaderManager
             listernerChangeTitle.changeTitle(R.string.title_RecordForTraining_Fragment, R.string.title_RecordForTraining_Fragment);
         }
         int backgroundImage =
-                (selectedGym == getResources().getInteger(R.integer.selectSheduleParnas))
+                (viewModel.isSelectedGymParnas())
                 ? R.drawable.background_foto_1
                 : R.drawable.background_foto_2;
 
@@ -306,34 +213,47 @@ public class RecordForTrainingFragment extends Fragment implements LoaderManager
         }
     }
 
-    public void onStop() {
-        super.onStop();
-        if (getLoaderManager().hasRunningLoaders()) {
-            getLoaderManager().destroyLoader(LOADER_ID);
+    private void checkNetworkConnection() {
+        if (viewModel.checkNetwork()) {
+            linLayoutError.setVisibility(View.INVISIBLE);
+            progressBar.setVisibility(View.VISIBLE);
+            viewModel.setToday(true);
+            if (viewModel.isSelectedGymParnas()) {
+                loadScheduleParnas();
+            } else {
+                loadScheduleMyzhestvo();
+            }
+        } else {
+            linLayoutError.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.INVISIBLE);
         }
     }
 
-    private static class Handler extends android.os.Handler {
-        private final WeakReference<RecordForTrainingFragment> fragmentWeakReference;
+    private void loadScheduleParnas() {
+        LiveData<List<List<Map>>> liveDataParnas = viewModel.loadScheduleParnas();
+        setObserveForLiveData(liveDataParnas);
+    }
 
-        Handler(RecordForTrainingFragment fragmentInstance) {
-            fragmentWeakReference = new WeakReference<>(fragmentInstance);
-        }
+    private void loadScheduleMyzhestvo() {
+        LiveData<List<List<Map>>> liveDataMyzhestvo = viewModel.loadScheduleMyzhestvo();
+        setObserveForLiveData(liveDataMyzhestvo);
+    }
 
-        @Override
-        public void handleMessage(Message message) {
-            RecordForTrainingFragment fragment = fragmentWeakReference.get();
-            if (fragment != null) {
-                boolean resultCheck = message.getData().getBoolean("checkConnection");
-                if (resultCheck) {
-                    fragment.linLayoutError.setVisibility(View.INVISIBLE);
-                    fragment.progressBar.setVisibility(View.VISIBLE);
-                    fragment.startAsyncTaskLoader();
+    private void setObserveForLiveData(LiveData<List<List<Map>>> listLiveData) {
+        listLiveData.observe(RecordForTrainingFragment.this, new Observer<List<List<Map>>>() {
+            @Override
+            public void onChanged(@Nullable List<List<Map>> lists) {
+                if (lists != null) {
+                    drawList(lists.get(viewModel.getSelectedDay() - 1));
+                    linLayoutError.setVisibility(View.INVISIBLE);
+                    progressBar.setVisibility(View.INVISIBLE);
+                    linLayoutSchedule.setVisibility(View.VISIBLE);
                 } else {
-                    fragment.linLayoutError.setVisibility(View.VISIBLE);
-                    fragment.progressBar.setVisibility(View.INVISIBLE);
+                    linLayoutError.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.INVISIBLE);
+                    linLayoutSchedule.setVisibility(View.INVISIBLE);
                 }
             }
-        }
+        });
     }
 }
