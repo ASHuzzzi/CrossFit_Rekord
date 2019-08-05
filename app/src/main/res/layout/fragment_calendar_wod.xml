@@ -61,7 +61,7 @@
     </com.prolificinteractive.materialcalendarview.MaterialCalendarView>
 
     <LinearLayout
-        android:id="@+id/Layout_Error_Calendar_Wod"
+        android:id="@+id/layout_Error"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
@@ -84,14 +84,14 @@
             android:text="@string/error_connection2" />
 
         <Button
-            android:id="@+id/bt_error_calendar_wod"
+            android:id="@+id/button_Error"
             style="@style/ErrorButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>
 
     <ProgressBar
-        android:id="@+id/pb_calendar_wod"
+        android:id="@+id/progressBar"
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

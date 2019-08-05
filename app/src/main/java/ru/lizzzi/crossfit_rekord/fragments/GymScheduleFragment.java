@@ -54,8 +54,6 @@ public class GymScheduleFragment extends Fragment {
     private LinearLayout layoutError;
     private ImageView imageTable;
 
-    private int selectedGym;
-
     private RecyclerAdapterTable adapter; //адаптер для списка тренировок
     private GymScheduleViewModel viewModel;
 
@@ -64,6 +62,8 @@ public class GymScheduleFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_table, container, false);
+        viewModel = ViewModelProviders.of(GymScheduleFragment.this)
+                .get(GymScheduleViewModel.class);
 
         buttonMonday = view.findViewById(R.id.day_1);
         buttonTuesday = view.findViewById(R.id.day_2);
@@ -83,10 +83,10 @@ public class GymScheduleFragment extends Fragment {
         progressBar.setVisibility(View.VISIBLE);
 
         Bundle bundle = getArguments();
-        selectedGym = (bundle != null)
+        viewModel.setSelectedGym((bundle != null)
                 ? bundle.getInt("gym")
                 : Objects.requireNonNull(
-                getContext()).getResources().getInteger(R.integer.selectSheduleParnas);
+                getContext()).getResources().getInteger(R.integer.selectSheduleParnas));
 
         buttonError.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -152,7 +152,6 @@ public class GymScheduleFragment extends Fragment {
                 return true ;
             }
         });
-        viewModel = ViewModelProviders.of(GymScheduleFragment.this).get(GymScheduleViewModel.class);
         return view;
     }
 
@@ -160,7 +159,8 @@ public class GymScheduleFragment extends Fragment {
         if (adapter != null) {
             viewModel.setSelectedDay(selectedDay);
             showSchedule(
-                    viewModel.getSchedule1(selectedGym).get(viewModel.getSelectedDay() - 1));
+                    viewModel.getSchedule(viewModel.getSelectedGym())
+                            .get(viewModel.getSelectedDay() - 1));
         }
     }
 
@@ -183,9 +183,12 @@ public class GymScheduleFragment extends Fragment {
                         calendar = Calendar.getInstance();
                         int hourNow = calendar.get(Calendar.HOUR_OF_DAY);
                         Date selectTime = dateFormat.parse(stStartTime);
-                        int selectHour = selectTime.getHours();
-                        boolean selectedToday = daysWhenRecordingIsPossible.get(0).equals(viewModel.getSelectedDay());
-                        if (selectedToday && (selectHour <= hourNow)) { //проверяем чтобы выбранное время было позже чем сейчас
+                        calendar.setTime(selectTime);
+                        int selectHour = calendar.get(Calendar.HOUR_OF_DAY);
+                        boolean selectedToday =
+                                daysWhenRecordingIsPossible.get(0).equals(viewModel.getSelectedDay());
+                        //проверяем чтобы выбранное время было позже чем сейчас
+                        if (selectedToday && (selectHour <= hourNow)) {
                             Toast toast = Toast.makeText(
                                     getContext(), 
                                     "Выберите более позднее время.", 
@@ -193,10 +196,11 @@ public class GymScheduleFragment extends Fragment {
                             toast.setGravity(Gravity.CENTER, 0, 0);
                             toast.show();
                         } else {
-                            int numberDayOfWeek =daysWhenRecordingIsPossible.indexOf(viewModel.getSelectedDay());
+                            int numberDayOfWeek =
+                                    daysWhenRecordingIsPossible.indexOf(viewModel.getSelectedDay());
                             UriParser uriParser = new UriParser();
                             Uri uri = uriParser.getURI(
-                                    selectedGym, 
+                                    viewModel.getSelectedGym(),
                                     numberDayOfWeek, 
                                     stStartTime, 
                                     stTypesItem);
@@ -213,7 +217,9 @@ public class GymScheduleFragment extends Fragment {
                         e.printStackTrace();
                     }
                 } else {
-                    String nameDayOfWeek = calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault());
+                    String nameDayOfWeek = calendar.getDisplayName(
+                            Calendar.DAY_OF_WEEK,
+                            Calendar.LONG, Locale.getDefault());
                     Toast toast = Toast.makeText(
                             getContext(), 
                             "Запись возможна на сегодня (" + nameDayOfWeek  + ") и два дня вперед", 
@@ -288,7 +294,7 @@ public class GymScheduleFragment extends Fragment {
             listernerChangeTitle.changeTitle(R.string.title_Table_Fragment, R.string.title_Table_Fragment);
         }
 
-        int backgroundImage = (viewModel.isSelectedGymParnas(selectedGym))
+        int backgroundImage = (viewModel.isSelectedGymParnas())
                 ? R.drawable.background_foto_1
                 : R.drawable.background_foto_2;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -303,7 +309,7 @@ public class GymScheduleFragment extends Fragment {
     private void checkNetworkConnection() {
         if (viewModel.checkNetwork()) {
             viewModel.setSelectedDay(Calendar.MONDAY);
-            if (viewModel.isSelectedGymParnas(selectedGym)) {
+            if (viewModel.isSelectedGymParnas()) {
                 loadScheduleParnas();
             } else {
                 loadScheduleMyzhestvo();
@@ -316,13 +322,13 @@ public class GymScheduleFragment extends Fragment {
 
     private void loadScheduleParnas() {
         LiveData<List<List<Map>>> liveDataParnas =
-                viewModel.loadScheduleParnas(String.valueOf(selectedGym));
+                viewModel.loadScheduleParnas();
         setObserveForLiveData(liveDataParnas);
     }
 
     private void loadScheduleMyzhestvo() {
         LiveData<List<List<Map>>> liveDataMyzhestvo =
-                viewModel.loadScheduleMyzhestvo(String.valueOf(selectedGym));
+                viewModel.loadScheduleMyzhestvo();
         setObserveForLiveData(liveDataMyzhestvo);
     }
 

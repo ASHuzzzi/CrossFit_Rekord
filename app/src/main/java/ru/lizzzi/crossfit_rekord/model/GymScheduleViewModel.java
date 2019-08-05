@@ -11,7 +11,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executor;
-import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -26,27 +26,29 @@ public class GymScheduleViewModel extends AndroidViewModel {
             1,
             60,
             TimeUnit.SECONDS,
-            new LinkedBlockingDeque<Runnable>());
+            new LinkedBlockingQueue<Runnable>());
     private MutableLiveData<List<List<Map>>> liveDataParnas;
     private MutableLiveData<List<List<Map>>> liveDataMyzhestvo;
     private BackendlessQueries backendlessQuery;
     private int GYM_PARNAS = 1;
     private int selectedDay;
+    private int selectedGym;
 
     public GymScheduleViewModel(@NonNull Application application) {
         super(application);
         backendlessQuery = new BackendlessQueries();
         selectedDay = Calendar.MONDAY;
+        selectedGym = GYM_PARNAS;
     }
 
-    public LiveData<List<List<Map>>> loadScheduleParnas(final String selectedGym) {
+    public LiveData<List<List<Map>>> loadScheduleParnas() {
         if (liveDataParnas == null) {
             liveDataParnas = new MutableLiveData<>();
         }
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                List<Map> loadedSchedule = backendlessQuery.loadSchedule(selectedGym);
+                List<Map> loadedSchedule = backendlessQuery.loadSchedule(String.valueOf(selectedGym));
                 if (loadedSchedule != null) {
                     scheduleParnas = splitRawSchedule(loadedSchedule);
                     liveDataParnas.postValue(scheduleParnas);
@@ -58,14 +60,14 @@ public class GymScheduleViewModel extends AndroidViewModel {
         return liveDataParnas;
     }
 
-    public LiveData<List<List<Map>>> loadScheduleMyzhestvo(final String selectedGym) {
+    public LiveData<List<List<Map>>> loadScheduleMyzhestvo() {
         if (liveDataMyzhestvo == null) {
             liveDataMyzhestvo = new MutableLiveData<>();
         }
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                List<Map> loadedSchedule = backendlessQuery.loadSchedule(selectedGym);
+                List<Map> loadedSchedule = backendlessQuery.loadSchedule(String.valueOf(selectedGym));
                 if (loadedSchedule != null) {
                     scheduleMyzhestvo = splitRawSchedule(loadedSchedule);
                     liveDataMyzhestvo.postValue(scheduleMyzhestvo);
@@ -137,7 +139,7 @@ public class GymScheduleViewModel extends AndroidViewModel {
         return scheduleForGym;
     }
 
-    public List<List<Map>> getSchedule1(int selectedGym) {
+    public List<List<Map>> getSchedule(int selectedGym) {
         return  (selectedGym == GYM_PARNAS) ? scheduleParnas : scheduleMyzhestvo;
     }
 
@@ -146,7 +148,7 @@ public class GymScheduleViewModel extends AndroidViewModel {
         return network.checkConnection();
     }
 
-    public boolean isSelectedGymParnas(int selectedGym) {
+    public boolean isSelectedGymParnas() {
         return selectedGym == GYM_PARNAS;
     }
 
@@ -156,5 +158,13 @@ public class GymScheduleViewModel extends AndroidViewModel {
 
     public int getSelectedDay() {
         return selectedDay;
+    }
+
+    public void setSelectedGym(int newSelectedGym) {
+        selectedGym = newSelectedGym;
+    }
+
+    public int getSelectedGym() {
+        return selectedGym;
     }
 }

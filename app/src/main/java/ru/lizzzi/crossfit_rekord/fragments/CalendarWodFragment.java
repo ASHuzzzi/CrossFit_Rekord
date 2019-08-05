@@ -1,17 +1,14 @@
 package ru.lizzzi.crossfit_rekord.fragments;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.SharedPreferences;
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,252 +31,138 @@ import java.util.List;
 import java.util.Locale;
 
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.data.SQLiteStorageWod;
-import ru.lizzzi.crossfit_rekord.inspectionСlasses.Network;
 import ru.lizzzi.crossfit_rekord.interfaces.ChangeTitle;
-import ru.lizzzi.crossfit_rekord.loaders.CalendarWodLoader;
+import ru.lizzzi.crossfit_rekord.model.CalendarWodViewModel;
 
-public class CalendarWodFragment extends Fragment implements  OnDateSelectedListener,
-        OnMonthChangedListener, LoaderManager.LoaderCallbacks<List<Date>> {
+public class CalendarWodFragment extends Fragment {
 
-    private Handler handlerOpenFragment;
-
-    private final static int LOADER_ID = 1; //идентефикатор loader'а
-
-    private SQLiteStorageWod dbStorage;
-
-    private static final String APP_PREFERENCES = "audata";
-    private static final String APP_PREFERENCES_OBJECTID = "ObjectId";
-    private static final String APP_PREFERENCES_SELECTEDDAY = "SelectedDay";
-    private static final String APP_PREFERENCES_SELECTEDDAYMONTH = "SelectedDayMonth";
-    private SharedPreferences sharedPreferences;
-
-    private int month;
-
-    private LinearLayout layoutErrorCalendarWod;
+    private LinearLayout layoutError;
     private MaterialCalendarView calendarView;
     private ProgressBar progressBar;
+    private CalendarWodViewModel viewModel;
 
-    private long timeStart;
-    private long timeInterval;
-    private long timeFinish;
-
-    private List<Date> selectDates;
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-    }
-
-    @SuppressLint("HandlerLeak")
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.fragment_calendar_wod, container, false);
+        viewModel = ViewModelProviders.of(CalendarWodFragment.this)
+                .get(CalendarWodViewModel.class);
 
-        calendarView = view.findViewById(R.id.calendarView);
-        layoutErrorCalendarWod = view.findViewById(R.id.Layout_Error_Calendar_Wod);
-        Button buttonErrorCalendarWod = view.findViewById(R.id.bt_error_calendar_wod);
-        progressBar = view.findViewById(R.id.pb_calendar_wod);
+        initCalendarView(view);
 
-        sharedPreferences = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        layoutError = view.findViewById(R.id.layout_Error);
+        layoutError.setVisibility(View.GONE);
 
-        calendarView.setVisibility(View.INVISIBLE);
-        layoutErrorCalendarWod.setVisibility(View.GONE);
+        progressBar = view.findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);
 
-        dbStorage = new SQLiteStorageWod(getContext());
-        dbStorage.createDataBase();
-
-        Calendar c = Calendar.getInstance();
-        int maximumDateYear = c.get(Calendar.YEAR);
-        int maximumDateMonth = c.get(Calendar.MONTH);
-        int maximumDateDay = c.getActualMaximum(Calendar.DAY_OF_MONTH);
-
-        calendarView.state().edit()
-                .setMinimumDate(CalendarDay.from(2019, 0, 1))
-                .setMaximumDate(CalendarDay.from(maximumDateYear, maximumDateMonth, maximumDateDay))
-                .commit();
-        calendarView.setOnDateChangedListener(this);
-        calendarView.setOnMonthChangedListener(this);
-        calendarView.setSaveEnabled(true);
-
-        getLoaderManager().initLoader(LOADER_ID, null,this);
-
-        //хэндлер для потока runnableOpenFragment
-        handlerOpenFragment = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                Bundle bundle = msg.getData();
-                boolean checkDone = bundle.getBoolean("result");
-                if (checkDone) {
-                    layoutErrorCalendarWod.setVisibility(View.GONE);
-                    String status = bundle.getString("status");
-                    if (status != null && status.equals("load")) {
-                        calendarView.setVisibility(View.INVISIBLE);
-                        progressBar.setVisibility(View.VISIBLE);
-                        startAsyncTaskLoader(timeStart, timeFinish);
-                    } else {
-                        calendarView.setVisibility(View.VISIBLE);
-                        progressBar.setVisibility(View.INVISIBLE);
-                    }
-                } else {
-                    layoutErrorCalendarWod.setVisibility(View.VISIBLE);
-                    progressBar.setVisibility(View.INVISIBLE);
-                }
-            }
-        };
-
-        buttonErrorCalendarWod.setOnClickListener(new View.OnClickListener() {
+        Button buttonError = view.findViewById(R.id.button_Error);
+        buttonError.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                layoutErrorCalendarWod.setVisibility(View.GONE);
+                layoutError.setVisibility(View.GONE);
                 progressBar.setVisibility(View.VISIBLE);
-                startAsyncTaskLoader(timeStart, timeFinish);
+                getDates();
             }
         });
         return view;
     }
 
-    @Override
-    public void onDateSelected(@NonNull MaterialCalendarView widget,
-                               @NonNull CalendarDay date,
-                               boolean selected) {
-        calendarView.setDateSelected(date, false);
-        String Day = (date.getDay() < 10) ? "0" + date.getDay() : String.valueOf(date.getDay());
-        String Month = (date.getMonth() < 10)
-                ? "0" + (date.getMonth() + 1)
-                : String.valueOf((date.getMonth() + 1));
+    private void initCalendarView(View rootView) {
+        calendarView = rootView.findViewById(R.id.calendarView);
+        Calendar calendar = GregorianCalendar.getInstance();
+        int maximumDateYear = calendar.get(Calendar.YEAR);
+        int maximumDateMonth = calendar.get(Calendar.MONTH);
+        int maximumDateDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
 
-        String selectedDate = Month + "/" + Day + "/" + date.getYear();
-        String dateForSave = Month + "/01/" + date.getYear();
+        calendarView.state().edit()
+                .setMinimumDate(CalendarDay.from(2019, 0, 1))
+                .setMaximumDate(CalendarDay.from(maximumDateYear, maximumDateMonth, maximumDateDay))
+                .commit();
+        calendarView.setOnDateChangedListener(new OnDateSelectedListener() {
+            @Override
+            public void onDateSelected(
+                    @NonNull MaterialCalendarView widget,
+                    @NonNull CalendarDay date,
+                    boolean selected) {
+                calendarView.setDateSelected(date, false);
+                String Day = (date.getDay() < 10) ? "0" + date.getDay() : String.valueOf(date.getDay());
+                String Month = (date.getMonth() < 10)
+                        ? "0" + (date.getMonth() + 1)
+                        : String.valueOf((date.getMonth() + 1));
 
-        try {
-            SimpleDateFormat dateFormat =
-                    new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
-            Date convertSelectDate = dateFormat.parse(selectedDate);
-            Date today = new GregorianCalendar().getTime();
-            if (convertSelectDate.getTime() <= today.getTime()) {
-                sharedPreferences.edit()
-                        .putString(APP_PREFERENCES_SELECTEDDAY, selectedDate)
-                        .putString(APP_PREFERENCES_SELECTEDDAYMONTH, dateForSave)
-                        .apply();
-                Bundle bundle = new Bundle();
-                bundle.putString("tag", selectedDate);
-                WorkoutDetailsFragment fragment = new WorkoutDetailsFragment();
-                fragment.setArguments(bundle);
-                FragmentManager fragmentManager = getFragmentManager();
-                FragmentTransaction ft = fragmentManager.beginTransaction();
-                ft.setCustomAnimations(
-                        R.anim.pull_in_right,
-                        R.anim.push_out_left,
-                        R.anim.pull_in_left,
-                        R.anim.push_out_right);
-                ft.replace(R.id.container, fragment);
-                ft.addToBackStack(null);
-                ft.commit();
-            } else {
-                for (int i = 0; i < selectDates.size(); i++) {
-                    calendarView.setDateSelected(CalendarDay.from(selectDates.get(i)), true);
+                String selectedDate = Month + "/" + Day + "/" + date.getYear();
+                String dateForSave = Month + "/01/" + date.getYear();
+
+                try {
+                    SimpleDateFormat dateFormat =
+                            new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
+                    Date convertSelectDate = dateFormat.parse(selectedDate);
+                    Date today = new GregorianCalendar().getTime();
+                    if (convertSelectDate.getTime() <= today.getTime()) {
+                        viewModel.saveDateInPrefs(selectedDate, dateForSave);
+                        Bundle bundle = new Bundle();
+                        bundle.putString("tag", selectedDate);
+                        WorkoutDetailsFragment fragment = new WorkoutDetailsFragment();
+                        fragment.setArguments(bundle);
+                        FragmentManager fragmentManager = getFragmentManager();
+                        if (fragmentManager != null) {
+                            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                            fragmentTransaction.setCustomAnimations(
+                                    R.anim.pull_in_right,
+                                    R.anim.push_out_left,
+                                    R.anim.pull_in_left,
+                                    R.anim.push_out_right);
+                            fragmentTransaction.replace(R.id.container, fragment);
+                            fragmentTransaction.addToBackStack(null);
+                            fragmentTransaction.commit();
+                        }
+                    } else {
+                        for (int i = 0; i < viewModel.getSelectDatesSize(); i++) {
+                            calendarView.setDateSelected(CalendarDay.from(
+                                    viewModel.getSelectDates().get(i)),
+                                    true);
+                        }
+                        Toast.makeText(
+                                getContext(),
+                                "Тренировки еще не было",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
                 }
-                Toast.makeText(
-                        getContext(),
-                        "Тренировки еще не было",
-                        Toast.LENGTH_SHORT).show();
             }
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void onMonthChanged(MaterialCalendarView widget, CalendarDay date) {
-        int swipeMonth = date.getMonth();
-        int checkMonth = month - swipeMonth;
-        if ((checkMonth == 2) || (checkMonth == -2) || (checkMonth == -10) || (checkMonth == 10)){
-            timeStart = date.getDate().getTime() - 2592000000L ;
-            timeInterval = 2592000000L + 2592000000L;
-            timeFinish = date.getDate().getTime() + timeInterval;
-
-            calendarView.setVisibility(View.INVISIBLE);
-            layoutErrorCalendarWod.setVisibility(View.GONE);
-            progressBar.setVisibility(View.VISIBLE);
-            getDates(timeStart, timeFinish);
-
-            month = date.getMonth();
-        }
-
-    }
-
-    private void startAsyncTaskLoader(long timeStart, long timeFinish){
-        if (isAdded()) {
-            if (getLoaderManager().hasRunningLoaders()) {
-                getLoaderManager().destroyLoader(LOADER_ID);
+        });
+        calendarView.setOnMonthChangedListener(new OnMonthChangedListener() {
+            @Override
+            public void onMonthChanged(MaterialCalendarView widget, CalendarDay date) {
+                int swipeMonth = date.getMonth();
+                int checkMonth = viewModel.getMonth() - swipeMonth;
+                if ((checkMonth == 2) || (checkMonth == -2) || (checkMonth == -10) || (checkMonth == 10)){
+                    viewModel.monthChanged(date);
+                    calendarView.setVisibility(View.INVISIBLE);
+                    layoutError.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.VISIBLE);
+                    getDates();
+                }
             }
-            SimpleDateFormat dateFormat =
-                    new SimpleDateFormat("MM.dd.yyyy", Locale.getDefault());
-            Bundle bundle = new Bundle();
-            bundle.putString("startDay", dateFormat.format(timeStart));
-            bundle.putString("nowDay", dateFormat.format(timeFinish));
-            getLoaderManager().restartLoader(LOADER_ID, bundle,this).forceLoad();
-        }
-    }
-
-    @NonNull
-    @Override
-    public Loader<List<Date>> onCreateLoader(int id, Bundle bundle) {
-        return new CalendarWodLoader(getContext(), bundle);
-    }
-
-    @Override
-    public void onLoadFinished(@NonNull Loader<List<Date>> loader, List<Date> dates) {
-        if (dates != null) {
-            String userId = sharedPreferences.getString(APP_PREFERENCES_OBJECTID, "");
-            dbStorage.saveDates(userId, dates);
-            showSelectedDates(dates);
-        } else {
-            layoutErrorCalendarWod.setVisibility(View.VISIBLE);
-            progressBar.setVisibility(View.INVISIBLE);
-            calendarView.setVisibility(View.INVISIBLE);
-            Toast.makeText(getContext(), "Нет данных", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    @Override
-    public void onLoaderReset(@NonNull Loader<List<Date>> loader) {
+        });
+        calendarView.setSaveEnabled(true);
+        calendarView.setVisibility(View.INVISIBLE);
     }
 
     @Override
     public  void onStart() {
         super.onStart();
-        if (layoutErrorCalendarWod.getVisibility() == View.GONE) {
-            String selectedDay = sharedPreferences.getString(APP_PREFERENCES_SELECTEDDAY, "");
-            Calendar calendar = Calendar.getInstance();
-            if (selectedDay.equals("0") || selectedDay.equals("")) {
-                timeFinish = calendar.getTimeInMillis();
-                timeInterval = 7776000000L;
-                timeStart = timeFinish - timeInterval;
-                month = calendar.get(Calendar.MONTH);
-            } else {
-                try {
-                    SimpleDateFormat dateFormat =
-                            new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
-                    Date date = dateFormat.parse(selectedDay);
-                    calendarView.setCurrentDate(date);
-                    calendar.setTime(date);
-                    month = calendar.get(Calendar.MONTH);
-                    timeFinish = date.getTime();
-                    timeInterval = 3024000000L;
-                    timeStart = timeFinish - timeInterval;
-                    timeFinish = timeFinish + timeInterval;
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+        if (layoutError.getVisibility() == View.GONE) {
+            Date date = viewModel.getPeriodBoundaries();
+            if (date != null) {
+                calendarView.setCurrentDate(date);
             }
 
             calendarView.setVisibility(View.INVISIBLE);
-            layoutErrorCalendarWod.setVisibility(View.GONE);
+            layoutError.setVisibility(View.GONE);
             progressBar.setVisibility(View.VISIBLE);
-            getDates(timeStart, timeFinish);
+            getDates();
         }
 
         if (getActivity() instanceof ChangeTitle) {
@@ -288,55 +171,49 @@ public class CalendarWodFragment extends Fragment implements  OnDateSelectedList
         }
     }
 
-    public void onStop() {
-        super.onStop();
-        if (getLoaderManager().hasRunningLoaders()) {
-            getLoaderManager().destroyLoader(LOADER_ID);
-        }
-        dbStorage.close();
-    }
-
-    public void getDates(final long timeStart, final long timeFinish) {
-        List<Date> selectDates = dbStorage.selectDates(
-                sharedPreferences.getString(APP_PREFERENCES_OBJECTID, ""),
-                timeStart,
-                timeFinish);
+    public void getDates() {
+        List<Date> selectDates = viewModel.getDates();
 
         if (selectDates.size() > 0) {
             showSelectedDates(selectDates);
         } else {
-            Runnable runnableOpenFragment = new Runnable() {
-                @Override
-                public void run() {
-                    Network network = new Network(getContext());
-                    Bundle bundle = new Bundle();
-                    boolean checkDone = network.checkConnection();
-                    if (checkDone) {
-                        CalendarWodFragment.this.timeStart = timeStart;
-                        CalendarWodFragment.this.timeFinish = timeFinish;
-                        bundle.putString("status", "load");
+            if (viewModel.checkNetwork()) {
+                layoutError.setVisibility(View.GONE);
+                calendarView.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.VISIBLE);
+                LiveData<List<Date>> listLiveData = viewModel.loadDates();
+                listLiveData.observe(CalendarWodFragment.this, new Observer<List<Date>>() {
+                    @Override
+                    public void onChanged(@Nullable List<Date> dates) {
+                        if (dates != null) {
+                            calendarView.setVisibility(View.VISIBLE);
+                            progressBar.setVisibility(View.INVISIBLE);
+                            showSelectedDates(dates);
+                        } else {
+                            layoutError.setVisibility(View.VISIBLE);
+                            progressBar.setVisibility(View.INVISIBLE);
+                            calendarView.setVisibility(View.INVISIBLE);
+                            Toast.makeText(getContext(), "Нет данных", Toast.LENGTH_SHORT).show();
+                        }
                     }
-                    bundle.putBoolean("result", checkDone);
-                    Message msg = handlerOpenFragment.obtainMessage();
-                    msg.setData(bundle);
-                    handlerOpenFragment.sendMessage(msg);
-                }
-            };
-            Thread threadOpenFragment = new Thread(runnableOpenFragment);
-            threadOpenFragment.setDaemon(true);
-            threadOpenFragment.start();
+                });
+
+            } else {
+                layoutError.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.INVISIBLE);
+            }
         }
     }
 
     public void showSelectedDates(List<Date> dates) {
-        selectDates = dates;
-        for (int i = 0; i < selectDates.size(); i++) {
+        viewModel.setSelectDates(dates);
+        for (int i = 0; i < viewModel.getSelectDatesSize(); i++) {
             calendarView.setDateSelected(
-                    CalendarDay.from(selectDates.get(i)),
+                    CalendarDay.from(viewModel.getSelectDates().get(i)),
                     true);
         }
         calendarView.setVisibility(View.VISIBLE);
-        layoutErrorCalendarWod.setVisibility(View.GONE);
+        layoutError.setVisibility(View.GONE);
         progressBar.setVisibility(View.INVISIBLE);
     }
 }

@@ -13,7 +13,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executor;
-import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -28,7 +28,7 @@ public class RecordForTrainingViewModel extends AndroidViewModel {
             1,
             60,
             TimeUnit.SECONDS,
-            new LinkedBlockingDeque<Runnable>());
+            new LinkedBlockingQueue<Runnable>());
     private MutableLiveData<List<List<Map>>> liveDataParnas;
     private MutableLiveData<List<List<Map>>> liveDataMyzhestvo;
     private BackendlessQueries backendlessQuery;
