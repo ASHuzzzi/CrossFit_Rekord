@@ -28,7 +28,7 @@ public class StartScreenFragment extends Fragment {
 
     private LinearLayout linLayStartScreenDots;
     private PageAdapterStartScreenSlider adapterSlider;
-    private int numberOfPage = 0;
+    private int numberOfPage;
     private ViewPager viewPager;
     private Handler handlerStartScreen;
     private int DELAY = 2000;
@@ -88,6 +88,7 @@ public class StartScreenFragment extends Fragment {
             }
         });
         handlerStartScreen = new Handler();
+        numberOfPage = 0;
         addBottomDots(0);
         return view;
     }
@@ -169,9 +170,7 @@ public class StartScreenFragment extends Fragment {
 
     Runnable runnable = new Runnable() {
         public void run() {
-            numberOfPage = (adapterSlider.getCount() == numberOfPage)
-                    ? 0
-                    : numberOfPage++;
+            numberOfPage = (adapterSlider.getCount() == numberOfPage) ? 0 : numberOfPage++;
             viewPager.setCurrentItem(numberOfPage, true);
             handlerStartScreen.postDelayed(this, DELAY);
         }

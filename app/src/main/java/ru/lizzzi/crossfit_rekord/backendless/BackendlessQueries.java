@@ -106,15 +106,29 @@ public class BackendlessQueries extends Application {
         try {
             BackendlessUser user = Backendless.UserService.login(email, password);
             sharedPreferences = getAppContext().getSharedPreferences(APP_PREFERENCES, MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putString(APP_PREFERENCES_OBJECTID, user.getObjectId());
-            editor.putString(APP_PREFERENCES_CARDNUMBER, String.valueOf(user.getProperty("cardNumber")));
-            editor.putString(APP_PREFERENCES_USERNAME, String.valueOf(user.getProperty("name")));
-            editor.putString(APP_PREFERENCES_USERSURNAME, String.valueOf(user.getProperty("surname")));
-            editor.putString(APP_PREFERENCES_PASSWORD, password);
-            editor.putString(APP_PREFERENCES_EMAIL, String.valueOf(user.getProperty("email")));
-            editor.putString(APP_PREFERENCES_PHONE, String.valueOf(user.getProperty("phoneNumber")));
-            editor.apply();
+            sharedPreferences.edit()
+                    .putString(
+                            APP_PREFERENCES_OBJECTID,
+                            user.getObjectId())
+                    .putString(
+                            APP_PREFERENCES_CARDNUMBER,
+                            String.valueOf(user.getProperty("cardNumber")))
+                    .putString(
+                            APP_PREFERENCES_USERNAME,
+                            String.valueOf(user.getProperty("name")))
+                    .putString(
+                            APP_PREFERENCES_USERSURNAME,
+                            String.valueOf(user.getProperty("surname")))
+                    .putString(
+                            APP_PREFERENCES_PASSWORD,
+                            password)
+                    .putString(
+                            APP_PREFERENCES_EMAIL,
+                            String.valueOf(user.getProperty("email")))
+                    .putString(
+                            APP_PREFERENCES_PHONE,
+                            String.valueOf(user.getProperty("phoneNumber")))
+                    .apply();
             return true;
         } catch (BackendlessException exception) {
             return false;

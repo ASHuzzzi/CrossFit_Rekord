@@ -33,15 +33,15 @@ public class ContactsFragment extends Fragment {
 
         textAppVersion = view.findViewById(R.id.textView41);
         imButtonInstagram = view.findViewById(R.id.ibInstagram);
-        imButtonInstagram.setOnClickListener(new View.OnClickListener(){
+        imButtonInstagram.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 openOtherApplication(PACKAGE_INSTAGRAM);
             }
         });
 
         imButtonVk = view.findViewById(R.id.ibVK);
-        imButtonVk.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
+        imButtonVk.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
                 openOtherApplication(PACKAGE_VK);
             }
         });
@@ -85,7 +85,10 @@ public class ContactsFragment extends Fragment {
         } else {
             intent.addCategory(Intent.CATEGORY_BROWSABLE);
         }
-        intent.setData(Uri.parse(getResources().getString(R.string.groupVK)));
+        intent.setData(Uri.parse(getResources().getString(
+                (packageName.equals(PACKAGE_VK))
+                        ? R.string.groupVK
+                        : R.string.Instagram)));
         startActivity(intent);
         Objects.requireNonNull(getActivity()).overridePendingTransition(
                 R.anim.pull_in_right,

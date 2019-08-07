@@ -1,21 +1,19 @@
 package ru.lizzzi.crossfit_rekord.fragments;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,79 +29,36 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.inspectionСlasses.Network;
 import ru.lizzzi.crossfit_rekord.interfaces.ChangeTitle;
 import ru.lizzzi.crossfit_rekord.interfaces.ChangeToggleStatus;
-import ru.lizzzi.crossfit_rekord.loaders.LoginLoader;
+import ru.lizzzi.crossfit_rekord.model.LoginViewModel;
 import ru.lizzzi.crossfit_rekord.services.LoadNotificationsService;
 
 
 //* Created by basso on 07.03.2018.
 
-public class LoginFragment extends Fragment implements LoaderManager.LoaderCallbacks<Boolean> {
+public class LoginFragment extends Fragment {
 
     private Button buttonLogin;
     private ProgressBar progressBar;
     private EditText editTextUserEmail;
     private EditText editTextUserPassword;
 
-    private Handler handlerLogin;
-    private Thread threadLogin;
-    private Runnable runnableLogin;
+    private boolean loading = true;
+    private boolean wait = false;
+    private LoginViewModel viewModel;
 
-    private final static int LOGIN_IS_DONE = 1;
-    private final static int WAIT_STATE = 0;
-    private final static int LOAD_STATE = 1;
-
-
-    @SuppressLint("HandlerLeak")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.fragment_login, container, false);
+        viewModel = ViewModelProviders.of(LoginFragment.this).get(LoginViewModel.class);
+
         editTextUserEmail = view.findViewById(R.id.editTextEmail);
         editTextUserPassword = view.findViewById(R.id.editTextPassword);
-        buttonLogin = view.findViewById(R.id.buttonLogin);
         progressBar = view.findViewById(R.id.progressbar);
-        TextView textContacts = view.findViewById(R.id.textContacts);
-        Button buttonRegistration = view.findViewById(R.id.buttonRegistration);
-        TextView textRecoveryPassword = view.findViewById(R.id.textRecoveryPassword);
 
-        //хэндлер для потока runnableOpenFragment
-        handlerLogin = new Handler() {
-            @Override
-            public void handleMessage(Message message) {
-                if (message.what == LOGIN_IS_DONE) {
-                    openNewFragment(StartScreenFragment.class);
-                } else {
-                    Bundle bundle = message.getData();
-                    boolean checkDone = bundle.getBoolean("result");
-                    if (checkDone) {
-                        startLoginLoader(
-                                editTextUserEmail.getText().toString(),
-                                editTextUserPassword.getText().toString());
-                    } else {
-                        changeUIOnState(WAIT_STATE);
-                        Toast.makeText(getContext(), "Нет подключения", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-        };
-
-        //поток запускаемый при создании экрана (запуск происходит из onStart)
-        runnableLogin = new Runnable() {
-            @Override
-            public void run() {
-                Network network = new Network(getContext());
-                boolean checkDone = network.checkConnection();
-                Bundle bundle = new Bundle();
-                bundle.putBoolean("result", checkDone);
-                Message msg = handlerLogin.obtainMessage();
-                msg.setData(bundle);
-                handlerLogin.sendMessage(msg);
-            }
-        };
-
+        buttonLogin = view.findViewById(R.id.buttonLogin);
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -118,7 +73,7 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
                     editTextUserEmail.setFocusableInTouchMode(true);
                     editTextUserEmail.setFocusable(true);
                     editTextUserEmail.requestFocus();
-                    Toast.makeText(getContext(), "Введите почту!", Toast.LENGTH_SHORT).show();
+                    showToast("Введите почту!");
                     return;
                 }
 
@@ -126,24 +81,45 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
                     editTextUserPassword.setFocusableInTouchMode(true);
                     editTextUserPassword.setFocusable(true);
                     editTextUserPassword.requestFocus();
-                    Toast.makeText(getContext(), "Введите пароль", Toast.LENGTH_SHORT).show();
+                    showToast("Введите пароль");
                     return;
                 }
 
                 //убираем клавиатуру после нажатия на кнопку
-                InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
-                if (imm != null) {
-                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                InputMethodManager inputMethodManager = (InputMethodManager) getContext()
+                        .getSystemService(Activity.INPUT_METHOD_SERVICE);
+                if (inputMethodManager != null) {
+                    inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 }
 
-                changeUIOnState(LOAD_STATE);
-                threadLogin = new Thread(runnableLogin);
-                threadLogin.setDaemon(true);
-                threadLogin.start();
-
+                uiLoadingState(loading);
+                if (viewModel.checkNetwork()) {
+                    LiveData<Boolean>  liveData = viewModel.getLogin(
+                            editTextUserEmail.getText().toString(),
+                            editTextUserPassword.getText().toString());
+                    liveData.observe(LoginFragment.this, new Observer<Boolean>() {
+                        @Override
+                        public void onChanged(Boolean loggedIn) {
+                            if (loggedIn) {
+                                startService();
+                                ChangeToggleStatus changeToggleStatus =
+                                        (ChangeToggleStatus) getActivity();
+                                changeToggleStatus.changeToggleStatus(true);
+                                openNewFragment(StartScreenFragment.class);
+                            } else {
+                                uiLoadingState(wait);
+                                showToast("Неверный логин или пароль!");
+                            }
+                        }
+                    });
+                } else {
+                    uiLoadingState(wait);
+                    showToast("Нет подключения");
+                }
             }
         });
 
+        TextView textContacts = view.findViewById(R.id.textContacts);
         textContacts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -151,6 +127,7 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
             }
         });
 
+        Button buttonRegistration = view.findViewById(R.id.buttonRegistration);
         buttonRegistration.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -158,6 +135,7 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
             }
         });
 
+        TextView textRecoveryPassword = view.findViewById(R.id.textRecoveryPassword);
         textRecoveryPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -176,68 +154,36 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
         }
     }
 
-    private void changeUIOnState(int state) {
-        if (state == LOAD_STATE) {
-            progressBar.setVisibility(View.VISIBLE);
-            buttonLogin.setPressed(true);
-        } else {
-            progressBar.setVisibility(View.INVISIBLE);
-            buttonLogin.setPressed(false);
-        }
-    }
-
-    private void startLoginLoader(String userEmail, String userPassword) {
-        Bundle bundle = new Bundle();
-        bundle.putString("e_mail" , userEmail);
-        bundle.putString("password" , userPassword);
-        int LOGIN_LOADER = 1;
-        getLoaderManager().initLoader(LOGIN_LOADER, bundle,this).forceLoad();
-    }
-
-    @NonNull
-    @Override
-    public Loader<Boolean> onCreateLoader(int id, Bundle bundle) {
-        return new LoginLoader(getContext(), bundle);
-    }
-
-    @Override
-    public void onLoadFinished(@NonNull Loader<Boolean> loader, Boolean userIsLoggined) {
-        if (userIsLoggined) {
-            startService();
-            ChangeToggleStatus changeToggleStatus = (ChangeToggleStatus) getActivity();
-            changeToggleStatus.changeToggleStatus(true);
-            handlerLogin.sendEmptyMessage(LOGIN_IS_DONE);
-        } else {
-            changeUIOnState(WAIT_STATE);
-            Toast.makeText(getContext(), "Неверный логин или пароль!", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    @Override
-    public void onLoaderReset(@NonNull Loader<Boolean> loader) {
+    private void uiLoadingState(boolean loading) {
+        progressBar.setVisibility((loading)
+                ? View.VISIBLE
+                : View.INVISIBLE);
+        buttonLogin.setPressed(loading);
     }
 
     private void startService() {
-        if (!isServiceRunning(LoadNotificationsService.class)) {
-            Intent intent;
+        if (!isServiceRunning()) {
 
             // Создаем Intent для вызова сервиса,
             // кладем туда параметр времени и код задачи
             int LOAD_NOTIFICATION = 1;
             String PARAM_TIME = "time";
             String PARAM_TASK = "task";
-            intent = new Intent(getContext(), LoadNotificationsService.class).putExtra(PARAM_TIME, 7)
+            Intent intent = new Intent(getContext(), LoadNotificationsService.class)
+                    .putExtra(PARAM_TIME, 7)
                     .putExtra(PARAM_TASK, LOAD_NOTIFICATION);
             // стартуем сервис
             getActivity().startService(intent);
         }
     }
 
-    private boolean isServiceRunning(Class<?> serviceClass) {
-        ActivityManager manager = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
+    private boolean isServiceRunning() {
+        ActivityManager manager = (ActivityManager) Objects.requireNonNull(getActivity())
+                .getSystemService(Context.ACTIVITY_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            for (ActivityManager.RunningServiceInfo service : Objects.requireNonNull(manager).getRunningServices(Integer.MAX_VALUE)) {
-                if (serviceClass.getName().equals(service.service.getClassName())) {
+            for (ActivityManager.RunningServiceInfo service
+                    : Objects.requireNonNull(manager).getRunningServices(Integer.MAX_VALUE)) {
+                if (LoadNotificationsService.class.getName().equals(service.service.getClassName())) {
                     return true;
                 }
             }
@@ -246,27 +192,30 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
     }
 
     private void openNewFragment(Class fragmentClass) {
-        Fragment fragment = null;
         try {
-            fragment = (Fragment) fragmentClass.newInstance();
+            Fragment fragment = (Fragment) fragmentClass.newInstance();
+            FragmentManager fragmentManager = getFragmentManager();
+            if (fragmentClass == StartScreenFragment.class && fragmentManager != null) {
+                for (int i = 0; i < (fragmentManager.getBackStackEntryCount()); i++) {
+                    fragmentManager.popBackStack();
+                }
+            }
+            if (fragmentManager != null) {
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.setCustomAnimations(
+                        R.anim.pull_in_right,
+                        R.anim.push_out_left,
+                        R.anim.pull_in_left,
+                        R.anim.push_out_right);
+                fragmentTransaction.replace(R.id.container, fragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-        FragmentManager fragmentManager = getFragmentManager();
-        if (fragmentClass == StartScreenFragment.class) {
-            for (int i = 0; i < (fragmentManager.getBackStackEntryCount()); i++) {
-                fragmentManager.popBackStack();
-            }
-        }
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.setCustomAnimations(
-                R.anim.pull_in_right,
-                R.anim.push_out_left,
-                R.anim.pull_in_left,
-                R.anim.push_out_right);
-        fragmentTransaction.replace(R.id.container, fragment);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
+
     }
 
     private static boolean isEmailCorrect(String userEmail) {
@@ -274,5 +223,9 @@ public class LoginFragment extends Fragment implements LoaderManager.LoaderCallb
         Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(userEmail);
         return !matcher.matches();
+    }
+
+    private void showToast(String toastText) {
+        Toast.makeText(getContext(), toastText, Toast.LENGTH_SHORT).show();
     }
 }
