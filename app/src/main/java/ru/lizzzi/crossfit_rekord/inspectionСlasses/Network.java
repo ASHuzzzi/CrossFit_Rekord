@@ -18,12 +18,13 @@ public class Network implements CheckNetwork {
 
     @Override
     public boolean checkConnection() {
-        ConnectivityManager connectivityManager =
-                (ConnectivityManager)context.
-                        getApplicationContext().
-                        getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager connectivityManager = (ConnectivityManager)context
+                .getApplicationContext()
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork =
-                connectivityManager != null ? connectivityManager.getActiveNetworkInfo() : null;
+                connectivityManager != null
+                        ? connectivityManager.getActiveNetworkInfo()
+                        : null;
         // проверка подключения
         if (activeNetwork != null && activeNetwork.isConnected()) {
             Runtime runtime = Runtime.getRuntime();

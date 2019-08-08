@@ -15,7 +15,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -45,14 +44,12 @@ public class CalendarWodViewModel  extends AndroidViewModel {
     private static final String APP_PREFERENCES = "audata";
     private static final String APP_PREFERENCES_OBJECTID = "ObjectId";
     private static final String APP_PREFERENCES_SELECTEDDAY = "SelectedDay";
-    private static final String APP_PREFERENCES_SELECTEDDAYMONTH = "SelectedDayMonth";
     private SharedPreferences sharedPreferences;
 
     private String userObjectID;
-    private int month;
     private long timeStart;
-    private long timeInterval;
     private long timeFinish;
+    private Calendar calendar;
 
     public CalendarWodViewModel(@NonNull Application application) {
         super(application);
@@ -64,26 +61,18 @@ public class CalendarWodViewModel  extends AndroidViewModel {
         userObjectID = sharedPreferences.getString(APP_PREFERENCES_OBJECTID, "");
         dbStorage = new SQLiteStorageWod(getApplication());
         dbStorage.createDataBase();
-        Calendar calendar = GregorianCalendar.getInstance();
-        month = calendar.get(Calendar.MONTH);
+        calendar = Calendar.getInstance();
     }
 
     public LiveData<List<Date>> loadDates() {
-        if (liveData == null) {
-            liveData = new MutableLiveData<>();
-        }
+        liveData = new MutableLiveData<>();
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                SimpleDateFormat dateFormat = new SimpleDateFormat(
-                        "MM.dd.yyyy",
-                        Locale.getDefault());
-                String startDate = dateFormat.format(timeStart);
-                String finishDate = dateFormat.format(timeFinish);
                 List<Map> loadedDates = backendlessQuery.loadCalendarWod(
                         userObjectID,
-                        startDate,
-                        finishDate);
+                        timeStart,
+                        timeFinish);
                 if (loadedDates != null) {
                     ArrayList<Date> datesForLoadInLocalDb = new ArrayList<>();
                     Date parseDate;
@@ -112,17 +101,16 @@ public class CalendarWodViewModel  extends AndroidViewModel {
         return liveData;
     }
 
-    public boolean checkNetwork() {
+    public boolean isNetworkConnection() {
         Network network = new Network(getApplication());
         return network.checkConnection();
     }
 
     public List<Date> getDates() {
-        return dbStorage.selectDates(
+        return selectDates = dbStorage.selectDates(
                 sharedPreferences.getString(APP_PREFERENCES_OBJECTID, ""),
                 timeStart,
                 timeFinish);
-
     }
 
     public List<Date> getSelectDates() {
@@ -137,54 +125,60 @@ public class CalendarWodViewModel  extends AndroidViewModel {
         this.selectDates = selectDates;
     }
 
-    public int getMonth() {
-        return month;
-    }
-
-    public void setMonth(int month) {
-        this.month = month;
-    }
-
-    public void saveDateInPrefs(String selectedDate, String dateForSave) {
+    public void saveDateInPrefs(Date date) {
+        calendar.setTime(date);
+        String Day = (calendar.get(Calendar.DATE) < 10)
+                ? "0" + calendar.get(Calendar.DATE)
+                : String.valueOf(calendar.get(Calendar.DATE));
+        String Month = (calendar.get(Calendar.MONTH) < 10)
+                ? "0" + (calendar.get(Calendar.MONTH) + 1)
+                : String.valueOf((calendar.get(Calendar.MONTH) + 1));
+        String selectedDate = Month + "/" + Day + "/" + calendar.get(Calendar.YEAR);
         sharedPreferences.edit()
                 .putString(APP_PREFERENCES_SELECTEDDAY, selectedDate)
-                .putString(APP_PREFERENCES_SELECTEDDAYMONTH, dateForSave)
                 .apply();
     }
 
-    public Date getPeriodBoundaries() {
-        Date date = null;
-        String selectedDay = getSavedDate();
-        Calendar calendar = Calendar.getInstance();
+    public Date getDate() {
+        Date date;
+        String selectedDay = getDateFromPreferences();
         if (selectedDay.equals("0") || selectedDay.equals("")) {
-            timeFinish = calendar.getTimeInMillis();
-            timeInterval = 7776000000L;
+            date = calendar.getTime();
         } else {
             try {
-                SimpleDateFormat dateFormat =
-                        new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
+                SimpleDateFormat dateFormat = new SimpleDateFormat(
+                        "MM/dd/yyyy",
+                        Locale.getDefault());
                 date = dateFormat.parse(selectedDay);
-                calendar.setTime(date);
-                timeFinish = date.getTime();
-                timeInterval = 3024000000L;
-                timeFinish = timeFinish + timeInterval;
             } catch (ParseException e) {
-                e.printStackTrace();
+                date = calendar.getTime();
             }
         }
-        timeStart = timeFinish - timeInterval;
-        setMonth(calendar.get(Calendar.MONTH));
+        calendar.setTime(date);
+        calendar.add(Calendar.DAY_OF_MONTH, 0);
+        timeStart = (calendar.getTimeInMillis());
+        calendar.setTime(date);
+        calendar.add(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+        timeFinish = date.getTime();
         return date;
     }
 
-    private String getSavedDate() {
+    private String getDateFromPreferences() {
         return sharedPreferences.getString(APP_PREFERENCES_SELECTEDDAY, "");
     }
 
-    public void monthChanged(CalendarDay date) {
-        timeStart = date.getDate().getTime() - 2592000000L ;
-        timeInterval = 2592000000L + 2592000000L;
-        timeFinish = date.getDate().getTime() + timeInterval;
-        setMonth(date.getMonth());
+    public void monthChanged(CalendarDay calendarDay) {
+        Date date = calendarDay.getDate();
+        calendar.setTime(date);
+        calendar.add(Calendar.DAY_OF_MONTH, 0);
+        timeStart = (calendar.getTimeInMillis());
+        calendar.setTime(date);
+        calendar.add(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+        timeFinish = (calendar.getTimeInMillis());
+    }
+
+    public boolean earlierThanToday(Date selectedDate) {
+        calendar.setTime(selectedDate);
+        return calendar.before(Calendar.getInstance());
     }
 }

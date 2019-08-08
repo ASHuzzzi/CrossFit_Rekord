@@ -122,9 +122,10 @@ public class SQLiteStorageWod extends SQLiteOpenHelper {
 
         ArrayList<Date> arrListDates = new ArrayList<>();
         String[] columns = new String[]{dbCalendarWod.columnDateSession};
-        String selection = dbCalendarWod.columnObjectId + "= '" + objectId + "' AND "
-                + dbCalendarWod.columnDateSession + " BETWEEN " + timeStart + " AND "
-                + timeNow;
+        String selection =
+                dbCalendarWod.columnObjectId + "= '" + objectId +
+                "' AND "
+                + dbCalendarWod.columnDateSession + " BETWEEN " + timeStart + " AND " + timeNow;
         Cursor cursor = database.query(
                 dbCalendarWod.TABLE_NAME,
                 columns,

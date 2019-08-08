@@ -32,24 +32,27 @@ public class BackendlessQueries extends Application {
     private static final String APP_PREFERENCES_PHONE = "Phone";
     private SharedPreferences sharedPreferences;
 
-    public void onCreate(){
+    public void onCreate() {
         MultiDex.install(getApplicationContext());
         super.onCreate();
         BackendlessQueries.context = getApplicationContext();
     }
 
-    private static Context getAppContext(){
+    private static Context getAppContext() {
         return BackendlessQueries.context;
     }
 
-    public List<Map> loadCalendarWod(String objectID, String startDay, String nowDay) {
+    public List<Map> loadCalendarWod(String objectID, long startDate, long endDate) {
         try {
             String userID = getAppContext().getResources().getString(R.string.bTableResultsUserID);
             String dateSession = getAppContext().getResources().getString(R.string.bTableResultsDateSession);
             String tableName = getAppContext().getResources().getString(R.string.bTableResultsName);
             String whereClause =
-                    userID + " = '" + objectID + "' and " + dateSession + " >= '" +
-                    startDay + "' and " + dateSession + " <= '" + nowDay + "'";
+                    userID + " = '" + objectID +
+                    "' and " +
+                    dateSession + " >= '" + startDate +
+                    "' and " +
+                    dateSession + " <= '" + endDate + "'";
             DataQueryBuilder queryBuilder = DataQueryBuilder.create();
             queryBuilder.setWhereClause(whereClause);
             queryBuilder.setPageSize(100);

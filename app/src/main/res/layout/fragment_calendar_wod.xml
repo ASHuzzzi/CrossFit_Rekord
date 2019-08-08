@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.widget.RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.widget.RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -47,7 +48,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:longClickable="false"
-        android:visibility="visible"
         app:mcv_allowClickDaysOutsideCurrentMonth="false"
         app:mcv_arrowColor="@color/colorRedPrimary"
         app:mcv_calendarMode="month"
@@ -57,7 +57,6 @@
         app:mcv_showOtherDates="defaults"
         app:mcv_tileSize="match_parent"
         app:mcv_weekDayTextAppearance="@style/calendarweekDayStyle">
-
     </com.prolificinteractive.materialcalendarview.MaterialCalendarView>
 
     <LinearLayout
@@ -97,7 +96,6 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_centerVertical="false"
-        android:visibility="visible"
         tools:layout_editor_absoluteY="8dp" />
 
 </android.widget.RelativeLayout>

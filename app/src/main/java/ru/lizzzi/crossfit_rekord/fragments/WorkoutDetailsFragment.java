@@ -1,7 +1,5 @@
 package ru.lizzzi.crossfit_rekord.fragments;
 
-import android.annotation.SuppressLint;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -17,6 +15,7 @@ import android.widget.TextView;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Objects;
 
 import ru.lizzzi.crossfit_rekord.R;
@@ -32,46 +31,31 @@ public class WorkoutDetailsFragment extends Fragment{
     private static final String APP_PREFERENCES = "audata";
     private static final String APP_PREFERENCES_SELECTEDDAY = "SelectedDay";
 
-    private TextView tvSelectedDay;
+    private TextView textSelectedDay;
 
-    @SuppressLint("HandlerLeak")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         setRetainInstance(true);
 
-        View v = inflater.inflate(R.layout.fragment_workout_details, container, false);
-        tvSelectedDay = v.findViewById(R.id.tvSelectedDay);
+        View view = inflater.inflate(R.layout.fragment_workout_details, container, false);
+        textSelectedDay = view.findViewById(R.id.tvSelectedDay);
 
         // Find the view pager that will allow the user to swipe between fragments
-        final ViewPager viewPager = v.findViewById(R.id.vp_1);
+        final ViewPager viewPager = view.findViewById(R.id.vp_1);
 
         // Create an adapter that knows which fragment should be shown on each page
-        PagerAdapterWorkoutDetails adapter2 = new PagerAdapterWorkoutDetails(getChildFragmentManager(), getContext());
+        PagerAdapterWorkoutDetails pageAdapter =
+                new PagerAdapterWorkoutDetails(getChildFragmentManager(), getContext());
 
         // Set the adapter onto the view pager
-        viewPager.setAdapter(adapter2);
+        viewPager.setAdapter(pageAdapter);
 
         // Give the TabLayout the ViewPager
-        TabLayout tabLayout = v.findViewById(R.id.sliding_tabs);
+        TabLayout tabLayout = view.findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-            }
 
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
-
-        return v;
+        return view;
     }
 
     @Override
@@ -81,22 +65,27 @@ public class WorkoutDetailsFragment extends Fragment{
             ChangeTitle listernerChangeTitle = (ChangeTitle) getActivity();
             listernerChangeTitle.changeTitle(R.string.title_WorkoutDetails_Fragment, R.string.title_CalendarWod_Fragment);
         }
-
     }
 
 
     @Override
     public void onResume() {
         super.onResume();
-
         try {
-            SharedPreferences mSettings = Objects.requireNonNull(getContext()).getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-            String ri =  mSettings.getString(APP_PREFERENCES_SELECTEDDAY, "");
-            @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-            Date ddd = sdf.parse(ri);
-            @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf2 = new SimpleDateFormat("EEEE dd MMMM");
-            String sdsd = sdf2.format(ddd);
-            tvSelectedDay.setText(sdsd);
+            SharedPreferences sharedPreferences =
+                    Objects.requireNonNull(getContext()).getSharedPreferences(
+                            APP_PREFERENCES,
+                            Context.MODE_PRIVATE);
+            String savedDate =  sharedPreferences.getString(APP_PREFERENCES_SELECTEDDAY, "");
+            SimpleDateFormat dateFormat = new SimpleDateFormat(
+                    "MM/dd/yyyy",
+                    Locale.getDefault());
+            Date parse = dateFormat.parse(savedDate);
+            SimpleDateFormat dateFormat2 = new SimpleDateFormat(
+                    "EEEE dd MMMM",
+                    Locale.getDefault());
+            String parseDate = dateFormat2.format(parse);
+            textSelectedDay.setText(parseDate);
         } catch (ParseException e) {
             e.printStackTrace();
         }
