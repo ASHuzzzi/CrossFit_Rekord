@@ -1,19 +1,14 @@
 package ru.lizzzi.crossfit_rekord.fragments;
 
-
-import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.os.Handler;
-import android.os.Message;
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.LoaderManager;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,161 +19,150 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Objects;
+
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.inspectionСlasses.Network;
 import ru.lizzzi.crossfit_rekord.interfaces.ChangeTitle;
-import ru.lizzzi.crossfit_rekord.loaders.AboutMeLoader;
+import ru.lizzzi.crossfit_rekord.model.AboutMeViewModel;
 
 /**
  * Created by basso on 07.03.2018.
  */
 
-public class AboutMeFragment extends Fragment implements LoaderManager.LoaderCallbacks<Boolean> {
+public class AboutMeFragment extends Fragment {
 
-    private static final String APP_PREFERENCES = "audata";
-    private static final String APP_PREFERENCES_EMAIL = "Email";
-    private static final String APP_PREFERENCES_USERNAME = "Username";
-    private static final String APP_PREFERENCES_USERSURNAME = "Usersurname";
-    private static final String APP_PREFERENCES_CARDNUMBER = "cardNumber";
-    private static final String APP_PREFERENCES_PHONE = "Phone";
-    private static final String APP_PREFERENCES_PASSWORD = "Password";
-    private SharedPreferences mSettings;
+    private TextView textCardNumber;
+    private EditText editName;
+    private EditText editSurname;
+    private EditText editPhone;
+    private Button buttonChangeUserData;
+    private ProgressBar progressBar;
 
-    private TextView tvCardNumber;
-    private EditText etName;
-    private EditText etSurname;
-    private EditText etPhone;
-    private Button btChangeUserData;
-    private ProgressBar pbAboutMe;
+    private AboutMeViewModel viewModel;
+    private boolean LOADING = true;
+    private boolean WAITING = false;
 
-    private Handler handlerAboutMeFragment;
-    private Thread threadAboutMeFragment;
-    private Runnable runnableAboutMeFragment;
-
-    @SuppressLint("HandlerLeak")
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-        View v = inflater.inflate(R.layout.fragment_aboutme, container, false);
+    public View onCreateView(
+            @NonNull LayoutInflater inflater,
+            ViewGroup container,
+            Bundle savedInstanceState){
+        View view = inflater.inflate(R.layout.fragment_about_me, container, false);
+        viewModel = ViewModelProviders.of(AboutMeFragment.this).get(AboutMeViewModel.class);
 
-        mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        textCardNumber = view.findViewById(R.id.textCardNumber);
+        editName = view.findViewById(R.id.editName);
+        editSurname = view.findViewById(R.id.editSurname);
+        editPhone = view.findViewById(R.id.editPhone);
+        progressBar = view.findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.INVISIBLE);
 
-        tvCardNumber = v.findViewById(R.id.tvCardNumber);
-        TextView tvOpenChangeEmail = v.findViewById(R.id.tvOpenChangeEmail);
-        TextView tvOpenChangePas = v.findViewById(R.id.tvOpenChangePas);
-        etName = v.findViewById(R.id.etName);
-        etSurname = v.findViewById(R.id.etSurname);
-        etPhone = v.findViewById(R.id.etPhone);
-        btChangeUserData = v.findViewById(R.id.btnChangeUserData);
-        pbAboutMe = v.findViewById(R.id.pbAboutMe);
+        initButtonChangeUserData(view);
+        initTextChangeEmail(view);
+        initTextChangePassword(view);
 
+        return view;
+    }
 
-        //хэндлер для потока runnableOpenFragment
-        handlerAboutMeFragment = new Handler() {
+    private void initButtonChangeUserData(View rootView) {
+        buttonChangeUserData = rootView.findViewById(R.id.buttonChangeUserData);
+        buttonChangeUserData.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void handleMessage(Message msg) {
-                Bundle bundle = msg.getData();
-                String result_check = bundle.getString("result");
-                if (result_check != null && result_check.equals("true")){
-                    ChangeUIElements(1);
-                    startAsyncTaskLoader(
-                            mSettings.getString(APP_PREFERENCES_EMAIL, ""),
-                            mSettings.getString(APP_PREFERENCES_PASSWORD, ""),
-                            etName.getText().toString(),
-                            etSurname.getText().toString(),
-                            etPhone.getText().toString()
-                    );
-                }else{
-                    ChangeUIElements(0);
+            public void onClick(View view) {
+                editName.setText(deleteSpaceInEnd(editName.getText().toString()));
+                editSurname.setText(deleteSpaceInEnd(editSurname.getText().toString()));
+                editPhone.setText(deleteSpaceInEnd(editPhone.getText().toString()));
+
+                //убираем клавиатуру после нажатия на кнопку
+                InputMethodManager inputMethodManager = (InputMethodManager)
+                        Objects.requireNonNull(getContext())
+                                .getSystemService(Activity.INPUT_METHOD_SERVICE);
+                if (inputMethodManager != null) {
+                    inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
+
+                uiState(LOADING);
+                if (viewModel.checkNetwork()) {
+                    final LiveData<Boolean> liveData = viewModel.saveUserData(
+                            editName.getText().toString(),
+                            editSurname.getText().toString(),
+                            editPhone.getText().toString());
+                    liveData.observe(AboutMeFragment.this, new Observer<Boolean>() {
+                        @Override
+                        public void onChanged(Boolean isSaved) {
+                            Toast.makeText(
+                                    getContext(),
+                                    (isSaved)
+                                            ? "Данные обновлены"
+                                            : "Повторите сохранение",
+                                    Toast.LENGTH_SHORT).show();
+                            uiState(WAITING);
+                            liveData.removeObservers(AboutMeFragment.this);
+                        }
+                    });
+                } else {
+                    uiState(WAITING);
                     Toast.makeText(getContext(), "Нет подключения", Toast.LENGTH_SHORT).show();
                 }
             }
-        };
-
-        //поток запускаемый при создании экрана (запуск происходит из onStart)
-        runnableAboutMeFragment = new Runnable() {
-            @Override
-            public void run() {
-
-                Network network = new Network(getContext());
-                Bundle bundle = new Bundle();
-                boolean checkDone = network.checkConnection();
-                if (checkDone){
-                    bundle.putString("result", String.valueOf(true));
-
-                }else {
-                    bundle.putString("result", String.valueOf(false));
-                }
-                Message msg = handlerAboutMeFragment.obtainMessage();
-                msg.setData(bundle);
-                handlerAboutMeFragment.sendMessage(msg);
-            }
-        };
-
-        btChangeUserData.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                String stCheckSpace = etName.getText().toString();
-                if(stCheckSpace.endsWith(" ")){
-                    stCheckSpace = stCheckSpace.substring(0, stCheckSpace.length() - 1);
-                    etName.setText(stCheckSpace);
-                }
-
-                stCheckSpace = etSurname.getText().toString();
-                if(stCheckSpace.endsWith(" ")){
-                    stCheckSpace = stCheckSpace.substring(0, stCheckSpace.length() - 1);
-                    etSurname.setText(stCheckSpace);
-                }
-
-                stCheckSpace = etPhone.getText().toString();
-                if(stCheckSpace.endsWith(" ")){
-                    stCheckSpace = stCheckSpace.substring(0, stCheckSpace.length() - 1);
-                    etPhone.setText(stCheckSpace);
-                }
-
-
-
-                //убираем клавиатуру после нажатия на кнопку
-                InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
-                if (imm != null) {
-                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                }
-
-                threadAboutMeFragment = new Thread(runnableAboutMeFragment);
-                threadAboutMeFragment.setDaemon(true);
-                threadAboutMeFragment.start();
-
-
-            }
         });
+    }
 
-        tvOpenChangeEmail.setOnClickListener(new View.OnClickListener() {
+    private void initTextChangeEmail(View rootView) {
+        TextView textChangeEmail = rootView.findViewById(R.id.textOpenChangeEmail);
+        textChangeEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Fragment fragment =  new ChangeEmailFragment();
-                FragmentManager fragmentManager = getFragmentManager();
-                FragmentTransaction ft = fragmentManager.beginTransaction();
-                ft.setCustomAnimations(R.anim.pull_in_right, R.anim.push_out_left, R.anim.pull_in_left, R.anim.push_out_right);
-                ft.replace(R.id.container, fragment);
-                ft.addToBackStack(null);
-                ft.commit();
+                openFragment(ChangeEmailFragment.class);
             }
         });
+    }
 
-        tvOpenChangePas.setOnClickListener(new View.OnClickListener() {
+    private void initTextChangePassword(View rootView) {
+        TextView textChangePassword = rootView.findViewById(R.id.textOpenChangePas);
+        textChangePassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Fragment fragment =  new ChangePasswordFragment();
-                FragmentManager fragmentManager = getFragmentManager();
-                FragmentTransaction ft = fragmentManager.beginTransaction();
-                ft.setCustomAnimations(R.anim.pull_in_right, R.anim.push_out_left, R.anim.pull_in_left, R.anim.push_out_right);
-                ft.replace(R.id.container, fragment);
-                ft.addToBackStack(null);
-                ft.commit();
+                openFragment(ChangePasswordFragment.class);
             }
         });
+    }
 
-        return v;
+
+    private String deleteSpaceInEnd(String inputText) {
+        return (inputText.endsWith(" "))
+                ? inputText.substring(0, inputText.length() - 1)
+                : inputText;
+    }
+
+    private void uiState(boolean loading) {
+        progressBar.setVisibility(
+                (loading)
+                        ? View.VISIBLE
+                        : View.INVISIBLE);
+        buttonChangeUserData.setPressed(loading);
+    }
+
+    private void openFragment(Class fragmentClass) {
+        try {
+            Fragment fragment = (Fragment) fragmentClass.newInstance();
+            FragmentManager fragmentManager = getFragmentManager();
+            if (fragmentManager != null) {
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.setCustomAnimations(
+                        R.anim.pull_in_right,
+                        R.anim.push_out_left,
+                        R.anim.pull_in_left,
+                        R.anim.push_out_right);
+                fragmentTransaction.replace(R.id.container, fragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (java.lang.InstantiationException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -188,66 +172,15 @@ public class AboutMeFragment extends Fragment implements LoaderManager.LoaderCal
             ChangeTitle listernerChangeTitle = (ChangeTitle) getActivity();
             listernerChangeTitle.changeTitle(R.string.title_AboutMe_Fragment, R.string.title_AboutMe_Fragment);
         }
-
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
-        pbAboutMe.setVisibility(View.INVISIBLE);
-        tvCardNumber.setText(mSettings.getString(APP_PREFERENCES_CARDNUMBER, ""));
-        etName.setText(mSettings.getString(APP_PREFERENCES_USERNAME, ""));
-        etSurname.setText(mSettings.getString(APP_PREFERENCES_USERSURNAME, ""));
-        etPhone.setText(mSettings.getString(APP_PREFERENCES_PHONE, ""));
-
-        etName.setSelection(etName.getText().length());
-    }
-
-    private void ChangeUIElements(int status){
-        if (status == 1){
-            pbAboutMe.setVisibility(View.VISIBLE);
-            btChangeUserData.setPressed(true);
-        }else{
-            pbAboutMe.setVisibility(View.INVISIBLE);
-            btChangeUserData.setPressed(false);
-        }
-    }
-
-    private void startAsyncTaskLoader(String stEmail, String carNumber, String name,
-                                      String surname, String phone) {
-        Bundle bundle = new Bundle();
-        bundle.putString("e-mail", stEmail);
-        bundle.putString("password", carNumber);
-        bundle.putString("name", name);
-        bundle.putString("surname", surname);
-        bundle.putString("phone", phone);
-        int LOADERID = 1;
-        getLoaderManager().restartLoader(LOADERID, bundle, this).forceLoad();
-    }
-
-
-    @NonNull
-    @Override
-    public Loader<Boolean> onCreateLoader(int id, Bundle args) {
-        AboutMeLoader loader;
-        loader = new AboutMeLoader(getContext(), args);
-        return loader;
-    }
-
-    @Override
-    public void onLoadFinished(@NonNull Loader<Boolean> loader, Boolean data) {
-        if (data){
-            Toast.makeText(getContext(), "Данные обновлены", Toast.LENGTH_SHORT).show();
-        }else {
-            Toast.makeText(getContext(), "Повторите сохранение", Toast.LENGTH_SHORT).show();
-        }
-        ChangeUIElements(0);
-
-    }
-
-    @Override
-    public void onLoaderReset(@NonNull Loader<Boolean> loader) {
-
+        textCardNumber.setText(viewModel.getCardNumber());
+        editName.setText(viewModel.getUserName());
+        editSurname.setText(viewModel.getUserSurname());
+        editPhone.setText(viewModel.getPhone());
+        editName.setSelection(editName.getText().length());
     }
 }

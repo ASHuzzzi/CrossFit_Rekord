@@ -23,7 +23,7 @@
             android:textSize="14sp" />
 
         <TextView
-            android:id="@+id/tvCardNumber"
+            android:id="@+id/textCardNumber"
             style="@style/MainTextStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -41,7 +41,7 @@
             android:text="@string/strUserName" />
 
         <EditText
-            android:id="@+id/etName"
+            android:id="@+id/editName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
@@ -64,7 +64,7 @@
             android:text="@string/strUserSurname" />
 
         <EditText
-            android:id="@+id/etSurname"
+            android:id="@+id/editSurname"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
@@ -87,7 +87,7 @@
             android:text="@string/strPhone" />
 
         <EditText
-            android:id="@+id/etPhone"
+            android:id="@+id/editPhone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
@@ -102,16 +102,16 @@
             tools:targetApi="o" />
 
         <ProgressBar
-            android:id="@+id/pbAboutMe"
+            android:id="@+id/progressBar"
             style="?android:attr/progressBarStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:visibility="invisible" />
+            tools:visibility="gone" />
 
     </LinearLayout>
 
     <Button
-        android:id="@+id/btnChangeUserData"
+        android:id="@+id/buttonChangeUserData"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/llAboutMe"
@@ -125,21 +125,21 @@
         android:text="@string/strBtnChange" />
 
     <TextView
-        android:id="@+id/tvOpenChangeEmail"
+        android:id="@+id/textOpenChangeEmail"
         style="@style/MainTextStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/btnChangeUserData"
+        android:layout_below="@+id/buttonChangeUserData"
         android:layout_marginTop="30dp"
         android:gravity="center_horizontal"
         android:text="@string/strEmailChange" />
 
     <TextView
-        android:id="@+id/tvOpenChangePas"
+        android:id="@+id/textOpenChangePas"
         style="@style/MainTextStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tvOpenChangeEmail"
+        android:layout_below="@+id/textOpenChangeEmail"
         android:layout_marginTop="30dp"
         android:gravity="center_horizontal"
         android:text="@string/strPasswordChange" />

@@ -31,9 +31,7 @@ public class LoginViewModel extends AndroidViewModel {
     }
 
     public LiveData<Boolean> getLogin(final String userEmail, final String userPassword) {
-        if (liveData == null) {
-            liveData = new MutableLiveData<>();
-        }
+        liveData = new MutableLiveData<>();
         executor.execute(new Runnable() {
             @Override
             public void run() {

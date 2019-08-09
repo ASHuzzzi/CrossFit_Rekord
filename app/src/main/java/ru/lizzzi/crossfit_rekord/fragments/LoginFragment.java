@@ -86,8 +86,9 @@ public class LoginFragment extends Fragment {
                 }
 
                 //убираем клавиатуру после нажатия на кнопку
-                InputMethodManager inputMethodManager = (InputMethodManager) getContext()
-                        .getSystemService(Activity.INPUT_METHOD_SERVICE);
+                InputMethodManager inputMethodManager = (InputMethodManager)
+                        Objects.requireNonNull(getContext())
+                                .getSystemService(Activity.INPUT_METHOD_SERVICE);
                 if (inputMethodManager != null) {
                     inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 }
@@ -104,7 +105,9 @@ public class LoginFragment extends Fragment {
                                 startService();
                                 ChangeToggleStatus changeToggleStatus =
                                         (ChangeToggleStatus) getActivity();
-                                changeToggleStatus.changeToggleStatus(true);
+                                if (changeToggleStatus != null) {
+                                    changeToggleStatus.changeToggleStatus(true);
+                                }
                                 openNewFragment(StartScreenFragment.class);
                             } else {
                                 uiLoadingState(wait);

@@ -1,6 +1,7 @@
 package ru.lizzzi.crossfit_rekord.activity;
 
 import android.app.ActivityManager;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -15,7 +16,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -33,7 +33,6 @@ import com.backendless.Backendless;
 import java.util.Objects;
 
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.data.SQLiteStorageNotification;
 import ru.lizzzi.crossfit_rekord.fragments.AboutMeFragment;
 import ru.lizzzi.crossfit_rekord.fragments.CalendarWodFragment;
 import ru.lizzzi.crossfit_rekord.fragments.CharacterFragment;
@@ -47,9 +46,9 @@ import ru.lizzzi.crossfit_rekord.fragments.StartScreenFragment;
 import ru.lizzzi.crossfit_rekord.fragments.ScheduleFragment;
 import ru.lizzzi.crossfit_rekord.interfaces.ChangeTitle;
 import ru.lizzzi.crossfit_rekord.interfaces.ChangeToggleStatus;
+import ru.lizzzi.crossfit_rekord.model.MainViewModel;
 import ru.lizzzi.crossfit_rekord.services.LoadNotificationsService;
 import ru.lizzzi.crossfit_rekord.fragments.NotificationFragment;
-
 
 public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
@@ -59,7 +58,6 @@ public class MainActivity extends AppCompatActivity implements
     private BroadcastReceiver broadcastReceiver;
     private final int LOAD_NOTIFICATION = 1;
     private final int UPDATE_NOTIFICATION = 2;
-
     public final static int STATUS_FINISH = 200;
 
     private final static String PARAM_TIME = "time";
@@ -68,23 +66,18 @@ public class MainActivity extends AppCompatActivity implements
     public final static String PARAM_STATUS = "status";
     public final static String BROADCAST_ACTION = "ru.lizzzi.crossfit_rekord.activity";
 
-    private SQLiteStorageNotification dbStorage;
-
     private TextView textNotificationCounter;
     private NavigationView navigationView;
-    private int openFragment = 1;
-    private int fragmentName = 0;
-
     private DrawerLayout drawer;
     private ActionBarDrawerToggle actionBarToggle;
-
-    String menuFragment;
+    private MainViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+        viewModel = ViewModelProviders.of(MainActivity.this).get(MainViewModel.class);
         initNavigationView();
         initNotificationCounter();
     }
@@ -94,15 +87,18 @@ public class MainActivity extends AppCompatActivity implements
         setSupportActionBar(toolbar);
         drawer = findViewById(R.id.drawer_layout);
         actionBarToggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
+                this,
+                drawer,
+                toolbar,
+                R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close) {
 
             @Override
             public void onDrawerClosed(View drawerView) {
                 // Code here will be triggered once the drawer closes as we don't want anything to happen so we leave this blank
                 super.onDrawerClosed(drawerView);
-                InputMethodManager inputMethodManager = (InputMethodManager)
-                        getSystemService(Context.INPUT_METHOD_SERVICE);
-                assert inputMethodManager != null;
+                InputMethodManager inputMethodManager =
+                        (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 inputMethodManager.hideSoftInputFromWindow(drawerView.getWindowToken(), 0);
             }
 
@@ -110,9 +106,8 @@ public class MainActivity extends AppCompatActivity implements
             public void onDrawerOpened(View drawerView) {
                 // Code here will be triggered once the drawer open as we dont want anything to happen so we leave this blank
                 super.onDrawerOpened(drawerView);
-                InputMethodManager inputMethodManager = (InputMethodManager)
-                        getSystemService(Context.INPUT_METHOD_SERVICE);
-                assert inputMethodManager != null;
+                InputMethodManager inputMethodManager =
+                        (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 inputMethodManager.hideSoftInputFromWindow(drawerView.getWindowToken(), 0);
             }
         };
@@ -131,19 +126,19 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void initNotificationCounter() {
-        textNotificationCounter = (TextView) MenuItemCompat.getActionView(
-                navigationView.getMenu().findItem(R.id.notification));
+        textNotificationCounter =
+                (TextView) navigationView.getMenu().findItem(R.id.notification).getActionView();
     }
 
     @Override
     protected void  onStart() {
         super.onStart();
-        checkForAvailabilityDB();
+        viewModel.checkForAvailabilityDB();
         initBackendlessApi();
         initBroadcastReceiver();
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.container);
         AuthDataCheck authData = new AuthDataCheck();
-        boolean checkIsDone = authData.checkAuthData(getContext());
+        boolean checkIsDone = authData.checkAuthData(this);
         if (checkIsDone) {
             if (!isServiceLoadNotificationRunning()) {
                 Intent intent;
@@ -153,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements
                 startService(intent);
             }
             changeToggleStatus(true);
-            menuFragment = getIntent().getStringExtra("notification");
+            String menuFragment = getIntent().getStringExtra("notification");
             if (menuFragment != null 
                     && menuFragment.equalsIgnoreCase("RecordForTrainingSelectFragment")) {
                 OpenFragment(RecordForTrainingSelectFragment.class, null);
@@ -175,14 +170,9 @@ public class MainActivity extends AppCompatActivity implements
         unregisterReceiver(broadcastReceiver);
     }
 
-    private void checkForAvailabilityDB() {
-        dbStorage = new SQLiteStorageNotification(getContext());
-        dbStorage.createDataBase();
-    }
-
-    private void initBackendlessApi() {
-        final String APPLICATION_IDB = "215CF2B1-C44E-E365-FFB6-9C35DD6A9300";
-        final String API_KEYB = "8764616E-C5FE-CE43-FF54-17B4A8026F00";
+    public void initBackendlessApi() {
+        String API_KEYB = "8764616E-C5FE-CE43-FF54-17B4A8026F00";
+        String APPLICATION_IDB = "215CF2B1-C44E-E365-FFB6-9C35DD6A9300";
         Backendless.initApp(this, APPLICATION_IDB, API_KEYB);
     }
 
@@ -202,7 +192,10 @@ public class MainActivity extends AppCompatActivity implements
                             if (result > 0) {
                                 initializeCountDrawer();
                                 drawer.openDrawer(GravityCompat.START   );
-                                Toast toast = Toast.makeText(getContext(), "Появились свежие новости!", Toast.LENGTH_LONG);
+                                Toast toast = Toast.makeText(
+                                        MainActivity.this,
+                                        "Появились свежие новости!",
+                                        Toast.LENGTH_LONG);
                                 toast.setGravity(Gravity.BOTTOM, 0, 0);
                                 toast.show();
                             }
@@ -223,11 +216,13 @@ public class MainActivity extends AppCompatActivity implements
     private void initializeCountDrawer() {
         new Thread(new Runnable() {
             public void run() {
-                boolean dbIsAvailable =  dbStorage.checkTable();
-                if(dbIsAvailable){
-                    int unreadNotifications = dbStorage.getUnreadNotifications();
+                boolean dbIsAvailable =  viewModel.dbIsAvailable();
+                if (dbIsAvailable) {
+                    int unreadNotifications = viewModel.getUnreadNotifications();
                     String stCounter =
-                            (unreadNotifications > 0) ? String.valueOf(unreadNotifications) : "";
+                            (unreadNotifications > 0)
+                                    ? String.valueOf(unreadNotifications)
+                                    : "";
                     textNotificationCounter.setGravity(Gravity.CENTER_VERTICAL);
                     textNotificationCounter.setTypeface(null, Typeface.BOLD);
                     textNotificationCounter.setTextColor(getResources().getColor(R.color.colorAccent));
@@ -237,22 +232,22 @@ public class MainActivity extends AppCompatActivity implements
         }).run();
     }
 
-    private void OpenFragment(Class fragmentClass, String tag){
+    private void OpenFragment(Class fragmentClass, String tag) {
         try {
             Fragment fragment = (Fragment) fragmentClass.newInstance();
             FragmentManager fragmentManager = getSupportFragmentManager();
             for(int i = 0; i < (fragmentManager.getBackStackEntryCount() - 1); i++) {
                 fragmentManager.popBackStack();
             }
-            FragmentTransaction ft = fragmentManager.beginTransaction();
-            ft.setCustomAnimations(
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.setCustomAnimations(
                     R.anim.pull_in_right,
                     R.anim.push_out_left,
                     R.anim.pull_in_left,
                     R.anim.push_out_right);
-            ft.replace(R.id.container, fragment, tag);
-            ft.addToBackStack(null);
-            ft.commit();
+            fragmentTransaction.replace(R.id.container, fragment, tag);
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -262,7 +257,8 @@ public class MainActivity extends AppCompatActivity implements
         Class<?> serviceClass = LoadNotificationsService.class;
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            for (ActivityManager.RunningServiceInfo service : Objects.requireNonNull(manager).getRunningServices(Integer.MAX_VALUE)) {
+            for (ActivityManager.RunningServiceInfo service :
+                    Objects.requireNonNull(manager).getRunningServices(Integer.MAX_VALUE)) {
                 if (serviceClass.getName().equals(service.service.getClassName())) {
                     return true;
                 }
@@ -282,59 +278,55 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         Class fragmentClass = null;
-        int selectedMenuItem = item.getItemId();
         String fragmentTag =  null;
+        int selectedMenuItem = item.getItemId();
         switch (selectedMenuItem) {
             case (R.id.shedule):
-                fragmentName = R.string.title_Table_Fragment;
+                viewModel.setOpenFragment(R.string.title_Table_Fragment);
                 fragmentClass = ScheduleFragment.class;
                 break;
             case (R.id.record_training):
-                fragmentName = R.string.title_RecordForTraining_Fragment;
+                viewModel.setOpenFragment(R.string.title_RecordForTraining_Fragment);
                 fragmentClass = RecordForTrainingSelectFragment.class;
                 break;
             case (R.id.definition):
-                fragmentName = R.string.title_Character_Fragment;
+                viewModel.setOpenFragment(R.string.title_RecordForTraining_Fragment);
                 fragmentClass = CharacterFragment.class;
                 break;
             case (R.id.contacts):
-                fragmentName = R.string.title_Contacts_Fragment;
+                viewModel.setOpenFragment(R.string.title_Contacts_Fragment);
                 fragmentClass = ContactsFragment.class;
                 break;
             case (R.id.profile):
-                fragmentName = R.string.title_AboutMe_Fragment;
+                viewModel.setOpenFragment(R.string.title_AboutMe_Fragment);
                 fragmentClass = AboutMeFragment.class;
                 break;
             case (R.id.calendar_wod):
-                fragmentName = R.string.title_CalendarWod_Fragment;
+                viewModel.setOpenFragment(R.string.title_CalendarWod_Fragment);
                 fragmentClass = CalendarWodFragment.class;
                 break;
             case (R.id.notification):
+                viewModel.setOpenFragment(R.string.title_Notification_Fragment);
                 fragmentClass = NotificationFragment.class;
-                fragmentName = R.string.title_Notification_Fragment;
                 break;
             case (R.id.myResults):
+                viewModel.setOpenFragment(R.string.title_MyResults_Fragment);
                 fragmentClass = MyResultsFragment.class;
-                fragmentName = R.string.title_MyResults_Fragment;
                 break;
             case (R.id.alarm):
+                viewModel.setOpenFragment(R.string.title_AlarmSettings_Fragment);
                 fragmentClass = AlarmSettingsFragment.class;
-                fragmentName = R.string.title_AlarmSettings_Fragment;
                 fragmentTag = getResources().getString(R.string.title_AlarmSettings_Fragment);
                 break;
         }
 
-        if(fragmentName != openFragment) {
+        if(viewModel.getFragmentName() != viewModel.getOpenFragment()) {
             OpenFragment(fragmentClass, fragmentTag);
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    private Context getContext() {
-        return this;
     }
 
     @Override
@@ -345,13 +337,11 @@ public class MainActivity extends AppCompatActivity implements
         } else {
             int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
             if (backStackEntryCount == 1) {
-                final String APP_PREFERENCES = "audata";
-                final String APP_PREFERENCES_SELECTEDDAY = "SelectedDay";
-                SharedPreferences mSettings = 
-                        getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = mSettings.edit();
-                editor.putString(APP_PREFERENCES_SELECTEDDAY, "0");
-                editor.apply();
+                String APP_PREFERENCES = "audata";
+                String APP_PREFERENCES_SELECTEDDAY = "SelectedDay";
+                SharedPreferences sharedPreferences =
+                        this.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+                sharedPreferences.edit().putString(APP_PREFERENCES_SELECTEDDAY, "0").apply();
                 finish();
             } else {
                 getSupportFragmentManager().popBackStack();
@@ -362,8 +352,8 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void changeTitle(int nameFotTitle, int nameForNavigationDraw) {
         setTitle(nameFotTitle);
-        if (fragmentName == 0) fragmentName = nameFotTitle;
-        openFragment = nameFotTitle;
+        if (viewModel.getFragmentName() == 0) viewModel.setFragmentName(nameFotTitle);
+        viewModel.setOpenFragment(nameFotTitle);
 
         for (int index = 0; index < navigationView.getMenu().size(); index++) {
             navigationView.getMenu().getItem(index).setChecked(false);
