@@ -26,9 +26,9 @@ import ru.lizzzi.crossfit_rekord.interfaces.ChangeTitle;
 import ru.lizzzi.crossfit_rekord.loaders.ChangePasswordLoader;
 
 public class ChangePasswordFragment extends Fragment implements LoaderManager.LoaderCallbacks<Boolean>{
-    private static final String APP_PREFERENCES = "audata";
-    private static final String APP_PREFERENCES_EMAIL = "Email";
-    private static final String APP_PREFERENCES_PASSWORD = "Password";
+    private final String APP_PREFERENCES = "audata";
+    private final String APP_PREFERENCES_EMAIL = "Email";
+    private final String APP_PREFERENCES_PASSWORD = "Password";
     private SharedPreferences mSettings;
 
     private EditText etPasswordOld;

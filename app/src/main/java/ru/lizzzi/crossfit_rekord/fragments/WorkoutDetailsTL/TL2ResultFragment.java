@@ -40,9 +40,9 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
     private Handler handlerOpenFragment;
     private Thread threadUpdateFragment;
 
-    private static final String APP_PREFERENCES = "audata";
-    private static final String APP_PREFERENCES_SELECTEDDAY = "SelectedDay";
-    private static final String APP_PREFERENCES_OBJECTID = "ObjectId";
+    private final String APP_PREFERENCES = "audata";
+    private final String APP_PREFERENCES_SELECTEDDAY = "SelectedDay";
+    private final String APP_PREFERENCES_OBJECTID = "ObjectId";
     private SharedPreferences sharedPreferences;
 
     private LinearLayout linLayError;

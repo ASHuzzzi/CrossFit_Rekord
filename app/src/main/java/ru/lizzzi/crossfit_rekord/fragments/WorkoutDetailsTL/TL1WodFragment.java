@@ -49,8 +49,8 @@ public class TL1WodFragment extends Fragment implements LoaderManager.LoaderCall
     private Handler handlerOpenFragment;
     private Thread threadOpenFragment;
 
-    private static final String APP_PREFERENCES = "audata";
-    private static final String APP_PREFERENCES_SELECTEDDAY = "SelectedDay";
+    private final String APP_PREFERENCES = "audata";
+    private final String APP_PREFERENCES_SELECTEDDAY = "SelectedDay";
 
     private Runnable runnableOpenFragment;
     private SharedPreferences sharedPreferences;

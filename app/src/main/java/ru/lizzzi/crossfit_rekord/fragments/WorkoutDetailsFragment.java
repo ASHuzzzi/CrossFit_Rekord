@@ -26,10 +26,7 @@ import ru.lizzzi.crossfit_rekord.interfaces.ChangeTitle;
  * Created by Liza on 13.03.2018.
  */
 
-public class WorkoutDetailsFragment extends Fragment{
-
-    private static final String APP_PREFERENCES = "audata";
-    private static final String APP_PREFERENCES_SELECTEDDAY = "SelectedDay";
+public class WorkoutDetailsFragment extends Fragment {
 
     private TextView textSelectedDay;
 
@@ -61,9 +58,11 @@ public class WorkoutDetailsFragment extends Fragment{
     @Override
     public  void onStart() {
         super.onStart();
-        if (getActivity() instanceof ChangeTitle){
-            ChangeTitle listernerChangeTitle = (ChangeTitle) getActivity();
-            listernerChangeTitle.changeTitle(R.string.title_WorkoutDetails_Fragment, R.string.title_CalendarWod_Fragment);
+        ChangeTitle listenerChangeTitle = (ChangeTitle) getActivity();
+        if (listenerChangeTitle != null) {
+            listenerChangeTitle.changeTitle(
+                    R.string.title_WorkoutDetails_Fragment,
+                    R.string.title_CalendarWod_Fragment);
         }
     }
 
@@ -72,6 +71,8 @@ public class WorkoutDetailsFragment extends Fragment{
     public void onResume() {
         super.onResume();
         try {
+            String APP_PREFERENCES = "audata";
+            String APP_PREFERENCES_SELECTEDDAY = "SelectedDay";
             SharedPreferences sharedPreferences =
                     Objects.requireNonNull(getContext()).getSharedPreferences(
                             APP_PREFERENCES,

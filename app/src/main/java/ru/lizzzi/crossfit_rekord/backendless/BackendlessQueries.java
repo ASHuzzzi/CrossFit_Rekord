@@ -22,14 +22,14 @@ public class BackendlessQueries extends Application {
     @SuppressLint("StaticFieldLeak")
     private static Context context;
 
-    private static final String APP_PREFERENCES = "audata";
-    private static final String APP_PREFERENCES_CARDNUMBER = "cardNumber";
-    private static final String APP_PREFERENCES_EMAIL = "Email";
-    private static final String APP_PREFERENCES_PASSWORD = "Password";
-    private static final String APP_PREFERENCES_OBJECTID = "ObjectId";
-    private static final String APP_PREFERENCES_USERNAME = "Username";
-    private static final String APP_PREFERENCES_USERSURNAME = "Usersurname";
-    private static final String APP_PREFERENCES_PHONE = "Phone";
+    private final String APP_PREFERENCES = "audata";
+    private final String APP_PREFERENCES_CARDNUMBER = "cardNumber";
+    private final String APP_PREFERENCES_EMAIL = "Email";
+    private final String APP_PREFERENCES_PASSWORD = "Password";
+    private final String APP_PREFERENCES_OBJECTID = "ObjectId";
+    private final String APP_PREFERENCES_USERNAME = "Username";
+    private final String APP_PREFERENCES_USERSURNAME = "Usersurname";
+    private final String APP_PREFERENCES_PHONE = "Phone";
     private SharedPreferences sharedPreferences;
 
     public void onCreate() {
