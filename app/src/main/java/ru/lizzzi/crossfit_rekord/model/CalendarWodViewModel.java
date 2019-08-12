@@ -41,9 +41,8 @@ public class CalendarWodViewModel  extends AndroidViewModel {
             TimeUnit.SECONDS,
             new LinkedBlockingQueue<Runnable>());
 
-    private static final String APP_PREFERENCES = "audata";
-    private static final String APP_PREFERENCES_OBJECTID = "ObjectId";
-    private static final String APP_PREFERENCES_SELECTEDDAY = "SelectedDay";
+    private final String APP_PREFERENCES_OBJECTID = "ObjectId";
+    private final String APP_PREFERENCES_SELECTEDDAY = "SelectedDay";
     private SharedPreferences sharedPreferences;
 
     private String userObjectID;
@@ -54,6 +53,7 @@ public class CalendarWodViewModel  extends AndroidViewModel {
     public CalendarWodViewModel(@NonNull Application application) {
         super(application);
         backendlessQuery = new BackendlessQueries();
+        String APP_PREFERENCES = "audata";
         sharedPreferences =
                 getApplication().getSharedPreferences(
                         APP_PREFERENCES,

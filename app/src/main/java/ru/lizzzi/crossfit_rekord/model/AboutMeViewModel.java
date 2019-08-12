@@ -27,18 +27,14 @@ public class AboutMeViewModel extends AndroidViewModel {
             TimeUnit.SECONDS,
             new LinkedBlockingQueue<Runnable>());
 
-    private static final String APP_PREFERENCES = "audata";
-    private static final String APP_PREFERENCES_EMAIL = "Email";
-    private static final String APP_PREFERENCES_USERNAME = "Username";
-    private static final String APP_PREFERENCES_USERSURNAME = "Usersurname";
-    private static final String APP_PREFERENCES_CARDNUMBER = "cardNumber";
-    private static final String APP_PREFERENCES_PHONE = "Phone";
-    private static final String APP_PREFERENCES_PASSWORD = "Password";
+    private final String APP_PREFERENCES_EMAIL = "Email";
+    private final String APP_PREFERENCES_PASSWORD = "Password";
     private SharedPreferences sharedPreferences;
 
     public AboutMeViewModel(@NonNull Application application) {
         super(application);
         backendlessQuery = new BackendlessQueries();
+        String APP_PREFERENCES = "audata";
         sharedPreferences = getApplication().getSharedPreferences(
                 APP_PREFERENCES,
                 Context.MODE_PRIVATE);
@@ -72,18 +68,22 @@ public class AboutMeViewModel extends AndroidViewModel {
     }
 
     public String getCardNumber() {
+        String APP_PREFERENCES_CARDNUMBER = "cardNumber";
         return sharedPreferences.getString(APP_PREFERENCES_CARDNUMBER, "");
     }
 
     public String getUserName() {
+        String APP_PREFERENCES_USERNAME = "Username";
         return sharedPreferences.getString(APP_PREFERENCES_USERNAME, "");
     }
 
     public String getUserSurname() {
+        String APP_PREFERENCES_USERSURNAME = "Usersurname";
         return sharedPreferences.getString(APP_PREFERENCES_USERSURNAME, "");
     }
 
     public String getPhone() {
+        String APP_PREFERENCES_PHONE = "Phone";
         return sharedPreferences.getString(APP_PREFERENCES_PHONE, "");
     }
 }

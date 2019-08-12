@@ -95,7 +95,7 @@ public class LoginFragment extends Fragment {
 
                 uiLoadingState(loading);
                 if (viewModel.checkNetwork()) {
-                    LiveData<Boolean>  liveData = viewModel.getLogin(
+                    LiveData<Boolean> liveData = viewModel.getLogin(
                             editTextUserEmail.getText().toString(),
                             editTextUserPassword.getText().toString());
                     liveData.observe(LoginFragment.this, new Observer<Boolean>() {

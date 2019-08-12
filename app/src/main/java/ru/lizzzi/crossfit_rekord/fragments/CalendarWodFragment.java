@@ -119,8 +119,14 @@ public class CalendarWodFragment extends Fragment {
     }
 
     @Override
-    public  void onStart() {
-        super.onStart();
+    public  void onResume() {
+        super.onResume();
+        ChangeTitle listenerChangeTitle = (ChangeTitle) getActivity();
+        if (listenerChangeTitle != null) {
+            listenerChangeTitle.changeTitle(
+                    R.string.title_CalendarWod_Fragment,
+                    R.string.title_CalendarWod_Fragment);
+        }
         Date date = viewModel.getDate();
         if (date != null) {
             calendarView.setCurrentDate(date);
@@ -128,10 +134,6 @@ public class CalendarWodFragment extends Fragment {
 
         if (viewModel.getSelectDates() == null) {
             getDates();
-        }
-        if (getActivity() instanceof ChangeTitle) {
-            ChangeTitle listernerChangeTitle = (ChangeTitle) getActivity();
-            listernerChangeTitle.changeTitle(R.string.title_CalendarWod_Fragment, R.string.title_CalendarWod_Fragment);
         }
     }
 

@@ -355,43 +355,44 @@ public class MainActivity extends AppCompatActivity implements
         if (viewModel.getFragmentName() == 0) viewModel.setFragmentName(nameFotTitle);
         viewModel.setOpenFragment(nameFotTitle);
 
-        for (int index = 0; index < navigationView.getMenu().size(); index++) {
-            navigationView.getMenu().getItem(index).setChecked(false);
+        for (int item = 0; item < navigationView.getMenu().size(); item++) {
+            navigationView.getMenu().getItem(item).setChecked(false);
         }
 
-        int navigationViewIndex = -1;
+        int NOTHING_SELECTED = -1;
+        int item = NOTHING_SELECTED;
         switch (nameForNavigationDraw) {
             case (R.string.title_Notification_Fragment):
-                navigationViewIndex = 0;
+                item = 0;
                 break;
             case (R.string.title_Table_Fragment):
-                navigationViewIndex = 1;
+                item = 1;
                 break;
             case (R.string.title_RecordForTraining_Fragment):
-                navigationViewIndex = 2;
+                item = 2;
                 break;
             case (R.string.title_CalendarWod_Fragment):
-                navigationViewIndex = 3;
+                item = 3;
                 break;
             case (R.string.title_MyResults_Fragment):
-                navigationViewIndex = 4;
+                item = 4;
                 break;
             case (R.string.title_Character_Fragment):
-                navigationViewIndex = 5;
+                item = 5;
                 break;
             case (R.string.title_AboutMe_Fragment):
-                navigationViewIndex = 6;
+                item = 6;
                 break;
             case (R.string.title_AlarmSettings_Fragment):
-                navigationViewIndex = 7;
+                item = 7;
                 break;
             case (R.string.title_Contacts_Fragment):
-                navigationViewIndex = 8;
+                item = 8;
                 break;
         }
 
-        if (navigationViewIndex != -1) {
-            navigationView.getMenu().getItem(navigationViewIndex).setChecked(true);
+        if (item != NOTHING_SELECTED) {
+            navigationView.getMenu().getItem(item).setChecked(true);
         }
     }
 }

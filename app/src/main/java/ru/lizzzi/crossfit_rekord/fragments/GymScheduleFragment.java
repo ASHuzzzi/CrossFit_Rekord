@@ -28,7 +28,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -167,43 +166,36 @@ public class GymScheduleFragment extends Fragment {
     private void showSchedule(final List<Map> dailySchedule){
         adapter = new RecyclerAdapterTable(getContext(), dailySchedule, new ListenerRecordForTrainingSelect() {
             @Override
-            public void selectTime(String stStartTime, String stTypesItem) {
+            public void selectTime(String startTime, String typesItem) {
+                int selectedDay = viewModel.getSelectedDay();
                 Calendar calendar = Calendar.getInstance();
                 List<Integer> daysWhenRecordingIsPossible = new ArrayList<>();
-                for (int i=0; i < 3; i++) {
+                for (int i = 0; i < 3; i++) {
                     calendar.add(Calendar.DAY_OF_WEEK, i);
                     daysWhenRecordingIsPossible.add(calendar.get(Calendar.DAY_OF_WEEK));
                     calendar.clear();
                     calendar = Calendar.getInstance();
                 }
-                if (daysWhenRecordingIsPossible.contains(viewModel.getSelectedDay())) {
+                if (daysWhenRecordingIsPossible.contains(selectedDay)) {
                     try {
                         SimpleDateFormat dateFormat =
                                 new SimpleDateFormat("HH:mm", Locale.getDefault());
                         calendar = Calendar.getInstance();
                         int hourNow = calendar.get(Calendar.HOUR_OF_DAY);
-                        Date selectTime = dateFormat.parse(stStartTime);
-                        calendar.setTime(selectTime);
+                        calendar.setTime(dateFormat.parse(startTime));
                         int selectHour = calendar.get(Calendar.HOUR_OF_DAY);
                         boolean selectedToday =
-                                daysWhenRecordingIsPossible.get(0).equals(viewModel.getSelectedDay());
+                                daysWhenRecordingIsPossible.get(0).equals(selectedDay);
                         //проверяем чтобы выбранное время было позже чем сейчас
                         if (selectedToday && (selectHour <= hourNow)) {
-                            Toast toast = Toast.makeText(
-                                    getContext(), 
-                                    "Выберите более позднее время.", 
-                                    Toast.LENGTH_LONG);
-                            toast.setGravity(Gravity.CENTER, 0, 0);
-                            toast.show();
+                            showToast("Выберите более позднее время.");
                         } else {
-                            int numberDayOfWeek =
-                                    daysWhenRecordingIsPossible.indexOf(viewModel.getSelectedDay());
                             UriParser uriParser = new UriParser();
                             Uri uri = uriParser.getURI(
                                     viewModel.getSelectedGym(),
-                                    numberDayOfWeek, 
-                                    stStartTime, 
-                                    stTypesItem);
+                                    daysWhenRecordingIsPossible.indexOf(selectedDay),
+                                    startTime,
+                                    typesItem);
                             Intent intent = new Intent();
                             intent.setAction(Intent.ACTION_VIEW);
                             intent.addCategory(Intent.CATEGORY_BROWSABLE);
@@ -220,12 +212,10 @@ public class GymScheduleFragment extends Fragment {
                     String nameDayOfWeek = calendar.getDisplayName(
                             Calendar.DAY_OF_WEEK,
                             Calendar.LONG, Locale.getDefault());
-                    Toast toast = Toast.makeText(
-                            getContext(), 
-                            "Запись возможна на сегодня (" + nameDayOfWeek  + ") и два дня вперед", 
-                            Toast.LENGTH_LONG);
-                    toast.setGravity(Gravity.CENTER, 0, 0);
-                    toast.show();
+                    showToast(
+                            "Запись возможна на сегодня (" +
+                                    nameDayOfWeek  +
+                                    ") и два дня вперед");
                 }
             }
         });
@@ -233,6 +223,12 @@ public class GymScheduleFragment extends Fragment {
         itemsInTable.setLayoutManager(mLayoutManager);
         itemsInTable.setAdapter(adapter);
         setPressedButtons(viewModel.getSelectedDay());
+    }
+
+    private void showToast(String toastText) {
+        Toast toast = Toast.makeText(getContext(), toastText, Toast.LENGTH_LONG);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.show();
     }
 
     //метод подготоавливающий состояние кнопок в зависимости от выбранного дня
@@ -282,16 +278,17 @@ public class GymScheduleFragment extends Fragment {
     public  void onStart() {
         super.onStart();
         if (adapter == null) {
-            int UNPRESS_ALL_BUTTONS = 8;
-            setPressedButtons(UNPRESS_ALL_BUTTONS);
+            unpressedButtons();
             checkNetworkConnection();
         } else {
             setPressedButtons(viewModel.getSelectedDay());
         }
 
-        if (getActivity() instanceof ChangeTitle) {
-            ChangeTitle listernerChangeTitle = (ChangeTitle) getActivity();
-            listernerChangeTitle.changeTitle(R.string.title_Table_Fragment, R.string.title_Table_Fragment);
+        ChangeTitle listenerChangeTitle = (ChangeTitle) getActivity();
+        if (listenerChangeTitle != null) {
+            listenerChangeTitle.changeTitle(
+                    R.string.title_Table_Fragment,
+                    R.string.title_Table_Fragment);
         }
 
         int backgroundImage = (viewModel.isSelectedGymParnas())

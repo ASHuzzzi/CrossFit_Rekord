@@ -39,11 +39,11 @@ public class RecordForTrainingSelectFragment extends Fragment {
     @Override
     public  void onStart() {
         super.onStart();
-
-        if (getActivity() instanceof ChangeTitle){
-            ChangeTitle listernerChangeTitle = (ChangeTitle) getActivity();
-            listernerChangeTitle.changeTitle(R.string.title_RecordForTraining_Fragment, R.string.title_RecordForTraining_Fragment);
+        ChangeTitle listenerChangeTitle = (ChangeTitle) getActivity();
+        if (listenerChangeTitle != null) {
+            listenerChangeTitle.changeTitle(
+                    R.string.title_RecordForTraining_Fragment,
+                    R.string.title_RecordForTraining_Fragment);
         }
-
     }
 }
