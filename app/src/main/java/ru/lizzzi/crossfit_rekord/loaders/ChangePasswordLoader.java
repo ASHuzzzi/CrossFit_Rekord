@@ -1,6 +1,7 @@
 package ru.lizzzi.crossfit_rekord.loaders;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.content.AsyncTaskLoader;
 
@@ -24,6 +25,19 @@ public class ChangePasswordLoader extends AsyncTaskLoader<Boolean> {
 
     @Override
     public Boolean loadInBackground() {
-        return backendlessQuery.changePassword(userEmail, userOldPassword, userNewPassword);
+        boolean isChanged = backendlessQuery.changePassword(
+                userEmail,
+                userOldPassword,
+                userNewPassword);
+        if (isChanged) {
+            String APP_PREFERENCES = "audata";
+            String APP_PREFERENCES_PASSWORD = "Password";
+            SharedPreferences sharedPreferences =
+                    getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+            sharedPreferences.edit()
+                    .putString(APP_PREFERENCES_PASSWORD, userNewPassword)
+                    .apply();
+        }
+        return isChanged;
     }
 }

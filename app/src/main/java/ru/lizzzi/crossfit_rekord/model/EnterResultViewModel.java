@@ -64,7 +64,7 @@ public class EnterResultViewModel extends AndroidViewModel {
                 SharedPreferences sharedPreferences =
                         getApplication().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
-                boolean isDataSaved = backendlessQuery.saveEditWorkoutDetails(
+                boolean isDataSaved = backendlessQuery.setWorkoutDetails(
                         action,
                         sharedPreferences.getString(APP_PREFERENCES_SELECTEDDAY, ""),
                         sharedPreferences.getString(APP_PREFERENCES_OBJECTID, ""),

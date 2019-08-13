@@ -29,6 +29,9 @@ public class AboutMeViewModel extends AndroidViewModel {
 
     private final String APP_PREFERENCES_EMAIL = "Email";
     private final String APP_PREFERENCES_PASSWORD = "Password";
+    private final String APP_PREFERENCES_USERNAME = "Username";
+    private final String APP_PREFERENCES_USERSURNAME = "Usersurname";
+    private final String APP_PREFERENCES_PHONE = "Phone";
     private SharedPreferences sharedPreferences;
 
     public AboutMeViewModel(@NonNull Application application) {
@@ -56,6 +59,13 @@ public class AboutMeViewModel extends AndroidViewModel {
                         userName,
                         userSurname,
                         userPhoneNumber);
+                if (loggedIn) {
+                    sharedPreferences.edit()
+                            .putString(APP_PREFERENCES_USERNAME, userName)
+                            .putString(APP_PREFERENCES_USERSURNAME, userSurname)
+                            .putString(APP_PREFERENCES_PHONE, userPhoneNumber)
+                            .apply();
+                }
                 liveData.postValue(loggedIn);
             }
         });
