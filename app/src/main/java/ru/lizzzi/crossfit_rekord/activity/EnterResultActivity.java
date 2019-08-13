@@ -48,33 +48,50 @@ public class EnterResultActivity extends AppCompatActivity {
 
         editResultOfSkill = findViewById(R.id.etResultSkill);
         editResultOfWoD = findViewById(R.id.etResultWoD);
-
         progressBar = findViewById(R.id.progressBarSaveUpload);
-        buttonSaveUpload = findViewById(R.id.buttonSaveUpload);
 
+        initActionBar();
+        initRadioGroup();
+        initButtonSaveUpload();
+    }
+
+
+    private void initActionBar() {
+        this.setSupportActionBar((Toolbar) findViewById(R.id.toolbarER));
+        final ActionBar actionBar = this.getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(false);
+        }
+    }
+
+    private void initRadioGroup() {
         radioButtonSc = findViewById(R.id.rbSc);
         radioButtonRx = findViewById(R.id.rbRx);
         radioButtonRxPlus = findViewById(R.id.rbRxP);
         RadioGroup radioGroup = findViewById(R.id.rgSelectLevel);
-
-        initActionBar();
-
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId) {
                     case R.id.rbSc:
-                        viewModel.setWodLevel(getResources().getString(R.string.strActivityERLevelSc));
+                        viewModel.setWodLevel(
+                                getResources().getString(R.string.strActivityERLevelSc));
                         break;
                     case R.id.rbRx:
-                        viewModel.setWodLevel(getResources().getString(R.string.strActivityERLevelRx));
+                        viewModel.setWodLevel(
+                                getResources().getString(R.string.strActivityERLevelRx));
                         break;
                     case R.id.rbRxP:
-                        viewModel.setWodLevel(getResources().getString(R.string.strActivityERLevelRxPlus));
+                        viewModel.setWodLevel(
+                                getResources().getString(R.string.strActivityERLevelRxPlus));
                 }
             }
         });
+    }
 
+    private void  initButtonSaveUpload() {
+        buttonSaveUpload = findViewById(R.id.buttonSaveUpload);
         buttonSaveUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -97,12 +114,28 @@ public class EnterResultActivity extends AppCompatActivity {
         return inputText;
     }
 
-    private void initActionBar() {
-        this.setSupportActionBar((Toolbar) findViewById(R.id.toolbarER));
-        final ActionBar actionBar = this.getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setDisplayShowHomeEnabled(false);
+    private void changeWodResult() {
+        progressBar.setVisibility(View.VISIBLE);
+        buttonSaveUpload.setClickable(false);
+        if (viewModel.checkNetwork()) {
+            LiveData<Boolean> liveData = viewModel.saveWorkoutDetails(
+                    editResultOfSkill.getText().toString(),
+                    editResultOfWoD.getText().toString());
+            liveData.observe(EnterResultActivity.this, new Observer<Boolean>() {
+                @Override
+                public void onChanged(Boolean isSaved) {
+                    if (isSaved) {
+                        setResult(RESULT_OK, new Intent());
+                        finish();
+                    } else {
+                        showToast("Не удалось! Повторите попытку");
+                    }
+                }
+            });
+        } else {
+            progressBar.setVisibility(View.INVISIBLE);
+            buttonSaveUpload.setClickable(true);
+            showToast("Нет подключения к сети!");
         }
     }
 
@@ -195,31 +228,6 @@ public class EnterResultActivity extends AppCompatActivity {
     public void onBackPressed(){
         super.onBackPressed();
         overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
-    }
-
-    private void changeWodResult() {
-        progressBar.setVisibility(View.VISIBLE);
-        buttonSaveUpload.setClickable(false);
-        if (viewModel.checkNetwork()) {
-            LiveData<Boolean> liveData = viewModel.saveWorkoutDetails(
-                    editResultOfSkill.getText().toString(),
-                    editResultOfWoD.getText().toString());
-            liveData.observe(EnterResultActivity.this, new Observer<Boolean>() {
-                @Override
-                public void onChanged(Boolean isSaved) {
-                    if (isSaved) {
-                        setResult(RESULT_OK, new Intent());
-                        finish();
-                    } else {
-                        showToast("Не удалось! Повторите попытку");
-                    }
-                }
-            });
-        } else {
-            progressBar.setVisibility(View.INVISIBLE);
-            buttonSaveUpload.setClickable(true);
-            showToast("Нет подключения к сети!");
-        }
     }
 
     private void showToast(String toastText) {

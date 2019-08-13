@@ -75,7 +75,8 @@ public class EnterResultViewModel extends AndroidViewModel {
                         userWodResult);
                 if (isDataSaved) {
                     try {
-                        String selectedDay = sharedPreferences.getString(APP_PREFERENCES_SELECTEDDAY, "");
+                        String selectedDay =
+                                sharedPreferences.getString(APP_PREFERENCES_SELECTEDDAY, "");
                         SimpleDateFormat dateFormat =
                                 new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
                         Date date = dateFormat.parse(selectedDay);
@@ -85,13 +86,17 @@ public class EnterResultViewModel extends AndroidViewModel {
                             case ACTION_SAVE:
                             case ACTION_UPLOAD:
                                 dbStorage.saveDate(
-                                        sharedPreferences.getString(APP_PREFERENCES_OBJECTID, ""),
+                                        sharedPreferences.getString(
+                                                APP_PREFERENCES_OBJECTID,
+                                                ""),
                                         dateForLoader);
                                 break;
 
                             case ACTION_DELETE:
                                 dbStorage.deleteDate(
-                                        sharedPreferences.getString(APP_PREFERENCES_OBJECTID, ""),
+                                        sharedPreferences.getString(
+                                                APP_PREFERENCES_OBJECTID,
+                                                ""),
                                         dateForLoader);
                                 break;
                         }
