@@ -120,7 +120,7 @@ public class SQLiteStorageNotification extends SQLiteOpenHelper {
 
     }
 
-    public long datelastcheck(){
+    public long dateLastCheck(){
         database = this.getReadableDatabase();
         long stLastDateCheck = 0;
         String[] columns = new  String[]{"MAX(" +
@@ -136,11 +136,10 @@ public class SQLiteStorageNotification extends SQLiteOpenHelper {
                 null);
         if (cursor !=null && cursor.moveToFirst()){
             do {
-
                 for (String cn : cursor.getColumnNames()) {
                     stLastDateCheck = cursor.getLong(cursor.getColumnIndex(cn));
                 }
-            }while (cursor.moveToNext());
+            } while (cursor.moveToNext());
         }
         if (cursor != null) {
             cursor.close();

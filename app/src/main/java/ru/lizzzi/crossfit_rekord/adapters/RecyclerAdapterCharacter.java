@@ -1,6 +1,5 @@
 package ru.lizzzi.crossfit_rekord.adapters;
 
-import android.annotation.SuppressLint;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -12,16 +11,17 @@ import android.widget.TextView;
 import java.util.List;
 
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.interfaces.ListernerCharacter;
+import ru.lizzzi.crossfit_rekord.interfaces.CharacterListener;
 
-public class RecyclerAdapterCharacter extends RecyclerView.Adapter<RecyclerAdapterCharacter.ViewHolder> {
+public class RecyclerAdapterCharacter
+        extends RecyclerView.Adapter<RecyclerAdapterCharacter.ViewHolder> {
 
     private List listCharacter;
-    private ListernerCharacter listerner;
+    private CharacterListener listener;
 
-    public RecyclerAdapterCharacter(List character, ListernerCharacter listerner){
+    public RecyclerAdapterCharacter(List character, CharacterListener listener) {
         this.listCharacter = character;
-        this.listerner = listerner;
+        this.listener = listener;
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -46,15 +46,14 @@ public class RecyclerAdapterCharacter extends RecyclerView.Adapter<RecyclerAdapt
     }
 
     @Override
-    public void onBindViewHolder(
-            @NonNull ViewHolder holder,
-            @SuppressLint("RecyclerView") final int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        final int itemPosition = position;
 
-        holder.textCharacter.setText(String.valueOf(listCharacter.get(position)));
+        holder.textCharacter.setText(listCharacter.get(itemPosition).toString());
         holder.cardCharacter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listerner.selectCharacter(String.valueOf(listCharacter.get(position)));
+                listener.selectCharacter(listCharacter.get(itemPosition).toString());
             }
         });
     }

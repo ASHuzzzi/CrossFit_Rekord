@@ -44,16 +44,16 @@ import ru.lizzzi.crossfit_rekord.fragments.LoginFragment;
 import ru.lizzzi.crossfit_rekord.fragments.RecordForTrainingSelectFragment;
 import ru.lizzzi.crossfit_rekord.fragments.StartScreenFragment;
 import ru.lizzzi.crossfit_rekord.fragments.ScheduleFragment;
-import ru.lizzzi.crossfit_rekord.interfaces.ChangeTitle;
-import ru.lizzzi.crossfit_rekord.interfaces.ChangeToggleStatus;
+import ru.lizzzi.crossfit_rekord.interfaces.TitleChange;
+import ru.lizzzi.crossfit_rekord.interfaces.ToggleStatusChange;
 import ru.lizzzi.crossfit_rekord.model.MainViewModel;
 import ru.lizzzi.crossfit_rekord.services.LoadNotificationsService;
 import ru.lizzzi.crossfit_rekord.fragments.NotificationFragment;
 
 public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
-        ChangeTitle,
-        ChangeToggleStatus {
+        TitleChange,
+        ToggleStatusChange {
 
     private BroadcastReceiver broadcastReceiver;
     private final int LOAD_NOTIFICATION = 1;

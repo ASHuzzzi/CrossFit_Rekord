@@ -1,5 +1,6 @@
 package ru.lizzzi.crossfit_rekord.interfaces;
 
-public interface ListernerCharacter {
+public interface CharacterListener {
+
     void selectCharacter(String selectCharacter);
 }

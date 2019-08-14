@@ -22,10 +22,10 @@ import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.dialogs.SelectTimeDialog;
 import ru.lizzzi.crossfit_rekord.dialogs.SelectWeekDayDialog;
 import ru.lizzzi.crossfit_rekord.inspectionСlasses.alarm.AlarmHelper;
-import ru.lizzzi.crossfit_rekord.interfaces.ChangeTitle;
-import ru.lizzzi.crossfit_rekord.interfaces.SetSettingNotification;
+import ru.lizzzi.crossfit_rekord.interfaces.TitleChange;
+import ru.lizzzi.crossfit_rekord.interfaces.NotificationSetting;
 
-public class AlarmSettingsFragment extends Fragment implements SetSettingNotification{
+public class AlarmSettingsFragment extends Fragment implements NotificationSetting {
 
     private TextView textSelectedDay;
     private TextView textHour;
@@ -94,9 +94,9 @@ public class AlarmSettingsFragment extends Fragment implements SetSettingNotific
     @Override
     public void onStart(){
         super.onStart();
-        if (getActivity() instanceof ChangeTitle) {
-            ChangeTitle listernerChangeTitle = (ChangeTitle) getActivity();
-            listernerChangeTitle.changeTitle(R.string.title_AlarmSettings_Fragment, R.string.title_AlarmSettings_Fragment);
+        if (getActivity() instanceof TitleChange) {
+            TitleChange listernerTitleChange = (TitleChange) getActivity();
+            listernerTitleChange.changeTitle(R.string.title_AlarmSettings_Fragment, R.string.title_AlarmSettings_Fragment);
         }
 
         Calendar calendar = Calendar.getInstance();

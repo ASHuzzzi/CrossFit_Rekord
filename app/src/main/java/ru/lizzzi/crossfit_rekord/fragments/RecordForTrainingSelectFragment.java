@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.adapters.PageAdapterRecord;
-import ru.lizzzi.crossfit_rekord.interfaces.ChangeTitle;
+import ru.lizzzi.crossfit_rekord.interfaces.TitleChange;
 
 public class RecordForTrainingSelectFragment extends Fragment {
 
@@ -39,9 +39,9 @@ public class RecordForTrainingSelectFragment extends Fragment {
     @Override
     public  void onStart() {
         super.onStart();
-        ChangeTitle listenerChangeTitle = (ChangeTitle) getActivity();
-        if (listenerChangeTitle != null) {
-            listenerChangeTitle.changeTitle(
+        TitleChange listenerTitleChange = (TitleChange) getActivity();
+        if (listenerTitleChange != null) {
+            listenerTitleChange.changeTitle(
                     R.string.title_RecordForTraining_Fragment,
                     R.string.title_RecordForTraining_Fragment);
         }

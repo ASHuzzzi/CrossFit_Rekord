@@ -22,7 +22,7 @@ import android.widget.Toast;
 import java.util.Objects;
 
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.interfaces.ChangeTitle;
+import ru.lizzzi.crossfit_rekord.interfaces.TitleChange;
 import ru.lizzzi.crossfit_rekord.model.AboutMeViewModel;
 
 /**
@@ -168,9 +168,9 @@ public class AboutMeFragment extends Fragment {
     @Override
     public  void onStart() {
         super.onStart();
-        if (getActivity() instanceof ChangeTitle){
-            ChangeTitle listernerChangeTitle = (ChangeTitle) getActivity();
-            listernerChangeTitle.changeTitle(R.string.title_AboutMe_Fragment, R.string.title_AboutMe_Fragment);
+        if (getActivity() instanceof TitleChange){
+            TitleChange listernerTitleChange = (TitleChange) getActivity();
+            listernerTitleChange.changeTitle(R.string.title_AboutMe_Fragment, R.string.title_AboutMe_Fragment);
         }
     }
 

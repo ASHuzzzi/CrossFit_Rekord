@@ -29,8 +29,8 @@ import ru.lizzzi.crossfit_rekord.activity.MainActivity;
 import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterNotification;
 import ru.lizzzi.crossfit_rekord.data.SQLiteStorageNotification;
 import ru.lizzzi.crossfit_rekord.loaders.NotificationLoader;
-import ru.lizzzi.crossfit_rekord.interfaces.ChangeTitle;
-import ru.lizzzi.crossfit_rekord.interfaces.ListernerNotification;
+import ru.lizzzi.crossfit_rekord.interfaces.TitleChange;
+import ru.lizzzi.crossfit_rekord.interfaces.NotificationListener;
 
 public class NotificationFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Map<String, Object>>> {
 
@@ -112,13 +112,13 @@ public class NotificationFragment extends Fragment implements LoaderManager.Load
     public void onLoadFinished(@NonNull Loader<List<Map<String, Object>>> loader, List<Map<String, Object>> data) {
 
         if (data != null){
-            RecyclerAdapterNotification adapterNotification = new RecyclerAdapterNotification(getContext(), data, new ListernerNotification() {
+            RecyclerAdapterNotification adapterNotification = new RecyclerAdapterNotification(getContext(), data, new NotificationListener() {
                 @Override
-                public void selectNotificationInList(String stdateNote, String stheader) {
+                public void selectNotificationInList(String dateNote, String headerText) {
 
                     Bundle bundle = new Bundle();
-                    bundle.putString("dateNote", stdateNote);
-                    bundle.putString("headerNote", stheader);
+                    bundle.putString("dateNote", dateNote);
+                    bundle.putString("headerNote", headerText);
                     NotificationDataFragment yfc = new NotificationDataFragment();
                     yfc.setArguments(bundle);
                     FragmentManager fragmentManager = getFragmentManager();
@@ -130,7 +130,7 @@ public class NotificationFragment extends Fragment implements LoaderManager.Load
                 }
 
                 @Override
-                public void deleteNotificationInList(final String stdateNote) {
+                public void deleteNotificationInList(final String dateNote) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                     builder.setMessage("Удалить новость?")
                             .setCancelable(false)
@@ -138,7 +138,7 @@ public class NotificationFragment extends Fragment implements LoaderManager.Load
                                     new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialogInterface, int i) {
-                                            long lDateNote = Long.valueOf(stdateNote);
+                                            long lDateNote = Long.valueOf(dateNote);
 
                                             SQLiteStorageNotification mDBHelper = new SQLiteStorageNotification(getContext());
                                             mDBHelper.deleteNotification(lDateNote);
@@ -190,9 +190,9 @@ public class NotificationFragment extends Fragment implements LoaderManager.Load
     public  void onStart() {
         super.onStart();
 
-        if (getActivity() instanceof ChangeTitle){
-            ChangeTitle listernerChangeTitle = (ChangeTitle) getActivity();
-            listernerChangeTitle.changeTitle(R.string.title_Notification_Fragment, R.string.title_Notification_Fragment);
+        if (getActivity() instanceof TitleChange){
+            TitleChange listernerTitleChange = (TitleChange) getActivity();
+            listernerTitleChange.changeTitle(R.string.title_Notification_Fragment, R.string.title_Notification_Fragment);
         }
 
         // регистрируем (включаем) BroadcastReceiver

@@ -17,29 +17,30 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.documentfields.DocumentFieldsSchedule;
+import ru.lizzzi.crossfit_rekord.items.ScheduleItem;
 import ru.lizzzi.crossfit_rekord.inspectionСlasses.BackgroundDrawable;
-import ru.lizzzi.crossfit_rekord.interfaces.ListenerRecordForTrainingSelect;
+import ru.lizzzi.crossfit_rekord.interfaces.RecordForTrainingSelectListener;
 
 public class RecyclerAdapterRecordForTrainingSelect
         extends RecyclerView.Adapter<RecyclerAdapterRecordForTrainingSelect.ViewHolder> {
 
     private List<Map> scheduleItems;
     private boolean isToday;
-    private ListenerRecordForTrainingSelect listener;
-    private final ThreadLocal<DocumentFieldsSchedule> scheduleFields = new ThreadLocal<>();
+    private RecordForTrainingSelectListener listener;
+    private ScheduleItem scheduleItem;
 
     public RecyclerAdapterRecordForTrainingSelect(
             Context context,
             @NonNull List<Map> scheduleItems,
             boolean isToday,
-            ListenerRecordForTrainingSelect listener) {
+            RecordForTrainingSelectListener listener) {
         this.scheduleItems = scheduleItems;
         this.isToday = isToday;
         this.listener = listener;
-        scheduleFields.set(new DocumentFieldsSchedule(context));
+        scheduleItem = new ScheduleItem(context);
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -67,9 +68,11 @@ public class RecyclerAdapterRecordForTrainingSelect
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        final Map scheduleItem = scheduleItems.get(position);
-        final String startTime = scheduleItem.get(scheduleFields.get().getStartTime()).toString();
-        final String workoutType = scheduleItem.get(scheduleFields.get().getType()).toString();
+        final Map mapItem = scheduleItems.get(position);
+        final String startTime =
+                Objects.requireNonNull(mapItem.get(scheduleItem.getStartTime())).toString();
+        final String workoutType =
+                Objects.requireNonNull(mapItem.get(scheduleItem.getType())).toString();
 
         holder.startTime.setText(startTime);
         holder.workoutTypes.setText(workoutType);

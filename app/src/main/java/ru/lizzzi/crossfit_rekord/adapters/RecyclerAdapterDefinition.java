@@ -10,19 +10,21 @@ import android.widget.TextView;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.documentfields.TerminsAndDefinition;
+import ru.lizzzi.crossfit_rekord.items.TerminsAndDefinitionItem;
 
 public class RecyclerAdapterDefinition extends RecyclerView.Adapter<RecyclerAdapterDefinition.ViewHolder> {
 
-    private List<Map<String, String>> termsOfSelectedCharacter;
-    private TerminsAndDefinition terminsAndDefinition;
+    private List<Map<String, String>> termsItems;
+    private TerminsAndDefinitionItem terminsAndDefinitionItem;
 
-    public RecyclerAdapterDefinition(Context context,
-                                     @NonNull List<Map<String, String>> termsOfSelectedCharacter) {
-        this.termsOfSelectedCharacter = termsOfSelectedCharacter;
-        terminsAndDefinition = new TerminsAndDefinition(context);
+    public RecyclerAdapterDefinition(
+            Context context,
+            @NonNull List<Map<String, String>> termsItems) {
+        this.termsItems = termsItems;
+        terminsAndDefinitionItem = new TerminsAndDefinitionItem(context);
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -47,11 +49,11 @@ public class RecyclerAdapterDefinition extends RecyclerView.Adapter<RecyclerAdap
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        final Map mapTermsOfSelectedCharacter = termsOfSelectedCharacter.get(position);
-        String termin =
-                mapTermsOfSelectedCharacter.get(terminsAndDefinition.getTerminFields()).toString();
-        String definition =
-                mapTermsOfSelectedCharacter.get(terminsAndDefinition.getDefinitionFields()).toString();
+        final Map mapTermsOfSelectedCharacter = termsItems.get(position);
+        String termin = Objects.requireNonNull(mapTermsOfSelectedCharacter.get(
+                terminsAndDefinitionItem.getTerminFields())).toString();
+        String definition = Objects.requireNonNull(mapTermsOfSelectedCharacter.get(
+                terminsAndDefinitionItem.getDefinitionFields())).toString();
         holder.textTermin.setText(termin);
         holder.textDescription.setText(definition);
     }
@@ -63,6 +65,6 @@ public class RecyclerAdapterDefinition extends RecyclerView.Adapter<RecyclerAdap
 
     @Override
     public int getItemCount() {
-        return termsOfSelectedCharacter.size();
+        return termsItems.size();
     }
 }

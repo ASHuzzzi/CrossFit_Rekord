@@ -35,10 +35,8 @@ public class PagerAdapterWorkoutDetails extends FragmentPagerAdapter {
         return 2;
     }
 
-    // This determines the title for each tab
     @Override
     public CharSequence getPageTitle(int position) {
-        // Generate title based on item position
         switch (position) {
             case 0:
                 return context.getString(R.string.strWorkoutDetailsWod);

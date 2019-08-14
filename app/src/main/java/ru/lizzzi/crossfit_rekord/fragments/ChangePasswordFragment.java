@@ -21,8 +21,8 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.inspectionСlasses.Network;
-import ru.lizzzi.crossfit_rekord.interfaces.ChangeTitle;
+import ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck;
+import ru.lizzzi.crossfit_rekord.interfaces.TitleChange;
 import ru.lizzzi.crossfit_rekord.loaders.ChangePasswordLoader;
 
 public class ChangePasswordFragment extends Fragment implements LoaderManager.LoaderCallbacks<Boolean>{
@@ -81,7 +81,7 @@ public class ChangePasswordFragment extends Fragment implements LoaderManager.Lo
             @Override
             public void run() {
 
-                Network network = new Network(getContext());
+                NetworkCheck network = new NetworkCheck(getContext());
                 Bundle bundle = new Bundle();
                 boolean checkDone = network.checkConnection();
                 if (checkDone) {
@@ -146,9 +146,9 @@ public class ChangePasswordFragment extends Fragment implements LoaderManager.Lo
     @Override
     public  void onStart() {
         super.onStart();
-        if (getActivity() instanceof ChangeTitle){
-            ChangeTitle listernerChangeTitle = (ChangeTitle) getActivity();
-            listernerChangeTitle.changeTitle(R.string.title_ChangePassword_Fragment, R.string.title_AboutMe_Fragment);
+        if (getActivity() instanceof TitleChange){
+            TitleChange listernerTitleChange = (TitleChange) getActivity();
+            listernerTitleChange.changeTitle(R.string.title_ChangePassword_Fragment, R.string.title_AboutMe_Fragment);
         }
 
     }

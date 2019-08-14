@@ -15,7 +15,7 @@ import java.util.Map;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.data.SQLiteStorageUserResult;
-import ru.lizzzi.crossfit_rekord.interfaces.ChangeTitle;
+import ru.lizzzi.crossfit_rekord.interfaces.TitleChange;
 
 public class MyResultsFragment extends Fragment implements View.OnFocusChangeListener {
 
@@ -199,9 +199,9 @@ public class MyResultsFragment extends Fragment implements View.OnFocusChangeLis
     public  void onStart() {
         super.onStart();
 
-        if (getActivity() instanceof ChangeTitle){
-            ChangeTitle listernerChangeTitle = (ChangeTitle) getActivity();
-            listernerChangeTitle.changeTitle(R.string.title_MyResults_Fragment, R.string.title_MyResults_Fragment);
+        if (getActivity() instanceof TitleChange){
+            TitleChange listernerTitleChange = (TitleChange) getActivity();
+            listernerTitleChange.changeTitle(R.string.title_MyResults_Fragment, R.string.title_MyResults_Fragment);
         }
 
         prepareEditText();

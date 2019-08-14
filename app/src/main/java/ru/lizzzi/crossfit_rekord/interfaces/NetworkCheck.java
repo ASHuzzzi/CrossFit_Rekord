@@ -1,5 +1,6 @@
 package ru.lizzzi.crossfit_rekord.interfaces;
 
-public interface CheckNetwork {
+public interface NetworkCheck {
+
     boolean checkConnection();
 }

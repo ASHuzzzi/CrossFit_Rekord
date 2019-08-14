@@ -15,7 +15,7 @@ import java.util.Map;
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterDefinition;
 import ru.lizzzi.crossfit_rekord.data.SQLiteStorageDefinition;
-import ru.lizzzi.crossfit_rekord.interfaces.ChangeTitle;
+import ru.lizzzi.crossfit_rekord.interfaces.TitleChange;
 
 public class DefinitionFragment extends Fragment {
 
@@ -36,9 +36,9 @@ public class DefinitionFragment extends Fragment {
     @Override
     public  void onStart() {
         super.onStart();
-        if (getActivity() instanceof ChangeTitle) {
-            ChangeTitle listernerChangeTitle = (ChangeTitle) getActivity();
-            listernerChangeTitle.changeTitle(R.string.title_Definition_Fragment, R.string.title_Character_Fragment);
+        if (getActivity() instanceof TitleChange) {
+            TitleChange listernerTitleChange = (TitleChange) getActivity();
+            listernerTitleChange.changeTitle(R.string.title_Definition_Fragment, R.string.title_Character_Fragment);
         }
         List<Map<String, String>> termsOfSelectedCharacter = getListDefinitions(selectedCharacter);
         RecyclerAdapterDefinition adapter = new RecyclerAdapterDefinition(

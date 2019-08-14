@@ -10,20 +10,21 @@ import android.widget.TextView;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.documentfields.DocumentFieldsWorkoutDetails;
+import ru.lizzzi.crossfit_rekord.items.WorkoutDetailsItem;
 
 
 public class RecyclerAdapterWorkoutDetails
-        extends RecyclerView.Adapter<RecyclerAdapterWorkoutDetails.ViewHolder>{
+        extends RecyclerView.Adapter<RecyclerAdapterWorkoutDetails.ViewHolder> {
 
     private List<Map> wodItems;
-    private DocumentFieldsWorkoutDetails wordkoutFields;
+    private WorkoutDetailsItem wordkoutItem;
 
-    public RecyclerAdapterWorkoutDetails(Context context, @NonNull List<Map> wodItems){
+    public RecyclerAdapterWorkoutDetails(Context context, @NonNull List<Map> wodItems) {
         this.wodItems = wodItems;
-        wordkoutFields = new DocumentFieldsWorkoutDetails(context);
+        wordkoutItem = new WorkoutDetailsItem(context);
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -45,7 +46,7 @@ public class RecyclerAdapterWorkoutDetails
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType){
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(
                 R.layout.item_rv_workout_details,
                 parent,
@@ -56,11 +57,16 @@ public class RecyclerAdapterWorkoutDetails
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position){
         final Map wodItem = wodItems.get(position);
-        String userName = wodItem.get(wordkoutFields.getNameField()).toString();
-        String userSurname = wodItem.get(wordkoutFields.getSurnameField()).toString();
-        String skillResult = wodItem.get(wordkoutFields.getSkillField()).toString();
-        String wodLevel = wodItem.get(wordkoutFields.getWodLevelField()).toString();
-        String wodResult = wodItem.get(wordkoutFields.getWodResultField()).toString();
+        String userName =
+                Objects.requireNonNull(wodItem.get(wordkoutItem.getNameField())).toString();
+        String userSurname =
+                Objects.requireNonNull(wodItem.get(wordkoutItem.getSurnameField())).toString();
+        String skillResult =
+                Objects.requireNonNull(wodItem.get(wordkoutItem.getSkillField())).toString();
+        String wodLevel =
+                Objects.requireNonNull(wodItem.get(wordkoutItem.getWodLevelField())).toString();
+        String wodResult =
+                Objects.requireNonNull(wodItem.get(wordkoutItem.getWodResultField())).toString();
 
         holder.userName.setText(userName);
         holder.userSurname.setText(userSurname);

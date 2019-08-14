@@ -14,7 +14,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import ru.lizzzi.crossfit_rekord.backendless.BackendlessQueries;
-import ru.lizzzi.crossfit_rekord.inspectionСlasses.Network;
+import ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck;
 
 public class RegistryViewModel extends AndroidViewModel {
 
@@ -64,7 +64,7 @@ public class RegistryViewModel extends AndroidViewModel {
     }
 
     public boolean checkNetwork() {
-        Network network = new Network(getApplication());
+        NetworkCheck network = new NetworkCheck(getApplication());
         return network.checkConnection();
     }
 }

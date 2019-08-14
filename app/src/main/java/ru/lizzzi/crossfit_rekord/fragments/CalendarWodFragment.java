@@ -27,7 +27,7 @@ import java.util.Date;
 import java.util.List;
 
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.interfaces.ChangeTitle;
+import ru.lizzzi.crossfit_rekord.interfaces.TitleChange;
 import ru.lizzzi.crossfit_rekord.model.CalendarWodViewModel;
 
 public class CalendarWodFragment extends Fragment {
@@ -121,9 +121,9 @@ public class CalendarWodFragment extends Fragment {
     @Override
     public  void onResume() {
         super.onResume();
-        ChangeTitle listenerChangeTitle = (ChangeTitle) getActivity();
-        if (listenerChangeTitle != null) {
-            listenerChangeTitle.changeTitle(
+        TitleChange listenerTitleChange = (TitleChange) getActivity();
+        if (listenerTitleChange != null) {
+            listenerTitleChange.changeTitle(
                     R.string.title_CalendarWod_Fragment,
                     R.string.title_CalendarWod_Fragment);
         }

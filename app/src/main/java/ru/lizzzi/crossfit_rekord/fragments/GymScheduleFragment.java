@@ -36,8 +36,8 @@ import java.util.Objects;
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterTable;
 import ru.lizzzi.crossfit_rekord.inspectionСlasses.UriParser;
-import ru.lizzzi.crossfit_rekord.interfaces.ChangeTitle;
-import ru.lizzzi.crossfit_rekord.interfaces.ListenerRecordForTrainingSelect;
+import ru.lizzzi.crossfit_rekord.interfaces.TitleChange;
+import ru.lizzzi.crossfit_rekord.interfaces.RecordForTrainingSelectListener;
 import ru.lizzzi.crossfit_rekord.model.GymScheduleViewModel;
 
 public class GymScheduleFragment extends Fragment {
@@ -164,7 +164,7 @@ public class GymScheduleFragment extends Fragment {
     }
 
     private void showSchedule(final List<Map> dailySchedule){
-        adapter = new RecyclerAdapterTable(getContext(), dailySchedule, new ListenerRecordForTrainingSelect() {
+        adapter = new RecyclerAdapterTable(getContext(), dailySchedule, new RecordForTrainingSelectListener() {
             @Override
             public void selectTime(String startTime, String typesItem) {
                 int selectedDay = viewModel.getSelectedDay();
@@ -284,9 +284,9 @@ public class GymScheduleFragment extends Fragment {
             setPressedButtons(viewModel.getSelectedDay());
         }
 
-        ChangeTitle listenerChangeTitle = (ChangeTitle) getActivity();
-        if (listenerChangeTitle != null) {
-            listenerChangeTitle.changeTitle(
+        TitleChange listenerTitleChange = (TitleChange) getActivity();
+        if (listenerTitleChange != null) {
+            listenerTitleChange.changeTitle(
                     R.string.title_Table_Fragment,
                     R.string.title_Table_Fragment);
         }

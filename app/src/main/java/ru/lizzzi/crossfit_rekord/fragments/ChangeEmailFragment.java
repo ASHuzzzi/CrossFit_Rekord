@@ -25,8 +25,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.inspectionСlasses.Network;
-import ru.lizzzi.crossfit_rekord.interfaces.ChangeTitle;
+import ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck;
+import ru.lizzzi.crossfit_rekord.interfaces.TitleChange;
 import ru.lizzzi.crossfit_rekord.loaders.ChangeEmailLoader;
 
 public class ChangeEmailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Boolean>{
@@ -83,7 +83,7 @@ public class ChangeEmailFragment extends Fragment implements LoaderManager.Loade
             @Override
             public void run() {
 
-                Network network = new Network(getContext());
+                NetworkCheck network = new NetworkCheck(getContext());
                 Bundle bundle = new Bundle();
                 boolean checkDone = network.checkConnection();
                 if (checkDone){
@@ -134,9 +134,9 @@ public class ChangeEmailFragment extends Fragment implements LoaderManager.Loade
     @Override
     public  void onStart() {
         super.onStart();
-        if (getActivity() instanceof ChangeTitle){
-            ChangeTitle listernerChangeTitle = (ChangeTitle) getActivity();
-            listernerChangeTitle.changeTitle(R.string.title_ChangeEmail_Fragment, R.string.title_AboutMe_Fragment);
+        if (getActivity() instanceof TitleChange){
+            TitleChange listernerTitleChange = (TitleChange) getActivity();
+            listernerTitleChange.changeTitle(R.string.title_ChangeEmail_Fragment, R.string.title_AboutMe_Fragment);
         }
 
     }

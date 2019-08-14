@@ -1,6 +1,6 @@
 package ru.lizzzi.crossfit_rekord.interfaces;
 
-public interface SetSettingNotification {
+public interface NotificationSetting {
 
     void setTime(int hour, int minute);
 

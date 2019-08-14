@@ -13,19 +13,22 @@ import java.util.List;
 import java.util.Map;
 
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.documentfields.DocumentFieldsSchedule;
+import ru.lizzzi.crossfit_rekord.items.ScheduleItem;
 import ru.lizzzi.crossfit_rekord.inspectionСlasses.BackgroundDrawable;
-import ru.lizzzi.crossfit_rekord.interfaces.ListenerRecordForTrainingSelect;
+import ru.lizzzi.crossfit_rekord.interfaces.RecordForTrainingSelectListener;
 
 public class RecyclerAdapterTable extends RecyclerView.Adapter<RecyclerAdapterTable.ViewHolder> {
-    private List<Map> shediletems;
-    private DocumentFieldsSchedule fields;
-    private ListenerRecordForTrainingSelect mlistener;
+    private List<Map> scheduleItems;
+    private ScheduleItem fields;
+    private RecordForTrainingSelectListener listener;
 
-    public RecyclerAdapterTable(Context context, @NonNull List<Map> shediletems, ListenerRecordForTrainingSelect listener) {
-        this.shediletems = shediletems;
-        fields = new DocumentFieldsSchedule(context);
-        mlistener = listener;
+    public RecyclerAdapterTable(
+            Context context,
+            @NonNull List<Map> scheduleItems,
+            RecordForTrainingSelectListener listener) {
+        this.scheduleItems = scheduleItems;
+        fields = new ScheduleItem(context);
+        this.listener = listener;
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -44,13 +47,16 @@ public class RecyclerAdapterTable extends RecyclerView.Adapter<RecyclerAdapterTa
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_rv_table, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(
+                R.layout.item_rv_table,
+                parent,
+                false);
         return new ViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position){
-        final Map documentInfo = shediletems.get(position);
+        final Map documentInfo = scheduleItems.get(position);
         String start_time = (String) documentInfo.get(fields.getStartTime());
         String type = (String) documentInfo.get(fields.getType());
 
@@ -64,7 +70,7 @@ public class RecyclerAdapterTable extends RecyclerView.Adapter<RecyclerAdapterTa
         holder.ll_item_table.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mlistener.selectTime((String) documentInfo.get(fields.getStartTime()),
+                listener.selectTime((String) documentInfo.get(fields.getStartTime()),
                         (String) documentInfo.get(fields.getType()));
             }
         });
@@ -72,7 +78,7 @@ public class RecyclerAdapterTable extends RecyclerView.Adapter<RecyclerAdapterTa
 
     @Override
     public int getItemCount() {
-        return shediletems.size();
+        return scheduleItems.size();
     }
 
     @Override

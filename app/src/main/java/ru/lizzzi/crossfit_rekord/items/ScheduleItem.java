@@ -1,18 +1,19 @@
-package ru.lizzzi.crossfit_rekord.documentfields;
+package ru.lizzzi.crossfit_rekord.items;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
 
 import ru.lizzzi.crossfit_rekord.R;
 
-public class DocumentFieldsSchedule {
+public class ScheduleItem {
     private Context context;
 
-    public DocumentFieldsSchedule(Context context) {
+    public ScheduleItem(Context context) {
         this.context = context;
     }
 
     public enum Fields {
+
         start_time(R.string.start_time),
         type(R.string.type);
 

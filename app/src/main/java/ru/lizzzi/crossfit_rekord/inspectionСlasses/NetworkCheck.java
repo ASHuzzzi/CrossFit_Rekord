@@ -6,13 +6,11 @@ import android.net.NetworkInfo;
 
 import java.io.IOException;
 
-import ru.lizzzi.crossfit_rekord.interfaces.CheckNetwork;
-
-public class Network implements CheckNetwork {
+public class NetworkCheck implements ru.lizzzi.crossfit_rekord.interfaces.NetworkCheck {
 
     private Context context;
 
-    public Network (Context context) {
+    public NetworkCheck(Context context) {
         this.context = context;
     }
 

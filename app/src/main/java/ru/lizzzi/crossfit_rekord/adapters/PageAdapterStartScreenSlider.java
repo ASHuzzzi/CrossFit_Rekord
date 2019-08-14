@@ -12,12 +12,10 @@ public class PageAdapterStartScreenSlider extends FragmentPagerAdapter {
         super(fragmentManager);
     }
 
-
     @Override
     public Fragment getItem(int position) {
         return StartScreenSliderFragment.newInstance(position);
     }
-
 
     @Override
     public int getCount() {

@@ -1,13 +1,13 @@
-package ru.lizzzi.crossfit_rekord.documentfields;
+package ru.lizzzi.crossfit_rekord.items;
 
 import android.content.Context;
 
 import ru.lizzzi.crossfit_rekord.R;
 
-public class TerminsAndDefinition {
+public class TerminsAndDefinitionItem {
     private Context context;
 
-    public TerminsAndDefinition(Context context) {
+    public TerminsAndDefinitionItem(Context context) {
         this.context = context;
     }
 
@@ -27,6 +27,7 @@ public class TerminsAndDefinition {
         }
 
     }
+
     public String getTerminFields() {
         return context.getString(Fields.termin.getId());
     }

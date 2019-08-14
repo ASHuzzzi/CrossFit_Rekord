@@ -29,8 +29,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.interfaces.ChangeTitle;
-import ru.lizzzi.crossfit_rekord.interfaces.ChangeToggleStatus;
+import ru.lizzzi.crossfit_rekord.interfaces.TitleChange;
+import ru.lizzzi.crossfit_rekord.interfaces.ToggleStatusChange;
 import ru.lizzzi.crossfit_rekord.model.LoginViewModel;
 import ru.lizzzi.crossfit_rekord.services.LoadNotificationsService;
 
@@ -103,10 +103,10 @@ public class LoginFragment extends Fragment {
                         public void onChanged(Boolean loggedIn) {
                             if (loggedIn) {
                                 startService();
-                                ChangeToggleStatus changeToggleStatus =
-                                        (ChangeToggleStatus) getActivity();
-                                if (changeToggleStatus != null) {
-                                    changeToggleStatus.changeToggleStatus(true);
+                                ToggleStatusChange toggleStatusChange =
+                                        (ToggleStatusChange) getActivity();
+                                if (toggleStatusChange != null) {
+                                    toggleStatusChange.changeToggleStatus(true);
                                 }
                                 openNewFragment(StartScreenFragment.class);
                             } else {
@@ -151,8 +151,8 @@ public class LoginFragment extends Fragment {
     @Override
     public  void onStart() {
         super.onStart();
-        if (getActivity() instanceof ChangeTitle) {
-            ChangeTitle listerner = (ChangeTitle) getActivity();
+        if (getActivity() instanceof TitleChange) {
+            TitleChange listerner = (TitleChange) getActivity();
             listerner.changeTitle(R.string.title_Login_Fragment, R.string.title_Login_Fragment);
         }
     }

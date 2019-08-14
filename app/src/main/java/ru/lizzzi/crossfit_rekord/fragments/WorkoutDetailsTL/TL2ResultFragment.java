@@ -28,7 +28,7 @@ import java.util.Objects;
 import ru.lizzzi.crossfit_rekord.activity.EnterResultActivity;
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterWorkoutDetails;
-import ru.lizzzi.crossfit_rekord.inspectionСlasses.Network;
+import ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck;
 import ru.lizzzi.crossfit_rekord.loaders.WorkoutDetailsLoaders;
 
 public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Map>>{
@@ -100,7 +100,7 @@ public class TL2ResultFragment extends Fragment implements LoaderManager.LoaderC
         runnableOpenFragment = new Runnable() {
             @Override
             public void run() {
-                Network network = new Network(getContext());
+                NetworkCheck network = new NetworkCheck(getContext());
                 Bundle bundle = new Bundle();
                 boolean checkDone = network.checkConnection();
                 if (checkDone) {

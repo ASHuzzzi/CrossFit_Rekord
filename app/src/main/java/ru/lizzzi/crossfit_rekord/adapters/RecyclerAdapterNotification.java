@@ -1,6 +1,5 @@
 package ru.lizzzi.crossfit_rekord.adapters;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
@@ -15,108 +14,105 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.documentfields.DocumentFieldsNotification;
-import ru.lizzzi.crossfit_rekord.interfaces.ListernerNotification;
+import ru.lizzzi.crossfit_rekord.items.NotificationItem;
+import ru.lizzzi.crossfit_rekord.interfaces.NotificationListener;
 
-public class RecyclerAdapterNotification extends RecyclerView.Adapter<RecyclerAdapterNotification.ViewHolder> {
+public class RecyclerAdapterNotification
+        extends RecyclerView.Adapter<RecyclerAdapterNotification.ViewHolder> {
 
-    private ListernerNotification mListener;
+    private NotificationListener listener;
     private List<Map<String, Object>> notifications;
-    private DocumentFieldsNotification fields;
-    @SuppressLint("SimpleDateFormat")
-    private final SimpleDateFormat sdf2 = new SimpleDateFormat("d MMM yyyy");
-    @SuppressLint("SimpleDateFormat")
-    private final SimpleDateFormat sdf3 = new SimpleDateFormat("HH:mm");
+    private NotificationItem fields;
 
-
-    public RecyclerAdapterNotification(Context context, @NonNull List<Map<String, Object>> notifications, ListernerNotification listener) {
+    public RecyclerAdapterNotification(
+            Context context,
+            @NonNull List<Map<String, Object>> notifications,
+            NotificationListener listener) {
         this.notifications = notifications;
-        mListener =listener;
-        fields = new DocumentFieldsNotification(context);
+        this.listener = listener;
+        fields = new NotificationItem(context);
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder{
+    static class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView stDateNote;
-        private TextView stHeader;
-        private TextView tvForLong;
-        private LinearLayout llNotification;
+        private TextView textDateNote;
+        private TextView textHeader;
+        private TextView textTime;
+        private LinearLayout notificationLayout;
 
         ViewHolder(View view) {
             super(view);
-            stDateNote = view.findViewById(R.id.tvTimeNotification);
-            stHeader = view.findViewById(R.id.tvHeaderNotification);
-            tvForLong = view.findViewById(R.id.tvForLong);
-            llNotification = view.findViewById(R.id.llNotification);
+            textDateNote = view.findViewById(R.id.tvTimeNotification);
+            textHeader = view.findViewById(R.id.tvHeaderNotification);
+            textTime = view.findViewById(R.id.tvForLong);
+            notificationLayout = view.findViewById(R.id.llNotification);
         }
     }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType){
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_rv_notification, parent, false);
-        return new ViewHolder(v);
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(
+                R.layout.item_rv_notification,
+                parent,
+                false);
+        return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position){
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final Map documentInfo = notifications.get(position);
-        String stdateNote = (String) documentInfo.get(fields.getDateField());
-        String stheader = (String) documentInfo.get(fields.getHeaderField());
-        int stviewed = Integer.valueOf((String) documentInfo.get(fields.getViewedField()));
+        String dateNote = Objects.requireNonNull(documentInfo.get(fields.getDateField())).toString();
+        String header = Objects.requireNonNull(documentInfo.get(fields.getHeaderField())).toString();
+        int isViewed = Integer.valueOf(
+                Objects.requireNonNull(documentInfo.get(fields.getViewedField())).toString());
 
-        long ldateNote = Long.valueOf(stdateNote);
-        String stLongToString = String.valueOf(ldateNote);
+        long noteTime = Long.valueOf(dateNote);
+        String time = String.valueOf(noteTime);
 
-        // set the calendar to start of today
-        Calendar c = Calendar.getInstance();
-        c.set(Calendar.HOUR_OF_DAY, 0);
-        c.set(Calendar.MINUTE, 0);
-        c.set(Calendar.SECOND, 0);
-        c.set(Calendar.MILLISECOND, 0);
-
-        Date today = c.getTime();
-        Date dDateNote = new Date(ldateNote);
+        Calendar calendar = Calendar.getInstance();
+        Date today = calendar.getTime();
+        Date dateOfNote = new Date(noteTime);
 
         //проверка на сегодня новость или нет
-        if (dDateNote.before(today)) {
-            stdateNote = sdf2.format(ldateNote);
-        }else{
-            stdateNote = sdf3.format(ldateNote);
+        SimpleDateFormat dateFormat = dateOfNote.before(today)
+                ? new SimpleDateFormat("d MMM yyyy", Locale.getDefault())
+                : new SimpleDateFormat("HH:mm", Locale.getDefault());
+        dateNote = dateFormat.format(noteTime);
+
+        holder.textDateNote.setText(dateNote);
+        holder.textHeader.setText(header);
+        holder.textTime.setText(time);
+
+        if(isViewed == 0) {
+            holder.textDateNote.setTypeface(null, Typeface.BOLD);
+            holder.textHeader.setTypeface(null, Typeface.BOLD);
+            holder.notificationLayout.setBackgroundResource(R.color.colorRedPrimary);
+        } else {
+            holder.textDateNote.setTypeface(null, Typeface.NORMAL);
+            holder.textHeader.setTypeface(null, Typeface.NORMAL);
+            holder.notificationLayout.setBackgroundResource(R.color.colorWhite);
         }
 
-        holder.stDateNote.setText(stdateNote);
-        holder.stHeader.setText(stheader);
-        holder.tvForLong.setText(stLongToString);
-
-        if(stviewed == 0){
-            holder.stDateNote.setTypeface(null, Typeface.BOLD);
-            holder.stHeader.setTypeface(null, Typeface.BOLD);
-            holder.llNotification.setBackgroundResource(R.color.colorRedPrimary);
-        }else {
-            holder.stDateNote.setTypeface(null, Typeface.NORMAL);
-            holder.stHeader.setTypeface(null, Typeface.NORMAL);
-            holder.llNotification.setBackgroundResource(R.color.colorWhite);
-        }
-
-        holder.llNotification.setOnClickListener(new View.OnClickListener() {
+        holder.notificationLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mListener.selectNotificationInList(
-                        (String) documentInfo.get(fields.getDateField()),
-                        (String) documentInfo.get(fields.getHeaderField()));
+                listener.selectNotificationInList(
+                        Objects.requireNonNull(documentInfo.get(fields.getDateField())).toString(),
+                        Objects.requireNonNull(documentInfo.get(fields.getHeaderField())).toString());
             }
         });
 
-        holder.llNotification.setOnLongClickListener(new View.OnLongClickListener() {
+        holder.notificationLayout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                mListener.deleteNotificationInList(
-                        (String) documentInfo.get(fields.getDateField())
-                );
+                listener.deleteNotificationInList(
+                        Objects.requireNonNull(documentInfo.get(fields.getDateField())).toString());
                 return true;
             }
         });

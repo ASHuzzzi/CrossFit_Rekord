@@ -27,8 +27,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.interfaces.ChangeTitle;
-import ru.lizzzi.crossfit_rekord.interfaces.ChangeToggleStatus;
+import ru.lizzzi.crossfit_rekord.interfaces.TitleChange;
+import ru.lizzzi.crossfit_rekord.interfaces.ToggleStatusChange;
 import ru.lizzzi.crossfit_rekord.model.RegistryViewModel;
 import ru.lizzzi.crossfit_rekord.services.LoadNotificationsService;
 
@@ -115,9 +115,9 @@ public class RegistryFragment extends Fragment {
                         public void onChanged(Boolean isRegistered) {
                             if (isRegistered) {
                                 loadNotification();
-                                ChangeToggleStatus changeToggleStatus = (ChangeToggleStatus) getActivity();
-                                if (changeToggleStatus != null) {
-                                    changeToggleStatus.changeToggleStatus(true);
+                                ToggleStatusChange toggleStatusChange = (ToggleStatusChange) getActivity();
+                                if (toggleStatusChange != null) {
+                                    toggleStatusChange.changeToggleStatus(true);
                                 }
                                 openStartScreenFragment();
                             } else {
@@ -176,9 +176,9 @@ public class RegistryFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        ChangeTitle listenerChangeTitle = (ChangeTitle) getActivity();
-        if (listenerChangeTitle != null) {
-            listenerChangeTitle.changeTitle(
+        TitleChange listenerTitleChange = (TitleChange) getActivity();
+        if (listenerTitleChange != null) {
+            listenerTitleChange.changeTitle(
                     R.string.title_Regystry_Fragment,
                     R.string.title_Regystry_Fragment);
         }

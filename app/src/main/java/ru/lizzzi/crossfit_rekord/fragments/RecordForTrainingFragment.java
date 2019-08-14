@@ -33,8 +33,8 @@ import java.util.Objects;
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterRecordForTrainingSelect;
 import ru.lizzzi.crossfit_rekord.inspectionСlasses.UriParser;
-import ru.lizzzi.crossfit_rekord.interfaces.ChangeTitle;
-import ru.lizzzi.crossfit_rekord.interfaces.ListenerRecordForTrainingSelect;
+import ru.lizzzi.crossfit_rekord.interfaces.TitleChange;
+import ru.lizzzi.crossfit_rekord.interfaces.RecordForTrainingSelectListener;
 import ru.lizzzi.crossfit_rekord.model.RecordForTrainingViewModel;
 
 public class RecordForTrainingFragment extends Fragment {
@@ -129,7 +129,7 @@ public class RecordForTrainingFragment extends Fragment {
                 getContext(),
                 dailySchedule,
                 viewModel.getIsToday(),
-                new ListenerRecordForTrainingSelect() {
+                new RecordForTrainingSelectListener() {
             @Override
             public void selectTime(String startTime, String typesItem) {
                 if (startTime.equals("outTime") && typesItem.equals("outTime")) {
@@ -196,9 +196,9 @@ public class RecordForTrainingFragment extends Fragment {
             linLayoutSchedule.setVisibility(View.VISIBLE);
         }
 
-        if (getActivity() instanceof ChangeTitle) {
-            ChangeTitle listernerChangeTitle = (ChangeTitle) getActivity();
-            listernerChangeTitle.changeTitle(R.string.title_RecordForTraining_Fragment, R.string.title_RecordForTraining_Fragment);
+        if (getActivity() instanceof TitleChange) {
+            TitleChange listernerTitleChange = (TitleChange) getActivity();
+            listernerTitleChange.changeTitle(R.string.title_RecordForTraining_Fragment, R.string.title_RecordForTraining_Fragment);
         }
         int backgroundImage =
                 (viewModel.isSelectedGymParnas())

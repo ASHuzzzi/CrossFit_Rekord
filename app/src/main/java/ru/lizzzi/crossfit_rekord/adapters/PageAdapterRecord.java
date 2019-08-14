@@ -19,13 +19,12 @@ public class PageAdapterRecord extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        Fragment tableFragment =  new RecordForTrainingFragment();
+        int gym = (position == 0)
+                ? context.getResources().getInteger(R.integer.selectSheduleParnas)
+                : context.getResources().getInteger(R.integer.selectSheduleMyzhestvo);
         Bundle bundle = new Bundle();
-        int gym = context.getResources().getInteger(R.integer.selectSheduleParnas);
-        if (position == 1) {
-            gym = context.getResources().getInteger(R.integer.selectSheduleMyzhestvo);
-        }
         bundle.putInt("gym", gym);
+        Fragment tableFragment =  new RecordForTrainingFragment();
         tableFragment.setArguments(bundle);
         return tableFragment;
     }

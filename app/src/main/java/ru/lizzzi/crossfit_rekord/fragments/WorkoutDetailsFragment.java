@@ -20,7 +20,7 @@ import java.util.Objects;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.adapters.PagerAdapterWorkoutDetails;
-import ru.lizzzi.crossfit_rekord.interfaces.ChangeTitle;
+import ru.lizzzi.crossfit_rekord.interfaces.TitleChange;
 
 /**
  * Created by Liza on 13.03.2018.
@@ -58,9 +58,9 @@ public class WorkoutDetailsFragment extends Fragment {
     @Override
     public  void onStart() {
         super.onStart();
-        ChangeTitle listenerChangeTitle = (ChangeTitle) getActivity();
-        if (listenerChangeTitle != null) {
-            listenerChangeTitle.changeTitle(
+        TitleChange listenerTitleChange = (TitleChange) getActivity();
+        if (listenerTitleChange != null) {
+            listenerTitleChange.changeTitle(
                     R.string.title_WorkoutDetails_Fragment,
                     R.string.title_CalendarWod_Fragment);
         }

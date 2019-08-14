@@ -16,8 +16,8 @@ import java.util.List;
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterCharacter;
 import ru.lizzzi.crossfit_rekord.data.SQLiteStorageDefinition;
-import ru.lizzzi.crossfit_rekord.interfaces.ChangeTitle;
-import ru.lizzzi.crossfit_rekord.interfaces.ListernerCharacter;
+import ru.lizzzi.crossfit_rekord.interfaces.TitleChange;
+import ru.lizzzi.crossfit_rekord.interfaces.CharacterListener;
 
 public class CharacterFragment extends Fragment {
 
@@ -36,9 +36,9 @@ public class CharacterFragment extends Fragment {
     @Override
     public  void onStart() {
         super.onStart();
-        if (getActivity() instanceof ChangeTitle) {
-            ChangeTitle listernerChangeTitle = (ChangeTitle) getActivity();
-            listernerChangeTitle.changeTitle(R.string.title_Character_Fragment, R.string.title_Character_Fragment);
+        if (getActivity() instanceof TitleChange) {
+            TitleChange listernerTitleChange = (TitleChange) getActivity();
+            listernerTitleChange.changeTitle(R.string.title_Character_Fragment, R.string.title_Character_Fragment);
         }
 
         SQLiteStorageDefinition dbStorage = new SQLiteStorageDefinition(getContext());
@@ -49,7 +49,7 @@ public class CharacterFragment extends Fragment {
         List<String> listCharacter = dbStorage.getListCharacters();
         RecyclerAdapterCharacter adapter = new RecyclerAdapterCharacter(
                 listCharacter,
-                new ListernerCharacter() {
+                new CharacterListener() {
             @Override
             public void selectCharacter(String selectCharacter) {
                 Bundle bundle = new Bundle();
