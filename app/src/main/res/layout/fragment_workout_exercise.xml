@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".fragments.WorkoutDetailsTL.TL1WodFragment">
+    tools:context=".fragments.WorkoutExerciseFragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -195,7 +195,7 @@
     </ScrollView>
 
     <LinearLayout
-        android:id="@+id/Layout_Error"
+        android:id="@+id/linLayError"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
@@ -219,7 +219,7 @@
             android:text="@string/error_connection2"/>
 
         <Button
-            android:id="@+id/button5"
+            android:id="@+id/buttonError"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/ErrorButtonStyle"/>

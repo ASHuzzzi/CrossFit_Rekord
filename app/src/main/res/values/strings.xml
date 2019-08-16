@@ -133,7 +133,7 @@
     <string name="strAboutMeFragment">AboutMeFragment</string>
     <string name="strRecordForTrainingRecordingFragment">RecordForTrainingRecordingFragment</string>
 
-    <!-- Значения для фрагмента TL2ResultFragment -->
+    <!-- Значения для фрагмента WodResultFragment -->
     <string name="strEnterResult">Внести результаты</string>
     <string name="strEditDeleteResult">Редактировать</string>
     <string name="strHeaderName">Имя</string>
@@ -177,7 +177,7 @@
     <string name="EmptyListTV1">Никто еще не записался</string>
     <string name="EmptyListTV2">Покажи пример - будь первым!</string>
 
-    <!-- Значения для фрагмента TL1WodFragment -->
+    <!-- Значения для фрагмента WorkoutExerciseFragment -->
     <string name="TL1WarmUp">Warm-Up</string>
     <string name="TL1Skill">Skill</string>
     <string name="TL1WOD">WOD</string>

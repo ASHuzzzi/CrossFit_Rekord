@@ -23,11 +23,10 @@ import java.util.concurrent.TimeUnit;
 import ru.lizzzi.crossfit_rekord.backendless.BackendlessQueries;
 import ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck;
 
-public class TL1WodViewModel extends AndroidViewModel {
+public class WorkoutExerciseViewModel extends AndroidViewModel {
 
     private String selectedDay;
     private MutableLiveData<Map<String, String>> liveData;
-    private BackendlessQueries backendlessQuery;
     private Executor executor = new ThreadPoolExecutor(
             0,
             1,
@@ -35,9 +34,8 @@ public class TL1WodViewModel extends AndroidViewModel {
             TimeUnit.SECONDS,
             new LinkedBlockingQueue<Runnable>());
 
-    public TL1WodViewModel(@NonNull Application application) {
+    public WorkoutExerciseViewModel(@NonNull Application application) {
         super(application);
-        backendlessQuery = new BackendlessQueries();
         String APP_PREFERENCES = "audata";
         String APP_PREFERENCES_SELECTEDDAY = "SelectedDay";
         SharedPreferences sharedPreferences =
@@ -45,17 +43,13 @@ public class TL1WodViewModel extends AndroidViewModel {
         selectedDay = sharedPreferences.getString(APP_PREFERENCES_SELECTEDDAY, "");
     }
 
-    public LiveData<Map<String, String>> getWorkout(final String tableNameToLoad) {
+    public LiveData<Map<String, String>> getWorkout() {
         liveData = new MutableLiveData<>();
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                String typeQuery = "all";
-                List<Map> resultQuery = backendlessQuery.loadWorkoutDetails(
-                        typeQuery,
-                        tableNameToLoad,
-                        selectedDay,
-                        null);
+                BackendlessQueries backendlessQuery = new BackendlessQueries();
+                List<Map> resultQuery = backendlessQuery.loadingExerciseWorkout(selectedDay);
                 Map<String, String> wod = new HashMap<>();
                 wod.put("warmup",
                         String.valueOf(resultQuery.get(0).get("warmup")).equals("null")

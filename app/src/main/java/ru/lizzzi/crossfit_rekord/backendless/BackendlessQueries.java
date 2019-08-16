@@ -68,7 +68,7 @@ public class BackendlessQueries {
     private final String TABLE_USERS_PHONE_NUBMER = "phoneNumber";
     private final String TABLE_USERS_SURNAME = "surname";
 
-    public List<Map> loadCalendarWod(String userID, long startDate, long endDate) {
+    public List<Map> loadingCalendarWod(String userID, long startDate, long endDate) {
         try {
             String whereClause =
                     TABLE_RESULTS_USER_ID + " = '" + userID +
@@ -85,7 +85,7 @@ public class BackendlessQueries {
         }
     }
 
-    public List<Map> loadSchedule(String selectedGym) {
+    public List<Map> loadingSchedule(String selectedGym) {
         //Пока никак не обрабатываю ошибки от сервера. Т.е. если данные есть, то строю список
         //если данных нет, то список не строится и выскакивает стандартная заглушка.
         try {
@@ -101,24 +101,25 @@ public class BackendlessQueries {
         }
     }
 
-    public List<Map> loadWorkoutDetails(String typeQuery,
-                                        String tableName,
-                                        String selectedDay,
-                                        String userId) {
+    public List<Map> loadingExerciseWorkout(String selectedDay) {
         try {
-            String whereClause;
-            if (typeQuery.equals("all")) {
-                whereClause = TABLE_RESULTS_DATE_SESSION + " = '" + selectedDay + "'" ;
-            } else {
-                whereClause =
-                        TABLE_RESULTS_DATE_SESSION + " = '" + selectedDay +
-                        "' and " +
-                        TABLE_RESULTS_USER_ID + " = '" + userId + "'" ;
-            }
+            String whereClause = TABLE_RESULTS_DATE_SESSION + " = '" + selectedDay + "'" ;
             DataQueryBuilder queryBuilder = DataQueryBuilder.create();
             queryBuilder.setWhereClause(whereClause);
             queryBuilder.setPageSize(100);
-            return Backendless.Data.of(tableName).find(queryBuilder);
+            return Backendless.Data.of(TABLE_EXERCISES_NAME).find(queryBuilder);
+        } catch (BackendlessException exception) {
+            return null;
+        }
+    }
+
+    public List<Map> loadingWorkoutResults(String selectedDay) {
+        try {
+            String whereClause = TABLE_RESULTS_DATE_SESSION + " = '" + selectedDay + "'" ;
+            DataQueryBuilder queryBuilder = DataQueryBuilder.create();
+            queryBuilder.setWhereClause(whereClause);
+            queryBuilder.setPageSize(100);
+            return Backendless.Data.of(TABLE_RESULTS_NAME).find(queryBuilder);
         } catch (BackendlessException exception) {
             return null;
         }
@@ -252,7 +253,7 @@ public class BackendlessQueries {
         return resultOfQuery;
     }
 
-    public List<Map> loadNotification (String dateLastCheck, String timeNow) {
+    public List<Map> downloadNotifications(String dateLastCheck, String timeNow) {
         try {
             String whereClause =
                     TABLE_NOTIFICATION_DATE_NOTE + " > '" + dateLastCheck +

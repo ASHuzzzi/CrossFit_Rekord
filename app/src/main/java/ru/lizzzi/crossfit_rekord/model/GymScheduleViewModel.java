@@ -48,7 +48,7 @@ public class GymScheduleViewModel extends AndroidViewModel {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                List<Map> loadedSchedule = backendlessQuery.loadSchedule(String.valueOf(selectedGym));
+                List<Map> loadedSchedule = backendlessQuery.loadingSchedule(String.valueOf(selectedGym));
                 if (loadedSchedule != null) {
                     scheduleParnas = splitRawSchedule(loadedSchedule);
                     liveDataParnas.postValue(scheduleParnas);
@@ -67,7 +67,7 @@ public class GymScheduleViewModel extends AndroidViewModel {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                List<Map> loadedSchedule = backendlessQuery.loadSchedule(String.valueOf(selectedGym));
+                List<Map> loadedSchedule = backendlessQuery.loadingSchedule(String.valueOf(selectedGym));
                 if (loadedSchedule != null) {
                     scheduleMyzhestvo = splitRawSchedule(loadedSchedule);
                     liveDataMyzhestvo.postValue(scheduleMyzhestvo);

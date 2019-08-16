@@ -71,8 +71,8 @@ public class GymScheduleFragment extends Fragment {
         buttonFriday = view.findViewById(R.id.day_5);
         buttonSaturday = view.findViewById(R.id.day_6);
         buttonSunday = view.findViewById(R.id.day_7);
-        Button buttonError = view.findViewById(R.id.button5);
-        layoutError = view.findViewById(R.id.Layout_Error);
+        Button buttonError = view.findViewById(R.id.buttonError);
+        layoutError = view.findViewById(R.id.linLayError);
         progressBar = view.findViewById(R.id.progressBar);
         itemsInTable = view.findViewById(R.id.lvTable);
         imageTable = view.findViewById(R.id.ivTable);
@@ -163,7 +163,7 @@ public class GymScheduleFragment extends Fragment {
         }
     }
 
-    private void showSchedule(final List<Map> dailySchedule){
+    private void showSchedule(final List<Map> dailySchedule) {
         adapter = new RecyclerAdapterTable(getContext(), dailySchedule, new RecordForTrainingSelectListener() {
             @Override
             public void selectTime(String startTime, String typesItem) {

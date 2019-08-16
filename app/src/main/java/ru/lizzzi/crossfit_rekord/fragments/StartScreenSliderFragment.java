@@ -29,7 +29,7 @@ public class StartScreenSliderFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             int pageNumber = getArguments().getInt(ARGUMENT_PAGE_NUMBER);
-            switch (pageNumber){
+            switch (pageNumber) {
                 case 0:
                     backgroundImage = getResources().getDrawable(R.drawable.foto_for_star_screen_1);
                     break;
@@ -43,7 +43,7 @@ public class StartScreenSliderFragment extends Fragment {
                     backgroundImage = getResources().getDrawable(R.drawable.foto_for_star_screen_4);
                     break;
             }
-        }else {
+        } else {
             backgroundImage = getResources().getDrawable(R.drawable.foto_for_star_screen_1);
         }
     }
@@ -51,10 +51,10 @@ public class StartScreenSliderFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_start_screen_slider, container, false);
+        View view = inflater.inflate(R.layout.fragment_start_screen_slider, container, false);
 
-        ImageView imBackgroundImage = v.findViewById(R.id.ivSlider);
+        ImageView imBackgroundImage = view.findViewById(R.id.ivSlider);
         imBackgroundImage.setImageDrawable(backgroundImage);
-        return v;
+        return view;
     }
 }

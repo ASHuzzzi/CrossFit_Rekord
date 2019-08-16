@@ -1,4 +1,4 @@
-package ru.lizzzi.crossfit_rekord.fragments.WorkoutDetailsTL;
+package ru.lizzzi.crossfit_rekord.fragments;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
@@ -18,9 +18,9 @@ import java.util.Map;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.interfaces.TitleChange;
-import ru.lizzzi.crossfit_rekord.model.TL1WodViewModel;
+import ru.lizzzi.crossfit_rekord.model.WorkoutExerciseViewModel;
 
-public class TL1WodFragment extends Fragment {
+public class WorkoutExerciseFragment extends Fragment {
 
     private TextView textWarmUp;
     private TextView textSkill;
@@ -34,13 +34,17 @@ public class TL1WodFragment extends Fragment {
     private TextView textEmptyData;
     private ProgressBar progressBar;
 
-    private TL1WodViewModel viewModel;
+    private WorkoutExerciseViewModel viewModel;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_tl1wod, container, false);
-        viewModel = ViewModelProviders.of(TL1WodFragment.this).get(TL1WodViewModel.class);
+        View view = inflater.inflate(
+                R.layout.fragment_workout_exercise,
+                container,
+                false);
+        viewModel = ViewModelProviders.of(WorkoutExerciseFragment.this)
+                .get(WorkoutExerciseViewModel.class);
 
         textWarmUp = view.findViewById(R.id.tvWarmUp);
         textSkill = view.findViewById(R.id.tvSkill);
@@ -51,8 +55,8 @@ public class TL1WodFragment extends Fragment {
         textEmptyData = view.findViewById(R.id.tvTL1ED1);
 
         layoutMain = view.findViewById(R.id.llMain);
-        Button buttonError = view.findViewById(R.id.button5);
-        layoutError = view.findViewById(R.id.Layout_Error);
+        Button buttonError = view.findViewById(R.id.buttonError);
+        layoutError = view.findViewById(R.id.linLayError);
         layoutEmptyData = view.findViewById(R.id.llEmptyData);
         progressBar = view.findViewById(R.id.progressBar3);
 
@@ -93,8 +97,8 @@ public class TL1WodFragment extends Fragment {
         layoutError.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.VISIBLE);
         if (viewModel.checkNetwork()) {
-            LiveData<Map<String, String>> liveData = viewModel.getWorkout("exercises");
-            liveData.observe(TL1WodFragment.this, new Observer<Map<String, String>>() {
+            LiveData<Map<String, String>> liveData = viewModel.getWorkout();
+            liveData.observe(WorkoutExerciseFragment.this, new Observer<Map<String, String>>() {
                 @Override
                 public void onChanged(Map<String, String> wodOfDay) {
                     if (wodOfDay != null && wodOfDay.size() > 0) {

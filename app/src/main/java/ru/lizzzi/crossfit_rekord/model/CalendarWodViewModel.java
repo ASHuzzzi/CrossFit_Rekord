@@ -69,7 +69,7 @@ public class CalendarWodViewModel  extends AndroidViewModel {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                List<Map> loadedDates = backendlessQuery.loadCalendarWod(
+                List<Map> loadedDates = backendlessQuery.loadingCalendarWod(
                         userObjectID,
                         timeStart,
                         timeFinish);

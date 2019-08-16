@@ -87,7 +87,7 @@ public class LoadNotificationsService extends Service {
 
     private List<Map> getNotificationList(String lastDateCheck, String currentTime) {
         BackendlessQueries backendlessQuery = new BackendlessQueries();
-        return backendlessQuery.loadNotification(lastDateCheck, currentTime);
+        return backendlessQuery.downloadNotifications(lastDateCheck, currentTime);
     }
 
     private void writeNotificationInLocalStorage(List<Map> notificationList) {

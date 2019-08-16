@@ -6,8 +6,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.fragments.WorkoutDetailsTL.TL1WodFragment;
-import ru.lizzzi.crossfit_rekord.fragments.WorkoutDetailsTL.TL2ResultFragment;
+import ru.lizzzi.crossfit_rekord.fragments.WorkoutExerciseFragment;
+import ru.lizzzi.crossfit_rekord.fragments.WodResultFragment;
 
 public class PagerAdapterWorkoutDetails extends FragmentPagerAdapter {
 
@@ -22,9 +22,9 @@ public class PagerAdapterWorkoutDetails extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return new TL1WodFragment();
+                return new WorkoutExerciseFragment();
             case 1:
-                return new TL2ResultFragment();
+                return new WodResultFragment();
             default:
                 return null;
         }
