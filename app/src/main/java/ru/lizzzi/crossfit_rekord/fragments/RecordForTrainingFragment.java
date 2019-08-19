@@ -214,19 +214,25 @@ public class RecordForTrainingFragment extends Fragment {
     }
 
     private void checkNetworkConnection() {
-        if (viewModel.checkNetwork()) {
-            linLayoutError.setVisibility(View.INVISIBLE);
-            progressBar.setVisibility(View.VISIBLE);
-            viewModel.setToday(true);
-            if (viewModel.isSelectedGymParnas()) {
-                loadScheduleParnas();
-            } else {
-                loadScheduleMyzhestvo();
+        LiveData<Boolean> liveDataConnection = viewModel.checkNetwork();
+        liveDataConnection.observe(RecordForTrainingFragment.this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isConnected) {
+                if (isConnected) {
+                    linLayoutError.setVisibility(View.INVISIBLE);
+                    progressBar.setVisibility(View.VISIBLE);
+                    viewModel.setToday(true);
+                    if (viewModel.isSelectedGymParnas()) {
+                        loadScheduleParnas();
+                    } else {
+                        loadScheduleMyzhestvo();
+                    }
+                } else {
+                    linLayoutError.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.INVISIBLE);
+                }
             }
-        } else {
-            linLayoutError.setVisibility(View.VISIBLE);
-            progressBar.setVisibility(View.INVISIBLE);
-        }
+        });
     }
 
     private void loadScheduleParnas() {

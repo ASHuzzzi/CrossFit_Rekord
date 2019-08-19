@@ -160,9 +160,17 @@ public class RecordForTrainingViewModel extends AndroidViewModel {
         return  (selectedGym == GYM_PARNAS) ? scheduleParnas : scheduleMyzhestvo;
     }
 
-    public boolean checkNetwork() {
-        NetworkCheck network = new NetworkCheck(getApplication());
-        return network.checkConnection();
+    public LiveData<Boolean> checkNetwork() {
+        final MutableLiveData<Boolean> liveDataConnection = new MutableLiveData<>();
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                NetworkCheck networkCheck = new NetworkCheck(getApplication());
+                boolean isConnected = networkCheck.checkConnection();
+                liveDataConnection.postValue(isConnected);
+            }
+        });
+        return liveDataConnection;
     }
 
     public boolean isSelectedGymParnas() {

@@ -94,31 +94,32 @@ public class LoginFragment extends Fragment {
                 }
 
                 uiLoadingState(loading);
-                if (viewModel.checkNetwork()) {
-                    LiveData<Boolean> liveData = viewModel.getLogin(
-                            editTextUserEmail.getText().toString(),
-                            editTextUserPassword.getText().toString());
-                    liveData.observe(LoginFragment.this, new Observer<Boolean>() {
-                        @Override
-                        public void onChanged(Boolean loggedIn) {
-                            if (loggedIn) {
-                                startService();
-                                ToggleStatusChange toggleStatusChange =
-                                        (ToggleStatusChange) getActivity();
-                                if (toggleStatusChange != null) {
-                                    toggleStatusChange.changeToggleStatus(true);
+                LiveData<Boolean> liveDataConnection = viewModel.checkNetwork();
+                liveDataConnection.observe(LoginFragment.this, new Observer<Boolean>() {
+                    @Override
+                    public void onChanged(Boolean isConnected) {
+                        LiveData<Boolean> liveData = viewModel.getLogin(
+                                editTextUserEmail.getText().toString(),
+                                editTextUserPassword.getText().toString());
+                        liveData.observe(LoginFragment.this, new Observer<Boolean>() {
+                            @Override
+                            public void onChanged(Boolean loggedIn) {
+                                if (loggedIn) {
+                                    startService();
+                                    ToggleStatusChange toggleStatusChange =
+                                            (ToggleStatusChange) getActivity();
+                                    if (toggleStatusChange != null) {
+                                        toggleStatusChange.changeToggleStatus(true);
+                                    }
+                                    openNewFragment(StartScreenFragment.class);
+                                } else {
+                                    uiLoadingState(wait);
+                                    showToast("Нет подключения");
                                 }
-                                openNewFragment(StartScreenFragment.class);
-                            } else {
-                                uiLoadingState(wait);
-                                showToast("Неверный логин или пароль!");
                             }
-                        }
-                    });
-                } else {
-                    uiLoadingState(wait);
-                    showToast("Нет подключения");
-                }
+                        });
+                    }
+                });
             }
         });
 

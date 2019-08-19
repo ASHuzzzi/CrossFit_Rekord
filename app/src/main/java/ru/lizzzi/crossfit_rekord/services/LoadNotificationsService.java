@@ -13,7 +13,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
-
 import ru.lizzzi.crossfit_rekord.activity.MainActivity;
 import ru.lizzzi.crossfit_rekord.backendless.BackendlessQueries;
 import ru.lizzzi.crossfit_rekord.data.SQLiteStorageNotification;
@@ -26,7 +25,7 @@ public class LoadNotificationsService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         int task = intent.getIntExtra(MainActivity.PARAM_TASK, 0);
         loadNotification(task);
-        return super.onStartCommand(intent, flags, startId);
+        return START_REDELIVER_INTENT;
     }
 
     @Override

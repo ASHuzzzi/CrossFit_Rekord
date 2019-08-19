@@ -117,26 +117,32 @@ public class EnterResultActivity extends AppCompatActivity {
     private void changeWodResult() {
         progressBar.setVisibility(View.VISIBLE);
         buttonSaveUpload.setClickable(false);
-        if (viewModel.checkNetwork()) {
-            LiveData<Boolean> liveData = viewModel.saveWorkoutDetails(
-                    editResultOfSkill.getText().toString(),
-                    editResultOfWoD.getText().toString());
-            liveData.observe(EnterResultActivity.this, new Observer<Boolean>() {
-                @Override
-                public void onChanged(Boolean isSaved) {
-                    if (isSaved) {
-                        setResult(RESULT_OK, new Intent());
-                        finish();
-                    } else {
-                        showToast("Не удалось! Повторите попытку");
-                    }
+        LiveData<Boolean> liveDataConnection = viewModel.checkNetwork();
+        liveDataConnection.observe(EnterResultActivity.this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isConnected) {
+                if (isConnected) {
+                    LiveData<Boolean> liveData = viewModel.saveWorkoutDetails(
+                            editResultOfSkill.getText().toString(),
+                            editResultOfWoD.getText().toString());
+                    liveData.observe(EnterResultActivity.this, new Observer<Boolean>() {
+                        @Override
+                        public void onChanged(Boolean isSaved) {
+                            if (isSaved) {
+                                setResult(RESULT_OK, new Intent());
+                                finish();
+                            } else {
+                                showToast("Не удалось! Повторите попытку");
+                            }
+                        }
+                    });
+                } else {
+                    progressBar.setVisibility(View.INVISIBLE);
+                    buttonSaveUpload.setClickable(true);
+                    showToast("Нет подключения к сети!");
                 }
-            });
-        } else {
-            progressBar.setVisibility(View.INVISIBLE);
-            buttonSaveUpload.setClickable(true);
-            showToast("Нет подключения к сети!");
-        }
+            }
+        });
     }
 
     @Override

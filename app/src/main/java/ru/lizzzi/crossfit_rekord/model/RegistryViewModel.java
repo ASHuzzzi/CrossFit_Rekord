@@ -18,8 +18,6 @@ import ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck;
 
 public class RegistryViewModel extends AndroidViewModel {
 
-    private MutableLiveData<Boolean> liveData;
-    private BackendlessQueries backendlessQuery;
     private Executor executor = new ThreadPoolExecutor(
             0,
             1,
@@ -29,17 +27,17 @@ public class RegistryViewModel extends AndroidViewModel {
 
     public RegistryViewModel(@NonNull Application application) {
         super(application);
-        backendlessQuery = new BackendlessQueries();
     }
 
     public LiveData<Boolean> registered(
             final String userName,
             final String userEmail,
             final String userPassword) {
-        liveData = new MutableLiveData<>();
+        final MutableLiveData<Boolean> liveData = new MutableLiveData<>();
         executor.execute(new Runnable() {
             @Override
             public void run() {
+                BackendlessQueries backendlessQuery = new BackendlessQueries();
                 String userID = backendlessQuery.userRegistration(userName, userEmail, userPassword);
                 if (userID != null) {
                     String APP_PREFERENCES = "audata";
@@ -63,8 +61,16 @@ public class RegistryViewModel extends AndroidViewModel {
         return liveData;
     }
 
-    public boolean checkNetwork() {
-        NetworkCheck network = new NetworkCheck(getApplication());
-        return network.checkConnection();
+    public LiveData<Boolean> checkNetwork() {
+        final MutableLiveData<Boolean> liveDataConnection = new MutableLiveData<>();
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                NetworkCheck networkCheck = new NetworkCheck(getApplication());
+                boolean isConnected = networkCheck.checkConnection();
+                liveDataConnection.postValue(isConnected);
+            }
+        });
+        return liveDataConnection;
     }
 }

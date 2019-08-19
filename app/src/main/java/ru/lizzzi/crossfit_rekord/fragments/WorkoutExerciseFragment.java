@@ -96,29 +96,35 @@ public class WorkoutExerciseFragment extends Fragment {
     private void checkNetworkConnection() {
         layoutError.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.VISIBLE);
-        if (viewModel.checkNetwork()) {
-            LiveData<Map<String, String>> liveData = viewModel.getWorkout();
-            liveData.observe(WorkoutExerciseFragment.this, new Observer<Map<String, String>>() {
-                @Override
-                public void onChanged(Map<String, String> wodOfDay) {
-                    if (wodOfDay != null && wodOfDay.size() > 0) {
-                        textWarmUp.setText(wodOfDay.get("warmup"));
-                        textSkill.setText(wodOfDay.get("skill"));
-                        textWOD.setText(wodOfDay.get("wod"));
-                        textLevelSc.setText(wodOfDay.get("Sc"));
-                        textLevelRx.setText(wodOfDay.get("Rx"));
-                        textLevelRxPlus.setText(wodOfDay.get("Rxplus"));
-                        layoutMain.setVisibility(View.VISIBLE);
-                    } else {
-                        textEmptyData.setText(getResources().getText(R.string.TL1NoData1));
-                        layoutEmptyData.setVisibility(View.VISIBLE);
-                    }
+        LiveData<Boolean> liveDataConnection = viewModel.checkNetwork();
+        liveDataConnection.observe(WorkoutExerciseFragment.this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isConnected) {
+                if (isConnected) {
+                    LiveData<Map<String, String>> liveData = viewModel.getWorkout();
+                    liveData.observe(WorkoutExerciseFragment.this, new Observer<Map<String, String>>() {
+                        @Override
+                        public void onChanged(Map<String, String> wodOfDay) {
+                            if (wodOfDay != null && wodOfDay.size() > 0) {
+                                textWarmUp.setText(wodOfDay.get("warmup"));
+                                textSkill.setText(wodOfDay.get("skill"));
+                                textWOD.setText(wodOfDay.get("wod"));
+                                textLevelSc.setText(wodOfDay.get("Sc"));
+                                textLevelRx.setText(wodOfDay.get("Rx"));
+                                textLevelRxPlus.setText(wodOfDay.get("Rxplus"));
+                                layoutMain.setVisibility(View.VISIBLE);
+                            } else {
+                                textEmptyData.setText(getResources().getText(R.string.TL1NoData1));
+                                layoutEmptyData.setVisibility(View.VISIBLE);
+                            }
+                            progressBar.setVisibility(View.INVISIBLE);
+                        }
+                    });
+                } else {
+                    layoutError.setVisibility(View.VISIBLE);
                     progressBar.setVisibility(View.INVISIBLE);
                 }
-            });
-        } else {
-            layoutError.setVisibility(View.VISIBLE);
-            progressBar.setVisibility(View.INVISIBLE);
-        }
+            }
+        });
     }
 }

@@ -82,28 +82,37 @@ public class AboutMeFragment extends Fragment {
                 }
 
                 uiState(LOADING);
-                if (viewModel.checkNetwork()) {
-                    final LiveData<Boolean> liveData = viewModel.saveUserData(
-                            editName.getText().toString(),
-                            editSurname.getText().toString(),
-                            editPhone.getText().toString());
-                    liveData.observe(AboutMeFragment.this, new Observer<Boolean>() {
-                        @Override
-                        public void onChanged(Boolean isSaved) {
+                LiveData<Boolean> liveDataConnection = viewModel.checkNetwork();
+                liveDataConnection.observe(AboutMeFragment.this, new Observer<Boolean>() {
+                    @Override
+                    public void onChanged(Boolean isConnected) {
+                        if (isConnected) {
+                            final LiveData<Boolean> liveData = viewModel.saveUserData(
+                                    editName.getText().toString(),
+                                    editSurname.getText().toString(),
+                                    editPhone.getText().toString());
+                            liveData.observe(AboutMeFragment.this, new Observer<Boolean>() {
+                                @Override
+                                public void onChanged(Boolean isSaved) {
+                                    Toast.makeText(
+                                            getContext(),
+                                            (isSaved)
+                                                    ? "Данные обновлены"
+                                                    : "Повторите сохранение",
+                                            Toast.LENGTH_SHORT).show();
+                                    uiState(WAITING);
+                                    liveData.removeObservers(AboutMeFragment.this);
+                                }
+                            });
+                        } else {
+                            uiState(WAITING);
                             Toast.makeText(
                                     getContext(),
-                                    (isSaved)
-                                            ? "Данные обновлены"
-                                            : "Повторите сохранение",
+                                    "Нет подключения",
                                     Toast.LENGTH_SHORT).show();
-                            uiState(WAITING);
-                            liveData.removeObservers(AboutMeFragment.this);
                         }
-                    });
-                } else {
-                    uiState(WAITING);
-                    Toast.makeText(getContext(), "Нет подключения", Toast.LENGTH_SHORT).show();
-                }
+                    }
+                });
             }
         });
     }

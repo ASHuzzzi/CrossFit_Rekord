@@ -304,17 +304,23 @@ public class GymScheduleFragment extends Fragment {
     }
 
     private void checkNetworkConnection() {
-        if (viewModel.checkNetwork()) {
-            viewModel.setSelectedDay(Calendar.MONDAY);
-            if (viewModel.isSelectedGymParnas()) {
-                loadScheduleParnas();
-            } else {
-                loadScheduleMyzhestvo();
+        LiveData<Boolean> liveDataConnection = viewModel.checkNetwork();
+        liveDataConnection.observe(GymScheduleFragment.this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isConnected) {
+                if (isConnected) {
+                    viewModel.setSelectedDay(Calendar.MONDAY);
+                    if (viewModel.isSelectedGymParnas()) {
+                        loadScheduleParnas();
+                    } else {
+                        loadScheduleMyzhestvo();
+                    }
+                } else {
+                    layoutError.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.INVISIBLE);
+                }
             }
-        } else {
-            layoutError.setVisibility(View.VISIBLE);
-            progressBar.setVisibility(View.INVISIBLE);
-        }
+        });
     }
 
     private void loadScheduleParnas() {

@@ -26,7 +26,6 @@ import ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck;
 public class WorkoutExerciseViewModel extends AndroidViewModel {
 
     private String selectedDay;
-    private MutableLiveData<Map<String, String>> liveData;
     private Executor executor = new ThreadPoolExecutor(
             0,
             1,
@@ -44,7 +43,7 @@ public class WorkoutExerciseViewModel extends AndroidViewModel {
     }
 
     public LiveData<Map<String, String>> getWorkout() {
-        liveData = new MutableLiveData<>();
+        final MutableLiveData<Map<String, String>> liveData = new MutableLiveData<>();
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -81,9 +80,17 @@ public class WorkoutExerciseViewModel extends AndroidViewModel {
         return liveData;
     }
 
-    public boolean checkNetwork() {
-        NetworkCheck network = new NetworkCheck(getApplication());
-        return network.checkConnection();
+    public LiveData<Boolean> checkNetwork() {
+        final MutableLiveData<Boolean> liveDataConnection = new MutableLiveData<>();
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                NetworkCheck networkCheck = new NetworkCheck(getApplication());
+                boolean isConnected = networkCheck.checkConnection();
+                liveDataConnection.postValue(isConnected);
+            }
+        });
+        return liveDataConnection;
     }
 
     public String getSelectedDay() {

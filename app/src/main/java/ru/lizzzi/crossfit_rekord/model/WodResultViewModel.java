@@ -21,7 +21,6 @@ import ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck;
 
 public class WodResultViewModel extends AndroidViewModel {
 
-    private MutableLiveData<List<Map>> liveData;
     private Executor executor = new ThreadPoolExecutor(
             0,
             1,
@@ -37,7 +36,7 @@ public class WodResultViewModel extends AndroidViewModel {
     }
 
     public LiveData<List<Map>> getWorkoutResult() {
-        liveData = new MutableLiveData<>();
+        final MutableLiveData<List<Map>> liveData = new MutableLiveData<>();
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -73,9 +72,17 @@ public class WodResultViewModel extends AndroidViewModel {
         return liveData;
     }
 
-    public boolean checkNetwork() {
-        NetworkCheck network = new NetworkCheck(getApplication());
-        return network.checkConnection();
+    public LiveData<Boolean> checkNetwork() {
+        final MutableLiveData<Boolean> liveDataConnection = new MutableLiveData<>();
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                NetworkCheck networkCheck = new NetworkCheck(getApplication());
+                boolean isConnected = networkCheck.checkConnection();
+                liveDataConnection.postValue(isConnected);
+            }
+        });
+        return liveDataConnection;
     }
 
     public Map<String, String> getUserResults() {

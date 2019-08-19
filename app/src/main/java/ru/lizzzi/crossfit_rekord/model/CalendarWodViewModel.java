@@ -30,10 +30,10 @@ import ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck;
 public class CalendarWodViewModel  extends AndroidViewModel {
 
     private SQLiteStorageWod dbStorage;
-    private BackendlessQueries backendlessQuery;
 
     private List<Date> selectDates;
     private MutableLiveData<List<Date>> liveData;
+    private MutableLiveData<Boolean> liveDataConnection;
     private Executor executor = new ThreadPoolExecutor(
             0,
             1,
@@ -52,7 +52,6 @@ public class CalendarWodViewModel  extends AndroidViewModel {
 
     public CalendarWodViewModel(@NonNull Application application) {
         super(application);
-        backendlessQuery = new BackendlessQueries();
         String APP_PREFERENCES = "audata";
         sharedPreferences =
                 getApplication().getSharedPreferences(
@@ -69,6 +68,7 @@ public class CalendarWodViewModel  extends AndroidViewModel {
         executor.execute(new Runnable() {
             @Override
             public void run() {
+                BackendlessQueries backendlessQuery = new BackendlessQueries();
                 List<Map> loadedDates = backendlessQuery.loadingCalendarWod(
                         userObjectID,
                         timeStart,
@@ -101,9 +101,17 @@ public class CalendarWodViewModel  extends AndroidViewModel {
         return liveData;
     }
 
-    public boolean isNetworkConnection() {
-        NetworkCheck network = new NetworkCheck(getApplication());
-        return network.checkConnection();
+    public LiveData<Boolean> checkNetwork() {
+        liveDataConnection = new MutableLiveData<>();
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                NetworkCheck networkCheck = new NetworkCheck(getApplication());
+                boolean isConnected = networkCheck.checkConnection();
+                liveDataConnection.postValue(isConnected);
+            }
+        });
+        return liveDataConnection;
     }
 
     public List<Date> getDates() {

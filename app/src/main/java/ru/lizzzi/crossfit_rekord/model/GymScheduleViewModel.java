@@ -19,6 +19,7 @@ import ru.lizzzi.crossfit_rekord.backendless.BackendlessQueries;
 import ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck;
 
 public class GymScheduleViewModel extends AndroidViewModel {
+
     private List<List<Map>> scheduleParnas;
     private List<List<Map>> scheduleMyzhestvo;
     private Executor executor = new ThreadPoolExecutor(
@@ -48,7 +49,8 @@ public class GymScheduleViewModel extends AndroidViewModel {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                List<Map> loadedSchedule = backendlessQuery.loadingSchedule(String.valueOf(selectedGym));
+                List<Map> loadedSchedule =
+                        backendlessQuery.loadingSchedule(String.valueOf(selectedGym));
                 if (loadedSchedule != null) {
                     scheduleParnas = splitRawSchedule(loadedSchedule);
                     liveDataParnas.postValue(scheduleParnas);
@@ -67,7 +69,8 @@ public class GymScheduleViewModel extends AndroidViewModel {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                List<Map> loadedSchedule = backendlessQuery.loadingSchedule(String.valueOf(selectedGym));
+                List<Map> loadedSchedule =
+                        backendlessQuery.loadingSchedule(String.valueOf(selectedGym));
                 if (loadedSchedule != null) {
                     scheduleMyzhestvo = splitRawSchedule(loadedSchedule);
                     liveDataMyzhestvo.postValue(scheduleMyzhestvo);
@@ -143,9 +146,17 @@ public class GymScheduleViewModel extends AndroidViewModel {
         return  (selectedGym == GYM_PARNAS) ? scheduleParnas : scheduleMyzhestvo;
     }
 
-    public boolean checkNetwork() {
-        NetworkCheck network = new NetworkCheck(getApplication());
-        return network.checkConnection();
+    public LiveData<Boolean> checkNetwork() {
+        final MutableLiveData<Boolean> liveDataConnection = new MutableLiveData<>();
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                NetworkCheck networkCheck = new NetworkCheck(getApplication());
+                boolean isConnected = networkCheck.checkConnection();
+                liveDataConnection.postValue(isConnected);
+            }
+        });
+        return liveDataConnection;
     }
 
     public boolean isSelectedGymParnas() {

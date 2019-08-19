@@ -37,8 +37,6 @@ public class EnterResultViewModel extends AndroidViewModel {
     private int action;
     private String wodLevel;
 
-    private MutableLiveData<Boolean> liveData;
-    private BackendlessQueries backendlessQuery;
     private Executor executor = new ThreadPoolExecutor(
             0,
             1,
@@ -49,7 +47,6 @@ public class EnterResultViewModel extends AndroidViewModel {
 
     public EnterResultViewModel(@NonNull Application application) {
         super(application);
-        backendlessQuery = new BackendlessQueries();
         wodLevel = getApplication().getResources().getString(R.string.strActivityERLevelSc);
         action = ACTION_SAVE;
     }
@@ -57,13 +54,13 @@ public class EnterResultViewModel extends AndroidViewModel {
     public LiveData<Boolean> saveWorkoutDetails(
             final String userSkill,
             final String userWodResult) {
-        liveData = new MutableLiveData<>();
+        final MutableLiveData<Boolean> liveData = new MutableLiveData<>();
         executor.execute(new Runnable() {
             @Override
             public void run() {
                 SharedPreferences sharedPreferences =
                         getApplication().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-
+                BackendlessQueries backendlessQuery = new BackendlessQueries();
                 boolean isDataSaved = backendlessQuery.setWorkoutDetails(
                         action,
                         sharedPreferences.getString(APP_PREFERENCES_SELECTEDDAY, ""),
@@ -111,9 +108,17 @@ public class EnterResultViewModel extends AndroidViewModel {
         return liveData;
     }
 
-    public boolean checkNetwork() {
-        NetworkCheck network = new NetworkCheck(getApplication());
-        return network.checkConnection();
+    public LiveData<Boolean> checkNetwork() {
+        final MutableLiveData<Boolean> liveDataConnection = new MutableLiveData<>();
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                NetworkCheck networkCheck = new NetworkCheck(getApplication());
+                boolean isConnected = networkCheck.checkConnection();
+                liveDataConnection.postValue(isConnected);
+            }
+        });
+        return liveDataConnection;
     }
 
     public String getWodLevel() {

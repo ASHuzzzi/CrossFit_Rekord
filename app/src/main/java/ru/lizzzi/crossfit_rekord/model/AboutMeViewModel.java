@@ -19,7 +19,6 @@ import ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck;
 public class AboutMeViewModel extends AndroidViewModel {
 
     private MutableLiveData<Boolean> liveData;
-    private BackendlessQueries backendlessQuery;
     private Executor executor = new ThreadPoolExecutor(
             0,
             1,
@@ -36,7 +35,6 @@ public class AboutMeViewModel extends AndroidViewModel {
 
     public AboutMeViewModel(@NonNull Application application) {
         super(application);
-        backendlessQuery = new BackendlessQueries();
         String APP_PREFERENCES = "audata";
         sharedPreferences = getApplication().getSharedPreferences(
                 APP_PREFERENCES,
@@ -53,6 +51,7 @@ public class AboutMeViewModel extends AndroidViewModel {
         executor.execute(new Runnable() {
             @Override
             public void run() {
+                BackendlessQueries backendlessQuery = new BackendlessQueries();
                 boolean loggedIn = backendlessQuery.saveUserData(
                         sharedPreferences.getString(APP_PREFERENCES_EMAIL, ""),
                         sharedPreferences.getString(APP_PREFERENCES_PASSWORD, ""),
@@ -72,9 +71,17 @@ public class AboutMeViewModel extends AndroidViewModel {
         return liveData;
     }
 
-    public boolean checkNetwork() {
-        NetworkCheck network = new NetworkCheck(getApplication());
-        return network.checkConnection();
+    public LiveData<Boolean> checkNetwork() {
+        final MutableLiveData<Boolean> liveDataConnection = new MutableLiveData<>();
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                NetworkCheck networkCheck = new NetworkCheck(getApplication());
+                boolean isConnected = networkCheck.checkConnection();
+                liveDataConnection.postValue(isConnected);
+            }
+        });
+        return liveDataConnection;
     }
 
     public String getCardNumber() {

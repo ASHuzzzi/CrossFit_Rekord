@@ -105,37 +105,43 @@ public class RegistryFragment extends Fragment {
                 }
 
                 uiState(LOADING);
-                if (viewModel.checkNetwork()) {
-                    LiveData<Boolean> liveData = viewModel.registered(
-                            editTextUserName.getText().toString(),
-                            editTextUserEmail.getText().toString(),
-                            editTextUserPassword.getText().toString());
-                    liveData.observe(RegistryFragment.this, new Observer<Boolean>() {
-                        @Override
-                        public void onChanged(Boolean isRegistered) {
-                            if (isRegistered) {
-                                loadNotification();
-                                ToggleStatusChange toggleStatusChange = (ToggleStatusChange) getActivity();
-                                if (toggleStatusChange != null) {
-                                    toggleStatusChange.changeToggleStatus(true);
+                LiveData<Boolean> liveDataConnection = viewModel.checkNetwork();
+                liveDataConnection.observe(RegistryFragment.this, new Observer<Boolean>() {
+                    @Override
+                    public void onChanged(Boolean isConnected) {
+                        if (isConnected) {
+                            LiveData<Boolean> liveData = viewModel.registered(
+                                    editTextUserName.getText().toString(),
+                                    editTextUserEmail.getText().toString(),
+                                    editTextUserPassword.getText().toString());
+                            liveData.observe(RegistryFragment.this, new Observer<Boolean>() {
+                                @Override
+                                public void onChanged(Boolean isRegistered) {
+                                    if (isRegistered) {
+                                        loadNotification();
+                                        ToggleStatusChange toggleStatusChange = (ToggleStatusChange) getActivity();
+                                        if (toggleStatusChange != null) {
+                                            toggleStatusChange.changeToggleStatus(true);
+                                        }
+                                        openStartScreenFragment();
+                                    } else {
+                                        uiState(WAIT);
+                                        Toast.makeText(
+                                                getContext(),
+                                                "Неверный логин или пароль!",
+                                                Toast.LENGTH_SHORT).show();
+                                    }
                                 }
-                                openStartScreenFragment();
-                            } else {
-                                uiState(WAIT);
-                                Toast.makeText(
-                                        getContext(),
-                                        "Неверный логин или пароль!",
-                                        Toast.LENGTH_SHORT).show();
-                            }
+                            });
+                        } else {
+                            uiState(WAIT);
+                            Toast.makeText(
+                                    getContext(),
+                                    "Нет подключения",
+                                    Toast.LENGTH_SHORT).show();
                         }
-                    });
-                } else {
-                    uiState(WAIT);
-                    Toast.makeText(
-                            getContext(),
-                            "Нет подключения",
-                            Toast.LENGTH_SHORT).show();
-                }
+                    }
+                });
             }
         });
         return view;

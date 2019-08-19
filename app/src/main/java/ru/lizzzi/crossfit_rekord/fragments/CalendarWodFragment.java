@@ -142,25 +142,34 @@ public class CalendarWodFragment extends Fragment {
             layoutError.setVisibility(View.GONE);
             calendarView.setVisibility(View.INVISIBLE);
             progressBar.setVisibility(View.VISIBLE);
-            if (viewModel.isNetworkConnection()) {
-                final LiveData<List<Date>> listLiveData = viewModel.loadDates();
-                listLiveData.observe(CalendarWodFragment.this, new Observer<List<Date>>() {
-                    @Override
-                    public void onChanged(@Nullable List<Date> dates) {
-                        if (dates != null) {
-                            viewModel.setSelectDates(dates);
-                            showSelectedDates();
-                        } else {
-                            layoutError.setVisibility(View.VISIBLE);
-                            progressBar.setVisibility(View.INVISIBLE);
-                            Toast.makeText(getContext(), "Нет данных", Toast.LENGTH_SHORT).show();
-                        }
+            LiveData<Boolean> liveDataConnection = viewModel.checkNetwork();
+            liveDataConnection.observe(CalendarWodFragment.this, new Observer<Boolean>() {
+                @Override
+                public void onChanged(Boolean isConnected) {
+                    if (isConnected) {
+                        LiveData<List<Date>> listLiveData = viewModel.loadDates();
+                        listLiveData.observe(CalendarWodFragment.this, new Observer<List<Date>>() {
+                            @Override
+                            public void onChanged(@Nullable List<Date> dates) {
+                                if (dates != null) {
+                                    viewModel.setSelectDates(dates);
+                                    showSelectedDates();
+                                } else {
+                                    layoutError.setVisibility(View.VISIBLE);
+                                    progressBar.setVisibility(View.INVISIBLE);
+                                    Toast.makeText(
+                                            getContext(),
+                                            "Нет данных",
+                                            Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                    } else {
+                        layoutError.setVisibility(View.VISIBLE);
+                        progressBar.setVisibility(View.INVISIBLE);
                     }
-                });
-            } else {
-                layoutError.setVisibility(View.VISIBLE);
-                progressBar.setVisibility(View.INVISIBLE);
-            }
+                }
+            });
         } else {
             showSelectedDates();
         }

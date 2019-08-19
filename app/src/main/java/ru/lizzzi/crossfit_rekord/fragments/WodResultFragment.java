@@ -111,33 +111,39 @@ public class WodResultFragment extends Fragment {
         layoutError.setVisibility(View.INVISIBLE);
         layoutMain.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.VISIBLE);
-        if (viewModel.checkNetwork()) {
-            LiveData<List<Map>> liveData = viewModel.getWorkoutResult();
-            liveData.observe(WodResultFragment.this, new Observer<List<Map>>() {
-                @Override
-                public void onChanged(@Nullable List<Map> results) {
-                    LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-                    recViewUsers.setLayoutManager(layoutManager);
-                    if (results != null && !results.isEmpty()) {
-                        adapter = new RecyclerAdapterWorkoutDetails(getContext(), results);
-                        recViewUsers.setAdapter(adapter);
-                    } else {
-                        if (adapter != null) {
-                            recViewUsers.setAdapter(null);
+        LiveData<Boolean> liveDataConnection = viewModel.checkNetwork();
+        liveDataConnection.observe(WodResultFragment.this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isConnected) {
+                if (isConnected) {
+                    LiveData<List<Map>> liveData = viewModel.getWorkoutResult();
+                    liveData.observe(WodResultFragment.this, new Observer<List<Map>>() {
+                        @Override
+                        public void onChanged(@Nullable List<Map> results) {
+                            LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+                            recViewUsers.setLayoutManager(layoutManager);
+                            if (results != null && !results.isEmpty()) {
+                                adapter = new RecyclerAdapterWorkoutDetails(getContext(), results);
+                                recViewUsers.setAdapter(adapter);
+                            } else {
+                                if (adapter != null) {
+                                    recViewUsers.setAdapter(null);
+                                }
+                            }
+                            recViewUsers.setAdapter(adapter);
+                            progressBar.setVisibility(View.INVISIBLE);
+                            layoutMain.setVisibility(View.VISIBLE);
+                            buttonSaveResults.setText(
+                                    viewModel.userResultsAvailable()
+                                            ? R.string.strEditDeleteResult
+                                            : R.string.strEnterResult);
                         }
-                    }
-                    recViewUsers.setAdapter(adapter);
+                    });
+                } else {
+                    layoutError.setVisibility(View.VISIBLE);
                     progressBar.setVisibility(View.INVISIBLE);
-                    layoutMain.setVisibility(View.VISIBLE);
-                    buttonSaveResults.setText(
-                            viewModel.userResultsAvailable()
-                                    ? R.string.strEditDeleteResult
-                                    : R.string.strEnterResult);
                 }
-            });
-        } else {
-            layoutError.setVisibility(View.VISIBLE);
-            progressBar.setVisibility(View.INVISIBLE);
-        }
+            }
+        });
     }
 }
