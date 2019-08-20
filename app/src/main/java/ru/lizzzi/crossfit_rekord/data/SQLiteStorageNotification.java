@@ -201,33 +201,34 @@ public class SQLiteStorageNotification extends SQLiteOpenHelper {
         return listNotification;
     }
 
-    public ArrayList<String> selectTextNotification(long date){
+    public ArrayList<String> getTextNotification(long date) {
         database = this.getReadableDatabase();
 
-        ArrayList<String> arrListNotification = new ArrayList<>();
-        String[]  columns = new  String[]{Notification.columnText, Notification.columnViewed};
-        Cursor cursor = database.query(Notification.TABLE_NAME,
+        ArrayList<String> notificationProperty = new ArrayList<>();
+        String[] columns = new  String[]{
+                Notification.columnHeader,
+                Notification.columnText,
+                Notification.columnViewed };
+        Cursor cursor = database.query(
+                Notification.TABLE_NAME,
                 columns,
                 Notification.columnDateNote + "= '" + date + "'",
                 null,
                 null,
                 null,
                 null);
-        if (cursor !=null && cursor.moveToFirst()){
+        if (cursor !=null && cursor.moveToFirst()) {
             do {
-                for (String cn : cursor.getColumnNames()) {
-
-                    String stText = cursor.getString(cursor.getColumnIndex(cn));
-                    arrListNotification.add(stText);
-
+                for (String value : cursor.getColumnNames()) {
+                    String property = cursor.getString(cursor.getColumnIndex(value));
+                    notificationProperty.add(property);
                 }
-
-            }while (cursor.moveToNext());
+            } while (cursor.moveToNext());
         }
         if (cursor != null) {
             cursor.close();
         }
-        return arrListNotification;
+        return notificationProperty;
     }
 
     public void updateStatusNotification(long date, int status){

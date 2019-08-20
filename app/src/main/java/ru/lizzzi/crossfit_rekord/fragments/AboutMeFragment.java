@@ -177,9 +177,11 @@ public class AboutMeFragment extends Fragment {
     @Override
     public  void onStart() {
         super.onStart();
-        if (getActivity() instanceof TitleChange){
-            TitleChange listernerTitleChange = (TitleChange) getActivity();
-            listernerTitleChange.changeTitle(R.string.title_AboutMe_Fragment, R.string.title_AboutMe_Fragment);
+        TitleChange listenerTitleChange = (TitleChange) getActivity();
+        if (listenerTitleChange != null) {
+            listenerTitleChange.changeTitle(
+                    R.string.title_AboutMe_Fragment,
+                    R.string.title_AboutMe_Fragment);
         }
     }
 

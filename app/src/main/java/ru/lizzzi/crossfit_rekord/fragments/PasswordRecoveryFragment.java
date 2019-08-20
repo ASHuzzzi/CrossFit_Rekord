@@ -1,16 +1,14 @@
 package ru.lizzzi.crossfit_rekord.fragments;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,97 +18,90 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck;
 import ru.lizzzi.crossfit_rekord.interfaces.TitleChange;
-import ru.lizzzi.crossfit_rekord.loaders.RecoveryEmailLoader;
+import ru.lizzzi.crossfit_rekord.model.PasswordRecoveryViewModel;
 
-public class PasswordRecoveryFragment extends Fragment implements LoaderManager.LoaderCallbacks<Boolean>{
+public class PasswordRecoveryFragment extends Fragment {
 
-    private EditText editTextEmailForRecovery;
+    private EditText editEmailForRecovery;
     private Button buttonRecoveryPassword;
     private ProgressBar progressBar;
 
-    private Handler handlerPasswordRecovery;
-    private Thread threadPasswordRecovery;
-    private Runnable runnablePasswordRecovery;
+    private PasswordRecoveryViewModel viewModel;
 
-    private final static int LOGIN_IS_DONE = 1;
-    private final static int WAIT_STATE = 0;
-    private final static int LOAD_STATE = 1;
+    private boolean LOADING = true;
+    private boolean WAITING = false;
 
-    @SuppressLint("HandlerLeak")
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_email, container, false);
-        editTextEmailForRecovery = view.findViewById(R.id.editTextEmailForRecovery);
+        viewModel = ViewModelProviders.of(PasswordRecoveryFragment.this)
+                .get(PasswordRecoveryViewModel.class);
+        editEmailForRecovery = view.findViewById(R.id.editTextEmailForRecovery);
         buttonRecoveryPassword = view.findViewById(R.id.buttonRecoveryEmail);
         progressBar = view.findViewById(R.id.progressbar);
-
-        //хэндлер для потока runnableOpenFragment
-        handlerPasswordRecovery = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                if (msg.what == LOGIN_IS_DONE) {
-                    openLoginFragment();
-                } else {
-                    Bundle bundle = msg.getData();
-                    boolean checkDone = bundle.getBoolean("result");
-                    if (checkDone) {
-                        changeUIOnState(LOAD_STATE);
-                        startRecoveryPasswordLoader(editTextEmailForRecovery.getText().toString());
-
-                    } else {
-                        changeUIOnState(WAIT_STATE);
-                        Toast.makeText(getActivity(), "Нет подключения", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-        };
-
-        //поток запускаемый при создании экрана (запуск происходит из onStart)
-        runnablePasswordRecovery = new Runnable() {
-            @Override
-            public void run() {
-                NetworkCheck network = new NetworkCheck(getContext());
-                boolean checkDone = network.checkConnection();
-                Bundle bundle = new Bundle();
-                bundle.putBoolean("result", checkDone);
-                Message msg = handlerPasswordRecovery.obtainMessage();
-                msg.setData(bundle);
-                handlerPasswordRecovery.sendMessage(msg);
-            }
-        };
 
         buttonRecoveryPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String userEmail = editTextEmailForRecovery.getText().toString();
+                String userEmail = editEmailForRecovery.getText().toString();
                 if (userEmail.endsWith(" ")) {
                     userEmail = userEmail.substring(0, userEmail.length() - 1);
-                    editTextEmailForRecovery.setText(userEmail);
+                    editEmailForRecovery.setText(userEmail);
                 }
 
                 boolean userEmailIsCorrect = isEmailCorrect(userEmail);
-                if (editTextEmailForRecovery.getText().length()== 0 || userEmailIsCorrect) {
-                    editTextEmailForRecovery.setFocusableInTouchMode(true);
-                    editTextEmailForRecovery.setFocusable(true);
-                    editTextEmailForRecovery.requestFocus();
-                    Toast.makeText(getActivity(), "Введите почту!", Toast.LENGTH_SHORT).show();
+                if (editEmailForRecovery.getText().length()== 0 || userEmailIsCorrect) {
+                    editEmailForRecovery.setFocusableInTouchMode(true);
+                    editEmailForRecovery.setFocusable(true);
+                    editEmailForRecovery.requestFocus();
+                    showToast("Введите почту!");
                     return;
                 }
 
                 //убираем клавиатуру после нажатия на кнопку
-                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
-                if (imm != null) {
-                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                InputMethodManager inputMethodManager =
+                        (InputMethodManager) Objects.requireNonNull(getActivity())
+                                .getSystemService(Activity.INPUT_METHOD_SERVICE);
+                if (inputMethodManager != null) {
+                    inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 }
-                threadPasswordRecovery = new Thread(runnablePasswordRecovery);
-                threadPasswordRecovery.setDaemon(true);
-                threadPasswordRecovery.start();
+
+                uiState(LOADING);
+                LiveData<Boolean> liveDataConnection = viewModel.checkNetwork();
+                liveDataConnection.observe(
+                        PasswordRecoveryFragment.this,
+                        new Observer<Boolean>() {
+                    @Override
+                    public void onChanged(final Boolean isConnected) {
+                        if (isConnected) {
+                            final LiveData<Boolean> liveData = viewModel.recoverPassword(
+                                    editEmailForRecovery.getText().toString());
+                            liveData.observe(
+                                    PasswordRecoveryFragment.this,
+                                    new Observer<Boolean>() {
+                                @Override
+                                public void onChanged(Boolean isRecovered) {
+                                    showToast((isRecovered)
+                                            ? "Ожидайте письма"
+                                            : "Повторите попытку");
+                                    uiState(WAITING);
+                                    if (isRecovered) {
+                                        openLoginFragment();
+                                    }
+                                }
+                            });
+                        } else {
+                            uiState(WAITING);
+                            showToast("Нет подключения");
+                        }
+                    }
+                });
             }
         });
         return view;
@@ -119,49 +110,20 @@ public class PasswordRecoveryFragment extends Fragment implements LoaderManager.
     @Override
     public  void onStart() {
         super.onStart();
-        if (getActivity() instanceof TitleChange) {
-            TitleChange listernerTitleChange = (TitleChange) getActivity();
-            listernerTitleChange.changeTitle(R.string.title_PasswordRecovery_Fragment, R.string.title_AboutMe_Fragment);
+        TitleChange listenerTitleChange = (TitleChange) getActivity();
+        if (listenerTitleChange != null) {
+            listenerTitleChange.changeTitle(
+                    R.string.title_PasswordRecovery_Fragment,
+                    R.string.title_AboutMe_Fragment);
         }
     }
 
-    private void startRecoveryPasswordLoader(String oldUserEmail) {
-        Bundle bundle = new Bundle();
-        bundle.putString("e_mailOld", oldUserEmail);
-        int RECOVERY_LOADER = 1;
-        getLoaderManager().restartLoader(RECOVERY_LOADER, bundle, this).forceLoad();
-    }
-
-
-    @NonNull
-    @Override
-    public Loader<Boolean> onCreateLoader(int id, Bundle bundle) {
-        return new RecoveryEmailLoader(getActivity(), bundle);
-    }
-
-    @Override
-    public void onLoadFinished(@NonNull Loader<Boolean> loader, Boolean recoveryIsGone) {
-        if (recoveryIsGone) {
-            Toast.makeText(getActivity(), "Ожидайте письма", Toast.LENGTH_SHORT).show();
-            handlerPasswordRecovery.sendEmptyMessage(LOGIN_IS_DONE);
-        } else {
-            Toast.makeText(getActivity(), "Повторите попытку", Toast.LENGTH_SHORT).show();
-        }
-        changeUIOnState(WAIT_STATE);
-    }
-
-    @Override
-    public void onLoaderReset(@NonNull Loader<Boolean> loader) {
-    }
-
-    private void changeUIOnState(int state) {
-        if (state == LOAD_STATE) {
-            progressBar.setVisibility(View.VISIBLE);
-            buttonRecoveryPassword.setPressed(true);
-        } else {
-            progressBar.setVisibility(View.INVISIBLE);
-            buttonRecoveryPassword.setPressed(false);
-        }
+    private void uiState(boolean loading) {
+        progressBar.setVisibility(
+                (loading)
+                        ? View.VISIBLE
+                        : View.INVISIBLE);
+        buttonRecoveryPassword.setPressed(loading);
     }
 
     private static boolean isEmailCorrect(String email) {
@@ -172,24 +134,24 @@ public class PasswordRecoveryFragment extends Fragment implements LoaderManager.
     }
 
     private void openLoginFragment() {
-        Fragment fragment = null;
-        try {
-            fragment = LoginFragment.class.newInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
         FragmentManager fragmentManager = getFragmentManager();
-        for (int i = 0; i < (fragmentManager.getBackStackEntryCount()-1); i++) {
-            fragmentManager.popBackStack();
+        if (fragmentManager != null) {
+            for (int i = 0; i < (fragmentManager.getBackStackEntryCount()-1); i++) {
+                fragmentManager.popBackStack();
+            }
+            Fragment fragment = new LoginFragment();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.setCustomAnimations(
+                    R.anim.pull_in_right,
+                    R.anim.push_out_left,
+                    R.anim.pull_in_left,
+                    R.anim.push_out_right);
+            fragmentTransaction.replace(R.id.container, fragment);
+            fragmentTransaction.commit();
         }
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.setCustomAnimations(
-                R.anim.pull_in_right,
-                R.anim.push_out_left,
-                R.anim.pull_in_left,
-                R.anim.push_out_right);
-        fragmentTransaction.replace(R.id.container, fragment);
-        fragmentTransaction.commit();
+    }
+
+    private void showToast(String toastText) {
+        Toast.makeText(getContext(), toastText, Toast.LENGTH_SHORT).show();
     }
 }

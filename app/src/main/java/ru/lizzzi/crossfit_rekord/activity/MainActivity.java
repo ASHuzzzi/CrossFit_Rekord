@@ -56,8 +56,8 @@ public class MainActivity extends AppCompatActivity implements
         ToggleStatusChange {
 
     private BroadcastReceiver broadcastReceiver;
-    private final int LOAD_NOTIFICATION = 1;
-    private final int UPDATE_NOTIFICATION = 2;
+    public final static int LOAD_NOTIFICATION = 1;
+    public final static int UPDATE_NOTIFICATION = 2;
     public final static int STATUS_FINISH = 200;
 
     private final static String PARAM_TIME = "time";

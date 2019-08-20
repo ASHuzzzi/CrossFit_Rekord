@@ -222,7 +222,7 @@ public class LoginFragment extends Fragment {
 
     }
 
-    private static boolean isEmailCorrect(String userEmail) {
+    private boolean isEmailCorrect(String userEmail) {
         String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
         Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(userEmail);

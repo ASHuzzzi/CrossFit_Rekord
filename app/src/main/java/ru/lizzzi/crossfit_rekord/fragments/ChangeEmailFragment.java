@@ -1,16 +1,12 @@
 package ru.lizzzi.crossfit_rekord.fragments;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,187 +17,131 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck;
 import ru.lizzzi.crossfit_rekord.interfaces.TitleChange;
-import ru.lizzzi.crossfit_rekord.loaders.ChangeEmailLoader;
+import ru.lizzzi.crossfit_rekord.model.ChangeEmailViewModel;
 
-public class ChangeEmailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Boolean>{
+public class ChangeEmailFragment extends Fragment {
 
-    private final String APP_PREFERENCES = "audata";
-    private final String APP_PREFERENCES_EMAIL = "Email";
-    private final String APP_PREFERENCES_PASSWORD = "Password";
-    private SharedPreferences mSettings;
+    private TextView textOldEmail;
+    private EditText editNewEmail;
+    private ProgressBar progressBar;
+    private Button buttonChangeEmail;
 
-    private TextView tvOldEmail;
-    private EditText etChangeEmail;
-    private ProgressBar pbChangeEmail;
-    private Button btnChangeEmail;
+    private ChangeEmailViewModel viewModel;
 
-    private Handler handlerChangeEmailFragment;
-    private Thread threadChangeEmailFragment;
-    private Runnable runnableChangeEmailFragment;
+    private boolean LOADING = true;
+    private boolean WAITING = false;
 
-    @SuppressLint("HandlerLeak")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_change_email, container, false);
+        View view = inflater.inflate(R.layout.fragment_change_email, container, false);
+        viewModel = ViewModelProviders.of(ChangeEmailFragment.this)
+                .get(ChangeEmailViewModel.class);
 
-        mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        textOldEmail = view.findViewById(R.id.textOldEmail);
+        editNewEmail = view.findViewById(R.id.editTextNewEmail);
+        progressBar = view.findViewById(R.id.progressbar);
 
-        tvOldEmail = v.findViewById(R.id.textOldEmail);
-        etChangeEmail = v.findViewById(R.id.editTextNewEmail);
-        pbChangeEmail = v.findViewById(R.id.progressbar);
-        btnChangeEmail = v.findViewById(R.id.buttonChangeEmail);
-
-        //хэндлер для потока runnableOpenFragment
-        handlerChangeEmailFragment = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                Bundle bundle = msg.getData();
-                String result_check = bundle.getString("result");
-                if (result_check != null && result_check.equals("true")){
-                    ChangeUIElements(1);
-                    startAsyncTaskLoader(
-                            mSettings.getString(APP_PREFERENCES_EMAIL, ""),
-                            etChangeEmail.getText().toString(),
-                            mSettings.getString(APP_PREFERENCES_PASSWORD, "")
-
-                    );
-                }else{
-                    ChangeUIElements(0);
-                    Toast.makeText(getContext(), "Нет подключения", Toast.LENGTH_SHORT).show();
-                }
-            }
-        };
-
-        //поток запускаемый при создании экрана (запуск происходит из onStart)
-        runnableChangeEmailFragment = new Runnable() {
-            @Override
-            public void run() {
-
-                NetworkCheck network = new NetworkCheck(getContext());
-                Bundle bundle = new Bundle();
-                boolean checkDone = network.checkConnection();
-                if (checkDone){
-                    bundle.putString("result", String.valueOf(true));
-
-                }else {
-                    bundle.putString("result", String.valueOf(false));
-                }
-                Message msg = handlerChangeEmailFragment.obtainMessage();
-                msg.setData(bundle);
-                handlerChangeEmailFragment.sendMessage(msg);
-            }
-        };
-
-        btnChangeEmail.setOnClickListener(new View.OnClickListener() {
+        buttonChangeEmail = view.findViewById(R.id.buttonChangeEmail);
+        buttonChangeEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                String stCheckSpace = etChangeEmail.getText().toString();
-                if(stCheckSpace.endsWith(" ")){
-                    stCheckSpace = stCheckSpace.substring(0, stCheckSpace.length() - 1);
-                    etChangeEmail.setText(stCheckSpace);
+                String checkSpace = editNewEmail.getText().toString();
+                if(checkSpace.endsWith(" ")) {
+                    checkSpace = checkSpace.substring(0, checkSpace.length() - 1);
+                    editNewEmail.setText(checkSpace);
                 }
 
-                if (etChangeEmail.getText().length()== 0 || isEmailValid(etChangeEmail.getText().toString())){
-                    etChangeEmail.setFocusableInTouchMode(true);
-                    etChangeEmail.setFocusable(true);
-                    etChangeEmail.requestFocus();
-                    Toast.makeText(getContext(), "Введите почту!", Toast.LENGTH_SHORT).show();
+                if (editNewEmail.getText().length()== 0 ||
+                        isEmailValid(editNewEmail.getText().toString())) {
+                    editNewEmail.setFocusableInTouchMode(true);
+                    editNewEmail.setFocusable(true);
+                    editNewEmail.requestFocus();
+                    showToast("Введите почту!");
                     return;
                 }
 
                 //убираем клавиатуру после нажатия на кнопку
-                InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
-                if (imm != null) {
-                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                InputMethodManager inputMethodManager =
+                        (InputMethodManager) Objects.requireNonNull(getContext())
+                                .getSystemService(Activity.INPUT_METHOD_SERVICE);
+                if (inputMethodManager != null) {
+                    inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 }
 
-                threadChangeEmailFragment = new Thread(runnableChangeEmailFragment);
-                threadChangeEmailFragment.setDaemon(true);
-                threadChangeEmailFragment.start();
+                uiState(LOADING);
+                LiveData<Boolean> liveDataConnection = viewModel.checkNetwork();
+                liveDataConnection.observe(ChangeEmailFragment.this, new Observer<Boolean>() {
+                    @Override
+                    public void onChanged(final Boolean isConnected) {
+                        if (isConnected) {
+                            final LiveData<Boolean> liveData =
+                                    viewModel.changeEmail(editNewEmail.getText().toString());
+                            liveData.observe(ChangeEmailFragment.this, new Observer<Boolean>() {
+                                @Override
+                                public void onChanged(Boolean isSaved) {
+                                    if (isSaved) {
+                                        textOldEmail.setText(viewModel.getUserEmail());
+                                        editNewEmail.setText(
+                                                getResources().getString(R.string.empty));
+                                    }
+                                    showToast((isSaved)
+                                            ? "Данные обновлены"
+                                            : "Повторите сохранение");
+                                    uiState(WAITING);
+                                }
+                            });
+                        } else {
+                            uiState(WAITING);
+                            showToast("Нет подключения");
+                        }
+                    }
+                });
             }
         });
-
-        return v;
+        return view;
     }
 
     @Override
     public  void onStart() {
         super.onStart();
-        if (getActivity() instanceof TitleChange){
-            TitleChange listernerTitleChange = (TitleChange) getActivity();
-            listernerTitleChange.changeTitle(R.string.title_ChangeEmail_Fragment, R.string.title_AboutMe_Fragment);
+        TitleChange listenerTitleChange = (TitleChange) getActivity();
+        if (listenerTitleChange != null) {
+            listenerTitleChange.changeTitle(
+                    R.string.title_ChangeEmail_Fragment,
+                    R.string.title_AboutMe_Fragment);
         }
-
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
-        pbChangeEmail.setVisibility(View.INVISIBLE);
-        tvOldEmail.setText(mSettings.getString(APP_PREFERENCES_EMAIL, ""));
-        etChangeEmail.setText(getResources().getString(R.string.empty));
-
+        progressBar.setVisibility(View.INVISIBLE);
+        textOldEmail.setText(viewModel.getUserEmail());
+        editNewEmail.setText(getResources().getString(R.string.empty));
     }
 
-    private void ChangeUIElements(int status){
-        if (status == 1){
-            pbChangeEmail.setVisibility(View.VISIBLE);
-            btnChangeEmail.setPressed(true);
-        }else{
-            pbChangeEmail.setVisibility(View.INVISIBLE);
-            btnChangeEmail.setPressed(false);
-        }
+    private void uiState(boolean loading) {
+        progressBar.setVisibility(
+                (loading)
+                        ? View.VISIBLE
+                        : View.INVISIBLE);
+        buttonChangeEmail.setPressed(loading);
     }
 
-    private void startAsyncTaskLoader(
-            String e_mailOld, String e_mailNew, String password) {
-        Bundle bundle = new Bundle();
-        bundle.putString("e_mailOld", e_mailOld);
-        bundle.putString("e_mailNew", e_mailNew);
-        bundle.putString("password", password);
-        int LOADERID = 1;
-        getLoaderManager().restartLoader(LOADERID, bundle, this).forceLoad();
-    }
-
-
-    @NonNull
-    @Override
-    public Loader<Boolean> onCreateLoader(int id, Bundle args) {
-        ChangeEmailLoader loader;
-        loader = new ChangeEmailLoader(getContext(), args);
-        return loader;
-    }
-
-    @Override
-    public void onLoadFinished(@NonNull Loader<Boolean> loader, Boolean data) {
-        if (data){
-            tvOldEmail.setText(mSettings.getString(APP_PREFERENCES_EMAIL, ""));
-            etChangeEmail.setText(getResources().getString(R.string.empty));
-            Toast.makeText(getContext(), "Данные обновлены", Toast.LENGTH_SHORT).show();
-        }else {
-            Toast.makeText(getContext(), "Повторите сохранение", Toast.LENGTH_SHORT).show();
-        }
-        ChangeUIElements(0);
-
-    }
-
-    @Override
-    public void onLoaderReset(@NonNull Loader<Boolean> loader) {
-
-    }
-
-    private static boolean isEmailValid(String email) {
+    private boolean isEmailValid(String email) {
         String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
         Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(email);
         return !matcher.matches();
+    }
+
+    private void showToast(String toastText) {
+        Toast.makeText(getContext(), toastText, Toast.LENGTH_SHORT).show();
     }
 }

@@ -103,8 +103,7 @@ public class RecyclerAdapterNotification
             @Override
             public void onClick(View view) {
                 listener.selectNotificationInList(
-                        Objects.requireNonNull(documentInfo.get(fields.getDateField())).toString(),
-                        Objects.requireNonNull(documentInfo.get(fields.getHeaderField())).toString());
+                        Objects.requireNonNull(documentInfo.get(fields.getDateField())).toString());
             }
         });
 
