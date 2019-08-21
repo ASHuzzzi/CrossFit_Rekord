@@ -72,7 +72,7 @@ public class LoadNotificationsService extends Service {
         long dateLastCheck = dbStorage.dateLastCheck();
         if (dateLastCheck == 0) {
             Calendar calendar = Calendar.getInstance();
-            calendar.add(Calendar.MONTH, 0);
+            calendar.add(Calendar.MONTH, -1);
             dateLastCheck = calendar.getTimeInMillis();
         }
         dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -105,13 +105,12 @@ public class LoadNotificationsService extends Service {
                 dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.UK);
                 Date notificationDate = dateFormat.parse(dateNotification);
                 long timeNotification = notificationDate.getTime();
-                int NOT_VIEWED = 0;
                 SQLiteStorageNotification.saveNotification(
                         timeNotification,
                         headerNotification,
                         textNotification,
                         codeNotification,
-                        NOT_VIEWED);
+                        false);
             } catch (ParseException exception) {
                 exception.printStackTrace();
             }

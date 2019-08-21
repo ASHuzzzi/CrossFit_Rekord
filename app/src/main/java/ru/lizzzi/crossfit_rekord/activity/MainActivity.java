@@ -133,7 +133,6 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void  onStart() {
         super.onStart();
-        viewModel.checkForAvailabilityDB();
         initBackendlessApi();
         initBroadcastReceiver();
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.container);
@@ -216,18 +215,14 @@ public class MainActivity extends AppCompatActivity implements
     private void initializeCountDrawer() {
         new Thread(new Runnable() {
             public void run() {
-                boolean dbIsAvailable =  viewModel.dbIsAvailable();
-                if (dbIsAvailable) {
-                    int unreadNotifications = viewModel.getUnreadNotifications();
-                    String stCounter =
-                            (unreadNotifications > 0)
-                                    ? String.valueOf(unreadNotifications)
-                                    : "";
-                    textNotificationCounter.setGravity(Gravity.CENTER_VERTICAL);
-                    textNotificationCounter.setTypeface(null, Typeface.BOLD);
-                    textNotificationCounter.setTextColor(getResources().getColor(R.color.colorAccent));
-                    textNotificationCounter.setText(stCounter);
-                }
+                int unreadNotifications = viewModel.getUnreadNotifications();
+                textNotificationCounter.setGravity(Gravity.CENTER_VERTICAL);
+                textNotificationCounter.setTypeface(null, Typeface.BOLD);
+                textNotificationCounter.setTextColor(getResources().getColor(R.color.colorRedPrimary));
+                textNotificationCounter.setText(
+                        (unreadNotifications > 0)
+                        ? String.valueOf(unreadNotifications)
+                        : "");
             }
         }).run();
     }

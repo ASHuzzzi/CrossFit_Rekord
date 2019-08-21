@@ -31,11 +31,11 @@ public class NotificationDataViewModel extends AndroidViewModel {
     public void getNotification(Bundle bundle) {
         notificationTime = bundle.getLong("dateNote");
         SQLiteStorageNotification dbStorage = new SQLiteStorageNotification(getApplication());
-        List<String> notificationProperty = dbStorage.getTextNotification(notificationTime);
+        List<String> notificationProperty = dbStorage.getNotification(notificationTime);
         if (!notificationProperty.isEmpty()) {
-            String isViewed = notificationProperty.get(2);
-            if (isViewed.equals("0")) {
-                dbStorage.updateStatusNotification(notificationTime, 1);
+            boolean isViewed = Boolean.parseBoolean(notificationProperty.get(2));
+            if (!isViewed) {
+                dbStorage.updateStatusNotification(notificationTime, true);
                 Intent intent = new Intent(MainActivity.BROADCAST_ACTION);
                 intent.putExtra(MainActivity.PARAM_TASK, MainActivity.UPDATE_NOTIFICATION);
                 intent.putExtra(MainActivity.PARAM_STATUS, MainActivity.STATUS_FINISH);

@@ -69,7 +69,7 @@ public class RecyclerAdapterNotification
         final Map documentInfo = notifications.get(position);
         String dateNote = Objects.requireNonNull(documentInfo.get(fields.getDateField())).toString();
         String header = Objects.requireNonNull(documentInfo.get(fields.getHeaderField())).toString();
-        int isViewed = Integer.valueOf(
+        boolean isViewed = Boolean.parseBoolean(
                 Objects.requireNonNull(documentInfo.get(fields.getViewedField())).toString());
 
         long noteTime = Long.valueOf(dateNote);
@@ -89,15 +89,10 @@ public class RecyclerAdapterNotification
         holder.textHeader.setText(header);
         holder.textTime.setText(time);
 
-        if(isViewed == 0) {
-            holder.textDateNote.setTypeface(null, Typeface.BOLD);
-            holder.textHeader.setTypeface(null, Typeface.BOLD);
-            holder.notificationLayout.setBackgroundResource(R.color.colorRedPrimary);
-        } else {
-            holder.textDateNote.setTypeface(null, Typeface.NORMAL);
-            holder.textHeader.setTypeface(null, Typeface.NORMAL);
-            holder.notificationLayout.setBackgroundResource(R.color.colorWhite);
-        }
+        holder.textDateNote.setTypeface(null, (isViewed) ? Typeface.NORMAL : Typeface.BOLD);
+        holder.textHeader.setTypeface(null, (isViewed) ? Typeface.NORMAL : Typeface.BOLD);
+        holder.notificationLayout.setBackgroundResource(
+                (isViewed) ? R.color.colorWhite : R.color.colorRedPrimary);
 
         holder.notificationLayout.setOnClickListener(new View.OnClickListener() {
             @Override

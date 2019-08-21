@@ -1,16 +1,12 @@
 package ru.lizzzi.crossfit_rekord.fragments;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,193 +16,146 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import java.util.Objects;
+
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck;
 import ru.lizzzi.crossfit_rekord.interfaces.TitleChange;
-import ru.lizzzi.crossfit_rekord.loaders.ChangePasswordLoader;
+import ru.lizzzi.crossfit_rekord.model.ChangePasswordViewModel;
 
-public class ChangePasswordFragment extends Fragment implements LoaderManager.LoaderCallbacks<Boolean>{
-    private final String APP_PREFERENCES = "audata";
-    private final String APP_PREFERENCES_EMAIL = "Email";
-    private final String APP_PREFERENCES_PASSWORD = "Password";
-    private SharedPreferences mSettings;
+public class ChangePasswordFragment extends Fragment {
 
-    private EditText etPasswordOld;
-    private EditText etPasswordNew;
-    private EditText etPasswordRepeat;
-    private ProgressBar pbChangePassword;
-    private Button btnChangePassword;
+    private EditText editOldPassword;
+    private EditText editNewPassword;
+    private EditText editRepeatPassword;
+    private ProgressBar progressBar;
+    private Button buttonChangePassword;
 
+    private ChangePasswordViewModel viewModel;
 
-    private Handler handlerChangeEmailFragment;
-    private Thread threadChangeEmailFragment;
-    private Runnable runnableChangeEmailFragment;
+    private boolean LOADING = true;
+    private boolean WAITING = false;
 
-    @SuppressLint("HandlerLeak")
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_change_password, container, false);
+    public View onCreateView(
+            @NonNull LayoutInflater inflater,
+            ViewGroup container,
+            Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_change_password, container, false);
+        viewModel = ViewModelProviders.of(ChangePasswordFragment.this)
+                .get(ChangePasswordViewModel.class);
 
-        mSettings = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        editOldPassword = view.findViewById(R.id.etPasswordOld);
+        editNewPassword = view.findViewById(R.id.etPasswordNew);
+        editRepeatPassword = view.findViewById(R.id.etPasswordRepeat);
+        progressBar = view.findViewById(R.id.pbChangePassword);
+        buttonChangePassword = view.findViewById(R.id.btnChangePassword);
 
-        etPasswordOld = v.findViewById(R.id.etPasswordOld);
-        etPasswordNew = v.findViewById(R.id.etPasswordNew);
-        etPasswordRepeat = v.findViewById(R.id.etPasswordRepeat);
-        pbChangePassword = v.findViewById(R.id.pbChangePassword);
-        btnChangePassword = v.findViewById(R.id.btnChangePassword);
-
-        //хэндлер для потока runnableOpenFragment
-        handlerChangeEmailFragment = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                Bundle bundle = msg.getData();
-                String result_check = bundle.getString("result");
-                if (result_check != null && result_check.equals("true")){
-                    ChangeUIElements(1);
-                    startAsyncTaskLoader(
-                            mSettings.getString(APP_PREFERENCES_EMAIL, ""),
-                            etPasswordOld.getText().toString(),
-                            etPasswordNew.getText().toString()
-
-                    );
-                }else{
-                    ChangeUIElements(0);
-                    Toast.makeText(getContext(), "Нет подключения", Toast.LENGTH_SHORT).show();
-                }
-            }
-        };
-
-        //поток запускаемый при создании экрана (запуск происходит из onStart)
-        runnableChangeEmailFragment = new Runnable() {
-            @Override
-            public void run() {
-
-                NetworkCheck network = new NetworkCheck(getContext());
-                Bundle bundle = new Bundle();
-                boolean checkDone = network.checkConnection();
-                if (checkDone) {
-                    bundle.putString("result", String.valueOf(true));
-
-                }else {
-                    bundle.putString("result", String.valueOf(false));
-                }
-                Message msg = handlerChangeEmailFragment.obtainMessage();
-                msg.setData(bundle);
-                handlerChangeEmailFragment.sendMessage(msg);
-            }
-        };
-
-        btnChangePassword.setOnClickListener(new View.OnClickListener() {
+        buttonChangePassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                String stCheckPas = mSettings.getString(APP_PREFERENCES_PASSWORD, "");
-                if(!etPasswordOld.getText().toString().equals(stCheckPas)){
-                    etPasswordOld.setFocusableInTouchMode(true);
-                    etPasswordOld.setFocusable(true);
-                    etPasswordOld.requestFocus();
-                    Toast.makeText(getContext(), "Неправильный старый пароль!", Toast.LENGTH_SHORT).show();
+                if(editNewPassword.getText().length() == 0) {
+                    setFocusOnView(editNewPassword, "Введите пароль");
                     return;
                 }
 
-                if(etPasswordNew.getText().length()== 0 || etPasswordRepeat.getText().length()==0){
-                    if(etPasswordNew.getText().length()== 0){
-                        etPasswordNew.setFocusableInTouchMode(true);
-                        etPasswordNew.setFocusable(true);
-                        etPasswordNew.requestFocus();
-                        Toast.makeText(getContext(), "Введите пароль", Toast.LENGTH_SHORT).show();
-                    }else {
-                        etPasswordRepeat.setFocusableInTouchMode(true);
-                        etPasswordRepeat.setFocusable(true);
-                        etPasswordRepeat.requestFocus();
-                        Toast.makeText(getContext(), "Повторите пароль", Toast.LENGTH_SHORT).show();
-                    }
+                if (editRepeatPassword.getText().length() == 0) {
+                    setFocusOnView(editRepeatPassword, "Повторите пароль");
                     return;
                 }
 
-                if(!etPasswordNew.getText().toString().equals(etPasswordRepeat.getText().toString())){
-                    Toast.makeText(getContext(), "Пароли не совпадают!", Toast.LENGTH_SHORT).show();
+                String checkSpace = viewModel.getUserPassword();
+                if(!editOldPassword.getText().toString().equals(checkSpace)) {
+                    setFocusOnView(editOldPassword, "Неправильный старый пароль!");
                     return;
                 }
+
+                if(!editNewPassword.getText().toString()
+                        .equals(editRepeatPassword.getText().toString())) {
+                    showToast("Пароли не совпадают!");
+                    return;
+                }
+
                 //убираем клавиатуру после нажатия на кнопку
-                InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
-                if (imm != null) {
-                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                InputMethodManager inputMethodManager =
+                        (InputMethodManager) Objects.requireNonNull(getContext())
+                                .getSystemService(Activity.INPUT_METHOD_SERVICE);
+                if (inputMethodManager != null) {
+                    inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 }
 
-                threadChangeEmailFragment = new Thread(runnableChangeEmailFragment);
-                threadChangeEmailFragment.setDaemon(true);
-                threadChangeEmailFragment.start();
+                uiState(LOADING);
+                LiveData<Boolean> liveDataConnection = viewModel.checkNetwork();
+                liveDataConnection.observe(ChangePasswordFragment.this, new Observer<Boolean>() {
+                    @Override
+                    public void onChanged(final Boolean isConnected) {
+                        if (isConnected) {
+                            final LiveData<Boolean> liveData =
+                                    viewModel.changePassword(editNewPassword.getText().toString());
+                            liveData.observe(ChangePasswordFragment.this, new Observer<Boolean>() {
+                                @Override
+                                public void onChanged(Boolean isSaved) {
+                                    if (isSaved) {
+                                        editOldPassword
+                                                .setText(getResources().getString(R.string.empty));
+                                        editNewPassword
+                                                .setText(getResources().getString(R.string.empty));
+                                        editRepeatPassword.
+                                                setText(getResources().getString(R.string.empty));
+                                    }
+                                    showToast((isSaved)
+                                            ? "Данные обновлены"
+                                            : "Повторите сохранение");
+                                    uiState(WAITING);
+                                }
+                            });
+                        } else {
+                            uiState(WAITING);
+                            showToast("Нет подключения");
+                        }
+                    }
+                });
             }
         });
 
-        return v;
+        return view;
+    }
+
+    private void setFocusOnView(View view, String toastText) {
+        view.setFocusableInTouchMode(true);
+        view.setFocusable(true);
+        view.requestFocus();
+        showToast(toastText);
     }
 
     @Override
     public  void onStart() {
         super.onStart();
-        if (getActivity() instanceof TitleChange){
-            TitleChange listernerTitleChange = (TitleChange) getActivity();
-            listernerTitleChange.changeTitle(R.string.title_ChangePassword_Fragment, R.string.title_AboutMe_Fragment);
+        TitleChange listenerTitleChange = (TitleChange) getActivity();
+        if (listenerTitleChange != null) {
+            listenerTitleChange.changeTitle(
+                    R.string.title_ChangePassword_Fragment,
+                    R.string.title_AboutMe_Fragment);
         }
-
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
-        pbChangePassword.setVisibility(View.INVISIBLE);
-        etPasswordOld.setText(getResources().getString(R.string.empty));
-        etPasswordNew.setText(getResources().getString(R.string.empty));
-        etPasswordRepeat.setText(getResources().getString(R.string.empty));
+        progressBar.setVisibility(View.INVISIBLE);
+        editOldPassword.setText(getResources().getString(R.string.empty));
+        editNewPassword.setText(getResources().getString(R.string.empty));
+        editRepeatPassword.setText(getResources().getString(R.string.empty));
     }
 
-    private void ChangeUIElements(int status){
-        if (status == 1){
-            pbChangePassword.setVisibility(View.VISIBLE);
-            btnChangePassword.setPressed(true);
-        }else{
-            pbChangePassword.setVisibility(View.INVISIBLE);
-            btnChangePassword.setPressed(false);
-        }
+    private void uiState(boolean loading) {
+        progressBar.setVisibility(
+                (loading)
+                        ? View.VISIBLE
+                        : View.INVISIBLE);
+        buttonChangePassword.setPressed(loading);
     }
 
-    private void startAsyncTaskLoader(String e_mail, String oldPassword, String newPassword) {
-        Bundle bundle = new Bundle();
-        bundle.putString("e_mail", e_mail);
-        bundle.putString("oldPassword", oldPassword);
-        bundle.putString("newPassword", newPassword);
-        int LOADERID = 1;
-        getLoaderManager().restartLoader(LOADERID, bundle, this).forceLoad();
-    }
-
-
-    @NonNull
-    @Override
-    public Loader<Boolean> onCreateLoader(int id, Bundle args) {
-        ChangePasswordLoader loader;
-        loader = new ChangePasswordLoader(getContext(), args);
-        return loader;
-    }
-
-    @Override
-    public void onLoadFinished(@NonNull Loader<Boolean> loader, Boolean data) {
-        if (data){
-            etPasswordOld.setText(getResources().getString(R.string.empty));
-            etPasswordNew.setText(getResources().getString(R.string.empty));
-            etPasswordRepeat.setText(getResources().getString(R.string.empty));
-            Toast.makeText(getContext(), "Данные обновлены", Toast.LENGTH_SHORT).show();
-        }else {
-            Toast.makeText(getContext(), "Повторите сохранение", Toast.LENGTH_SHORT).show();
-        }
-        ChangeUIElements(0);
-
-    }
-
-    @Override
-    public void onLoaderReset(@NonNull Loader<Boolean> loader) {
-
+    private void showToast(String toastText) {
+        Toast.makeText(getContext(), toastText, Toast.LENGTH_SHORT).show();
     }
 }
