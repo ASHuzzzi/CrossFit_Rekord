@@ -14,7 +14,7 @@ public class ScheduleItem {
 
     public enum Fields {
 
-        start_time(R.string.start_time),
+        startTime(R.string.start_time),
         type(R.string.type);
 
         private int fieldNameId;
@@ -31,7 +31,7 @@ public class ScheduleItem {
 
     @NonNull
     public String getStartTime() {
-        return context.getString(Fields.start_time.getNameId());
+        return context.getString(Fields.startTime.getNameId());
     }
 
     @NonNull

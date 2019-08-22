@@ -28,8 +28,8 @@ public class GymScheduleViewModel extends AndroidViewModel {
             60,
             TimeUnit.SECONDS,
             new LinkedBlockingQueue<Runnable>());
-    private MutableLiveData<List<List<Map>>> liveDataParnas;
-    private MutableLiveData<List<List<Map>>> liveDataMyzhestvo;
+    private MutableLiveData<Boolean> liveDataParnas;
+    private MutableLiveData<Boolean> liveDataMyzhestvo;
     private BackendlessQueries backendlessQuery;
     private int GYM_PARNAS = 1;
     private int selectedDay;
@@ -40,9 +40,11 @@ public class GymScheduleViewModel extends AndroidViewModel {
         backendlessQuery = new BackendlessQueries();
         selectedDay = Calendar.MONDAY;
         selectedGym = GYM_PARNAS;
+        scheduleParnas = new ArrayList<>();
+        scheduleMyzhestvo = new ArrayList<>();
     }
 
-    public LiveData<List<List<Map>>> loadScheduleParnas() {
+    public LiveData<Boolean> loadScheduleParnas() {
         if (liveDataParnas == null) {
             liveDataParnas = new MutableLiveData<>();
         }
@@ -51,18 +53,18 @@ public class GymScheduleViewModel extends AndroidViewModel {
             public void run() {
                 List<Map> loadedSchedule =
                         backendlessQuery.loadingSchedule(String.valueOf(selectedGym));
-                if (loadedSchedule != null) {
+                if ((loadedSchedule != null) && !loadedSchedule.isEmpty()) {
                     scheduleParnas = splitRawSchedule(loadedSchedule);
-                    liveDataParnas.postValue(scheduleParnas);
+                    liveDataParnas.postValue(true);
                 } else {
-                    liveDataParnas.postValue(null);
+                    liveDataParnas.postValue(false);
                 }
             }
         });
         return liveDataParnas;
     }
 
-    public LiveData<List<List<Map>>> loadScheduleMyzhestvo() {
+    public LiveData<Boolean> loadScheduleMyzhestvo() {
         if (liveDataMyzhestvo == null) {
             liveDataMyzhestvo = new MutableLiveData<>();
         }
@@ -71,11 +73,11 @@ public class GymScheduleViewModel extends AndroidViewModel {
             public void run() {
                 List<Map> loadedSchedule =
                         backendlessQuery.loadingSchedule(String.valueOf(selectedGym));
-                if (loadedSchedule != null) {
+                if ((loadedSchedule != null) && !loadedSchedule.isEmpty()) {
                     scheduleMyzhestvo = splitRawSchedule(loadedSchedule);
-                    liveDataMyzhestvo.postValue(scheduleMyzhestvo);
+                    liveDataMyzhestvo.postValue(true);
                 } else {
-                    liveDataMyzhestvo.postValue(null);
+                    liveDataMyzhestvo.postValue(false);
                 }
             }
         });
@@ -142,8 +144,10 @@ public class GymScheduleViewModel extends AndroidViewModel {
         return scheduleForGym;
     }
 
-    public List<List<Map>> getSchedule(int selectedGym) {
-        return  (selectedGym == GYM_PARNAS) ? scheduleParnas : scheduleMyzhestvo;
+    public List<Map> getSchedule() {
+        return  (isSelectedGymParnas())
+                ? scheduleParnas.get(selectedDay - 1)
+                : scheduleMyzhestvo.get(selectedDay - 1);
     }
 
     public LiveData<Boolean> checkNetwork() {
@@ -163,16 +167,16 @@ public class GymScheduleViewModel extends AndroidViewModel {
         return selectedGym == GYM_PARNAS;
     }
 
-    public void setSelectedDay(int newSelectedDay) {
-        selectedDay = newSelectedDay;
+    public void setSelectedDay(int selectedDay) {
+        this.selectedDay = selectedDay;
     }
 
     public int getSelectedDay() {
         return selectedDay;
     }
 
-    public void setSelectedGym(int newSelectedGym) {
-        selectedGym = newSelectedGym;
+    public void setSelectedGym(int selectedGym) {
+        this.selectedGym = selectedGym;
     }
 
     public int getSelectedGym() {

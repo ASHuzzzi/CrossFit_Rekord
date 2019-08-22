@@ -9,11 +9,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -22,22 +20,14 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 import java.util.Objects;
 
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterTable;
+import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterSchedule;
 import ru.lizzzi.crossfit_rekord.inspectionСlasses.UriParser;
 import ru.lizzzi.crossfit_rekord.interfaces.TitleChange;
-import ru.lizzzi.crossfit_rekord.interfaces.RecordForTrainingSelectListener;
 import ru.lizzzi.crossfit_rekord.model.GymScheduleViewModel;
 
 public class GymScheduleFragment extends Fragment {
@@ -53,49 +43,39 @@ public class GymScheduleFragment extends Fragment {
     private LinearLayout layoutError;
     private ImageView imageTable;
 
-    private RecyclerAdapterTable adapter; //адаптер для списка тренировок
+    private RecyclerAdapterSchedule adapter; //адаптер для списка тренировок
     private GymScheduleViewModel viewModel;
 
-    @SuppressLint("ClickableViewAccessibility")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_table, container, false);
+
         viewModel = ViewModelProviders.of(GymScheduleFragment.this)
                 .get(GymScheduleViewModel.class);
-
-        buttonMonday = view.findViewById(R.id.day_1);
-        buttonTuesday = view.findViewById(R.id.day_2);
-        buttonWednesday = view.findViewById(R.id.day_3);
-        buttonThursday = view.findViewById(R.id.day_4);
-        buttonFriday = view.findViewById(R.id.day_5);
-        buttonSaturday = view.findViewById(R.id.day_6);
-        buttonSunday = view.findViewById(R.id.day_7);
-        Button buttonError = view.findViewById(R.id.buttonError);
-        layoutError = view.findViewById(R.id.linLayError);
-        progressBar = view.findViewById(R.id.progressBar);
-        itemsInTable = view.findViewById(R.id.lvTable);
-        imageTable = view.findViewById(R.id.ivTable);
-
-        layoutError.setVisibility(View.INVISIBLE);
-        itemsInTable.setVisibility(View.INVISIBLE);
-        progressBar.setVisibility(View.VISIBLE);
-
         Bundle bundle = getArguments();
         viewModel.setSelectedGym((bundle != null)
                 ? bundle.getInt("gym")
-                : Objects.requireNonNull(
-                getContext()).getResources().getInteger(R.integer.selectSheduleParnas));
+                : getResources().getInteger(R.integer.selectSheduleParnas));
 
-        buttonError.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                progressBar.setVisibility(View.VISIBLE);
-                layoutError.setVisibility(View.INVISIBLE);
-                checkNetworkConnection();
-            }
-        });
+        initButtonsOfWeekDays(view);
+        initButtonError(view);
+        initItemsInTable(view);
 
+        imageTable = view.findViewById(R.id.ivTable);
+
+        progressBar = view.findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.VISIBLE);
+
+        layoutError = view.findViewById(R.id.linLayError);
+        layoutError.setVisibility(View.INVISIBLE);
+
+        return view;
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private void initButtonsOfWeekDays(View rootView) {
+        buttonMonday = rootView.findViewById(R.id.day_1);
         buttonMonday.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -104,6 +84,7 @@ public class GymScheduleFragment extends Fragment {
             }
         });
 
+        buttonTuesday = rootView.findViewById(R.id.day_2);
         buttonTuesday.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -112,6 +93,7 @@ public class GymScheduleFragment extends Fragment {
             }
         });
 
+        buttonWednesday = rootView.findViewById(R.id.day_3);
         buttonWednesday.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -120,6 +102,7 @@ public class GymScheduleFragment extends Fragment {
             }
         });
 
+        buttonThursday = rootView.findViewById(R.id.day_4);
         buttonThursday.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -128,6 +111,7 @@ public class GymScheduleFragment extends Fragment {
             }
         });
 
+        buttonFriday = rootView.findViewById(R.id.day_5);
         buttonFriday.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -136,6 +120,7 @@ public class GymScheduleFragment extends Fragment {
             }
         });
 
+        buttonSaturday = rootView.findViewById(R.id.day_6);
         buttonSaturday.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -144,6 +129,7 @@ public class GymScheduleFragment extends Fragment {
             }
         });
 
+        buttonSunday = rootView.findViewById(R.id.day_7);
         buttonSunday.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -151,89 +137,43 @@ public class GymScheduleFragment extends Fragment {
                 return true ;
             }
         });
-        return view;
+    }
+
+    private void initItemsInTable(View rootView) {
+        adapter = new RecyclerAdapterSchedule(GymScheduleFragment.this);
+        LinearLayoutManager layoutManager =
+                new LinearLayoutManager(GymScheduleFragment.this.getContext());
+        itemsInTable = rootView.findViewById(R.id.lvTable);
+        itemsInTable.setLayoutManager(layoutManager);
+        itemsInTable.setAdapter(adapter);
+        itemsInTable.setVisibility(View.INVISIBLE);
+    }
+
+    private void initButtonError(View rootView) {
+        Button buttonError = rootView.findViewById(R.id.buttonError);
+        buttonError.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                progressBar.setVisibility(View.VISIBLE);
+                layoutError.setVisibility(View.INVISIBLE);
+                checkNetworkConnection();
+            }
+        });
     }
 
     private void takeOnButtonClick(int selectedDay) {
-        if (adapter != null) {
+        if (!adapter.isEmpty()) {
             viewModel.setSelectedDay(selectedDay);
-            showSchedule(
-                    viewModel.getSchedule(viewModel.getSelectedGym())
-                            .get(viewModel.getSelectedDay() - 1));
+            adapter.setScheduleItems(viewModel.getSchedule());
+            adapter.notifyDataSetChanged();
+            setPressedButtons();
         }
     }
 
-    private void showSchedule(final List<Map> dailySchedule) {
-        adapter = new RecyclerAdapterTable(getContext(), dailySchedule, new RecordForTrainingSelectListener() {
-            @Override
-            public void selectTime(String startTime, String typesItem) {
-                int selectedDay = viewModel.getSelectedDay();
-                Calendar calendar = Calendar.getInstance();
-                List<Integer> daysWhenRecordingIsPossible = new ArrayList<>();
-                for (int i = 0; i < 3; i++) {
-                    calendar.add(Calendar.DAY_OF_WEEK, i);
-                    daysWhenRecordingIsPossible.add(calendar.get(Calendar.DAY_OF_WEEK));
-                    calendar.clear();
-                    calendar = Calendar.getInstance();
-                }
-                if (daysWhenRecordingIsPossible.contains(selectedDay)) {
-                    try {
-                        SimpleDateFormat dateFormat =
-                                new SimpleDateFormat("HH:mm", Locale.getDefault());
-                        calendar = Calendar.getInstance();
-                        int hourNow = calendar.get(Calendar.HOUR_OF_DAY);
-                        calendar.setTime(dateFormat.parse(startTime));
-                        int selectHour = calendar.get(Calendar.HOUR_OF_DAY);
-                        boolean selectedToday =
-                                daysWhenRecordingIsPossible.get(0).equals(selectedDay);
-                        //проверяем чтобы выбранное время было позже чем сейчас
-                        if (selectedToday && (selectHour <= hourNow)) {
-                            showToast("Выберите более позднее время.");
-                        } else {
-                            UriParser uriParser = new UriParser();
-                            Uri uri = uriParser.getURI(
-                                    viewModel.getSelectedGym(),
-                                    daysWhenRecordingIsPossible.indexOf(selectedDay),
-                                    startTime,
-                                    typesItem);
-                            Intent intent = new Intent();
-                            intent.setAction(Intent.ACTION_VIEW);
-                            intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                            intent.setData(uri);
-                            startActivity(intent);
-                            Objects.requireNonNull(getActivity()).overridePendingTransition(
-                                    R.anim.pull_in_right,
-                                    R.anim.push_out_left);
-                        }
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    String nameDayOfWeek = calendar.getDisplayName(
-                            Calendar.DAY_OF_WEEK,
-                            Calendar.LONG, Locale.getDefault());
-                    showToast(
-                            "Запись возможна на сегодня (" +
-                                    nameDayOfWeek  +
-                                    ") и два дня вперед");
-                }
-            }
-        });
-        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
-        itemsInTable.setLayoutManager(mLayoutManager);
-        itemsInTable.setAdapter(adapter);
-        setPressedButtons(viewModel.getSelectedDay());
-    }
-
-    private void showToast(String toastText) {
-        Toast toast = Toast.makeText(getContext(), toastText, Toast.LENGTH_LONG);
-        toast.setGravity(Gravity.CENTER, 0, 0);
-        toast.show();
-    }
-
     //метод подготоавливающий состояние кнопок в зависимости от выбранного дня
-    private void setPressedButtons(int selectedDayOfWeek) {
+    private void setPressedButtons() {
         unpressedButtons();
+        int selectedDayOfWeek = viewModel.getSelectedDay();
         switch (selectedDayOfWeek) {
             case Calendar.MONDAY:
                 buttonMonday.setPressed(true);
@@ -259,7 +199,6 @@ public class GymScheduleFragment extends Fragment {
         }
     }
 
-    //метод применяющий выбор кнопок
     private void unpressedButtons() {
         buttonMonday.setPressed(false);
         buttonTuesday.setPressed(false);
@@ -270,18 +209,14 @@ public class GymScheduleFragment extends Fragment {
         buttonSunday.setPressed(false);
     }
 
-    //в onStart делаем проверку на наличие данных в адаптаре. При первом запуске адаптер пустой и
-    //будет запущен поток.
-    //при возврате через кнопку back адаптер будет не пустым поток не запуститься. что сохранит
-    //состояние адаптера в положении перед открытием нового фрагмента
     @Override
     public  void onStart() {
         super.onStart();
-        if (adapter == null) {
+        if (adapter.isEmpty()) {
             unpressedButtons();
             checkNetworkConnection();
         } else {
-            setPressedButtons(viewModel.getSelectedDay());
+            setPressedButtons();
         }
 
         TitleChange listenerTitleChange = (TitleChange) getActivity();
@@ -324,31 +259,50 @@ public class GymScheduleFragment extends Fragment {
     }
 
     private void loadScheduleParnas() {
-        LiveData<List<List<Map>>> liveDataParnas =
+        LiveData<Boolean> liveDataParnas =
                 viewModel.loadScheduleParnas();
         setObserveForLiveData(liveDataParnas);
     }
 
     private void loadScheduleMyzhestvo() {
-        LiveData<List<List<Map>>> liveDataMyzhestvo =
+        LiveData<Boolean> liveDataMyzhestvo =
                 viewModel.loadScheduleMyzhestvo();
         setObserveForLiveData(liveDataMyzhestvo);
     }
 
-    private void setObserveForLiveData(LiveData<List<List<Map>>> listLiveData) {
-        listLiveData.observe(GymScheduleFragment.this, new Observer<List<List<Map>>>() {
+    private void setObserveForLiveData(LiveData<Boolean> listLiveData) {
+        listLiveData.observe(GymScheduleFragment.this, new Observer<Boolean>() {
             @Override
-            public void onChanged(@Nullable List<List<Map>> lists) {
-                if (lists != null) {
-                    showSchedule(lists.get(viewModel.getSelectedDay() - 1));
-                    layoutError.setVisibility(View.INVISIBLE);
-                    progressBar.setVisibility(View.INVISIBLE);
+            public void onChanged(Boolean scheduleIsLoaded) {
+                if (scheduleIsLoaded) {
+                    adapter.setScheduleItems(viewModel.getSchedule());
+                    adapter.notifyDataSetChanged();
+                    setPressedButtons();
                     itemsInTable.setVisibility(View.VISIBLE);
-                } else {
-                    progressBar.setVisibility(View.INVISIBLE);
-                    layoutError.setVisibility(View.VISIBLE);
                 }
+                layoutError.setVisibility(
+                        (scheduleIsLoaded)
+                                ? View.INVISIBLE
+                                : View.VISIBLE);
+                progressBar.setVisibility(View.INVISIBLE);
             }
         });
+    }
+
+    public int getSelectedDay() {
+        return viewModel.getSelectedDay();
+    }
+
+    public void openBrowserForRecording(int selectedDay, String startTime, String scheduleType) {
+        UriParser uriParser = new UriParser();
+        Uri uri = uriParser.getURI(viewModel.getSelectedGym(), selectedDay, startTime, scheduleType);
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+        intent.addCategory(Intent.CATEGORY_BROWSABLE);
+        intent.setData(uri);
+        startActivity(intent);
+        Objects.requireNonNull(getActivity()).overridePendingTransition(
+                R.anim.pull_in_right,
+                R.anim.push_out_left);
     }
 }
