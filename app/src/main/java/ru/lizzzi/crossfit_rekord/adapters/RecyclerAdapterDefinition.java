@@ -1,6 +1,5 @@
 package ru.lizzzi.crossfit_rekord.adapters;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,11 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 import ru.lizzzi.crossfit_rekord.R;
+import ru.lizzzi.crossfit_rekord.fragments.DefinitionFragment;
 import ru.lizzzi.crossfit_rekord.items.TerminsAndDefinitionItem;
 
 public class RecyclerAdapterDefinition extends RecyclerView.Adapter<RecyclerAdapterDefinition.ViewHolder> {
@@ -20,11 +21,9 @@ public class RecyclerAdapterDefinition extends RecyclerView.Adapter<RecyclerAdap
     private List<Map<String, String>> termsItems;
     private TerminsAndDefinitionItem terminsAndDefinitionItem;
 
-    public RecyclerAdapterDefinition(
-            Context context,
-            @NonNull List<Map<String, String>> termsItems) {
-        this.termsItems = termsItems;
-        terminsAndDefinitionItem = new TerminsAndDefinitionItem(context);
+    public RecyclerAdapterDefinition(DefinitionFragment fragment) {
+        termsItems = new ArrayList<>();
+        terminsAndDefinitionItem = new TerminsAndDefinitionItem(fragment.getContext());
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -66,5 +65,9 @@ public class RecyclerAdapterDefinition extends RecyclerView.Adapter<RecyclerAdap
     @Override
     public int getItemCount() {
         return termsItems.size();
+    }
+
+    public void add(List<Map<String, String>> termsItems) {
+        this.termsItems = termsItems;
     }
 }

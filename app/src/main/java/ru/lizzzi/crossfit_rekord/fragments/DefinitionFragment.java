@@ -20,33 +20,38 @@ import ru.lizzzi.crossfit_rekord.interfaces.TitleChange;
 public class DefinitionFragment extends Fragment {
 
     private String selectedCharacter;
-    private RecyclerView recViewDefinitions;
+    private RecyclerAdapterDefinition adapter;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_definition, container, false);
-        recViewDefinitions = view.findViewById(R.id.rvDefinition);
+
         Bundle bundle = getArguments();
         selectedCharacter = (bundle != null) ? bundle.getString("tag") : "A";
+
+        RecyclerView recViewDefinitions = view.findViewById(R.id.rvDefinition);
+        adapter = new RecyclerAdapterDefinition(DefinitionFragment.this);
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+        recViewDefinitions.setLayoutManager(mLayoutManager);
+        recViewDefinitions.setAdapter(adapter);
+
         return view;
     }
 
     @Override
     public  void onStart() {
         super.onStart();
-        if (getActivity() instanceof TitleChange) {
-            TitleChange listernerTitleChange = (TitleChange) getActivity();
-            listernerTitleChange.changeTitle(R.string.title_Definition_Fragment, R.string.title_Character_Fragment);
+        TitleChange listenerTitleChange = (TitleChange) getActivity();
+        if (listenerTitleChange != null) {
+            listenerTitleChange.changeTitle(
+                    R.string.title_Definition_Fragment,
+                    R.string.title_Character_Fragment);
         }
-        List<Map<String, String>> termsOfSelectedCharacter = getListDefinitions(selectedCharacter);
-        RecyclerAdapterDefinition adapter = new RecyclerAdapterDefinition(
-                getContext(),
-                termsOfSelectedCharacter);
-        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
-        recViewDefinitions.setLayoutManager(mLayoutManager);
-        recViewDefinitions.setAdapter(adapter);
+        adapter.add(getListDefinitions(selectedCharacter));
+        adapter.notifyDataSetChanged();
+
     }
 
     private List<Map<String, String>> getListDefinitions(String selectedCharacter) {

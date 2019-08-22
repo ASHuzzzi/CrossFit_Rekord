@@ -142,7 +142,7 @@ public class GymScheduleFragment extends Fragment {
     private void initItemsInTable(View rootView) {
         adapter = new RecyclerAdapterSchedule(GymScheduleFragment.this);
         LinearLayoutManager layoutManager =
-                new LinearLayoutManager(GymScheduleFragment.this.getContext());
+                new LinearLayoutManager(getContext());
         itemsInTable = rootView.findViewById(R.id.lvTable);
         itemsInTable.setLayoutManager(layoutManager);
         itemsInTable.setAdapter(adapter);
@@ -231,8 +231,7 @@ public class GymScheduleFragment extends Fragment {
                 : R.drawable.background_foto_2;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             imageTable.setImageDrawable(getResources().getDrawable(
-                    backgroundImage,
-                    Objects.requireNonNull(getContext()).getTheme()));
+                    backgroundImage, getActivity().getTheme()));
         } else {
             imageTable.setImageDrawable(getResources().getDrawable(backgroundImage));
         }

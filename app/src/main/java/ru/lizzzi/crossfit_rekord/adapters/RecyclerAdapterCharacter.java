@@ -8,20 +8,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.interfaces.CharacterListener;
+import ru.lizzzi.crossfit_rekord.fragments.CharacterFragment;
 
 public class RecyclerAdapterCharacter
         extends RecyclerView.Adapter<RecyclerAdapterCharacter.ViewHolder> {
 
     private List listCharacter;
-    private CharacterListener listener;
+    private CharacterFragment fragment;
 
-    public RecyclerAdapterCharacter(List character, CharacterListener listener) {
-        this.listCharacter = character;
-        this.listener = listener;
+    public RecyclerAdapterCharacter(CharacterFragment fragment) {
+        this.fragment = fragment;
+        this.listCharacter = new ArrayList();
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -53,7 +54,7 @@ public class RecyclerAdapterCharacter
         holder.cardCharacter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.selectCharacter(listCharacter.get(itemPosition).toString());
+                fragment.openDefinitionFragment(listCharacter.get(itemPosition).toString());
             }
         });
     }
@@ -66,5 +67,9 @@ public class RecyclerAdapterCharacter
     @Override
     public int getItemCount() {
         return listCharacter.size();
+    }
+
+    public void add(List listCharacter) {
+        this.listCharacter = listCharacter;
     }
 }
