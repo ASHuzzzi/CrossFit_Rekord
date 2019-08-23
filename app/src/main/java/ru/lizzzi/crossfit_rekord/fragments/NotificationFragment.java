@@ -21,22 +21,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.activity.MainActivity;
 import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterNotification;
-import ru.lizzzi.crossfit_rekord.data.SQLiteStorageNotification;
 import ru.lizzzi.crossfit_rekord.interfaces.TitleChange;
-import ru.lizzzi.crossfit_rekord.interfaces.NotificationListener;
 import ru.lizzzi.crossfit_rekord.model.NotificationViewModel;
 
 public class NotificationFragment extends Fragment {
 
     private RecyclerView recyclerViewNotification;
     private ProgressBar progressBar;
+    private RecyclerAdapterNotification adapter;
 
     private BroadcastReceiver broadcastReceiver;
     private NotificationViewModel viewModel;
@@ -51,6 +46,12 @@ public class NotificationFragment extends Fragment {
                 .get(NotificationViewModel.class);
 
         recyclerViewNotification = view.findViewById(R.id.rvNotoficationList);
+        adapter = new RecyclerAdapterNotification(NotificationFragment.this);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        recyclerViewNotification.setLayoutManager(layoutManager);
+        recyclerViewNotification.setAdapter(adapter);
+
         progressBar = view.findViewById(R.id.pbNotification);
 
         return  view;
@@ -59,19 +60,17 @@ public class NotificationFragment extends Fragment {
     @Override
     public  void onStart() {
         super.onStart();
-        TitleChange listenerTitleChange = (TitleChange) getActivity();
-        if (listenerTitleChange != null) {
-            listenerTitleChange.changeTitle(
-                    R.string.title_Notification_Fragment,
-                    R.string.title_Notification_Fragment);
-        }
+        TitleChange listenerTitleChange = (TitleChange) requireActivity();
+        listenerTitleChange.changeTitle(
+                R.string.title_Notification_Fragment,
+                R.string.title_Notification_Fragment);
         initBroadcastReceiver();
-        getNotification();
+        getNotifications();
     }
 
     public void onPause() {
         super.onPause();
-        Objects.requireNonNull(getActivity()).unregisterReceiver(broadcastReceiver);
+        requireActivity().unregisterReceiver(broadcastReceiver);
     }
 
     private void initBroadcastReceiver() {
@@ -85,7 +84,7 @@ public class NotificationFragment extends Fragment {
                     int result = intent.getIntExtra(MainActivity.PARAM_RESULT, 0);
                     if (task == MainActivity.LOAD_NOTIFICATION) {
                         if (result > 0) {
-                            getNotification();
+                            getNotifications();
                         }
                     }
                 }
@@ -94,98 +93,84 @@ public class NotificationFragment extends Fragment {
         // создаем фильтр для BroadcastReceiver
         IntentFilter intentFilter = new IntentFilter(MainActivity.BROADCAST_ACTION);
         // регистрируем (включаем) BroadcastReceiver
-        Objects.requireNonNull(getActivity()).registerReceiver(broadcastReceiver, intentFilter);
+        requireActivity().registerReceiver(broadcastReceiver, intentFilter);
     }
 
-    private void getNotification() {
+    private void getNotifications() {
         recyclerViewNotification.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.VISIBLE);
-        final LiveData<List<Map<String, Object>>> liveData = viewModel.getNotification();
-        liveData.observe(NotificationFragment.this, new Observer<List<Map<String, Object>>>() {
+        LiveData<Boolean> liveData = viewModel.loadNotification();
+        liveData.observe(NotificationFragment.this, new Observer<Boolean>() {
             @Override
-            public void onChanged(List<Map<String, Object>> notificationList) {
-                if (!notificationList.isEmpty()) {
-                    RecyclerAdapterNotification adapterNotification = new RecyclerAdapterNotification(
-                            getContext(),
-                            notificationList,
-                            new NotificationListener() {
-                        @Override
-                        public void selectNotificationInList(String dateNote) {
-                            Bundle bundle = new Bundle();
-                            bundle.putLong("dateNote", Long.parseLong(dateNote));
-                            NotificationDataFragment notificationDataFragment =
-                                    new NotificationDataFragment();
-                            notificationDataFragment.setArguments(bundle);
-                            FragmentManager fragmentManager = getFragmentManager();
-                            if (fragmentManager != null) {
-                                FragmentTransaction fragmentTransaction =
-                                        fragmentManager.beginTransaction();
-                                fragmentTransaction.setCustomAnimations(
-                                        R.anim.pull_in_right,
-                                        R.anim.push_out_left,
-                                        R.anim.pull_in_left,
-                                        R.anim.push_out_right);
-                                fragmentTransaction.replace(R.id.container, notificationDataFragment);
-                                fragmentTransaction.addToBackStack(null);
-                                fragmentTransaction.commit();
-                            }
-                        }
-
-                        @Override
-                        public void deleteNotificationInList(final String selectedDateNote) {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                            builder.setMessage("Удалить новость?")
-                                    .setCancelable(false)
-                                    .setPositiveButton("Да",
-                                            new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(
-                                                        DialogInterface dialogInterface,
-                                                        int i) {
-                                                    long dateNote = Long.valueOf(selectedDateNote);
-                                                    SQLiteStorageNotification sqlStorage
-                                                            = new SQLiteStorageNotification(getContext());
-                                                    sqlStorage.deleteNotification(dateNote);
-                                                    getNotification();
-
-                                                    Intent intent =
-                                                            new Intent(MainActivity.BROADCAST_ACTION);
-                                                    intent
-                                                            .putExtra(
-                                                                    MainActivity.PARAM_TASK,
-                                                                    MainActivity.UPDATE_NOTIFICATION)
-                                                            .putExtra(
-                                                                    MainActivity.PARAM_STATUS,
-                                                                    MainActivity.STATUS_FINISH)
-                                                            .putExtra(
-                                                                    MainActivity.PARAM_RESULT,
-                                                                    MainActivity.LOAD_NOTIFICATION);
-                                                    Objects.requireNonNull(getActivity())
-                                                            .sendBroadcast(intent);
-                                                }
-                                            })
-                                    .setNegativeButton("Нет",
-                                            new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int id) {
-                                                    dialog.cancel();
-                                                }
-                                            });
-                            AlertDialog alert = builder.create();
-                            alert.show();
-                            alert.getButton(AlertDialog.BUTTON_POSITIVE)
-                                    .setTextColor(getResources().getColor(R.color.colorAccent));
-                            alert.getButton(AlertDialog.BUTTON_NEGATIVE)
-                                    .setTextColor(getResources().getColor(R.color.colorPrimary));
-                        }
-                    });
-                    LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-                    recyclerViewNotification.setLayoutManager(layoutManager);
-                    recyclerViewNotification.setAdapter(adapterNotification);
-
+            public void onChanged(Boolean notificationsIsLoaded) {
+                if (notificationsIsLoaded) {
+                    adapter.setNotifications(viewModel.getNotifications());
+                    adapter.notifyDataSetChanged();
                     recyclerViewNotification.setVisibility(View.VISIBLE);
-                    progressBar.setVisibility(View.INVISIBLE);
                 }
+                progressBar.setVisibility(View.INVISIBLE);
             }
         });
+    }
+
+    public void openNotificationDataFragment(long dateNote) {
+        Bundle bundle = new Bundle();
+        bundle.putLong("dateNote", dateNote);
+        NotificationDataFragment notificationDataFragment =
+                new NotificationDataFragment();
+        notificationDataFragment.setArguments(bundle);
+        FragmentManager fragmentManager = getFragmentManager();
+        if (fragmentManager != null) {
+            FragmentTransaction fragmentTransaction =
+                    fragmentManager.beginTransaction();
+            fragmentTransaction.setCustomAnimations(
+                    R.anim.pull_in_right,
+                    R.anim.push_out_left,
+                    R.anim.pull_in_left,
+                    R.anim.push_out_right);
+            fragmentTransaction.replace(R.id.container, notificationDataFragment);
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
+        }
+    }
+
+    public void showAlertDialog(long selectedDateNote) {
+        final long dateNoteForDelete = selectedDateNote;
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder
+                .setMessage("Удалить новость?")
+                .setCancelable(false)
+                .setPositiveButton("Да",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(
+                                    DialogInterface dialogInterface,
+                                    int i) {
+                                viewModel.deleteNotification(dateNoteForDelete);
+                                getNotifications();
+                                sendBroadCast();
+                            }
+                        })
+                .setNegativeButton("Нет",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+        AlertDialog alert = builder.create();
+        alert.show();
+        alert.getButton(AlertDialog.BUTTON_POSITIVE)
+                .setTextColor(getResources().getColor(R.color.colorAccent));
+        alert.getButton(AlertDialog.BUTTON_NEGATIVE)
+                .setTextColor(getResources().getColor(R.color.colorPrimary));
+    }
+
+    public void sendBroadCast() {
+        Intent intent = new Intent(MainActivity.BROADCAST_ACTION);
+        intent
+                .putExtra(MainActivity.PARAM_TASK, MainActivity.UPDATE_NOTIFICATION)
+                .putExtra(MainActivity.PARAM_STATUS, MainActivity.STATUS_FINISH)
+                .putExtra(MainActivity.PARAM_RESULT, MainActivity.LOAD_NOTIFICATION);
+        requireActivity().sendBroadcast(intent);
     }
 }

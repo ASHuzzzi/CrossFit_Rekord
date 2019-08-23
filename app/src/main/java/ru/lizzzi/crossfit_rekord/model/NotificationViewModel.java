@@ -6,6 +6,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executor;
@@ -23,22 +24,32 @@ public class NotificationViewModel extends AndroidViewModel {
             60,
             TimeUnit.SECONDS,
             new LinkedBlockingQueue<Runnable>());
-    private SQLiteStorageNotification dbHelper;
+    private SQLiteStorageNotification dbStorage;
+    private List<Map<String, Object>> notifications;
 
     public NotificationViewModel(@NonNull Application application) {
         super(application);
-        dbHelper = new SQLiteStorageNotification(getApplication());
+        dbStorage = new SQLiteStorageNotification(getApplication());
+        notifications = new ArrayList<>();
     }
 
-    public LiveData<List<Map<String, Object>>> getNotification() {
-        final MutableLiveData<List<Map<String, Object>>> liveData = new MutableLiveData<>();
+    public LiveData<Boolean> loadNotification() {
+        final MutableLiveData<Boolean> liveData = new MutableLiveData<>();
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                List<Map<String, Object>> notification = dbHelper.loadNotification();
-                liveData.postValue(notification);
+                notifications = dbStorage.loadNotification();
+                liveData.postValue((notifications != null) && !notifications.isEmpty());
             }
         });
         return liveData;
+    }
+
+    public List<Map<String, Object>> getNotifications() {
+        return notifications;
+    }
+
+    public void deleteNotification(Long selectedDateNote) {
+        dbStorage.deleteNotification(selectedDateNote);
     }
 }

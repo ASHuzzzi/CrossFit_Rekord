@@ -1,6 +1,5 @@
 package ru.lizzzi.crossfit_rekord.adapters;
 
-import android.content.Context;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -11,31 +10,28 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 
 import ru.lizzzi.crossfit_rekord.R;
+import ru.lizzzi.crossfit_rekord.fragments.NotificationFragment;
 import ru.lizzzi.crossfit_rekord.items.NotificationItem;
-import ru.lizzzi.crossfit_rekord.interfaces.NotificationListener;
 
 public class RecyclerAdapterNotification
         extends RecyclerView.Adapter<RecyclerAdapterNotification.ViewHolder> {
 
-    private NotificationListener listener;
     private List<Map<String, Object>> notifications;
-    private NotificationItem fields;
+    private NotificationItem item;
+    private NotificationFragment fragment;
 
-    public RecyclerAdapterNotification(
-            Context context,
-            @NonNull List<Map<String, Object>> notifications,
-            NotificationListener listener) {
-        this.notifications = notifications;
-        this.listener = listener;
-        fields = new NotificationItem(context);
+    public RecyclerAdapterNotification(NotificationFragment fragment) {
+        this.fragment = fragment;
+        notifications = new ArrayList<>();
+        item = new NotificationItem(fragment.getContext());
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -66,14 +62,13 @@ public class RecyclerAdapterNotification
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        final Map documentInfo = notifications.get(position);
-        String dateNote = Objects.requireNonNull(documentInfo.get(fields.getDateField())).toString();
-        String header = Objects.requireNonNull(documentInfo.get(fields.getHeaderField())).toString();
+        final int itemPosition = position;
+        String dateNote = String.valueOf(notifications.get(itemPosition).get(item.getDateField()));
+        String header = String.valueOf(notifications.get(itemPosition).get(item.getHeaderField()));
         boolean isViewed = Boolean.parseBoolean(
-                Objects.requireNonNull(documentInfo.get(fields.getViewedField())).toString());
+                String.valueOf(notifications.get(itemPosition).get(item.getViewedField())));
 
         long noteTime = Long.valueOf(dateNote);
-        String time = String.valueOf(noteTime);
 
         Calendar calendar = Calendar.getInstance();
         Date today = calendar.getTime();
@@ -87,7 +82,7 @@ public class RecyclerAdapterNotification
 
         holder.textDateNote.setText(dateNote);
         holder.textHeader.setText(header);
-        holder.textTime.setText(time);
+        holder.textTime.setText(String.valueOf(noteTime));
 
         holder.textDateNote.setTypeface(null, (isViewed) ? Typeface.NORMAL : Typeface.BOLD);
         holder.textHeader.setTypeface(null, (isViewed) ? Typeface.NORMAL : Typeface.BOLD);
@@ -97,16 +92,16 @@ public class RecyclerAdapterNotification
         holder.notificationLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listener.selectNotificationInList(
-                        Objects.requireNonNull(documentInfo.get(fields.getDateField())).toString());
+                fragment.openNotificationDataFragment(Long.valueOf(
+                        String.valueOf(notifications.get(itemPosition).get(item.getDateField()))));
             }
         });
 
         holder.notificationLayout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                listener.deleteNotificationInList(
-                        Objects.requireNonNull(documentInfo.get(fields.getDateField())).toString());
+                fragment.showAlertDialog(Long.valueOf(
+                        String.valueOf(notifications.get(itemPosition).get(item.getDateField()))));
                 return true;
             }
         });
@@ -120,5 +115,13 @@ public class RecyclerAdapterNotification
     @Override
     public long getItemId(int position) {
         return position;
+    }
+
+    public boolean isEmpty() {
+        return notifications.isEmpty();
+    }
+
+    public void setNotifications(List<Map<String, Object>> notifications) {
+        this.notifications = notifications;
     }
 }
