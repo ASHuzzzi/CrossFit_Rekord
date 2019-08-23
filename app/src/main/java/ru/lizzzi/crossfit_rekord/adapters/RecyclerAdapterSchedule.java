@@ -29,21 +29,21 @@ public class RecyclerAdapterSchedule extends RecyclerView.Adapter<RecyclerAdapte
     private GymScheduleFragment fragment;
 
     public RecyclerAdapterSchedule(GymScheduleFragment fragment) {
-        scheduleItems = new ArrayList<>();
-        item = new ScheduleItem(fragment.getContext());
         this.fragment = fragment;
+        item = new ScheduleItem(fragment.getContext());
+        scheduleItems = new ArrayList<>();
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView StartTimeItem;
-        private TextView TypesItem;
-        private LinearLayout ll_item_table;
+        private TextView startTimeItem;
+        private TextView typesItem;
+        private LinearLayout layoutItem;
 
         ViewHolder(View view) {
             super(view);
-            StartTimeItem = view.findViewById(R.id.start_time);
-            TypesItem = view.findViewById(R.id.type);
-            ll_item_table = view.findViewById(R.id.ll_item_table);
+            startTimeItem = view.findViewById(R.id.start_time);
+            typesItem = view.findViewById(R.id.type);
+            layoutItem = view.findViewById(R.id.ll_item_table);
         }
     }
 
@@ -61,16 +61,16 @@ public class RecyclerAdapterSchedule extends RecyclerView.Adapter<RecyclerAdapte
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position){
         final String startTime =
                 String.valueOf(scheduleItems.get(position).get(item.getStartTime()));
-        final String type = String.valueOf(scheduleItems.get(position).get(item.getType()));
+        final String workoutType = String.valueOf(scheduleItems.get(position).get(item.getType()));
 
-        holder.StartTimeItem.setText(startTime);
-        holder.TypesItem.setText(type);
+        holder.startTimeItem.setText(startTime);
+        holder.typesItem.setText(workoutType);
 
         BackgroundDrawable backgroundDrawable = new BackgroundDrawable();
-        int drawable = backgroundDrawable.getBackgroundDrawable(type);
-        holder.TypesItem.setBackgroundResource(drawable);
+        int drawable = backgroundDrawable.getBackgroundDrawable(workoutType);
+        holder.typesItem.setBackgroundResource(drawable);
 
-        holder.ll_item_table.setOnClickListener(new View.OnClickListener() {
+        holder.layoutItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 int selectedDay = fragment.getSelectedDay();
@@ -99,7 +99,7 @@ public class RecyclerAdapterSchedule extends RecyclerView.Adapter<RecyclerAdapte
                             fragment.openBrowserForRecording(
                                     daysWhenRecordingIsPossible.indexOf(selectedDay),
                                     startTime,
-                                    type);
+                                    workoutType);
                         }
                     } catch (ParseException e) {
                         e.printStackTrace();

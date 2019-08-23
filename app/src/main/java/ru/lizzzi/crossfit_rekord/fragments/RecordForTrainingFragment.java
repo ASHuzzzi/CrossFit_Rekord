@@ -9,11 +9,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -22,26 +20,21 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
-import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Objects;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterRecordForTrainingSelect;
 import ru.lizzzi.crossfit_rekord.inspectionСlasses.UriParser;
 import ru.lizzzi.crossfit_rekord.interfaces.TitleChange;
-import ru.lizzzi.crossfit_rekord.interfaces.RecordForTrainingSelectListener;
 import ru.lizzzi.crossfit_rekord.model.RecordForTrainingViewModel;
 
 public class RecordForTrainingFragment extends Fragment {
 
-    private LinearLayout linLayoutError;
-    private LinearLayout linLayoutSchedule;
-    private RecyclerView recyclerViewSchedule;
+    private LinearLayout layoutError;
+    private LinearLayout layoutSchedule;
     private ProgressBar progressBar;
     private Button buttonToday;
     private Button buttonTomorrow;
@@ -51,119 +44,104 @@ public class RecordForTrainingFragment extends Fragment {
     private RecyclerAdapterRecordForTrainingSelect adapter;
     private RecordForTrainingViewModel viewModel;
 
-    @SuppressLint("ClickableViewAccessibility")
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        View view = inflater.inflate(R.layout.fragment_record_for_training_select, container, false);
+    public View onCreateView(
+            @NonNull LayoutInflater inflater,
+            ViewGroup container,
+            Bundle savedInstanceState) {
+        View view = inflater.inflate(
+                R.layout.fragment_record_for_training_select,
+                container,
+                false);
         viewModel = ViewModelProviders.of(RecordForTrainingFragment.this).
                 get(RecordForTrainingViewModel.class);
-        Objects.requireNonNull(getActivity()).setTitle(R.string.title_RecordForTraining_Fragment);
-
-        buttonToday = view.findViewById(R.id.btToday);
-        buttonTomorrow = view.findViewById(R.id.btTommorow);
-        buttonAfterTomorrow = view.findViewById(R.id.btAftertommorow);
-        Button buttonError = view.findViewById(R.id.button6);
-        recyclerViewSchedule = view.findViewById(R.id.rvTrainingTime);
-        linLayoutError = view.findViewById(R.id.llEror_RfTS);
-        linLayoutSchedule = view.findViewById(R.id.llListTime);
-        progressBar = view.findViewById(R.id.pbRfTS);
-        imageBackground = view.findViewById(R.id.iv_RfTS);
 
         Bundle bundle = getArguments();
         viewModel.setSelectedGym((bundle != null)
                 ? bundle.getInt("gym")
-                : Objects.requireNonNull(
-                        getContext()).getResources().getInteger(R.integer.selectSheduleParnas));
+                : getResources().getInteger(R.integer.selectSheduleParnas));
 
-        final SimpleDateFormat simpleDateFormat =
-                new SimpleDateFormat("EEE.\n d MMMM", Locale.getDefault());
-        buttonToday.setText(simpleDateFormat.format(viewModel.getToday()));
-        buttonTomorrow.setText(simpleDateFormat.format(viewModel.getTomorrow()));
-        buttonAfterTomorrow.setText(simpleDateFormat.format(viewModel.getAfterTomorrow()));
+        initRecyclerViewSchedule(view);
+        initButtonsOfDay(view);
 
+        layoutError = view.findViewById(R.id.llEror_RfTS);
+        layoutSchedule = view.findViewById(R.id.llListTime);
+        progressBar = view.findViewById(R.id.pbRfTS);
+        imageBackground = view.findViewById(R.id.iv_RfTS);
+
+        Button buttonError = view.findViewById(R.id.button6);
         buttonError.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                linLayoutError.setVisibility(View.INVISIBLE);
-                progressBar.setVisibility(View.VISIBLE);
                 checkNetworkConnection();
             }
         });
 
-        buttonToday.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (adapter != null) {
-                    drawList(viewModel.getSchedule(viewModel.getToday()));
-                }
-                return true ;
-            }
-        });
-
-        buttonTomorrow.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (adapter != null) {
-                    drawList(viewModel.getSchedule(viewModel.getTomorrow()));
-                }
-                return true ;
-            }
-        });
-
-        buttonAfterTomorrow.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (adapter != null) {
-                    drawList(viewModel.getSchedule(viewModel.getAfterTomorrow()));
-                }
-                return true ;
-            }
-        });
         return view;
     }
 
-    private void drawList(List<Map> dailySchedule){
-        adapter = new RecyclerAdapterRecordForTrainingSelect(
-                getContext(),
-                dailySchedule,
-                viewModel.getIsToday(),
-                new RecordForTrainingSelectListener() {
+    private void initRecyclerViewSchedule(View rootView) {
+        adapter =
+                new RecyclerAdapterRecordForTrainingSelect(RecordForTrainingFragment.this);
+        RecyclerView recyclerViewSchedule = rootView.findViewById(R.id.rvTrainingTime);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        recyclerViewSchedule.setLayoutManager(layoutManager);
+        recyclerViewSchedule.setAdapter(adapter);
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private void initButtonsOfDay(View rootView) {
+        SimpleDateFormat simpleDateFormat =
+                new SimpleDateFormat("EEE.\n d MMMM", Locale.getDefault());
+
+        buttonToday = rootView.findViewById(R.id.btToday);
+        buttonToday.setText(simpleDateFormat.format(viewModel.getToday()));
+        buttonToday.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void selectTime(String startTime, String typesItem) {
-                if (startTime.equals("outTime") && typesItem.equals("outTime")) {
-                    Toast toast = Toast.makeText(
-                            getContext(),
-                            "Тренировка уже прошла. Выбери более позднее время!",
-                            Toast.LENGTH_LONG);
-                    toast.setGravity(Gravity.CENTER, 0, 0);
-                    toast.show();
-                } else {
-                    UriParser uriParser = new UriParser();
-                    Uri uri = uriParser.getURI(
-                            viewModel.getSelectedGym(),
-                            viewModel.getSelectedDayForUri(),
-                            startTime,
-                            typesItem);
-                    Intent intent = new Intent();
-                    intent.setAction(Intent.ACTION_VIEW);
-                    intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                    intent.setData(uri);
-                    startActivity(intent);
-                    Objects.requireNonNull(getActivity()).
-                            overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if (!adapter.isEmpty()) {
+                    viewModel.setToday();
+                    adapter.setScheduleItems(viewModel.getGymSchedule());
+                    adapter.notifyDataSetChanged();
+                    setPressedButtons();
                 }
+                return true ;
             }
         });
 
-        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
-        recyclerViewSchedule.setLayoutManager(mLayoutManager);
-        recyclerViewSchedule.setAdapter(adapter);
-        setPressedButtons(viewModel.getSelectedDayForUri());
+        buttonTomorrow = rootView.findViewById(R.id.btTommorow);
+        buttonTomorrow.setText(simpleDateFormat.format(viewModel.getTomorrow()));
+        buttonTomorrow.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if (!adapter.isEmpty()) {
+                    viewModel.setTomorrow();
+                    adapter.setScheduleItems(viewModel.getGymSchedule());
+                    adapter.notifyDataSetChanged();
+                    setPressedButtons();
+                }
+                return true ;
+            }
+        });
+
+        buttonAfterTomorrow = rootView.findViewById(R.id.btAftertommorow);
+        buttonAfterTomorrow.setText(simpleDateFormat.format(viewModel.getAfterTomorrow()));
+        buttonAfterTomorrow.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if (!adapter.isEmpty()) {
+                    viewModel.setAfterTomorrow();
+                    adapter.setScheduleItems(viewModel.getGymSchedule());
+                    adapter.notifyDataSetChanged();
+                    setPressedButtons();
+                }
+                return true ;
+            }
+        });
     }
 
-    private void setPressedButtons(int selectedDay) {
+    private void setPressedButtons() {
+        int selectedDay = viewModel.getSelectedDayForUri();
         switch (selectedDay) {
             case 0:
                 pushButtons(true, false, false);
@@ -187,19 +165,20 @@ public class RecordForTrainingFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        if (adapter == null) {
-            linLayoutSchedule.setVisibility(View.INVISIBLE);
-            linLayoutError.setVisibility(View.INVISIBLE);
-            checkNetworkConnection();
-        } else {
-            setPressedButtons(viewModel.getSelectedDayForUri());
-            linLayoutSchedule.setVisibility(View.VISIBLE);
+        TitleChange listenerTitleChange = (TitleChange) getActivity();
+        if (listenerTitleChange != null) {
+            listenerTitleChange.changeTitle(
+                    R.string.title_RecordForTraining_Fragment,
+                    R.string.title_RecordForTraining_Fragment);
         }
 
-        if (getActivity() instanceof TitleChange) {
-            TitleChange listernerTitleChange = (TitleChange) getActivity();
-            listernerTitleChange.changeTitle(R.string.title_RecordForTraining_Fragment, R.string.title_RecordForTraining_Fragment);
+        if (adapter.isEmpty()) {
+            checkNetworkConnection();
+        } else {
+            setPressedButtons();
+            layoutSchedule.setVisibility(View.VISIBLE);
         }
+
         int backgroundImage =
                 (viewModel.isSelectedGymParnas())
                 ? R.drawable.background_foto_1
@@ -214,52 +193,73 @@ public class RecordForTrainingFragment extends Fragment {
     }
 
     private void checkNetworkConnection() {
+        progressBar.setVisibility(View.VISIBLE);
+        layoutSchedule.setVisibility(View.INVISIBLE);
+        layoutError.setVisibility(View.INVISIBLE);
         LiveData<Boolean> liveDataConnection = viewModel.checkNetwork();
         liveDataConnection.observe(RecordForTrainingFragment.this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean isConnected) {
                 if (isConnected) {
-                    linLayoutError.setVisibility(View.INVISIBLE);
-                    progressBar.setVisibility(View.VISIBLE);
-                    viewModel.setToday(true);
+                    viewModel.setIsToday(true);
                     if (viewModel.isSelectedGymParnas()) {
                         loadScheduleParnas();
                     } else {
                         loadScheduleMyzhestvo();
                     }
                 } else {
-                    linLayoutError.setVisibility(View.VISIBLE);
-                    progressBar.setVisibility(View.INVISIBLE);
+                    layoutError.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.GONE);
                 }
             }
         });
     }
 
     private void loadScheduleParnas() {
-        LiveData<List<List<Map>>> liveDataParnas = viewModel.loadScheduleParnas();
+        LiveData<Boolean> liveDataParnas = viewModel.loadScheduleParnas();
         setObserveForLiveData(liveDataParnas);
     }
 
     private void loadScheduleMyzhestvo() {
-        LiveData<List<List<Map>>> liveDataMyzhestvo = viewModel.loadScheduleMyzhestvo();
+        LiveData<Boolean> liveDataMyzhestvo = viewModel.loadScheduleMyzhestvo();
         setObserveForLiveData(liveDataMyzhestvo);
     }
 
-    private void setObserveForLiveData(LiveData<List<List<Map>>> listLiveData) {
-        listLiveData.observe(RecordForTrainingFragment.this, new Observer<List<List<Map>>>() {
+    private void setObserveForLiveData(LiveData<Boolean> listLiveData) {
+        listLiveData.observe(RecordForTrainingFragment.this, new Observer<Boolean>() {
             @Override
-            public void onChanged(@Nullable List<List<Map>> lists) {
-                if (lists != null) {
-                    drawList(lists.get(viewModel.getSelectedDay() - 1));
-                    linLayoutError.setVisibility(View.INVISIBLE);
-                    progressBar.setVisibility(View.INVISIBLE);
-                    linLayoutSchedule.setVisibility(View.VISIBLE);
+            public void onChanged(Boolean scheduleIsLoaded) {
+                if (scheduleIsLoaded) {
+                    setPressedButtons();
+                    adapter.setScheduleItems(viewModel.getGymSchedule());
+                    adapter.notifyDataSetChanged();
                 } else {
-                    linLayoutError.setVisibility(View.VISIBLE);
-                    progressBar.setVisibility(View.INVISIBLE);
-                    linLayoutSchedule.setVisibility(View.INVISIBLE);
+                    layoutError.setVisibility(View.VISIBLE);
                 }
+                layoutSchedule.setVisibility((scheduleIsLoaded) ? View.VISIBLE : View.INVISIBLE);
+                progressBar.setVisibility(View.GONE);
             }
         });
+    }
+
+    public void openBrowserForRecording(String startTime, String scheduleType) {
+        UriParser uriParser = new UriParser();
+        Uri uri = uriParser.getURI(
+                viewModel.getSelectedGym(),
+                viewModel.getSelectedDayForUri(),
+                startTime,
+                scheduleType);
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+        intent.addCategory(Intent.CATEGORY_BROWSABLE);
+        intent.setData(uri);
+        startActivity(intent);
+        Objects.requireNonNull(getActivity()).overridePendingTransition(
+                R.anim.pull_in_right,
+                R.anim.push_out_left);
+    }
+
+    public boolean isToday() {
+        return viewModel.getIsToday();
     }
 }

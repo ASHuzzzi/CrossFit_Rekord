@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executor;
@@ -29,8 +28,8 @@ public class RecordForTrainingViewModel extends AndroidViewModel {
             60,
             TimeUnit.SECONDS,
             new LinkedBlockingQueue<Runnable>());
-    private MutableLiveData<List<List<Map>>> liveDataParnas;
-    private MutableLiveData<List<List<Map>>> liveDataMyzhestvo;
+    private MutableLiveData<Boolean> liveDataParnas;
+    private MutableLiveData<Boolean> liveDataMyzhestvo;
     private BackendlessQueries backendlessQuery;
     private int GYM_PARNAS = 1;
     private int selectedDay;
@@ -38,7 +37,7 @@ public class RecordForTrainingViewModel extends AndroidViewModel {
     private Date today;
     private Date tomorrow;
     private Date afterTomorrow;
-    private GregorianCalendar gregorianCalendar;
+    private Calendar calendar;
     private int selectedDayForUri;
     private int selectedGym;
 
@@ -46,19 +45,19 @@ public class RecordForTrainingViewModel extends AndroidViewModel {
     public RecordForTrainingViewModel(@NonNull Application application) {
         super(application);
         backendlessQuery = new BackendlessQueries();
-        gregorianCalendar = new GregorianCalendar();
-        selectedDay = gregorianCalendar.get(Calendar.DAY_OF_WEEK);
+        calendar = Calendar.getInstance();
+        selectedDay = calendar.get(Calendar.DAY_OF_WEEK);
         today = new Date();
-        gregorianCalendar.add(Calendar.DAY_OF_YEAR, 1);
-        tomorrow = gregorianCalendar.getTime();
-        gregorianCalendar.add(Calendar.DAY_OF_YEAR, 1);
-        afterTomorrow = gregorianCalendar.getTime();
+        calendar.add(Calendar.DAY_OF_YEAR, 1);
+        tomorrow = calendar.getTime();
+        calendar.add(Calendar.DAY_OF_YEAR, 1);
+        afterTomorrow = calendar.getTime();
         isToday = true;
         selectedGym = GYM_PARNAS;
         selectedDayForUri = 0;
     }
 
-    public LiveData<List<List<Map>>> loadScheduleParnas() {
+    public LiveData<Boolean> loadScheduleParnas() {
         if (liveDataParnas == null) {
             liveDataParnas = new MutableLiveData<>();
         }
@@ -66,18 +65,18 @@ public class RecordForTrainingViewModel extends AndroidViewModel {
             @Override
             public void run() {
                 List<Map> loadedSchedule = backendlessQuery.loadingSchedule(String.valueOf(selectedGym));
-                if (loadedSchedule != null) {
+                if ((loadedSchedule != null) && !loadedSchedule.isEmpty()) {
                     scheduleParnas = splitRawSchedule(loadedSchedule);
-                    liveDataParnas.postValue(scheduleParnas);
+                    liveDataParnas.postValue(true);
                 } else {
-                    liveDataParnas.postValue(null);
+                    liveDataParnas.postValue(false);
                 }
             }
         });
         return liveDataParnas;
     }
 
-    public LiveData<List<List<Map>>> loadScheduleMyzhestvo() {
+    public LiveData<Boolean> loadScheduleMyzhestvo() {
         if (liveDataMyzhestvo == null) {
             liveDataMyzhestvo = new MutableLiveData<>();
         }
@@ -85,11 +84,11 @@ public class RecordForTrainingViewModel extends AndroidViewModel {
             @Override
             public void run() {
                 List<Map> loadedSchedule = backendlessQuery.loadingSchedule(String.valueOf(selectedGym));
-                if (loadedSchedule != null) {
+                if ((loadedSchedule != null) && !loadedSchedule.isEmpty()) {
                     scheduleMyzhestvo = splitRawSchedule(loadedSchedule);
-                    liveDataMyzhestvo.postValue(scheduleMyzhestvo);
+                    liveDataMyzhestvo.postValue(true);
                 } else {
-                    liveDataMyzhestvo.postValue(null);
+                    liveDataMyzhestvo.postValue(false);
                 }
             }
         });
@@ -156,8 +155,10 @@ public class RecordForTrainingViewModel extends AndroidViewModel {
         return scheduleForGym;
     }
 
-    private List<List<Map>> getGymSchedule(int selectedGym) {
-        return  (selectedGym == GYM_PARNAS) ? scheduleParnas : scheduleMyzhestvo;
+    public List<Map> getGymSchedule() {
+        return  (selectedGym == GYM_PARNAS)
+                ? scheduleParnas.get(selectedDay - 1)
+                : scheduleMyzhestvo.get(selectedDay - 1);
     }
 
     public LiveData<Boolean> checkNetwork() {
@@ -177,15 +178,12 @@ public class RecordForTrainingViewModel extends AndroidViewModel {
         return selectedGym == GYM_PARNAS;
     }
 
-    public void setSelectedDay(int newSelectedDay) {
-        selectedDay = newSelectedDay;
-    }
 
     public int getSelectedDay() {
         return selectedDay;
     }
 
-    public void setToday(boolean newValue) {
+    public void setIsToday(boolean newValue) {
         isToday = newValue;
     }
 
@@ -205,23 +203,27 @@ public class RecordForTrainingViewModel extends AndroidViewModel {
         return afterTomorrow;
     }
 
-    public List<Map> getSchedule(Date date) {
-        gregorianCalendar.setTime(date);
-        selectedDay = gregorianCalendar.get(Calendar.DAY_OF_WEEK);
-        if (date == today) {
-            selectedDayForUri = 0;
-            setToday(true);
-        }
-        if (date == tomorrow) {
-            selectedDayForUri = 1;
-            setToday(false);
-        }
-        if (date == afterTomorrow) {
-            selectedDayForUri = 2;
-            setToday(false);
-        }
-        return getGymSchedule(selectedGym).get(selectedDay - 1);
+    public void setToday() {
+        selectedDayForUri = 0;
+        setIsToday(true);
+        calendar.setTime(today);
+        selectedDay = calendar.get(Calendar.DAY_OF_WEEK);
     }
+
+    public void setTomorrow() {
+        selectedDayForUri = 1;
+        setIsToday(false);
+        calendar.setTime(tomorrow);
+        selectedDay = calendar.get(Calendar.DAY_OF_WEEK);
+    }
+
+    public void setAfterTomorrow() {
+        selectedDayForUri = 2;
+        setIsToday(false);
+        calendar.setTime(afterTomorrow);
+        selectedDay = calendar.get(Calendar.DAY_OF_WEEK);
+    }
+
 
     public void setSelectedGym(int newSelectedGym) {
         selectedGym = newSelectedGym;

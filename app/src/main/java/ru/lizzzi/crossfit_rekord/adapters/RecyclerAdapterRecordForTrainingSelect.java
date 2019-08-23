@@ -1,58 +1,53 @@
 package ru.lizzzi.crossfit_rekord.adapters;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 
 import ru.lizzzi.crossfit_rekord.R;
+import ru.lizzzi.crossfit_rekord.fragments.RecordForTrainingFragment;
 import ru.lizzzi.crossfit_rekord.items.ScheduleItem;
 import ru.lizzzi.crossfit_rekord.inspectionСlasses.BackgroundDrawable;
-import ru.lizzzi.crossfit_rekord.interfaces.RecordForTrainingSelectListener;
 
 public class RecyclerAdapterRecordForTrainingSelect
         extends RecyclerView.Adapter<RecyclerAdapterRecordForTrainingSelect.ViewHolder> {
 
     private List<Map> scheduleItems;
-    private boolean isToday;
-    private RecordForTrainingSelectListener listener;
-    private ScheduleItem scheduleItem;
+    private ScheduleItem item;
+    private RecordForTrainingFragment fragment;
 
-    public RecyclerAdapterRecordForTrainingSelect(
-            Context context,
-            @NonNull List<Map> scheduleItems,
-            boolean isToday,
-            RecordForTrainingSelectListener listener) {
-        this.scheduleItems = scheduleItems;
-        this.isToday = isToday;
-        this.listener = listener;
-        scheduleItem = new ScheduleItem(context);
+    public RecyclerAdapterRecordForTrainingSelect(RecordForTrainingFragment fragment) {
+        this.fragment = fragment;
+        item = new ScheduleItem(fragment.getContext());
+        scheduleItems = new ArrayList<>();
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView startTime;
-        private TextView workoutTypes;
-        private LinearLayout tableLayout;
+        private TextView startTimeItem;
+        private TextView typesItem;
+        private LinearLayout layoutItem;
 
         ViewHolder(View view) {
             super(view);
-            startTime = view.findViewById(R.id.start_time);
-            workoutTypes = view.findViewById(R.id.type);
-            tableLayout = view.findViewById(R.id.ll_item_table);
+            startTimeItem = view.findViewById(R.id.start_time);
+            typesItem = view.findViewById(R.id.type);
+            layoutItem = view.findViewById(R.id.ll_item_table);
         }
     }
 
@@ -68,38 +63,41 @@ public class RecyclerAdapterRecordForTrainingSelect
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        final Map mapItem = scheduleItems.get(position);
         final String startTime =
-                Objects.requireNonNull(mapItem.get(scheduleItem.getStartTime())).toString();
-        final String workoutType =
-                Objects.requireNonNull(mapItem.get(scheduleItem.getType())).toString();
+                String.valueOf(scheduleItems.get(position).get(item.getStartTime()));
+        final String workoutType = String.valueOf(scheduleItems.get(position).get(item.getType()));
 
-        holder.startTime.setText(startTime);
-        holder.workoutTypes.setText(workoutType);
+        holder.startTimeItem.setText(startTime);
+        holder.typesItem.setText(workoutType);
 
         try {
-            Date today = new GregorianCalendar().getTime();
+            Date today = Calendar.getInstance().getTime();
             SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
             Date timeNow = dateFormat.parse(dateFormat.format(today));
             Date selectedTime = dateFormat.parse(startTime);
-            if (isToday && (selectedTime.getTime() < timeNow.getTime())) { //проверяем чтобы выбранное время было позже чем сейчас
-                holder.workoutTypes.setBackgroundResource(R.drawable.table_item_out_of_time);
-                holder.startTime.setTextColor(Color.BLACK);
-                holder.tableLayout.setOnClickListener(new View.OnClickListener() {
+            //проверяем чтобы выбранное время было позже чем сейчас
+            if (fragment.isToday() && (selectedTime.getTime() < timeNow.getTime())) {
+                holder.typesItem.setBackgroundResource(R.drawable.table_item_out_of_time);
+                holder.startTimeItem.setTextColor(Color.BLACK);
+                holder.layoutItem.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        listener.selectTime("outTime",
-                                "outTime");
+                        Toast toast = Toast.makeText(
+                                view.getContext(),
+                                "Тренировка уже прошла. Выбери более позднее время!",
+                                Toast.LENGTH_LONG);
+                        toast.setGravity(Gravity.CENTER, 0, 0);
+                        toast.show();
                     }
                 });
             } else {
                 BackgroundDrawable backgroundDrawable = new BackgroundDrawable();
                 int background = backgroundDrawable.getBackgroundDrawable(workoutType);
-                holder.workoutTypes.setBackgroundResource(background);
-                holder.tableLayout.setOnClickListener(new View.OnClickListener() {
+                holder.typesItem.setBackgroundResource(background);
+                holder.layoutItem.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        listener.selectTime(startTime, workoutType);
+                        fragment.openBrowserForRecording(startTime, workoutType);
                     }
                 });
             }
@@ -116,5 +114,13 @@ public class RecyclerAdapterRecordForTrainingSelect
     @Override
     public int getItemCount() {
         return scheduleItems.size();
+    }
+
+    public void setScheduleItems(List<Map> scheduleItems) {
+        this.scheduleItems = scheduleItems;
+    }
+
+    public boolean isEmpty () {
+        return scheduleItems.isEmpty();
     }
 }
