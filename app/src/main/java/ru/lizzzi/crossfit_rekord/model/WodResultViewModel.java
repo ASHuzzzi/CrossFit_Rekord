@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,14 +30,16 @@ public class WodResultViewModel extends AndroidViewModel {
             new LinkedBlockingQueue<Runnable>());
     private Map<String,String> userResults;
     private SharedPreferences sharedPreferences;
+    private List<Map> workoutResult;
 
     public WodResultViewModel(@NonNull Application application) {
         super(application);
         userResults = new HashMap<>();
+        workoutResult = new ArrayList<>();
     }
 
-    public LiveData<List<Map>> getWorkoutResult() {
-        final MutableLiveData<List<Map>> liveData = new MutableLiveData<>();
+    public LiveData<Boolean> loadingWorkoutResult() {
+        final MutableLiveData<Boolean> liveData = new MutableLiveData<>();
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -49,7 +52,7 @@ public class WodResultViewModel extends AndroidViewModel {
                 String selectedDay = sharedPreferences.getString(
                         APP_PREFERENCES_SELECTEDDAY,
                         "");
-                List<Map> workoutResult = backendlessQuery.loadingWorkoutResults(selectedDay);
+                workoutResult = backendlessQuery.loadingWorkoutResults(selectedDay);
                 for (int i = 0; i < workoutResult.size(); i++) {
                     String APP_PREFERENCES_OBJECTID = "ObjectId";
                     String currentUserId =
@@ -66,7 +69,7 @@ public class WodResultViewModel extends AndroidViewModel {
                                 String.valueOf(workoutResult.get(i).get("wod_result")));
                     }
                 }
-                liveData.postValue(workoutResult);
+                liveData.postValue(true);
             }
         });
         return liveData;
@@ -91,5 +94,9 @@ public class WodResultViewModel extends AndroidViewModel {
 
     public boolean userResultsAvailable() {
         return !userResults.isEmpty();
+    }
+
+    public List<Map> getWorkoutResult() {
+        return workoutResult;
     }
 }
