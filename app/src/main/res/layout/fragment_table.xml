@@ -86,7 +86,7 @@
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/lvTable"
+        android:id="@+id/recyclerResults"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/Layout_Button_Day_of_Week"

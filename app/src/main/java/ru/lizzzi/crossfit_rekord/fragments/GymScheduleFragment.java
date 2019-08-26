@@ -143,7 +143,7 @@ public class GymScheduleFragment extends Fragment {
         adapter = new RecyclerAdapterSchedule(GymScheduleFragment.this);
         LinearLayoutManager layoutManager =
                 new LinearLayoutManager(getContext());
-        itemsInTable = rootView.findViewById(R.id.lvTable);
+        itemsInTable = rootView.findViewById(R.id.recyclerResults);
         itemsInTable.setLayoutManager(layoutManager);
         itemsInTable.setAdapter(adapter);
         itemsInTable.setVisibility(View.INVISIBLE);

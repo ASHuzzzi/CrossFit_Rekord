@@ -1,8 +1,11 @@
 package ru.lizzzi.crossfit_rekord.fragments;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,12 +13,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.io.IOException;
-import java.util.Map;
-
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.data.SQLiteStorageUserResult;
+import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterMyResults;
 import ru.lizzzi.crossfit_rekord.interfaces.TitleChange;
+import ru.lizzzi.crossfit_rekord.model.MyResultsViewModel;
 
 public class MyResultsFragment extends Fragment implements View.OnFocusChangeListener {
 
@@ -36,28 +37,44 @@ public class MyResultsFragment extends Fragment implements View.OnFocusChangeLis
     private EditText etDumbellSnatch;
     private EditText etRowM;
     private EditText etRowCal;
+    private RecyclerView recyclerResults;
+
+    private RecyclerAdapterMyResults adapter;
+
+    private MyResultsViewModel viewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState){
-        View v = inflater.inflate(R.layout.fragment_my_results, container, false);
+        View view = inflater.inflate(R.layout.fragment_my_results, container, false);
+        viewModel =
+                ViewModelProviders.of(MyResultsFragment.this).get(MyResultsViewModel.class);
 
-        etMyWeight = v.findViewById(R.id.etMyWeight);
-        etDeadlift = v.findViewById(R.id.etDeadlift);
-        etSnatch = v.findViewById(R.id.etSnatch);
-        etSquatClean = v.findViewById(R.id.etSquatClean);
-        etClean = v.findViewById(R.id.etClean);
-        etSquatSnatches = v.findViewById(R.id.etSquatSnatches);
-        etCleanAndJerk = v.findViewById(R.id.etCleanAndJerk);
-        etFrontSquat = v.findViewById(R.id.etFrontSquat);
-        etBackSquat = v.findViewById(R.id.etBackSquat);
-        etShoulderPress = v.findViewById(R.id.etShoulderPress);
-        etPushPress = v.findViewById(R.id.etPushPress);
-        etBenchPress = v.findViewById(R.id.etBenchPress);
-        etSumoDeadlift = v.findViewById(R.id.etSumoDeadlift);
-        etThruster = v.findViewById(R.id.etThruster);
-        etDumbellSnatch = v.findViewById(R.id.etDumbellSnatch);
-        etRowM = v.findViewById(R.id.etRowM);
-        etRowCal = v.findViewById(R.id.etRowCal);
+        recyclerResults = view.findViewById(R.id.recyclerResults);
+        adapter = new RecyclerAdapterMyResults(MyResultsFragment.this);
+        LinearLayoutManager layoutManager =
+                new LinearLayoutManager(getContext());
+        recyclerResults = view.findViewById(R.id.recyclerResults);
+        recyclerResults.setLayoutManager(layoutManager);
+        recyclerResults.setAdapter(adapter);
+        recyclerResults.setVisibility(View.INVISIBLE);
+
+        etMyWeight = view.findViewById(R.id.etMyWeight);
+        etDeadlift = view.findViewById(R.id.editResult);
+        etSnatch = view.findViewById(R.id.etSnatch);
+        etSquatClean = view.findViewById(R.id.etSquatClean);
+        etClean = view.findViewById(R.id.etClean);
+        etSquatSnatches = view.findViewById(R.id.etSquatSnatches);
+        etCleanAndJerk = view.findViewById(R.id.etCleanAndJerk);
+        etFrontSquat = view.findViewById(R.id.etFrontSquat);
+        etBackSquat = view.findViewById(R.id.etBackSquat);
+        etShoulderPress = view.findViewById(R.id.etShoulderPress);
+        etPushPress = view.findViewById(R.id.etPushPress);
+        etBenchPress = view.findViewById(R.id.etBenchPress);
+        etSumoDeadlift = view.findViewById(R.id.etSumoDeadlift);
+        etThruster = view.findViewById(R.id.etThruster);
+        etDumbellSnatch = view.findViewById(R.id.etDumbellSnatch);
+        etRowM = view.findViewById(R.id.etRowM);
+        etRowCal = view.findViewById(R.id.etRowCal);
 
         etMyWeight.setOnFocusChangeListener(this);
         etDeadlift.setOnFocusChangeListener(this);
@@ -78,7 +95,7 @@ public class MyResultsFragment extends Fragment implements View.OnFocusChangeLis
         etRowM.setOnFocusChangeListener(this);
         etRowCal.setOnFocusChangeListener(this);
 
-        Button btnSaveMyResult = v.findViewById(R.id.btnSaveMyResult);
+        Button btnSaveMyResult = view.findViewById(R.id.btnSaveMyResult);
         btnSaveMyResult.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -187,30 +204,36 @@ public class MyResultsFragment extends Fragment implements View.OnFocusChangeLis
                     stExercise = getResources().getString(R.string.strDBMyResultRowCalEN);
                     saveResultInDB(stExercise, stResult);
                 }
-                prepareEditText();
+                //prepareEditText();
                 Toast.makeText(getContext(), "Данные обновлены", Toast.LENGTH_SHORT).show();
             }
         });
 
-        return v;
+        return view;
     }
 
     @Override
     public  void onStart() {
         super.onStart();
 
-        if (getActivity() instanceof TitleChange){
-            TitleChange listernerTitleChange = (TitleChange) getActivity();
-            listernerTitleChange.changeTitle(R.string.title_MyResults_Fragment, R.string.title_MyResults_Fragment);
+        TitleChange listenerTitleChange = (TitleChange) getActivity();
+        if (listenerTitleChange != null) {
+            listenerTitleChange.changeTitle(
+                    R.string.title_MyResults_Fragment,
+                    R.string.title_MyResults_Fragment);
         }
 
-        prepareEditText();
+        if (adapter.isEmpty()) {
+            adapter.setExercise(viewModel.getResults());
+            recyclerResults.setVisibility(View.VISIBLE);
+        }
 
+        //prepareEditText();
     }
 
-    private void prepareEditText(){
+    /*private void prepareEditText(){
         Map<String, String> mapExercise;
-        mapExercise = loadResultFromDB();
+        mapExercise = viewModel.getResults();
 
         String stExercise;
         String stResult;
@@ -335,33 +358,18 @@ public class MyResultsFragment extends Fragment implements View.OnFocusChangeLis
             stShow = stEmpty + stResult;
             etRowCal.setText(stShow);
         }
-    }
+    }*/
 
-    private void saveResultInDB(String stExercise, String stResult){
-        if (stResult.length() == 0 ){
-            stResult = "0";
-        }else{
-            if (stResult.length()>1 && stResult.startsWith("0")){
-                stResult = stResult.substring(1, stResult.length());
+    private void saveResultInDB(String exercise, String result) {
+        if (result.isEmpty()) {
+            result = "0";
+        } else {
+            if (result.length() > 1 && result.startsWith("0")) {
+                result = result.substring(1);
             }
         }
 
-        SQLiteStorageUserResult dbStorage = new SQLiteStorageUserResult(getContext());
-        dbStorage.setResult(stExercise, stResult);
-        dbStorage.close();
-    }
-
-
-    private Map<String, String> loadResultFromDB(){
-        SQLiteStorageUserResult dbStorage = new SQLiteStorageUserResult(getContext());
-
-        try {
-            dbStorage.createDataBase();
-        } catch (IOException ioe) {
-            throw new Error("Unable to create database");
-        }
-
-        return  dbStorage.getResult();
+        viewModel.saveResults(exercise, result);
     }
 
     @Override
@@ -376,7 +384,7 @@ public class MyResultsFragment extends Fragment implements View.OnFocusChangeLis
                         etMyWeight.setText("");
                     }
                     break;
-                case R.id.etDeadlift:
+                case R.id.editResult:
                     stResult = etDeadlift.getText().toString();
                     if (stResult.equals("0")){
                         etDeadlift.setText("");
@@ -483,7 +491,7 @@ public class MyResultsFragment extends Fragment implements View.OnFocusChangeLis
                         etMyWeight.setText("0");
                     }
                     break;
-                case R.id.etDeadlift:
+                case R.id.editResult:
                     stResult = etDeadlift.getText().toString();
                     if (stResult.equals("")){
                         etDeadlift.setText("0");

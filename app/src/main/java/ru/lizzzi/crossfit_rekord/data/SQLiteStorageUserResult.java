@@ -14,7 +14,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class SQLiteStorageUserResult extends SQLiteOpenHelper {
@@ -132,22 +134,22 @@ public class SQLiteStorageUserResult extends SQLiteOpenHelper {
         }
     }
 
-    public void setResult(String stExercise, String stResult){
+    public void setResult(String exercise, String result) {
         database = this.getWritableDatabase();
         ContentValues newValues = new ContentValues();
-        newValues.put(dbMyResult.columnExercise, stExercise);
-        newValues.put(dbMyResult.columnResult, stResult);
+        newValues.put(dbMyResult.columnExercise, exercise);
+        newValues.put(dbMyResult.columnResult, result);
         database.update(
                 dbMyResult.TABLE_NAME,
                 newValues,
                 dbMyResult.columnExercise + "= ?",
-                new String[]{stExercise});
+                new String[]{exercise});
         database.close();
     }
 
-    public Map<String, String> getResult() {
+    public List<Map<String, String>> getResult() {
         database = this.getReadableDatabase();
-        Map<String, String> result = new HashMap<>();
+        List<Map<String, String>> results = new ArrayList<>();
 
         Cursor cursor = database.query(
                 dbMyResult.TABLE_NAME,
@@ -159,17 +161,20 @@ public class SQLiteStorageUserResult extends SQLiteOpenHelper {
                 null,
                 null);
         if (cursor != null && cursor.moveToFirst()) {
-            String stExercise;
-            String stResult;
+            String exercise;
+            String result;
             do {
-                stExercise = cursor.getString(cursor.getColumnIndex(dbMyResult.columnExercise));
-                stResult = cursor.getString(cursor.getColumnIndex(dbMyResult.columnResult));
-
-                result.put(stExercise, stResult);
+                Map<String, String> exerciseResult =  new HashMap<>();
+                exercise = cursor.getString(cursor.getColumnIndex(dbMyResult.columnExercise));
+                result = cursor.getString(cursor.getColumnIndex(dbMyResult.columnResult));
+                exerciseResult.put("exercise", exercise);
+                exerciseResult.put("result", result);
+                results.add(exerciseResult);
             } while (cursor.moveToNext());
             cursor.close();
         }
-        return result;
+        database.close();
+        return results;
     }
 
     public static final class dbMyResult implements BaseColumns {
