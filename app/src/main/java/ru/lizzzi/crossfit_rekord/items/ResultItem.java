@@ -14,6 +14,7 @@ public class ResultItem {
 
     public enum Fields {
         exercise(R.string.exercise),
+        exerciseRu(R.string.exerciseRu),
         result(R.string.resultExercise);
 
         private int fieldNameId;
@@ -30,6 +31,11 @@ public class ResultItem {
     @NonNull
     public String getExercise() {
         return context.getString(Fields.exercise.getFieldNameId());
+    }
+
+    @NonNull
+    public String getExerciseRu() {
+        return context.getString(Fields.exerciseRu.getFieldNameId());
     }
 
     @NonNull

@@ -305,5 +305,6 @@
     <string name="sunday">Воскресенье</string>
 
     <string name="exercise">exercise</string>
+    <string name="exerciseRu">exerciseRu</string>
     <string name="resultExercise">result</string>
 </resources>

@@ -11,14 +11,14 @@
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/layoutCaption"
+            android:id="@+id/layoutMyWeight"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toStartOf="@id/editResult"
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/textCaptionEn"
+                android:id="@+id/textCaption"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
@@ -49,8 +49,8 @@
             android:focusableInTouchMode="true"
             android:gravity="center"
             android:inputType="phone"
-            android:maxWidth="20dp"
-            android:minWidth="20dp"
+            android:maxWidth="100dp"
+            android:minWidth="30dp"
             android:text="@string/empty"
             android:textColor="@color/colorRedPrimary"
             android:theme="@style/Theme.App.Base.MyResult" />
