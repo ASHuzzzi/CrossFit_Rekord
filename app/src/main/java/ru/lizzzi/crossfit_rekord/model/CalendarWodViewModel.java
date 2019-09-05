@@ -53,13 +53,11 @@ public class CalendarWodViewModel  extends AndroidViewModel {
     public CalendarWodViewModel(@NonNull Application application) {
         super(application);
         String APP_PREFERENCES = "audata";
-        sharedPreferences =
-                getApplication().getSharedPreferences(
-                        APP_PREFERENCES,
-                        Context.MODE_PRIVATE);
+        sharedPreferences = getApplication().getSharedPreferences(
+                APP_PREFERENCES,
+                Context.MODE_PRIVATE);
         userObjectID = sharedPreferences.getString(APP_PREFERENCES_OBJECTID, "");
         dbStorage = new SQLiteStorageWod(getApplication());
-        dbStorage.createDataBase();
         calendar = Calendar.getInstance();
     }
 

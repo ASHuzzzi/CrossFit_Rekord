@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.provider.BaseColumns;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,7 +23,7 @@ public class SQLiteStorageNotification extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase database) {
-        String SQL_CREATE_ROWER_TABLE =
+        String SQL_CREATE_TABLE =
                 "CREATE TABLE "
                 + Notification.TABLE_NAME + " ("
                 + Notification.COLUMN_CODE_NOTE + " INTEGER NOT NULL, "
@@ -33,7 +32,7 @@ public class SQLiteStorageNotification extends SQLiteOpenHelper {
                 + Notification.COLUMN_NUMBER_NOTE + " INTEGER, "
                 + Notification.COLUMN_TEXT + " TEXT, "
                 + Notification.COLUMN_VIEWED + " BOOLEAN);";
-        database.execSQL(SQL_CREATE_ROWER_TABLE);
+        database.execSQL(SQL_CREATE_TABLE);
     }
 
     @Override
@@ -54,11 +53,9 @@ public class SQLiteStorageNotification extends SQLiteOpenHelper {
     public long dateLastCheck() {
         database = this.getReadableDatabase();
         long lastDateCheck = 0;
-        String[] columns = new  String[] {
-                "MAX(" +
-                Notification.COLUMN_DATE_NOTE + ")"
-        };
-        Cursor cursor = database.query(true,
+        String[] columns = new  String[] { "MAX(" + Notification.COLUMN_DATE_NOTE + ")" };
+        Cursor cursor = database.query(
+                true,
                 Notification.TABLE_NAME,
                 columns,
                 null,
@@ -77,12 +74,11 @@ public class SQLiteStorageNotification extends SQLiteOpenHelper {
         return lastDateCheck;
     }
 
-    public void saveNotification(
-            long dateNote,
-            String header,
-            String text,
-            String codeNote,
-            boolean viewed) {
+    public void saveNotification(long dateNote,
+                                 String header,
+                                 String text,
+                                 String codeNote,
+                                 boolean viewed) {
         database = this.getWritableDatabase();
         ContentValues newValues = new ContentValues();
         newValues.put(Notification.COLUMN_DATE_NOTE, dateNote);
@@ -96,8 +92,9 @@ public class SQLiteStorageNotification extends SQLiteOpenHelper {
 
     public List<Map<String, Object>> loadNotification() {
         database = this.getReadableDatabase();
-        List<Map<String, Object>> listNotification = new ArrayList<>();
-        Cursor cursor = database.query(true,
+        List<Map<String, Object>> listOfNotifications = new ArrayList<>();
+        Cursor cursor = database.query(
+                true,
                 Notification.TABLE_NAME,
                 null,
                 null,
@@ -107,28 +104,29 @@ public class SQLiteStorageNotification extends SQLiteOpenHelper {
                 Notification.COLUMN_DATE_NOTE + " DESC",
                 null);
         if (cursor != null && cursor.moveToFirst()) {
-
             String dateNote;
             String header;
             String text;
             boolean viewed;
+
+
             do {
-                Map<String, Object> mapNotification = new HashMap<>();
                 dateNote = cursor.getString(cursor.getColumnIndex(Notification.COLUMN_DATE_NOTE));
                 header = cursor.getString(cursor.getColumnIndex(Notification.COLUMN_HEADER));
                 text = cursor.getString(cursor.getColumnIndex(Notification.COLUMN_TEXT));
                 viewed = cursor.getInt(cursor.getColumnIndex(Notification.COLUMN_VIEWED)) > 0;
 
-                mapNotification.put("dateNote", dateNote);
-                mapNotification.put("header", header);
-                mapNotification.put("text", text);
-                mapNotification.put("viewed", viewed);
-                listNotification.add(mapNotification);
+                Map<String, Object> notification = new HashMap<>();
+                notification.put("dateNote", dateNote);
+                notification.put("header", header);
+                notification.put("text", text);
+                notification.put("viewed", viewed);
+                listOfNotifications.add(notification);
             } while (cursor.moveToNext());
             cursor.close();
         }
         database.close();
-        return listNotification;
+        return listOfNotifications;
     }
 
     public ArrayList<String> getNotification(long date) {
@@ -177,11 +175,7 @@ public class SQLiteStorageNotification extends SQLiteOpenHelper {
     public int getUnreadNotifications() {
         database = this.getReadableDatabase();
         int lastDateCheck = 0;
-        String[] columns = new String[] {
-                "COUNT(" +
-                Notification.COLUMN_VIEWED +
-                ")"
-        };
+        String[] columns = new String[] { "COUNT(" + Notification.COLUMN_VIEWED + ")" };
         Cursor cursor = database.query(true,
                 Notification.TABLE_NAME,
                 columns,
@@ -206,12 +200,11 @@ public class SQLiteStorageNotification extends SQLiteOpenHelper {
         database.delete(
                 Notification.TABLE_NAME,
                 Notification.COLUMN_DATE_NOTE + "= '" + date + "'",
-                null
-        );
+                null);
         database.close();
     }
 
-    public static final class Notification implements BaseColumns {
+    public static final class Notification {
         final static String TABLE_NAME = "notification";
         final static String COLUMN_CODE_NOTE = "codeNote";
         final static String COLUMN_DATE_NOTE = "dateNote";
