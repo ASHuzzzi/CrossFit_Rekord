@@ -1,5 +1,6 @@
 package ru.lizzzi.crossfit_rekord.data;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -7,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
+import android.util.Log;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -27,22 +29,10 @@ public class SQLiteStorageUserResult extends SQLiteOpenHelper {
     public SQLiteStorageUserResult(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.context = context;
-    }
-
-    /**
-     * Создает пустую базу данных и перезаписывает ее нашей собственной базой
-     * */
-    public void createDataBase() {
-
-        if(!checkDataBase()) {
-            //вызывая этот метод создаем пустую базу, позже она будет перезаписана
-            this.getReadableDatabase();
-
-            try {
-                copyDataBase();
-            } catch (IOException e) {
-                throw new Error("Error copying database");
-            }
+        if (checkDataBase()) {
+            database = this.getReadableDatabase();
+        } else {
+            copyDataBase();
         }
     }
 
@@ -54,16 +44,15 @@ public class SQLiteStorageUserResult extends SQLiteOpenHelper {
         SQLiteDatabase database = null;
 
         try{
-            // путь к базе данных вашего приложения
+            @SuppressLint("SdCardPath")
             String DATABASE_PATH = "/data/data/ru.lizzzi.crossfit_rekord/databases/";
             String dbPath = DATABASE_PATH + DATABASE_NAME;
             database = SQLiteDatabase.openDatabase(
                     dbPath,
                     null,
                     SQLiteDatabase.OPEN_READONLY);
-            this.database = this.getReadableDatabase();
-        } catch(SQLiteException e) {
-            //база еще не существует
+        } catch(SQLiteException exception) {
+            Log.i("RekordInfo", exception.getMessage());
         }
         if(database != null) {
             database.close();
@@ -75,29 +64,34 @@ public class SQLiteStorageUserResult extends SQLiteOpenHelper {
      * Копирует базу из папки assets заместо созданной локальной БД
      * Выполняется путем копирования потока байтов.
      * */
-    private void copyDataBase() throws IOException{
-        //Открываем локальную БД как входящий поток
-        InputStream inputStream = context.getAssets().open("db/" + DATABASE_NAME);
+    private void copyDataBase() {
+        try {
+            //Открываем локальную БД как входящий поток
+            InputStream inputStream = context.getAssets().open("db/" + DATABASE_NAME);
 
-        //Путь ко вновь созданной БД
-        SQLiteDatabase database = this.getReadableDatabase();
-        String outFileName = database.getPath();
-        database.close();
+            //Путь ко вновь созданной БД
+            SQLiteDatabase database = this.getReadableDatabase();
+            String outFileName = database.getPath();
+            database.close();
 
-        //Открываем пустую базу данных как исходящий поток
-        OutputStream outputStream = new FileOutputStream(outFileName);
+            //Открываем пустую базу данных как исходящий поток
+            OutputStream outputStream = new FileOutputStream(outFileName);
 
-        //перемещаем байты из входящего файла в исходящий
-        byte[] buffer = new byte[1024];
-        int length;
-        while ((length = inputStream.read(buffer)) > 0) {
-            outputStream.write(buffer, 0, length);
+            //перемещаем байты из входящего файла в исходящий
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = inputStream.read(buffer)) > 0) {
+                outputStream.write(buffer, 0, length);
+            }
+
+            //закрываем потоки
+            outputStream.flush();
+            outputStream.close();
+            inputStream.close();
+        } catch (IOException exception) {
+            Log.w("RekordWarning", "");
+            exception.printStackTrace();
         }
-
-        //закрываем потоки
-        outputStream.flush();
-        outputStream.close();
-        inputStream.close();
     }
 
     @Override
@@ -110,7 +104,6 @@ public class SQLiteStorageUserResult extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-
     }
 
     @Override
@@ -125,23 +118,77 @@ public class SQLiteStorageUserResult extends SQLiteOpenHelper {
                         null,
                         newValues);
                 break;
-            case 3:
-                List<Map<String, String>> tempValue = getResult();
-                database.execSQL("DROP TABLE history");
-                try {
-                    copyDataBase();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                for (int i = 0; i < tempValue.size(); i++) {
-                    for (Map.Entry<String, String> entry : tempValue.get(i).entrySet()) {
-                        String exercise = entry.getKey();
-                        String result = entry.getValue();
-                        setResult(exercise, result);
-                    }
-                }
+            case 2:
+                upgradeDbToThirdVersion(database);
                 break;
         }
+    }
+
+    private void upgradeDbToThirdVersion(SQLiteDatabase database) {
+        List<Map<String, String>> valueFromDb = getResultForOldDB(database);
+        context.deleteDatabase(MyResultDB.TABLE_NAME);
+        onCreate(database);
+        try {
+            InputStream inputStream = context.getAssets().open("db/" + DATABASE_NAME);
+            String outFileName = database.getPath();
+            OutputStream outputStream = new FileOutputStream(outFileName);
+
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = inputStream.read(buffer)) > 0) {
+                outputStream.write(buffer, 0, length);
+            }
+
+            outputStream.flush();
+            outputStream.close();
+            inputStream.close();
+        } catch (IOException exception) {
+            Log.w("RekordWarning", "");
+            exception.printStackTrace();
+        }
+
+        for (int i = 0; i < valueFromDb.size(); i++) {
+            for (Map.Entry<String, String> entry : valueFromDb.get(i).entrySet()) {
+                String exercise = entry.getKey();
+                String result = entry.getValue();
+                ContentValues newValues2 = new ContentValues();
+                newValues2.put(MyResultDB.columnExercise, exercise);
+                newValues2.put(MyResultDB.columnResult, result);
+                database.update(
+                        MyResultDB.TABLE_NAME,
+                        newValues2,
+                        MyResultDB.columnExercise + "= ?",
+                        new String[]{exercise});
+            }
+        }
+    }
+
+    private List<Map<String, String>> getResultForOldDB(SQLiteDatabase database) {
+        List<Map<String, String>> results = new ArrayList<>();
+
+        Cursor cursor = database.query(
+                MyResultDB.TABLE_NAME,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null);
+        if (cursor != null && cursor.moveToFirst()) {
+            String exercise;
+            String result;
+            do {
+                Map<String, String> exerciseResult =  new HashMap<>();
+                exercise = cursor.getString(cursor.getColumnIndex(MyResultDB.columnExercise));
+                result = cursor.getString(cursor.getColumnIndex(MyResultDB.columnResult));
+                exerciseResult.put("result", result);
+                exerciseResult.put("exercise", exercise);
+                results.add(exerciseResult);
+            } while (cursor.moveToNext());
+            cursor.close();
+        }
+        return results;
     }
 
     public void setResult(String exercise, String result) {

@@ -23,7 +23,6 @@ public class MyResultsViewModel extends AndroidViewModel {
     public MyResultsViewModel(@NonNull Application application) {
         super(application);
         dbStorage = new SQLiteStorageUserResult(getApplication());
-        dbStorage.createDataBase();
         exercisesForShow = dbStorage.getResult();
         exercisesForSave = new ArrayList<>();
         myWeight = dbStorage.getWeight();
