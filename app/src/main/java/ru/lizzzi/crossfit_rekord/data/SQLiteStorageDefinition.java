@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
+import android.util.Log;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -19,46 +20,33 @@ import java.util.Map;
 
 public class SQLiteStorageDefinition extends SQLiteOpenHelper{
 
-    // путь к базе данных вашего приложения
-    @SuppressLint("SdCardPath")
-    private static final String DB_PATH = "/data/data/ru.lizzzi.crossfit_rekord/databases/";
-    private static final String DB_NAME = "DefinitionDirectory.db";
+    private static final String DATABASE_NAME = "DefinitionDirectory.db";
+    private static final int DATABASE_VERSION = 1;
     private SQLiteDatabase database;
     private final Context context;
 
     public SQLiteStorageDefinition(Context context) {
-        super(context, DB_NAME, null, 1);
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.context = context;
-    }
-
-    /**
-     * Создает пустую базу данных и перезаписывает ее нашей собственной базой
-     * */
-    public void createDataBase() {
-        if(!checkDataBase()) {
-            //вызывая этот метод создаем пустую базу, позже она будет перезаписана
-            this.getReadableDatabase();
-            try {
-                copyDataBase();
-            } catch (IOException e) {
-                throw new Error("Error copying database");
-            }
+        if (checkDataBase()) {
+            database = this.getReadableDatabase();
+        } else {
+            copyDataBase();
         }
     }
 
-    /**
-     * Проверяет, существует ли уже эта база, чтобы не копировать каждый раз при запуске приложения
-     * @return true если существует, false если не существует
-     */
-    public boolean checkDataBase() {
-        database = null;
+    private boolean checkDataBase() {
+        SQLiteDatabase database = null;
         try {
-            String myPath = DB_PATH + DB_NAME;
+            @SuppressLint("SdCardPath")
+            String DATABASE_PATH = "/data/data/ru.lizzzi.crossfit_rekord/databases/";
+            String dbPath = DATABASE_PATH + DATABASE_NAME;
             database = SQLiteDatabase.openDatabase(
-                    myPath,
+                    dbPath,
                     null,
                     SQLiteDatabase.OPEN_READONLY);
-        } catch(SQLiteException ignored) {
+        } catch(SQLiteException exception) {
+            Log.i("RekordInfo", exception.getMessage());
         }
         if (database != null) {
             database.close();
@@ -66,33 +54,34 @@ public class SQLiteStorageDefinition extends SQLiteOpenHelper{
         return database != null;
     }
 
-    /**
-     * Копирует базу из папки assets заместо созданной локальной БД
-     * Выполняется путем копирования потока байтов.
-     * */
-    private void copyDataBase() throws IOException {
-        //Открываем локальную БД как входящий поток
-        InputStream inputStream = context.getAssets().open("db/" + DB_NAME);
+    private void copyDataBase() {
+        try {
+            //Открываем локальную БД как входящий поток
+            InputStream inputStream = context.getAssets().open("db/" + DATABASE_NAME);
 
-        //Путь ко вновь созданной БД
-        database = this.getReadableDatabase();
-        String outFileName = database.getPath();
-        database.close();
+            //Путь ко вновь созданной БД
+            SQLiteDatabase database = this.getReadableDatabase();
+            String outFileName = database.getPath();
+            database.close();
 
-        //Открываем пустую базу данных как исходящий поток
-        OutputStream outputStream = new FileOutputStream(outFileName);
+            //Открываем пустую базу данных как исходящий поток
+            OutputStream outputStream = new FileOutputStream(outFileName);
 
-        //перемещаем байты из входящего файла в исходящий
-        byte[] buffer = new byte[1024];
-        int length;
-        while ((length = inputStream.read(buffer))>0) {
-            outputStream.write(buffer, 0, length);
+            //перемещаем байты из входящего файла в исходящий
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = inputStream.read(buffer)) > 0) {
+                outputStream.write(buffer, 0, length);
+            }
+
+            //закрываем потоки
+            outputStream.flush();
+            outputStream.close();
+            inputStream.close();
+        } catch (IOException exception) {
+            Log.w("RekordWarning", "");
+            exception.printStackTrace();
         }
-
-        //закрываем потоки
-        outputStream.flush();
-        outputStream.close();
-        inputStream.close();
     }
 
     @Override
@@ -107,19 +96,18 @@ public class SQLiteStorageDefinition extends SQLiteOpenHelper{
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
+    public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
+        context.deleteDatabase(DefinitionDB.TABLE_NAME);
+        copyDataBase();
     }
 
-    // Здесь можно добавить вспомогательные методы для доступа и получения данных из БД
-    // вы можете возвращать курсоры через "return myDataBase.query(....)", это облегчит их использование
-    // в создании адаптеров для ваших view
     public ArrayList<String> getListCharacters() {
         database = this.getReadableDatabase();
         ArrayList<String> listCharacter = new ArrayList<>();
-        String[] columns = new  String[] {DBdefinition.Column_character};
+        String[] columns = new  String[] {DefinitionDB.CHARACTER};
         Cursor cursor = database.query(
                 true,
-                DBdefinition.TABLE_NAME,
+                DefinitionDB.TABLE_NAME,
                 columns,
                 null,
                 null,
@@ -130,11 +118,11 @@ public class SQLiteStorageDefinition extends SQLiteOpenHelper{
         if (cursor !=null && cursor.moveToFirst()) {
             do {
                 String character = "";
-                for (String cn : cursor.getColumnNames()) {
-                    character = cursor.getString(cursor.getColumnIndex(cn));
+                for (String columnName : cursor.getColumnNames()) {
+                    character = cursor.getString(cursor.getColumnIndex(columnName));
                 }
                 listCharacter.add(character);
-            }while (cursor.moveToNext());
+            } while (cursor.moveToNext());
         }
         if (cursor != null) {
             cursor.close();
@@ -143,16 +131,16 @@ public class SQLiteStorageDefinition extends SQLiteOpenHelper{
         return listCharacter;
     }
 
-    public List<Map<String, String>> getTerminsAndDefinitions(String character){
+    public List<Map<String, String>> getTermsAndDefinitions(String character){
         database = this.getReadableDatabase();
         List<Map<String, String>> termsOfSelectedCharacter = new ArrayList<>();
         String[] columns = new  String[] {
-                DBdefinition.Column_termin,
-                DBdefinition.Column_description};
+                DefinitionDB.TERMIN,
+                DefinitionDB.DESCRIPTION};
         Cursor cursor = database.query(
-                DBdefinition.TABLE_NAME,
+                DefinitionDB.TABLE_NAME,
                 columns,
-                DBdefinition.Column_character + "= '" + character + "'",
+                DefinitionDB.CHARACTER + "= '" + character + "'",
                 null,
                 null,
                 null,
@@ -161,11 +149,11 @@ public class SQLiteStorageDefinition extends SQLiteOpenHelper{
             do {
                 Map<String, String> itemList = new HashMap<>();
                 String termin = cursor.getString(
-                        cursor.getColumnIndex(DBdefinition.Column_termin));
+                        cursor.getColumnIndex(DefinitionDB.TERMIN));
                 String description = cursor.getString(
-                        cursor.getColumnIndex(DBdefinition.Column_description));
-                itemList.put("termin", termin);
-                itemList.put("description", description);
+                        cursor.getColumnIndex(DefinitionDB.DESCRIPTION));
+                itemList.put(DefinitionDB.TERMIN, termin);
+                itemList.put(DefinitionDB.DESCRIPTION, description);
                 termsOfSelectedCharacter.add(itemList);
             } while (cursor.moveToNext());
         }
@@ -176,12 +164,11 @@ public class SQLiteStorageDefinition extends SQLiteOpenHelper{
         return termsOfSelectedCharacter;
     }
 
-    public static final class DBdefinition implements BaseColumns {
-        final static String TABLE_NAME = "definition";
-        final static String Column_termin = "termin";
-        final static String Column_description = "description";
-        final static String Column_character = "character";
-        final static String Column_attribute = "attribute";
+    public static final class DefinitionDB implements BaseColumns {
 
+        final static String TABLE_NAME = "definition";
+        final static String TERMIN = "termin";
+        final static String DESCRIPTION = "description";
+        final static String CHARACTER = "character";
     }
 }

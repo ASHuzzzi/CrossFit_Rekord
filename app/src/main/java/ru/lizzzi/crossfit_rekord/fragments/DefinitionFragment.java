@@ -56,6 +56,6 @@ public class DefinitionFragment extends Fragment {
 
     private List<Map<String, String>> getListDefinitions(String selectedCharacter) {
         SQLiteStorageDefinition dbStorage = new SQLiteStorageDefinition(getContext());
-        return dbStorage.getTerminsAndDefinitions(selectedCharacter);
+        return dbStorage.getTermsAndDefinitions(selectedCharacter);
     }
 }

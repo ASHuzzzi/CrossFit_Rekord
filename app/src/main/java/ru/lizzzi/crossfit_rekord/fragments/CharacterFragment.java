@@ -46,10 +46,6 @@ public class CharacterFragment extends Fragment {
         }
 
         SQLiteStorageDefinition dbStorage = new SQLiteStorageDefinition(getContext());
-        if (!dbStorage.checkDataBase()) {
-            dbStorage.createDataBase();
-        }
-
         adapter.add(dbStorage.getListCharacters());
         adapter.notifyDataSetChanged();
 

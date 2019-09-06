@@ -22,7 +22,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import java.util.Calendar;
-import java.util.Objects;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterSchedule;
@@ -300,7 +299,7 @@ public class GymScheduleFragment extends Fragment {
         intent.addCategory(Intent.CATEGORY_BROWSABLE);
         intent.setData(uri);
         startActivity(intent);
-        Objects.requireNonNull(getActivity()).overridePendingTransition(
+        requireActivity().overridePendingTransition(
                 R.anim.pull_in_right,
                 R.anim.push_out_left);
     }

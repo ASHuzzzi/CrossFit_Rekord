@@ -103,8 +103,7 @@ public class CalendarWodFragment extends Fragment {
                     Toast.makeText(
                             getContext(),
                             "Тренировки еще не было",
-                            Toast.LENGTH_SHORT)
-                            .show();
+                            Toast.LENGTH_SHORT).show();
                 }
             }
         });

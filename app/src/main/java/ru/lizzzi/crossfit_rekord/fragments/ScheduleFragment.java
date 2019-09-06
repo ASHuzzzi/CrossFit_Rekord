@@ -16,12 +16,10 @@ import ru.lizzzi.crossfit_rekord.interfaces.TitleChange;
 public class ScheduleFragment extends Fragment {
 
     @Override
-    public View onCreateView(
-            @NonNull LayoutInflater inflater,
-            ViewGroup container,
-            Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container,
+                             Bundle savedInstanceState) {
         setRetainInstance(true);
-
         View view = inflater.inflate(R.layout.fragment_tl_table, container, false);
 
         final ViewPager viewPager = view.findViewById(R.id.vp_1_record);
@@ -36,9 +34,11 @@ public class ScheduleFragment extends Fragment {
     @Override
     public  void onStart() {
         super.onStart();
-        if (getActivity() instanceof TitleChange){
-            TitleChange listernerTitleChange = (TitleChange) getActivity();
-            listernerTitleChange.changeTitle(R.string.title_Table_Fragment, R.string.title_Table_Fragment);
+        TitleChange listenerTitleChange = (TitleChange) getActivity();
+        if (listenerTitleChange != null) {
+            listenerTitleChange.changeTitle(
+                    R.string.title_Table_Fragment,
+                    R.string.title_Table_Fragment);
         }
 
     }

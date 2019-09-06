@@ -111,8 +111,8 @@ public class SQLiteStorageUserResult extends SQLiteOpenHelper {
         switch (oldVersion) {
             case 1:
                 ContentValues newValues = new ContentValues();
-                newValues.put(MyResultDB.columnExercise, "MyWeight");
-                newValues.put(MyResultDB.columnResult, "0");
+                newValues.put(MyResultDB.EXERCISE, "MyWeight");
+                newValues.put(MyResultDB.RESULT, "0");
                 database.insert(
                         MyResultDB.TABLE_NAME,
                         null,
@@ -152,12 +152,12 @@ public class SQLiteStorageUserResult extends SQLiteOpenHelper {
                 String exercise = entry.getKey();
                 String result = entry.getValue();
                 ContentValues newValues2 = new ContentValues();
-                newValues2.put(MyResultDB.columnExercise, exercise);
-                newValues2.put(MyResultDB.columnResult, result);
+                newValues2.put(MyResultDB.EXERCISE, exercise);
+                newValues2.put(MyResultDB.RESULT, result);
                 database.update(
                         MyResultDB.TABLE_NAME,
                         newValues2,
-                        MyResultDB.columnExercise + "= ?",
+                        MyResultDB.EXERCISE + "= ?",
                         new String[]{exercise});
             }
         }
@@ -180,8 +180,8 @@ public class SQLiteStorageUserResult extends SQLiteOpenHelper {
             String result;
             do {
                 Map<String, String> exerciseResult =  new HashMap<>();
-                exercise = cursor.getString(cursor.getColumnIndex(MyResultDB.columnExercise));
-                result = cursor.getString(cursor.getColumnIndex(MyResultDB.columnResult));
+                exercise = cursor.getString(cursor.getColumnIndex(MyResultDB.EXERCISE));
+                result = cursor.getString(cursor.getColumnIndex(MyResultDB.RESULT));
                 exerciseResult.put("result", result);
                 exerciseResult.put("exercise", exercise);
                 results.add(exerciseResult);
@@ -194,12 +194,12 @@ public class SQLiteStorageUserResult extends SQLiteOpenHelper {
     public void setResult(String exercise, String result) {
         database = this.getWritableDatabase();
         ContentValues newValues = new ContentValues();
-        newValues.put(MyResultDB.columnExercise, exercise);
-        newValues.put(MyResultDB.columnResult, result);
+        newValues.put(MyResultDB.EXERCISE, exercise);
+        newValues.put(MyResultDB.RESULT, result);
         database.update(
                 MyResultDB.TABLE_NAME,
                 newValues,
-                MyResultDB.columnExercise + "= ?",
+                MyResultDB.EXERCISE + "= ?",
                 new String[]{exercise});
         database.close();
     }
@@ -211,7 +211,7 @@ public class SQLiteStorageUserResult extends SQLiteOpenHelper {
         Cursor cursor = database.query(
                 MyResultDB.TABLE_NAME,
                 null,
-                MyResultDB.columnExercise + "!= ?",
+                MyResultDB.EXERCISE + "!= ?",
                 new String[] { "MyWeight" },
                 null,
                 null,
@@ -223,9 +223,9 @@ public class SQLiteStorageUserResult extends SQLiteOpenHelper {
             String result;
             do {
                 Map<String, String> exerciseResult =  new HashMap<>();
-                exercise = cursor.getString(cursor.getColumnIndex(MyResultDB.columnExercise));
-                exerciseRu = cursor.getString(cursor.getColumnIndex(MyResultDB.columnExerciseRU));
-                result = cursor.getString(cursor.getColumnIndex(MyResultDB.columnResult));
+                exercise = cursor.getString(cursor.getColumnIndex(MyResultDB.EXERCISE));
+                exerciseRu = cursor.getString(cursor.getColumnIndex(MyResultDB.EXERCISE_RU));
+                result = cursor.getString(cursor.getColumnIndex(MyResultDB.RESULT));
                 exerciseResult.put("result", result);
                 exerciseResult.put("exercise", exercise);
                 exerciseResult.put("exerciseRu", exerciseRu);
@@ -243,7 +243,7 @@ public class SQLiteStorageUserResult extends SQLiteOpenHelper {
         Cursor cursor = database.query(
                 MyResultDB.TABLE_NAME,
                 null,
-                MyResultDB.columnExercise + "= ?",
+                MyResultDB.EXERCISE + "= ?",
                 new String[] { "MyWeight" },
                 null,
                 null,
@@ -251,7 +251,7 @@ public class SQLiteStorageUserResult extends SQLiteOpenHelper {
                 null);
         if (cursor != null && cursor.moveToFirst()) {
             do {
-                result = cursor.getString(cursor.getColumnIndex(MyResultDB.columnResult));
+                result = cursor.getString(cursor.getColumnIndex(MyResultDB.RESULT));
             } while (cursor.moveToNext());
             cursor.close();
         }
@@ -262,8 +262,8 @@ public class SQLiteStorageUserResult extends SQLiteOpenHelper {
     public static final class MyResultDB implements BaseColumns {
 
         final static String TABLE_NAME = "myResult";
-        final static String columnExercise = "Exercise";
-        final static String columnExerciseRU = "ExerciseRu";
-        final static String columnResult = "Result";
+        final static String EXERCISE = "Exercise";
+        final static String EXERCISE_RU = "ExerciseRu";
+        final static String RESULT = "Result";
     }
 }
