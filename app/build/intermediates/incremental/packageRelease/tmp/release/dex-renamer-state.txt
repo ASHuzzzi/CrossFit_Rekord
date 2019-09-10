@@ -1,0 +1,4 @@
+#Wed Jul 24 08:17:48 MSK 2019
+base.0=C\:\\Users\\basso\\StudioProjects\\Project\\CrossFit_Rekord\\app\\build\\intermediates\\dex\\release\\mergeDexRelease\\out
+path.0=classes.dex
+renamed.0=classes.dex
