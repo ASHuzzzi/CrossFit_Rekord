@@ -3,9 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/CrossFit_Rekord.iml" filepath="$PROJECT_DIR$/CrossFit_Rekord.iml" />
-      <module fileurl="file://$PROJECT_DIR$/CrossFit_Rekord.iml" filepath="$PROJECT_DIR$/CrossFit_Rekord.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/crossfit-rekord/crossfit-rekord.iml" filepath="$PROJECT_DIR$/crossfit-rekord/crossfit-rekord.iml" />
     </modules>
   </component>
 </project>

@@ -1,0 +1,310 @@
+<resources>
+    <string name="app_name">CrossFit Rekord</string>
+    <string name="empty"> </string>
+    <string name="save">Сохранить</string>
+
+
+    <!-- Поля для составления списка по абониментам -->
+    <string name="period">period</string>
+    <string name="types_of_training">types_of_training</string>
+    <string name="price">cost</string>
+
+    <!-- Поля для составления расписания -->
+    <string name="day_of_week">day_of_week</string>
+    <string name="start_time">start_time</string>
+    <string name="type">type</string>
+    <string name="table">table</string>
+
+    <!-- Поля для составления списка по записавшимся -->
+    <string name="username">username</string>
+
+    <!-- Значения для фрагмента Registry -->
+    <string name="strUserNameR">Ваше имя</string>
+    <string name="email">Email</string>
+    <string name="password">Пароль</string>
+    <string name="passwordRep">Повторите пароль</string>
+    <string name="btnRegistered">Зарегистрироваться</string>
+
+    <!-- Hint'ы полей  для фрагмента Login-->
+    <string name="hint_user_name">Введите имя пользователя</string>
+    <string name="hint_email">Ввидете Email</string>
+    <string name="hint_password">Введите пароль</string>
+    <string name="hint_check_password">Введите пароль еще раз</string>
+
+    <!-- Значения для поля GymScheduleFragment -->
+    <string name="gymNameParnas">Парнас</string>
+    <string name="gymNameMyzhestvo">Мужества</string>
+    <integer name="selectSheduleParnas">1</integer>
+    <integer name="selectSheduleMyzhestvo">2</integer>
+
+    <!-- Значения для фрагмента RecordForTraining-->
+    <string name="select_day">Выберите день</string>
+    <string name="select_time">Выберите время</string>
+    <string name="whrite_entry">Записаться</string>
+    <string name="delete_entry">Удалить запись</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <!-- Значения для шторки-->
+    <string name="notification">Новости</string>
+    <string name="schedule">Расписание</string>
+    <string name="record_training">Записаться на тренировку</string>
+    <string name="contacts">Контакты</string>
+    <string name="definition">Словарь CrossFit</string>
+    <string name="result">Результаты</string>
+    <string name="profile">Мои данные</string>
+    <string name="calendar_wod">Результаты тренировок</string>
+    <string name="myResults">Мои результаты</string>
+    <string name="localNotification">Уведомления</string>
+
+    <string name="error_connection1">При загрузке данных произошла ошибка.</string>
+    <string name="error_connection2">Проверьте Ваше подключение к сети.</string>
+    <string name="error_connection_button">Повторить попытку</string>
+
+    <!-- Поля для составления результатов тренировки -->
+    <string name="Name">Name</string>
+    <string name="Surname">surname</string>
+    <string name="skill">skill</string>
+    <string name="wod_level">wod_level</string>
+    <string name="wod_result">wod_result</string>
+
+    <string name="name">name</string>
+
+    <!-- Значения для экрана Start_screen -->
+    <string name="button_shedule">Расписание</string>
+    <string name="button_record_training">Записаться на тренировку</string>
+    <string name="button_definition">Словарь CrossFit</string>
+    <string name="button_calendar_wod">Результаты тренировок</string>
+    <string name="button_contacts">Контакты</string>
+
+    <!-- Значения для крана Расписание -->
+    <string name="day_1">ПН</string>
+    <string name="day_2">ВТ</string>
+    <string name="day_3">СР</string>
+    <string name="day_4">ЧТ</string>
+    <string name="day_5">ПТ</string>
+    <string name="day_6">СБ</string>
+    <string name="day_7">ВС</string>
+
+    <!-- Заголовки Экранов -->
+    <string name="title_Table_Fragment">Расписание</string>
+    <string name="title_RecordForTraining_Fragment">Записаться на тренировку</string>
+    <string name="title_RecordForTrainingRecording_Fragment">Записаться на тренировку</string>
+    <string name="title_Notification_Fragment">Новости</string>
+    <string name="title_NotificationData_Fragment">Новости</string>
+    <string name="title_CalendarWod_Fragment">Календарь тренировок</string>
+    <string name="title_WorkoutDetails_Fragment">Результаты тренировки</string>
+    <string name="title_Character_Fragment">Словарь CrossFit</string>
+    <string name="title_Definition_Fragment">Словарь CrossFit</string>
+    <string name="title_AboutMe_Fragment">Мои данные</string>
+    <string name="title_Login_Fragment">Авторизация</string>
+    <string name="title_Contacts_Fragment">Контакты</string>
+    <string name="title_UserRegData_Fragment">Учетные данные</string>
+    <string name="title_ChangeEmail_Fragment">Изменение эл. почты</string>
+    <string name="title_ChangePassword_Fragment">Изменение пароля</string>
+    <string name="title_Regystry_Fragment">Регистрация</string>
+    <string name="title_PasswordRecovery_Fragment">Восстановление пароля</string>
+    <string name="title_MyResults_Fragment">Мои результаты</string>
+    <string name="title_AlarmSettings_Fragment">Уведомления</string>
+
+    <!-- Значения для фрагмента AboutMe -->
+    <string name="strCardNumber">Номер моей карты</string>
+    <string name="strUserName">Имя</string>
+    <string name="strUserSurname">Фамилия</string>
+    <string name="strPhone">Телефон</string>
+    <string name="strBtnChange">Изменить мои данные</string>
+    <string name="strEmailChange">Изменить эл. почту</string>\
+    <string name="strPasswordChange">Изменить пароль</string>
+    <string name="strBtnUserRedData">Учетные данные</string>
+
+    <!-- Значения для фрагмента Login -->
+    <string name="strEnterEmail">Адрес эл. почты</string>
+    <string name="strHintCardNumber">0 000000 000000</string>
+    <string name="strEnterPassword">Пароль</string>
+    <string name="strHintPassword">******</string>
+    <string name="strButtonEnter">Войти</string>
+    <string name="strRegistration">Если не регистрировался</string>
+    <string name="strButtonRegistration">Регистрация</string>
+    <string name="strRecoveryPas">Не помню пароль!</string>
+
+    <!-- Значения для аргументов для фрагмента Login -->
+    <string name="strRecordFragment">RecordForTrainingSelectFragment</string>
+    <string name="strAboutMeFragment">AboutMeFragment</string>
+    <string name="strRecordForTrainingRecordingFragment">RecordForTrainingRecordingFragment</string>
+
+    <!-- Значения для фрагмента WodResultFragment -->
+    <string name="strEnterResult">Внести результаты</string>
+    <string name="strEditDeleteResult">Редактировать</string>
+    <string name="strHeaderName">Имя</string>
+    <string name="strHeaderSkill">Skill</string>
+    <string name="strHeaderLevel">Level</string>
+    <string name="strHeaderResult">Result</string>
+
+
+    <!-- Поля для составления уведомлений -->
+    <string name="codeNote">codeNote</string>
+    <string name="dateNote">dateNote</string>
+    <string name="numberNote">numberNote</string>
+    <string name="header">header</string>
+    <string name="text">text</string>
+    <string name="viewed">viewed</string>
+
+    <!-- Значения для фрагмента Contacts -->
+    <string name="gymParnas">Зал Парнас</string>
+    <string name="gymMyzhestvo">Зал Мужества</string>
+    <string name="addressParnas">м. Парнас
+        ул. Михаила Дудина, 15</string>
+    <string name="addressMyzhestvo">м. Пл. Мужества
+        БЦ "Берег", пр-т Непокорённых 17к4 Е, цоколь</string>
+    <string name="refinement">(вход с Толубеевского проезда)</string>
+    <string name="contactNumberParnas">+7(812)9820062 </string>
+    <string name="contactNumberMyzhestvo">+7(960)2820061 </string>
+    <string name="contactWeb">www.crossfitrekord.ru</string>
+    <string name="contactMail">crossfitrekord@mail.ru</string>
+    <string name="groupVK">https://vk.com/crossfit_rekord</string>
+    <string name="Instagram">https://instagram.com/crossfit_rekord/</string>
+    <string name="descriptionInstagram">Инстаграм</string>
+    <string name="descriptionGroupVK">Группа в контакте</string>
+
+    <string name="Label">Rekord Crossfit 2019</string>
+    <string name="appVersion">Версия </string>
+
+    <!-- Значения для фрагмента RecordForTraining_Recording_Fragment -->
+    <string name="DayWhere">Когда:</string>
+    <string name="TimeWhere">Во сколько:</string>
+    <string name="Type">Тренировка </string>
+    <string name="EmptyListTV1">Никто еще не записался</string>
+    <string name="EmptyListTV2">Покажи пример - будь первым!</string>
+
+    <!-- Значения для фрагмента WorkoutExerciseFragment -->
+    <string name="TL1WarmUp">Warm-Up</string>
+    <string name="TL1Skill">Skill</string>
+    <string name="TL1WOD">WOD</string>
+    <string name="TL1Sc">Sc</string>
+    <string name="TL1Rx">Rx</string>
+    <string name="TL1RxPlus">Rx+</string>
+    <string name="TL1NoData1">Данных по тренировке пока нет.</string>
+    <string name="TL1NoData2">Но ты уже можешь записать свои результаты</string>
+    <string name="TL1NoData3">для этого сдвинь экран влево.</string>
+    <string name="TL1NoTime1">Комплекс будет выложен после 21:00.</string>
+
+    <!-- Значения для активити EnterResultActivity -->
+    <string name="strActivityERText">Введите свои результаты прошедшей тренировки</string>
+    <string name="strActivityERWod">WoD</string>
+    <string name="strActivityERLevel">Level</string>
+    <string name="strActivityERLevelSc">Sc</string>
+    <string name="strActivityERLevelRx">Rx</string>
+    <string name="strActivityERLevelRxPlus">Rx+</string>
+    <string name="strActivityERLevelOver">Другое</string>
+    <string name="strActivityERSkill">Skill"</string>
+    <string name="strActivityERDelete">Удалить"</string>
+    <string name="strActivityERSave">Сохранить"</string>
+
+    <!-- Значения для фрагмента ChangeEmail -->
+    <string name="strEmailText">Адрес Вашей электронной почты</string>
+    <string name="strEmailTextOld">Текущий адрес:</string>
+    <string name="strEmailTextNew">Новый адрес:</string>
+    <string name="btnEmailSaveNew">Сохранить адрес</string>
+
+    <!-- Значения для фрагмента ChangePassword -->
+    <string name="strPasswordOld">Старый пароль</string>
+    <string name="strPasswordNew">Новый пароль</string>
+    <string name="strPasswordRepeat">Повторите пароль</string>
+    <string name="btnPasswordSaveNew">Сохранить пароль</string>
+
+    <!-- Значения для диалога восстановления пароля -->
+    <string name="strDialogTitle">Восстановление пароля</string>
+    <string name="strDialogEmail">Адрес для восстановления пароля</string>
+    <string name="strDialogBtnSend">Отправить</string>
+    <string name="strDialogBtnCancel">Отмена</string>
+    <string name="strDialogBtnOk">ОК</string>
+
+    <!-- Значения для фрагмента Character -->
+    <string name="strSelectCharacter">Выберите букву раздела</string>
+
+    <!-- Значения для фрагмента MyResult -->
+    <string name="strButtonSaveMyResult">Сохранить</string>
+
+    <string name="strDBMyResultMyWeightEN">MyWeight</string>
+    <string name="strDBMyResultMyWeightRu">Мой вес</string>
+
+    <string name="strDBMyResultDeadliftEN">Deadlift</string>
+    <string name="strDBMyResultDeadliftRU">становая тяга</string>
+
+    <string name="strDBMyResultSnatchEN">Snatch</string>
+    <string name="strDBMyResultSnatchRU">рывок</string>
+
+    <string name="strDBMyResultSquatCleanEN">Squat Clean</string>
+    <string name="strDBMyResultSquatCleanRU">рывок в сед</string>
+
+    <string name="strDBMyResultCleanEN">Clean</string>
+    <string name="strDBMyResultCleanRU">взятие на грудь</string>
+
+    <string name="strDBMyResultSquatSnatchesEN">Squat Snatches</string>
+    <string name="strDBMyResultSquatSnatchesRU">взятие на грудь в сед</string>
+
+    <string name="strDBMyResultCleanAndJerkEN">Clean and jerk</string>
+    <string name="strDBMyResultCleanAndJerkRU">взятие на грудь и толчок штанги</string>
+
+    <string name="strDBMyResultFrontSquatEN">Front Squat</string>
+    <string name="strDBMyResultFrontSquatRU">приседания со штангой на груди</string>
+
+    <string name="strDBMyResultBackSquatEN">Back Squat</string>
+    <string name="strDBMyResultBackSquatRU">приседания со штангой на спине</string>
+
+    <string name="strDBMyResultShoulderPressEN">Shoulder Press</string>
+    <string name="strDBMyResultShoulderPressRU">жим стоя, с плеч строго</string>
+
+    <string name="strDBMyResultPushPressEN">Push Press</string>
+    <string name="strDBMyResultPushPressRU">жим стоя, с плеч толчком (швунг)</string>
+
+    <string name="strDBMyResultBenchPressEN">Bench Press</string>
+    <string name="strDBMyResultBenchPressRU">жим лежа от груди</string>
+
+    <string name="strDBMyResultSumoDeadliftEN">Sumo Deadlift</string>
+    <string name="strDBMyResultSumoDeadliftRU">становая тяга сумо</string>
+
+    <string name="strDBMyResultThrusterEN">Thruster</string>
+    <string name="strDBMyResultThrusterRU">выброс штанги</string>
+
+    <string name="strDBMyResultDumbellSnatchEN">Dumbell Snatch</string>
+    <string name="strDBMyResultDumbellSnatchRU">рывок гантели</string>
+
+    <string name="strDBMyResultRowMEN">Row (m)</string>
+    <string name="strDBMyResultRowMRU">гребля (500м)</string>
+
+    <string name="strDBMyResultRowCalEN">Row (cal)</string>
+    <string name="strDBMyResultRowCalRU">гребля (25 кал)</string>
+
+    <!-- Значения для фрагмента WorkoutDetails -->
+    <string name="strWorkoutDetailsWod">Wod</string>
+    <string name="strWorkoutDetailsResult">Результаты</string>
+
+    <!-- Значения для фрагмента DefinitionFragment -->
+    <string name="termin">termin</string>
+    <string name="description">description</string>
+
+    <string name="channel_id">ru.lizzzi.crossfit_rekord.inspectionСlasses</string>
+    <string name="channel_name">Общие</string>
+    <string name="notification_title">"Rekord'смен!"</string>
+    <string name="notification_text">Пора записаться на тренировку</string>
+
+    <!-- Значения для фрагмента AlarmSettingsFragment -->
+    <string name="dayOfWeek">Дни недели</string>
+    <string name="everyday">Ежедневно</string>
+    <string name="selectedTime">Время</string>
+    <string name="colon"> : </string>
+    <string name="repeat">Повтор</string>
+    <string name="monday">Понедельник</string>
+    <string name="tuesday">Вторник</string>
+    <string name="wednesday">Среда</string>
+    <string name="thursday">Четверг</string>
+    <string name="friday">Пятница</string>
+    <string name="saturday">Суббота</string>
+    <string name="sunday">Воскресенье</string>
+
+    <string name="exercise">exercise</string>
+    <string name="exerciseRu">exerciseRu</string>
+    <string name="resultExercise">result</string>
+</resources>
