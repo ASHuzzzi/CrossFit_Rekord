@@ -24,7 +24,7 @@ public class SQLiteStorageUserResult extends SQLiteOpenHelper {
     private static String DATABASE_NAME = "MyResult.db";
     private SQLiteDatabase database;
     private final Context context;
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
 
     public SQLiteStorageUserResult(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -118,9 +118,25 @@ public class SQLiteStorageUserResult extends SQLiteOpenHelper {
                         null,
                         newValues);
                 break;
-            case 2:
-                upgradeDbToThirdVersion(database);
-                break;
+            default:
+                try {
+                    InputStream inputStream = context.getAssets().open("db/" + DATABASE_NAME);
+                    String outFileName = database.getPath();
+                    OutputStream outputStream = new FileOutputStream(outFileName);
+
+                    byte[] buffer = new byte[1024];
+                    int length;
+                    while ((length = inputStream.read(buffer)) > 0) {
+                        outputStream.write(buffer, 0, length);
+                    }
+
+                    outputStream.flush();
+                    outputStream.close();
+                    inputStream.close();
+                } catch (IOException exception) {
+                    Log.w("RekordWarning", "");
+                    exception.printStackTrace();
+                }
         }
     }
 

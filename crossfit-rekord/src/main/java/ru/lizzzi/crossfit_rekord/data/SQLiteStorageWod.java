@@ -123,7 +123,7 @@ public class SQLiteStorageWod extends SQLiteOpenHelper {
 
     public static final class DbHelper {
 
-        final static String TABLE_NAME = "calendar_wod";
+        final static String TABLE_NAME = "calendarWod";
         final static String DATE_SESSION = "date_session";
         final static String SC = "sc";
         final static String RX = "rx";
