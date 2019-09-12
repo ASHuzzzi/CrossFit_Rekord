@@ -25,6 +25,16 @@ import ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck;
 
 public class WorkoutExerciseViewModel extends AndroidViewModel {
 
+    public static String WARM_UP = "warmup";
+    public static String SKILL = "skill";
+    public static String WOD = "wod";
+    public static String SC = "Sc";
+    public static String RX = "Rx";
+    public static String RX_PLUS = "Rxplus";
+    private String NULL = "null";
+    private String DASH = "—";
+
+
     private String selectedDay;
     private Executor executor = new ThreadPoolExecutor(
             0,
@@ -50,30 +60,32 @@ public class WorkoutExerciseViewModel extends AndroidViewModel {
                 BackendlessQueries backendlessQuery = new BackendlessQueries();
                 List<Map> resultQuery = backendlessQuery.loadingExerciseWorkout(selectedDay);
                 Map<String, String> wod = new HashMap<>();
-                wod.put("warmup",
-                        String.valueOf(resultQuery.get(0).get("warmup")).equals("null")
-                                ? "—"
-                                : String.valueOf(resultQuery.get(0).get("warmup")));
-                wod.put("skill",
-                        String.valueOf(resultQuery.get(0).get("skill")).equals("null")
-                                ? "—"
-                                : String.valueOf(resultQuery.get(0).get("skill")));
-                wod.put("wod",
-                        String.valueOf(resultQuery.get(0).get("wod")).equals("null")
-                                ? "—"
-                                : String.valueOf(resultQuery.get(0).get("wod")));
-                wod.put("Sc",
-                        String.valueOf(resultQuery.get(0).get("Sc")).equals("null")
-                                ? "—"
-                                : String.valueOf(resultQuery.get(0).get("Sc")));
-                wod.put("Rx",
-                        String.valueOf(resultQuery.get(0).get("Rx")).equals("null")
-                                ? "—"
-                                : String.valueOf(resultQuery.get(0).get("Rx")));
-                wod.put("Rxplus",
-                        String.valueOf(resultQuery.get(0).get("Rxplus")).equals("null")
-                                ? "—"
-                                : String.valueOf(resultQuery.get(0).get("Rxplus")));
+                if (resultQuery != null && !resultQuery.isEmpty()) {
+                    wod.put(WARM_UP,
+                            String.valueOf(resultQuery.get(0).get(WARM_UP)).equals(NULL)
+                                    ? DASH
+                                    : String.valueOf(resultQuery.get(0).get(WARM_UP)));
+                    wod.put(SKILL,
+                            String.valueOf(resultQuery.get(0).get(SKILL)).equals(NULL)
+                                    ? DASH
+                                    : String.valueOf(resultQuery.get(0).get(SKILL)));
+                    wod.put(WOD,
+                            String.valueOf(resultQuery.get(0).get(WOD)).equals(NULL)
+                                    ? DASH
+                                    : String.valueOf(resultQuery.get(0).get(WOD)));
+                    wod.put(SC,
+                            String.valueOf(resultQuery.get(0).get(SC)).equals(NULL)
+                                    ? DASH
+                                    : String.valueOf(resultQuery.get(0).get(SC)));
+                    wod.put(RX,
+                            String.valueOf(resultQuery.get(0).get(RX)).equals(NULL)
+                                    ? DASH
+                                    : String.valueOf(resultQuery.get(0).get(RX)));
+                    wod.put(RX_PLUS,
+                            String.valueOf(resultQuery.get(0).get(RX_PLUS)).equals(NULL)
+                                    ? DASH
+                                    : String.valueOf(resultQuery.get(0).get(RX_PLUS)));
+                }
                 liveData.postValue(wod);
             }
         });

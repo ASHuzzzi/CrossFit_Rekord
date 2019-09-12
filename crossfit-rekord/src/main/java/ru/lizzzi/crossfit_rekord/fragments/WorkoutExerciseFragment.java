@@ -105,13 +105,13 @@ public class WorkoutExerciseFragment extends Fragment {
                     liveData.observe(WorkoutExerciseFragment.this, new Observer<Map<String, String>>() {
                         @Override
                         public void onChanged(Map<String, String> wodOfDay) {
-                            if (wodOfDay != null && wodOfDay.size() > 0) {
-                                textWarmUp.setText(wodOfDay.get("warmup"));
-                                textSkill.setText(wodOfDay.get("skill"));
-                                textWOD.setText(wodOfDay.get("wod"));
-                                textLevelSc.setText(wodOfDay.get("Sc"));
-                                textLevelRx.setText(wodOfDay.get("Rx"));
-                                textLevelRxPlus.setText(wodOfDay.get("Rxplus"));
+                            if (wodOfDay != null && !wodOfDay.isEmpty()) {
+                                textWarmUp.setText(wodOfDay.get(WorkoutExerciseViewModel.WOD));
+                                textSkill.setText(wodOfDay.get(WorkoutExerciseViewModel.SKILL));
+                                textWOD.setText(wodOfDay.get(WorkoutExerciseViewModel.WOD));
+                                textLevelSc.setText(wodOfDay.get(WorkoutExerciseViewModel.SC));
+                                textLevelRx.setText(wodOfDay.get(WorkoutExerciseViewModel.RX));
+                                textLevelRxPlus.setText(wodOfDay.get(WorkoutExerciseViewModel.RX_PLUS));
                                 layoutMain.setVisibility(View.VISIBLE);
                             } else {
                                 textEmptyData.setText(getResources().getText(R.string.TL1NoData1));

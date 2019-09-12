@@ -24,7 +24,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -44,7 +43,6 @@ public class LoginFragment extends Fragment {
     private EditText editTextUserEmail;
     private EditText editTextUserPassword;
 
-    private boolean loading = true;
     private boolean wait = false;
     private LoginViewModel viewModel;
 
@@ -87,39 +85,11 @@ public class LoginFragment extends Fragment {
 
                 //убираем клавиатуру после нажатия на кнопку
                 InputMethodManager inputMethodManager = (InputMethodManager)
-                        Objects.requireNonNull(getContext())
-                                .getSystemService(Activity.INPUT_METHOD_SERVICE);
+                        requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
                 if (inputMethodManager != null) {
                     inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 }
-
-                uiLoadingState(loading);
-                LiveData<Boolean> liveDataConnection = viewModel.checkNetwork();
-                liveDataConnection.observe(LoginFragment.this, new Observer<Boolean>() {
-                    @Override
-                    public void onChanged(Boolean isConnected) {
-                        LiveData<Boolean> liveData = viewModel.getLogin(
-                                editTextUserEmail.getText().toString(),
-                                editTextUserPassword.getText().toString());
-                        liveData.observe(LoginFragment.this, new Observer<Boolean>() {
-                            @Override
-                            public void onChanged(Boolean loggedIn) {
-                                if (loggedIn) {
-                                    startService();
-                                    ToggleStatusChange toggleStatusChange =
-                                            (ToggleStatusChange) getActivity();
-                                    if (toggleStatusChange != null) {
-                                        toggleStatusChange.changeToggleStatus(true);
-                                    }
-                                    openNewFragment(StartScreenFragment.class);
-                                } else {
-                                    uiLoadingState(wait);
-                                    showToast("Нет подключения");
-                                }
-                            }
-                        });
-                    }
-                });
+                checkConnection();
             }
         });
 
@@ -152,22 +122,57 @@ public class LoginFragment extends Fragment {
     @Override
     public  void onStart() {
         super.onStart();
-        if (getActivity() instanceof TitleChange) {
-            TitleChange listerner = (TitleChange) getActivity();
-            listerner.changeTitle(R.string.title_Login_Fragment, R.string.title_Login_Fragment);
+        TitleChange listener = (TitleChange) getActivity();
+        if (listener != null) {
+            listener.changeTitle(R.string.title_Login_Fragment, R.string.title_Login_Fragment);
         }
     }
 
+    private void checkConnection() {
+        uiLoadingState(true);
+        LiveData<Boolean> liveDataConnection = viewModel.checkNetwork();
+        liveDataConnection.observe(LoginFragment.this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isConnected) {
+                if (isConnected) {
+                    logIn();
+                } else {
+                    uiLoadingState(wait);
+                    showToast("Нет подключения");
+                }
+            }
+        });
+    }
+
+    private void logIn() {
+        LiveData<Boolean> liveData = viewModel.getLogin(
+                editTextUserEmail.getText().toString(),
+                editTextUserPassword.getText().toString());
+        liveData.observe(LoginFragment.this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean loggedIn) {
+                if (loggedIn) {
+                    startService();
+                    ToggleStatusChange toggleStatusChange = (ToggleStatusChange) getActivity();
+                    if (toggleStatusChange != null) {
+                        toggleStatusChange.changeToggleStatus(true);
+                    }
+                    openNewFragment(StartScreenFragment.class);
+                } else {
+                    uiLoadingState(wait);
+                    showToast("Неверный логин/пароль");
+                }
+            }
+        });
+    }
+
     private void uiLoadingState(boolean loading) {
-        progressBar.setVisibility((loading)
-                ? View.VISIBLE
-                : View.INVISIBLE);
+        progressBar.setVisibility( (loading) ? View.VISIBLE : View.INVISIBLE);
         buttonLogin.setPressed(loading);
     }
 
     private void startService() {
         if (!isServiceRunning()) {
-
             // Создаем Intent для вызова сервиса,
             // кладем туда параметр времени и код задачи
             int LOAD_NOTIFICATION = 1;
@@ -177,16 +182,16 @@ public class LoginFragment extends Fragment {
                     .putExtra(PARAM_TIME, 7)
                     .putExtra(PARAM_TASK, LOAD_NOTIFICATION);
             // стартуем сервис
-            getActivity().startService(intent);
+            requireActivity().startService(intent);
         }
     }
 
     private boolean isServiceRunning() {
-        ActivityManager manager = (ActivityManager) Objects.requireNonNull(getActivity())
-                .getSystemService(Context.ACTIVITY_SERVICE);
+        ActivityManager manager =
+                (ActivityManager) requireActivity().getSystemService(Context.ACTIVITY_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             for (ActivityManager.RunningServiceInfo service
-                    : Objects.requireNonNull(manager).getRunningServices(Integer.MAX_VALUE)) {
+                    : manager.getRunningServices(Integer.MAX_VALUE)) {
                 if (LoadNotificationsService.class.getName().equals(service.service.getClassName())) {
                     return true;
                 }
@@ -219,7 +224,6 @@ public class LoginFragment extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     private boolean isEmailCorrect(String userEmail) {
