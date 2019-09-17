@@ -131,11 +131,20 @@ public class BackendlessQueries {
             Map<String, String> user = new HashMap<>();
             user.put("userID", backendlessUser.getObjectId());
             user.put("name", backendlessUser.getProperty("name").toString());
-            user.put("surname", backendlessUser.getProperty("surname").toString());
+            user.put("surname",
+                    (backendlessUser.getProperty("surname") != null)
+                            ? backendlessUser.getProperty("surname").toString()
+                            : "");
             user.put("password", password);
             user.put("email", backendlessUser.getProperty("email").toString());
-            user.put("phoneNumber", backendlessUser.getProperty("phoneNumber").toString());
-            user.put("cardNumber", backendlessUser.getProperty("cardNumber").toString());
+            user.put("phoneNumber",
+                    backendlessUser.getProperty("phoneNumber") != null
+                            ? backendlessUser.getProperty("phoneNumber").toString()
+                            : "");
+            user.put("cardNumber",
+                    (backendlessUser.getProperty("cardNumber") != null)
+                            ? backendlessUser.getProperty("cardNumber").toString()
+                            : "");
             return user;
         } catch (BackendlessException exception) {
             return null;

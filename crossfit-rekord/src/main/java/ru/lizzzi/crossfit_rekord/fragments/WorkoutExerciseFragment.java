@@ -76,6 +76,7 @@ public class WorkoutExerciseFragment extends Fragment {
         if (textWarmUp.length() < 1) {
             layoutMain.setVisibility(View.INVISIBLE);
             layoutEmptyData.setVisibility(View.INVISIBLE);
+            layoutError.setVisibility(View.INVISIBLE);
             if (viewModel.canShowWodDetails()) {
                 checkNetworkConnection();
             } else {
@@ -106,7 +107,7 @@ public class WorkoutExerciseFragment extends Fragment {
                         @Override
                         public void onChanged(Map<String, String> wodOfDay) {
                             if (wodOfDay != null && !wodOfDay.isEmpty()) {
-                                textWarmUp.setText(wodOfDay.get(WorkoutExerciseViewModel.WOD));
+                                textWarmUp.setText(wodOfDay.get(WorkoutExerciseViewModel.WARM_UP));
                                 textSkill.setText(wodOfDay.get(WorkoutExerciseViewModel.SKILL));
                                 textWOD.setText(wodOfDay.get(WorkoutExerciseViewModel.WOD));
                                 textLevelSc.setText(wodOfDay.get(WorkoutExerciseViewModel.SC));
