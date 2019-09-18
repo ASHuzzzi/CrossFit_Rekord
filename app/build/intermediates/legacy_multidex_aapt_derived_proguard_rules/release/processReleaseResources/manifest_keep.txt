@@ -1,4 +1,0 @@
-# Referenced at C:\Users\basso\StudioProjects\Project\CrossFit_Rekord\app\build\intermediates\merged_manifests\release\AndroidManifest.xml:14
--keep class android.support.v4.app.CoreComponentFactory { <init>(); }
-# Referenced at C:\Users\basso\StudioProjects\Project\CrossFit_Rekord\app\build\intermediates\merged_manifests\release\AndroidManifest.xml:14
--keep class ru.lizzzi.crossfit_rekord.backendless.BackendlessQueries { <init>(); }

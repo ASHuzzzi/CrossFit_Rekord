@@ -1,7 +1,0 @@
-#Wed Sep 11 11:28:04 MSK 2019
-base.0=/home/alexandr/Документы/AndroidProject/CrossFit_Rekord/app/build/intermediates/dex/debug/mergeExtDexDebug/out/classes.dex
-path.1=classes.dex
-renamed.1=classes2.dex
-path.0=classes.dex
-renamed.0=classes.dex
-base.1=/home/alexandr/Документы/AndroidProject/CrossFit_Rekord/app/build/intermediates/dex/debug/mergeProjectDexDebug/out/classes.dex
