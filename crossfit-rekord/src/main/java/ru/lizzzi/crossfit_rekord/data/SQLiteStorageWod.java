@@ -9,11 +9,14 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+
+import ru.lizzzi.crossfit_rekord.backendless.BackendlessQueries;
 
 public class SQLiteStorageWod extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "CalendarWod.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
     private SQLiteDatabase database;
 
     public SQLiteStorageWod(Context context) {
@@ -24,14 +27,12 @@ public class SQLiteStorageWod extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase database) {
         String SQL_CREATE_TABLE =
                 "CREATE TABLE " + DbHelper.TABLE_NAME + " ("
-                        + DbHelper.DATE_SESSION + " INTEGER NOT NULL, "
+                        + DbHelper.DATE_SESSION + " REAL NOT NULL, "
                         + DbHelper.OBJECT_ID + " TEXT, "
                         + DbHelper.WARM_UP + " TEXT, "
                         + DbHelper.SKILL + " TEXT, "
-                        + DbHelper.WOD + " TEXT, "
-                        + DbHelper.SC + " TEXT, "
-                        + DbHelper.RX + " TEXT, "
-                        + DbHelper.RX_PLUS + " TEXT);";
+                        + DbHelper.WOD_LEVEL + " TEXT,"
+                        + DbHelper.WOD + " TEXT);";
         database.execSQL(SQL_CREATE_TABLE);
     }
 
@@ -73,8 +74,7 @@ public class SQLiteStorageWod extends SQLiteOpenHelper {
                 Date dateOfWod = new Date();
 
                 for (String columnName : cursor.getColumnNames()) {
-                    long dateInMilliseconds =
-                            Long.parseLong(cursor.getString(cursor.getColumnIndex(columnName)));
+                    long dateInMilliseconds = cursor.getLong(cursor.getColumnIndex(columnName));
                     dateOfWod.setTime(dateInMilliseconds);
                     selectedDates.add(dateOfWod);
                 }
@@ -87,25 +87,50 @@ public class SQLiteStorageWod extends SQLiteOpenHelper {
         return selectedDates;
     }
 
-    public void saveDates(String userId, List<Date> dates) {
+    public void saveDates(String userId, List<Map> trainingResults) {
         database = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        long time;
-        for (int i = 0; i < dates.size(); i++) {
-            time = dates.get(i).getTime();
-            values.put(DbHelper.OBJECT_ID, userId);
-            values.put(DbHelper.DATE_SESSION, time);
-            database.insert(DbHelper.TABLE_NAME, null, values);
-            values.clear();
+        ContentValues newValues = new ContentValues();
+        Date date;
+        String skillResult;
+        String wodLevel;
+        String wodResult;
+        BackendlessQueries queries = new BackendlessQueries();
+        for (int i = 0; i < trainingResults.size(); i++) {
+            date = (Date) trainingResults.get(i).get(queries.TABLE_RESULTS_DATE_SESSION);
+            if (date != null) {
+                skillResult = (trainingResults.get(i).get(queries.TABLE_RESULTS_SKILL) != null)
+                        ? String.valueOf(trainingResults.get(i).get(queries.TABLE_RESULTS_SKILL))
+                        : "";
+                wodLevel = (trainingResults.get(i).get(queries.TABLE_RESULTS_WOD_LEVEL) != null)
+                        ? String.valueOf(trainingResults.get(i).get(queries.TABLE_RESULTS_WOD_LEVEL))
+                        : "";
+                wodResult = (trainingResults.get(i).get(queries.TABLE_RESULTS_WOD_RESULT) != null)
+                        ? String.valueOf(trainingResults.get(i).get(queries.TABLE_RESULTS_WOD_RESULT))
+                        : "";
+                newValues.put(DbHelper.OBJECT_ID, userId);
+                newValues.put(DbHelper.DATE_SESSION, date.getTime());
+                newValues.put(DbHelper.SKILL, skillResult);
+                newValues.put(DbHelper.WOD_LEVEL, wodLevel);
+                newValues.put(DbHelper.WOD, wodResult);
+                database.insert(DbHelper.TABLE_NAME, null, newValues);
+                newValues.clear();
+            }
         }
         database.close();
     }
 
-    public void saveDate(String userId, long date) {
+    public void saveDate(String userId,
+                         long date,
+                         String userSkill,
+                         String wodLevel,
+                         String userWodResult) {
         database = this.getWritableDatabase();
         ContentValues newValues = new ContentValues();
         newValues.put(DbHelper.OBJECT_ID, userId);
         newValues.put(DbHelper.DATE_SESSION, date);
+        newValues.put(DbHelper.SKILL, userSkill);
+        newValues.put(DbHelper.WOD_LEVEL, wodLevel);
+        newValues.put(DbHelper.WOD, userWodResult);
         database.insert(DbHelper.TABLE_NAME, null, newValues);
         database.close();
     }
@@ -125,9 +150,7 @@ public class SQLiteStorageWod extends SQLiteOpenHelper {
 
         final static String TABLE_NAME = "calendarWod";
         final static String DATE_SESSION = "date_session";
-        final static String SC = "sc";
-        final static String RX = "rx";
-        final static String RX_PLUS = "rx_plus";
+        final static String WOD_LEVEL = "wodLevel";
         final static String WARM_UP = "warm_up";
         final static String SKILL = "skill";
         final static String WOD = "wod";

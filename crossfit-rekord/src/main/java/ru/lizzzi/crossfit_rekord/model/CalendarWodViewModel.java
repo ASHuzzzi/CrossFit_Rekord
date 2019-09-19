@@ -67,19 +67,19 @@ public class CalendarWodViewModel  extends AndroidViewModel {
             @Override
             public void run() {
                 BackendlessQueries backendlessQuery = new BackendlessQueries();
-                List<Map> loadedDates = backendlessQuery.loadingCalendarWod(
+                List<Map> trainingResults = backendlessQuery.loadingCalendarWod(
                         userObjectID,
                         timeStart,
                         timeFinish);
-                if (loadedDates != null) {
+                if (trainingResults != null) {
                     ArrayList<Date> datesForLoadInLocalDb = new ArrayList<>();
                     Date parseDate;
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
                             "EEE MMM dd HH:mm:ss z yyyy",
                             Locale.ENGLISH);
-                    for (int i = 0; i < loadedDates.size(); i++) {
-                        String dateInStringFormat =
-                                String.valueOf(loadedDates.get(i).get("date_session"));
+                    for (int i = 0; i < trainingResults.size(); i++) {
+                        String dateInStringFormat = String.valueOf(
+                                trainingResults.get(i).get(backendlessQuery.TABLE_RESULTS_DATE_SESSION));
                         try {
                             parseDate = simpleDateFormat.parse(dateInStringFormat);
                             datesForLoadInLocalDb.add(parseDate);
@@ -89,7 +89,7 @@ public class CalendarWodViewModel  extends AndroidViewModel {
                     }
                     selectDates = datesForLoadInLocalDb;
                     String userId = sharedPreferences.getString(APP_PREFERENCES_OBJECTID, "");
-                    dbStorage.saveDates(userId, selectDates);
+                    dbStorage.saveDates(userId, trainingResults);
                     liveData.postValue(selectDates);
                 } else {
                     liveData.postValue(null);

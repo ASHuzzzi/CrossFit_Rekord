@@ -51,9 +51,7 @@ public class EnterResultViewModel extends AndroidViewModel {
         action = ACTION_SAVE;
     }
 
-    public LiveData<Boolean> saveWorkoutDetails(
-            final String userSkill,
-            final String userWodResult) {
+    public LiveData<Boolean> saveWorkoutDetails(final String userSkill, final String userWodResult) {
         final MutableLiveData<Boolean> liveData = new MutableLiveData<>();
         executor.execute(new Runnable() {
             @Override
@@ -86,7 +84,10 @@ public class EnterResultViewModel extends AndroidViewModel {
                                         sharedPreferences.getString(
                                                 APP_PREFERENCES_OBJECTID,
                                                 ""),
-                                        dateForLoader);
+                                        dateForLoader,
+                                        userSkill,
+                                        wodLevel,
+                                        userWodResult);
                                 break;
 
                             case ACTION_DELETE:
