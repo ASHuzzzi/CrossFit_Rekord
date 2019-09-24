@@ -3,117 +3,83 @@ package ru.lizzzi.crossfit_rekord.fragments;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.TextView;
+
+import java.util.Map;
 
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterMyResults;
+import ru.lizzzi.crossfit_rekord.data.SQLiteStorageWod;
 import ru.lizzzi.crossfit_rekord.interfaces.TitleChange;
-import ru.lizzzi.crossfit_rekord.model.MyResultsViewModel;
+import ru.lizzzi.crossfit_rekord.model.MyResultViewModel;
 
 public class MyResultsFragment extends Fragment {
 
-    private RecyclerView recyclerResults;
-    private EditText editMyWeightResult;
+    private MyResultViewModel viewModel;
+    private TextView textView;
+    private TextView textLastDateSession;
+    private TextView textLastWodLevel;
+    private TextView textLastWod;
 
-    private RecyclerAdapterMyResults adapter;
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_my_result, container, false);
+        viewModel = ViewModelProviders.of(this).get(MyResultViewModel.class);
 
-    private MyResultsViewModel viewModel;
+        initButtonOneRepeatHighs(view);
+        textView = view.findViewById(R.id.textView8);
+        textLastDateSession = view.findViewById(R.id.textLastDateSession);
+        textLastWodLevel = view.findViewById(R.id.textLastWodLevel);
+        textLastWod = view.findViewById(R.id.textLastWod);
 
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState){
-        View view = inflater.inflate(R.layout.fragment_my_results, container, false);
-        viewModel =
-                ViewModelProviders.of(MyResultsFragment.this).get(MyResultsViewModel.class);
-
-        initEditMyWeightResult(view);
-        initRecyclerResults(view);
-        initButtonSaveMyResult(view);
-
-        return view;
+         return view;
     }
 
-    private void initEditMyWeightResult(View rootView) {
-        editMyWeightResult = rootView.findViewById(R.id.editMyWeightResult);
-        editMyWeightResult.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                viewModel.setMyWeight(editMyWeightResult.getText().toString());
-            }
-        });
-    }
-
-    private void initRecyclerResults(View rootView) {
-        recyclerResults = rootView.findViewById(R.id.recyclerResults);
-        adapter = new RecyclerAdapterMyResults(MyResultsFragment.this);
-        LinearLayoutManager layoutManager =
-                new LinearLayoutManager(getContext());
-        recyclerResults = rootView.findViewById(R.id.recyclerResults);
-        recyclerResults.setLayoutManager(layoutManager);
-        recyclerResults.setAdapter(adapter);
-        recyclerResults.setVisibility(View.INVISIBLE);
-    }
-
-    private void initButtonSaveMyResult(View rootView) {
-        Button buttonSaveMyResult = rootView.findViewById(R.id.btnSaveMyResult);
-        buttonSaveMyResult.setOnClickListener(new View.OnClickListener() {
+    private void initButtonOneRepeatHighs(View rootView) {
+        Button buttonOneRepeatHighs = rootView.findViewById(R.id.buttonOneRepeatHighs);
+        buttonOneRepeatHighs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                saveResultInDB();
-                Toast.makeText(getContext(), "Данные обновлены", Toast.LENGTH_SHORT).show();
+                OneRepeatHighsFragment fragment = new OneRepeatHighsFragment();
+                FragmentManager fragmentManager = getFragmentManager();
+                if (fragmentManager != null) {
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.setCustomAnimations(
+                            R.anim.pull_in_right,
+                            R.anim.push_out_left,
+                            R.anim.pull_in_left,
+                            R.anim.push_out_right);
+                    fragmentTransaction.replace(R.id.container, fragment);
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commit();
+                }
             }
         });
     }
 
     @Override
-    public  void onStart() {
+    public void onStart() {
         super.onStart();
 
         TitleChange listenerTitleChange = (TitleChange) getActivity();
         if (listenerTitleChange != null) {
             listenerTitleChange.changeTitle(
-                    R.string.title_MyResults_Fragment,
-                    R.string.title_MyResults_Fragment);
+                    R.string.title_MyResult_Fragment,
+                    R.string.title_MyResult_Fragment);
         }
 
-        editMyWeightResult.setText(
-                (viewModel.getMyWeight().equals("0"))
-                        ? ""
-                        : viewModel.getMyWeight());
-
-
-        if (adapter.isEmpty()) {
-            adapter.setExercises(viewModel.getResults());
-            adapter.notifyDataSetChanged();
-            recyclerResults.setVisibility(View.VISIBLE);
-        }
-    }
-
-    private void saveResultInDB() {
-        viewModel.saveResults();
-        viewModel.saveWeight();
-    }
-
-    public void setExercise(String exercise, String result) {
-        viewModel.setExercises(exercise, result);
+        textView.setText( String.valueOf(viewModel.getMonthlyTraining()));
+        Map<String, String> lastTraining = viewModel.getLastTraining();
+        textLastDateSession.setText(lastTraining.get("dateSession"));
+        textLastWodLevel.setText(lastTraining.get("wodLevel"));
+        textLastWod.setText(lastTraining.get("wod"));
     }
 }

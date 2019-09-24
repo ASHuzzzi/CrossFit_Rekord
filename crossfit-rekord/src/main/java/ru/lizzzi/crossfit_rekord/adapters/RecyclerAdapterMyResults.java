@@ -15,17 +15,17 @@ import java.util.List;
 import java.util.Map;
 
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.fragments.MyResultsFragment;
+import ru.lizzzi.crossfit_rekord.fragments.OneRepeatHighsFragment;
 import ru.lizzzi.crossfit_rekord.items.ResultItem;
 
 public class RecyclerAdapterMyResults
         extends RecyclerView.Adapter<RecyclerAdapterMyResults.ViewHolder> {
 
-    private MyResultsFragment fragment;
+    private OneRepeatHighsFragment fragment;
     private List<Map<String, String>> exercises;
     private ResultItem item;
 
-    public RecyclerAdapterMyResults(MyResultsFragment fragment) {
+    public RecyclerAdapterMyResults(OneRepeatHighsFragment fragment) {
         this.fragment = fragment;
         item = new ResultItem(fragment.getContext());
         exercises = new ArrayList<>();

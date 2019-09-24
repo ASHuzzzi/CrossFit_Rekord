@@ -121,5 +121,5 @@
         android:paddingRight="25dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:text="@string/strButtonSaveMyResult" />
+        android:text="@string/strButtonSaveOneRepeatHighs" />
 </android.widget.RelativeLayout>

@@ -105,8 +105,9 @@
     <string name="title_ChangePassword_Fragment">Изменение пароля</string>
     <string name="title_Regystry_Fragment">Регистрация</string>
     <string name="title_PasswordRecovery_Fragment">Восстановление пароля</string>
-    <string name="title_MyResults_Fragment">Мои результаты</string>
+    <string name="title_OneRepeatHighs_Fragment">Мои максимумы</string>
     <string name="title_AlarmSettings_Fragment">Уведомления</string>
+    <string name="title_MyResult_Fragment">Мои результаты</string>
 
     <!-- Значения для фрагмента AboutMe -->
     <string name="strCardNumber">Номер моей карты</string>
@@ -223,8 +224,8 @@
     <!-- Значения для фрагмента Character -->
     <string name="strSelectCharacter">Выберите букву раздела</string>
 
-    <!-- Значения для фрагмента MyResult -->
-    <string name="strButtonSaveMyResult">Сохранить</string>
+    <!-- Значения для фрагмента OneRepeatHighs -->
+    <string name="strButtonSaveOneRepeatHighs">Сохранить</string>
 
     <string name="strDBMyResultMyWeightEN">MyWeight</string>
     <string name="strDBMyResultMyWeightRu">Мой вес</string>
@@ -306,5 +307,8 @@
 
     <string name="exercise">exercise</string>
     <string name="exerciseRu">exerciseRu</string>
-    <string name="resultExercise">result</string>
+    <string name="resultExercise">result</string>\
+
+    <!-- Значения для фрагмента MyResult -->
+    <string name="oneRepeatHighs">Мои максимумы</string>
 </resources>

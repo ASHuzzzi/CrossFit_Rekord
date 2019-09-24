@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -144,6 +145,62 @@ public class SQLiteStorageWod extends SQLiteOpenHelper {
                 DbHelper.DATE_SESSION + "= '" + date + "'";
         database.delete(DbHelper.TABLE_NAME, selection, null);
         database.close();
+    }
+
+    public int getTrainingQuantity(long timeStart, long timeEnd) {
+        database = this.getReadableDatabase();
+        int trainingQuantity = 0;
+        String[] columns = new String[] { "COUNT(" + DbHelper.DATE_SESSION + ")" };
+        String selection =
+                DbHelper.DATE_SESSION + " >= '" + timeStart
+                + "' AND " +
+                DbHelper.DATE_SESSION + " <= '" + timeEnd + "'";
+        Cursor cursor = database.query(
+                true,
+                DbHelper.TABLE_NAME,
+                columns,
+                selection,
+                null,
+                null,
+                null,
+                null,
+                null);
+        if (cursor != null && cursor.moveToFirst()) {
+            trainingQuantity = cursor.getInt(0);
+            cursor.close();
+        }
+        return trainingQuantity;
+    }
+
+    public Map<String, String> getLastTraining() {
+        database = this.getReadableDatabase();
+        Map<String, String>  lastTraining = new HashMap<>();
+        String[] columns = new String[] { "MAX(" + DbHelper.DATE_SESSION + ")", "*" };
+        Cursor cursor = database.query(
+                DbHelper.TABLE_NAME,
+                columns,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null);
+        if (cursor != null && cursor.moveToFirst()) {
+            String dateSession;
+            String wodLevel;
+            String wod;
+
+            do {
+                dateSession = String.valueOf(cursor.getLong(cursor.getColumnIndex(DbHelper.DATE_SESSION)));
+                wodLevel = cursor.getString(cursor.getColumnIndex(DbHelper.WOD_LEVEL));
+                wod = cursor.getString(cursor.getColumnIndex(DbHelper.WOD));
+                lastTraining.put("dateSession", dateSession);
+                lastTraining.put("wodLevel", wodLevel);
+                lastTraining.put("wod", wod);
+            } while (cursor.moveToNext());
+            cursor.close();
+        }
+        return lastTraining;
     }
 
     public static final class DbHelper {

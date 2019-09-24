@@ -11,7 +11,7 @@ import java.util.Map;
 
 import ru.lizzzi.crossfit_rekord.data.SQLiteStorageUserResult;
 
-public class MyResultsViewModel extends AndroidViewModel {
+public class OneRepeatHighsViewModel extends AndroidViewModel {
 
     private SQLiteStorageUserResult dbStorage;
     private List<Map<String, String>> exercisesForShow;
@@ -20,7 +20,7 @@ public class MyResultsViewModel extends AndroidViewModel {
     private String RESULT = "result";
     private String myWeight;
 
-    public MyResultsViewModel(@NonNull Application application) {
+    public OneRepeatHighsViewModel(@NonNull Application application) {
         super(application);
         dbStorage = new SQLiteStorageUserResult(getApplication());
         exercisesForShow = dbStorage.getResult();
