@@ -203,6 +203,33 @@ public class SQLiteStorageWod extends SQLiteOpenHelper {
         return lastTraining;
     }
 
+    public List<String> getLevelsTrainingForPeriod(long timeStart, long timeEnd) {
+        database = this.getReadableDatabase();
+        List<String> levels = new ArrayList<>();
+        String[] columns = new String[] { DbHelper.WOD_LEVEL };
+        String selection =
+                DbHelper.DATE_SESSION + " >= '" + timeStart
+                        + "' AND " +
+                        DbHelper.DATE_SESSION + " <= '" + timeEnd + "'";
+        Cursor cursor = database.query(
+                DbHelper.TABLE_NAME,
+                columns,
+                selection,
+                null,
+                null,
+                null,
+                null,
+                null);
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                levels.add(cursor.getString(cursor.getColumnIndex(DbHelper.WOD_LEVEL)));
+            } while (cursor.moveToNext());
+            cursor.close();
+            cursor.close();
+        }
+        return levels;
+    }
+
     public static final class DbHelper {
 
         final static String TABLE_NAME = "calendarWod";

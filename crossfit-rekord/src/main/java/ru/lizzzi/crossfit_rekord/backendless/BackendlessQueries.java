@@ -207,7 +207,7 @@ public class BackendlessQueries {
                                      String userWodResult) {
         String tableName = TABLE_RESULTS_NAME;
         String dateSession = TABLE_RESULTS_DATE_SESSION;
-        String ownerID = TABLE_RECORDING_OWNER_ID;
+        String ownerID = TABLE_RESULTS_USER_ID;
         String name = TABLE_RESULTS_USER_NAME;
         String surname = TABLE_RESULTS_SURNAME;
         String skill = TABLE_RESULTS_SKILL;

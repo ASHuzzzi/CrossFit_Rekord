@@ -1,51 +1,221 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp">
 
-    <TextView
-        android:id="@+id/textView8"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/layoutNumberOfWorkouts"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        android:textColor="@color/colorRedPrimary"
-        android:textSize="12sp"/>
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/textLastDateSession"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/textView8"
-        android:text="TextView"
-        android:textColor="@color/colorRedPrimary"
-        android:textSize="12sp" />
+        <TextView
+            android:id="@+id/captionMonthlyTraining"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Тренировок в этом месяце: "
+            android:textColor="@color/colorRedPrimary"
+            android:textSize="12sp"
+            />
 
-    <TextView
-        android:id="@+id/textLastWodLevel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/textLastDateSession"
-        android:text="TextView"
-        android:textColor="@color/colorRedPrimary"
-        android:textSize="12sp" />
+        <TextView
+            android:id="@+id/textMonthlyTraining"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textColor="@color/colorRedPrimary"
+            android:textSize="12sp"/>
 
-    <TextView
-        android:id="@+id/textLastWod"
-        android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/captionPreviousMonthlyTraining"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=", в предыдущем: "
+            android:textColor="@color/colorRedPrimary"
+            android:textSize="12sp"/>
+
+        <TextView
+            android:id="@+id/textPreviousMonthlyTraining"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textColor="@color/colorRedPrimary"
+            android:textSize="12sp"
+            android:layout_marginEnd="5dp"/>
+
+        <TextView
+            android:id="@+id/textTrainingDynamics"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textColor="@color/colorRedPrimary"
+            android:textSize="12sp"/>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/layoutLevelsOfWorkouts"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/textLastWodLevel"
-        android:text="TextView"
-        android:textColor="@color/colorRedPrimary"
-        android:textSize="12sp" />
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/layoutNumberOfWorkouts">
+
+        <TextView
+            android:id="@+id/textCaptionLevelsOfWorkouts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Тренировки по уровням в этом месяце"
+            android:textColor="@color/colorRedPrimary"
+            android:textSize="12sp"
+            android:layout_centerHorizontal="true"/>
+
+        <TextView
+            android:id="@+id/captionSc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textCaptionLevelsOfWorkouts"
+            android:text="Sc: "
+            android:textColor="@color/colorRedPrimary"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/textSc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textCaptionLevelsOfWorkouts"
+            android:layout_toEndOf="@id/captionSc"
+            android:text="0"
+            android:textColor="@color/colorRedPrimary"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/captionRx"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/captionSc"
+            android:text="Rx: "
+            android:textColor="@color/colorRedPrimary"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/textRx"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/captionSc"
+            android:layout_toEndOf="@id/captionRx"
+            android:text="0"
+            android:textColor="@color/colorRedPrimary"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/captionRxPlus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/captionRx"
+            android:text="Rx+: "
+            android:textColor="@color/colorRedPrimary"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/textRxPlus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/captionRx"
+            android:layout_toEndOf="@id/captionRxPlus"
+            android:text="0"
+            android:textColor="@color/colorRedPrimary"
+            android:textSize="12sp" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layoutPreviousTraining"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/layoutLevelsOfWorkouts">
+
+        <TextView
+            android:id="@+id/textCaptionPreviousTraining"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Предыдущая тренировка"
+            android:textColor="@color/colorRedPrimary"
+            android:textSize="12sp"
+            android:layout_centerHorizontal="true"/>
+
+        <TextView
+            android:id="@+id/captionLastDateSession"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textCaptionPreviousTraining"
+            android:text="Дата: "
+            android:textColor="@color/colorRedPrimary"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/textLastDateSession"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textCaptionPreviousTraining"
+            android:layout_toEndOf="@id/captionLastDateSession"
+            android:text="0"
+            android:textColor="@color/colorRedPrimary"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/captionLastWodLevel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textLastDateSession"
+            android:text="Уровень комплекса: "
+            android:textColor="@color/colorRedPrimary"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/textLastWodLevel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/captionLastDateSession"
+            android:layout_toEndOf="@id/captionLastWodLevel"
+            android:text="0"
+            android:textColor="@color/colorRedPrimary"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/captionLastWod"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textLastWodLevel"
+            android:text="Результат: "
+            android:textColor="@color/colorRedPrimary"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/textLastWod"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/captionLastWodLevel"
+            android:layout_toEndOf="@id/captionLastWod"
+            android:text="0"
+            android:textColor="@color/colorRedPrimary"
+            android:textSize="12sp" />
+
+    </RelativeLayout>
 
     <Button
         android:id="@+id/buttonOneRepeatHighs"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/textLastWod"
+        android:layout_below="@id/layoutPreviousTraining"
         android:layout_centerHorizontal="true"
         android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="5dp"
         android:layout_marginBottom="5dp"
         android:text="@string/oneRepeatHighs" />
+
+
 </RelativeLayout>

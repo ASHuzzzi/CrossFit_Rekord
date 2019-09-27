@@ -16,14 +16,18 @@ import android.widget.TextView;
 import java.util.Map;
 
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.data.SQLiteStorageWod;
 import ru.lizzzi.crossfit_rekord.interfaces.TitleChange;
 import ru.lizzzi.crossfit_rekord.model.MyResultViewModel;
 
 public class MyResultsFragment extends Fragment {
 
     private MyResultViewModel viewModel;
-    private TextView textView;
+    private TextView textMonthlyTraining;
+    private TextView textPreviousMonthlyTraining;
+    private TextView textTrainingDynamics;
+    private TextView textSc;
+    private TextView textRx;
+    private TextView textRxPlus;
     private TextView textLastDateSession;
     private TextView textLastWodLevel;
     private TextView textLastWod;
@@ -35,12 +39,16 @@ public class MyResultsFragment extends Fragment {
         viewModel = ViewModelProviders.of(this).get(MyResultViewModel.class);
 
         initButtonOneRepeatHighs(view);
-        textView = view.findViewById(R.id.textView8);
+        textMonthlyTraining = view.findViewById(R.id.textMonthlyTraining);
+        textPreviousMonthlyTraining = view.findViewById(R.id.textPreviousMonthlyTraining);
+        textTrainingDynamics = view.findViewById(R.id.textTrainingDynamics);
+        textSc = view.findViewById(R.id.textSc);
+        textRx = view.findViewById(R.id.textRx);
+        textRxPlus = view.findViewById(R.id.textRxPlus);
         textLastDateSession = view.findViewById(R.id.textLastDateSession);
         textLastWodLevel = view.findViewById(R.id.textLastWodLevel);
         textLastWod = view.findViewById(R.id.textLastWod);
-
-         return view;
+        return view;
     }
 
     private void initButtonOneRepeatHighs(View rootView) {
@@ -76,8 +84,16 @@ public class MyResultsFragment extends Fragment {
                     R.string.title_MyResult_Fragment);
         }
 
-        textView.setText( String.valueOf(viewModel.getMonthlyTraining()));
+        textMonthlyTraining.setText(String.valueOf(viewModel.getMonthlyTraining()));
+        textPreviousMonthlyTraining.setText(String.valueOf(viewModel.getPreviousMonthlyTraining()));
+        long percent =
+                Math.round((((double) viewModel.getMonthlyTraining()/ (double) viewModel.getPreviousMonthlyTraining())-1)*100);
+        String dynamics = "(" + percent + "%)";
+        textTrainingDynamics.setText(dynamics);
         Map<String, String> lastTraining = viewModel.getLastTraining();
+        textSc.setText(String.valueOf(viewModel.getScLevel()));
+        textRx.setText(String.valueOf(viewModel.getRxLevel()));
+        textRxPlus.setText(String.valueOf(viewModel.getRxPlusLevel()));
         textLastDateSession.setText(lastTraining.get("dateSession"));
         textLastWodLevel.setText(lastTraining.get("wodLevel"));
         textLastWod.setText(lastTraining.get("wod"));
