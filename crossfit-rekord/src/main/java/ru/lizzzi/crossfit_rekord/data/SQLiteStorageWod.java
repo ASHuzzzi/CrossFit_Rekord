@@ -20,6 +20,10 @@ public class SQLiteStorageWod extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 3;
     private SQLiteDatabase database;
 
+    public static final String DATE_SESSION = "dateSession";
+    public static final String WOD_LEVEL = "wodLevel";
+    public static final String WOD = "wod";
+
     public SQLiteStorageWod(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -194,9 +198,9 @@ public class SQLiteStorageWod extends SQLiteOpenHelper {
                 dateSession = String.valueOf(cursor.getLong(cursor.getColumnIndex(DbHelper.DATE_SESSION)));
                 wodLevel = cursor.getString(cursor.getColumnIndex(DbHelper.WOD_LEVEL));
                 wod = cursor.getString(cursor.getColumnIndex(DbHelper.WOD));
-                lastTraining.put("dateSession", dateSession);
-                lastTraining.put("wodLevel", wodLevel);
-                lastTraining.put("wod", wod);
+                lastTraining.put(DATE_SESSION, dateSession);
+                lastTraining.put(WOD_LEVEL, wodLevel);
+                lastTraining.put(WOD, wod);
             } while (cursor.moveToNext());
             cursor.close();
         }
@@ -230,7 +234,7 @@ public class SQLiteStorageWod extends SQLiteOpenHelper {
         return levels;
     }
 
-    public static final class DbHelper {
+    private static final class DbHelper {
 
         final static String TABLE_NAME = "calendarWod";
         final static String DATE_SESSION = "date_session";

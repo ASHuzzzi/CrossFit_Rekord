@@ -13,7 +13,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.interfaces.TitleChange;
@@ -86,16 +88,20 @@ public class MyResultsFragment extends Fragment {
 
         textMonthlyTraining.setText(String.valueOf(viewModel.getMonthlyTraining()));
         textPreviousMonthlyTraining.setText(String.valueOf(viewModel.getPreviousMonthlyTraining()));
-        long percent =
-                Math.round((((double) viewModel.getMonthlyTraining()/ (double) viewModel.getPreviousMonthlyTraining())-1)*100);
-        String dynamics = "(" + percent + "%)";
+        String dynamics = "(" + viewModel.getTrainingRatio() + "%)";
         textTrainingDynamics.setText(dynamics);
-        Map<String, String> lastTraining = viewModel.getLastTraining();
         textSc.setText(String.valueOf(viewModel.getScLevel()));
         textRx.setText(String.valueOf(viewModel.getRxLevel()));
         textRxPlus.setText(String.valueOf(viewModel.getRxPlusLevel()));
-        textLastDateSession.setText(lastTraining.get("dateSession"));
-        textLastWodLevel.setText(lastTraining.get("wodLevel"));
-        textLastWod.setText(lastTraining.get("wod"));
+        if (viewModel.getLastTrainingSize() > 0) {
+            Date date = new Date();
+            date.setTime(Long.parseLong(viewModel.getDateSession()));
+            SimpleDateFormat dateFormat =
+                    new SimpleDateFormat(" dd MMMM (EEEE)", Locale.getDefault());
+            String formatDate = dateFormat.format(date);
+            textLastDateSession.setText(formatDate);
+            textLastWodLevel.setText(viewModel.getWodLevel());
+            textLastWod.setText(viewModel.getWod());
+        }
     }
 }
