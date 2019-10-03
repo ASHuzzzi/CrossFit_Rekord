@@ -2,12 +2,16 @@ package ru.lizzzi.crossfit_rekord.model;
 
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.data.SQLiteStorageWod;
@@ -23,6 +27,7 @@ public class MyResultViewModel extends AndroidViewModel {
     private long startPreviousMonth;
     private long startThisMonth;
     private long endThisMonth;
+    private SharedPreferences sharedPreferences;
 
     public MyResultViewModel(@NonNull Application application) {
         super(application);
@@ -105,8 +110,9 @@ public class MyResultViewModel extends AndroidViewModel {
         lastTraining = storage.getLastTraining();
     }
 
-    public int getLastTrainingSize() {
-        return lastTraining.size();
+    public boolean isLastTrainingEmpty() {
+        return Objects.requireNonNull(lastTraining.get(SQLiteStorageWod.DATE_SESSION))
+                .equals(String.valueOf(SQLiteStorageWod.EMPTY_VALUE));
     }
 
     public String getDateSession() {
@@ -119,5 +125,26 @@ public class MyResultViewModel extends AndroidViewModel {
 
     public String getWod() {
         return lastTraining.get(SQLiteStorageWod.WOD);
+    }
+
+    public void saveDateInPrefs() {
+        long ttt = Long.parseLong(Objects.requireNonNull(lastTraining.get(SQLiteStorageWod.DATE_SESSION)));
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(ttt);
+        String Day = (calendar.get(Calendar.DATE) < 10)
+                ? "0" + calendar.get(Calendar.DATE)
+                : String.valueOf(calendar.get(Calendar.DATE));
+        String Month = (calendar.get(Calendar.MONTH) < 10)
+                ? "0" + (calendar.get(Calendar.MONTH) + 1)
+                : String.valueOf((calendar.get(Calendar.MONTH) + 1));
+        String selectedDate = Month + "/" + Day + "/" + calendar.get(Calendar.YEAR);
+        String APP_PREFERENCES_SELECTEDDAY = "SelectedDay";
+        String APP_PREFERENCES = "audata";
+        sharedPreferences = getApplication().getSharedPreferences(
+                APP_PREFERENCES,
+                Context.MODE_PRIVATE);
+        sharedPreferences.edit()
+                .putString(APP_PREFERENCES_SELECTEDDAY, selectedDate)
+                .apply();
     }
 }

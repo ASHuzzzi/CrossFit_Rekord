@@ -23,6 +23,7 @@ public class SQLiteStorageWod extends SQLiteOpenHelper {
     public static final String DATE_SESSION = "dateSession";
     public static final String WOD_LEVEL = "wodLevel";
     public static final String WOD = "wod";
+    public static final int EMPTY_VALUE = 0;
 
     public SQLiteStorageWod(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -199,8 +200,16 @@ public class SQLiteStorageWod extends SQLiteOpenHelper {
                 wodLevel = cursor.getString(cursor.getColumnIndex(DbHelper.WOD_LEVEL));
                 wod = cursor.getString(cursor.getColumnIndex(DbHelper.WOD));
                 lastTraining.put(DATE_SESSION, dateSession);
-                lastTraining.put(WOD_LEVEL, wodLevel);
-                lastTraining.put(WOD, wod);
+                if (wodLevel != null) {
+                    lastTraining.put(WOD_LEVEL, wodLevel);
+                } else {
+                    lastTraining.put(WOD_LEVEL, String.valueOf(EMPTY_VALUE));
+                }
+                if (wod != null) {
+                    lastTraining.put(WOD, wod);
+                } else {
+                    lastTraining.put(WOD, String.valueOf(EMPTY_VALUE));
+                }
             } while (cursor.moveToNext());
             cursor.close();
         }

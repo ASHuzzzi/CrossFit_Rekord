@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -30,9 +31,11 @@ public class MyResultsFragment extends Fragment {
     private TextView textSc;
     private TextView textRx;
     private TextView textRxPlus;
+    private RelativeLayout layoutPreviousTraining;
     private TextView textLastDateSession;
     private TextView textLastWodLevel;
     private TextView textLastWod;
+    private Button buttonShowPreviousTraining;
 
     @Nullable
     @Override
@@ -47,9 +50,30 @@ public class MyResultsFragment extends Fragment {
         textSc = view.findViewById(R.id.textSc);
         textRx = view.findViewById(R.id.textRx);
         textRxPlus = view.findViewById(R.id.textRxPlus);
+        layoutPreviousTraining = view.findViewById(R.id.layoutPreviousTraining);
         textLastDateSession = view.findViewById(R.id.textLastDateSession);
         textLastWodLevel = view.findViewById(R.id.textLastWodLevel);
         textLastWod = view.findViewById(R.id.textLastWod);
+        buttonShowPreviousTraining = view.findViewById(R.id.buttonShowPreviousTraining);
+        buttonShowPreviousTraining.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewModel.saveDateInPrefs();
+                WorkoutDetailsFragment fragment = new WorkoutDetailsFragment();
+                FragmentManager fragmentManager = getFragmentManager();
+                if (fragmentManager != null) {
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.setCustomAnimations(
+                            R.anim.pull_in_right,
+                            R.anim.push_out_left,
+                            R.anim.pull_in_left,
+                            R.anim.push_out_right);
+                    fragmentTransaction.replace(R.id.container, fragment);
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commit();
+                }
+            }
+        });
         return view;
     }
 
@@ -93,7 +117,8 @@ public class MyResultsFragment extends Fragment {
         textSc.setText(String.valueOf(viewModel.getScLevel()));
         textRx.setText(String.valueOf(viewModel.getRxLevel()));
         textRxPlus.setText(String.valueOf(viewModel.getRxPlusLevel()));
-        if (viewModel.getLastTrainingSize() > 0) {
+        if (!viewModel.isLastTrainingEmpty()) {
+            layoutPreviousTraining.setVisibility(View.VISIBLE);
             Date date = new Date();
             date.setTime(Long.parseLong(viewModel.getDateSession()));
             SimpleDateFormat dateFormat =
@@ -102,6 +127,8 @@ public class MyResultsFragment extends Fragment {
             textLastDateSession.setText(formatDate);
             textLastWodLevel.setText(viewModel.getWodLevel());
             textLastWod.setText(viewModel.getWod());
+        } else {
+            layoutPreviousTraining.setVisibility(View.GONE);
         }
     }
 }

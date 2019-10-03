@@ -5,21 +5,46 @@
     android:layout_height="match_parent"
     android:padding="10dp">
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/captionTraining"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Статистика по тренировкам"
+        android:textColor="@color/colorRedPrimary"
+        android:layout_centerHorizontal="true" />
+
+    <View
+        android:id="@+id/divider1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/captionTraining"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/divider" />
+
+    <RelativeLayout
         android:id="@+id/layoutNumberOfWorkouts"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_below="@id/divider1">
+
+        <TextView
+            android:id="@+id/captionQuantity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="Количество посещений"
+            android:textColor="@color/colorRedPrimary" />
 
         <TextView
             android:id="@+id/captionMonthlyTraining"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Тренировок в этом месяце: "
+            android:text="за месяц: "
             android:textColor="@color/colorRedPrimary"
-            android:textSize="12sp"
-            />
+            android:layout_below="@id/captionQuantity" />
 
         <TextView
             android:id="@+id/textMonthlyTraining"
@@ -27,15 +52,16 @@
             android:layout_height="wrap_content"
             android:text="0"
             android:textColor="@color/colorRedPrimary"
-            android:textSize="12sp"/>
+            android:layout_below="@id/captionQuantity"
+            android:layout_toRightOf="@id/captionMonthlyTraining"/>
 
         <TextView
             android:id="@+id/captionPreviousMonthlyTraining"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=", в предыдущем: "
+            android:text="за предыдущий месяц: "
             android:textColor="@color/colorRedPrimary"
-            android:textSize="12sp"/>
+            android:layout_below="@id/captionMonthlyTraining"/>
 
         <TextView
             android:id="@+id/textPreviousMonthlyTraining"
@@ -43,7 +69,17 @@
             android:layout_height="wrap_content"
             android:text="0"
             android:textColor="@color/colorRedPrimary"
-            android:textSize="12sp"
+            android:layout_below="@id/captionMonthlyTraining"
+            android:layout_toRightOf="@+id/captionPreviousMonthlyTraining"
+            android:layout_marginEnd="5dp"/>
+
+        <TextView
+            android:id="@+id/captionTrainingDynamics"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="динамика: "
+            android:textColor="@color/colorRedPrimary"
+            android:layout_below="@id/captionPreviousMonthlyTraining"
             android:layout_marginEnd="5dp"/>
 
         <TextView
@@ -52,8 +88,9 @@
             android:layout_height="wrap_content"
             android:text="0"
             android:textColor="@color/colorRedPrimary"
-            android:textSize="12sp"/>
-    </LinearLayout>
+            android:layout_below="@id/captionPreviousMonthlyTraining"
+            android:layout_toRightOf="@+id/captionTrainingDynamics"/>
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/layoutLevelsOfWorkouts"
@@ -66,9 +103,8 @@
             android:id="@+id/textCaptionLevelsOfWorkouts"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Тренировки по уровням в этом месяце"
+            android:text="По уровням за месяц"
             android:textColor="@color/colorRedPrimary"
-            android:textSize="12sp"
             android:layout_centerHorizontal="true"/>
 
         <TextView
@@ -77,8 +113,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/textCaptionLevelsOfWorkouts"
             android:text="Sc: "
-            android:textColor="@color/colorRedPrimary"
-            android:textSize="12sp" />
+            android:textColor="@color/colorRedPrimary"/>
 
         <TextView
             android:id="@+id/textSc"
@@ -87,8 +122,7 @@
             android:layout_below="@id/textCaptionLevelsOfWorkouts"
             android:layout_toEndOf="@id/captionSc"
             android:text="0"
-            android:textColor="@color/colorRedPrimary"
-            android:textSize="12sp" />
+            android:textColor="@color/colorRedPrimary"/>
 
         <TextView
             android:id="@+id/captionRx"
@@ -96,8 +130,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/captionSc"
             android:text="Rx: "
-            android:textColor="@color/colorRedPrimary"
-            android:textSize="12sp" />
+            android:textColor="@color/colorRedPrimary"/>
 
         <TextView
             android:id="@+id/textRx"
@@ -106,8 +139,7 @@
             android:layout_below="@id/captionSc"
             android:layout_toEndOf="@id/captionRx"
             android:text="0"
-            android:textColor="@color/colorRedPrimary"
-            android:textSize="12sp" />
+            android:textColor="@color/colorRedPrimary"/>
 
         <TextView
             android:id="@+id/captionRxPlus"
@@ -115,8 +147,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/captionRx"
             android:text="Rx+: "
-            android:textColor="@color/colorRedPrimary"
-            android:textSize="12sp" />
+            android:textColor="@color/colorRedPrimary"/>
 
         <TextView
             android:id="@+id/textRxPlus"
@@ -125,17 +156,25 @@
             android:layout_below="@id/captionRx"
             android:layout_toEndOf="@id/captionRxPlus"
             android:text="0"
-            android:textColor="@color/colorRedPrimary"
-            android:textSize="12sp" />
+            android:textColor="@color/colorRedPrimary"/>
 
     </RelativeLayout>
+
+    <View
+        android:id="@+id/divider2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/layoutLevelsOfWorkouts"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/divider" />
 
     <RelativeLayout
         android:id="@+id/layoutPreviousTraining"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:layout_below="@id/layoutLevelsOfWorkouts">
+        android:layout_below="@id/divider2">
 
         <TextView
             android:id="@+id/textCaptionPreviousTraining"
@@ -143,7 +182,6 @@
             android:layout_height="wrap_content"
             android:text="Предыдущая тренировка"
             android:textColor="@color/colorRedPrimary"
-            android:textSize="12sp"
             android:layout_centerHorizontal="true"/>
 
         <TextView
@@ -152,8 +190,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/textCaptionPreviousTraining"
             android:text="Дата: "
-            android:textColor="@color/colorRedPrimary"
-            android:textSize="12sp" />
+            android:textColor="@color/colorRedPrimary"/>
 
         <TextView
             android:id="@+id/textLastDateSession"
@@ -162,8 +199,7 @@
             android:layout_below="@id/textCaptionPreviousTraining"
             android:layout_toEndOf="@id/captionLastDateSession"
             android:text="0"
-            android:textColor="@color/colorRedPrimary"
-            android:textSize="12sp" />
+            android:textColor="@color/colorRedPrimary"/>
 
         <TextView
             android:id="@+id/captionLastWodLevel"
@@ -171,8 +207,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/textLastDateSession"
             android:text="Уровень комплекса: "
-            android:textColor="@color/colorRedPrimary"
-            android:textSize="12sp" />
+            android:textColor="@color/colorRedPrimary"/>
 
         <TextView
             android:id="@+id/textLastWodLevel"
@@ -181,8 +216,7 @@
             android:layout_below="@id/captionLastDateSession"
             android:layout_toEndOf="@id/captionLastWodLevel"
             android:text="0"
-            android:textColor="@color/colorRedPrimary"
-            android:textSize="12sp" />
+            android:textColor="@color/colorRedPrimary"/>
 
         <TextView
             android:id="@+id/captionLastWod"
@@ -190,8 +224,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/textLastWodLevel"
             android:text="Результат: "
-            android:textColor="@color/colorRedPrimary"
-            android:textSize="12sp" />
+            android:textColor="@color/colorRedPrimary"/>
 
         <TextView
             android:id="@+id/textLastWod"
@@ -200,8 +233,19 @@
             android:layout_below="@id/captionLastWodLevel"
             android:layout_toEndOf="@id/captionLastWod"
             android:text="0"
-            android:textColor="@color/colorRedPrimary"
-            android:textSize="12sp" />
+            android:textColor="@color/colorRedPrimary"/>
+
+        <Button
+            android:id="@+id/buttonShowPreviousTraining"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/captionLastWod"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="15dp"
+            android:text="Посмотреть её" />
 
     </RelativeLayout>
 
@@ -209,12 +253,12 @@
         android:id="@+id/buttonOneRepeatHighs"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/layoutPreviousTraining"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="5dp"
-        android:layout_marginBottom="5dp"
+        android:layout_marginBottom="15dp"
         android:text="@string/oneRepeatHighs" />
 
 
