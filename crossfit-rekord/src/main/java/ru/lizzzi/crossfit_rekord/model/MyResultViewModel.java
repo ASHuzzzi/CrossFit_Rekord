@@ -128,9 +128,10 @@ public class MyResultViewModel extends AndroidViewModel {
     }
 
     public void saveDateInPrefs() {
-        long ttt = Long.parseLong(Objects.requireNonNull(lastTraining.get(SQLiteStorageWod.DATE_SESSION)));
+        long dateSession =
+                Long.parseLong(Objects.requireNonNull(lastTraining.get(SQLiteStorageWod.DATE_SESSION)));
         Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(ttt);
+        calendar.setTimeInMillis(dateSession);
         String Day = (calendar.get(Calendar.DATE) < 10)
                 ? "0" + calendar.get(Calendar.DATE)
                 : String.valueOf(calendar.get(Calendar.DATE));

@@ -35,7 +35,6 @@ public class MyResultsFragment extends Fragment {
     private TextView textLastDateSession;
     private TextView textLastWodLevel;
     private TextView textLastWod;
-    private Button buttonShowPreviousTraining;
 
     @Nullable
     @Override
@@ -43,7 +42,6 @@ public class MyResultsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_my_result, container, false);
         viewModel = ViewModelProviders.of(this).get(MyResultViewModel.class);
 
-        initButtonOneRepeatHighs(view);
         textMonthlyTraining = view.findViewById(R.id.textMonthlyTraining);
         textPreviousMonthlyTraining = view.findViewById(R.id.textPreviousMonthlyTraining);
         textTrainingDynamics = view.findViewById(R.id.textTrainingDynamics);
@@ -54,27 +52,20 @@ public class MyResultsFragment extends Fragment {
         textLastDateSession = view.findViewById(R.id.textLastDateSession);
         textLastWodLevel = view.findViewById(R.id.textLastWodLevel);
         textLastWod = view.findViewById(R.id.textLastWod);
-        buttonShowPreviousTraining = view.findViewById(R.id.buttonShowPreviousTraining);
+        initButtonShowPreviousTraining(view);
+        initButtonOneRepeatHighs(view);
+        return view;
+    }
+
+    private void initButtonShowPreviousTraining(View rootview) {
+        Button buttonShowPreviousTraining = rootview.findViewById(R.id.buttonShowPreviousTraining);
         buttonShowPreviousTraining.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 viewModel.saveDateInPrefs();
-                WorkoutDetailsFragment fragment = new WorkoutDetailsFragment();
-                FragmentManager fragmentManager = getFragmentManager();
-                if (fragmentManager != null) {
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.setCustomAnimations(
-                            R.anim.pull_in_right,
-                            R.anim.push_out_left,
-                            R.anim.pull_in_left,
-                            R.anim.push_out_right);
-                    fragmentTransaction.replace(R.id.container, fragment);
-                    fragmentTransaction.addToBackStack(null);
-                    fragmentTransaction.commit();
-                }
+                openFragment(WorkoutDetailsFragment.class);
             }
         });
-        return view;
     }
 
     private void initButtonOneRepeatHighs(View rootView) {
@@ -82,21 +73,30 @@ public class MyResultsFragment extends Fragment {
         buttonOneRepeatHighs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                OneRepeatHighsFragment fragment = new OneRepeatHighsFragment();
-                FragmentManager fragmentManager = getFragmentManager();
-                if (fragmentManager != null) {
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.setCustomAnimations(
-                            R.anim.pull_in_right,
-                            R.anim.push_out_left,
-                            R.anim.pull_in_left,
-                            R.anim.push_out_right);
-                    fragmentTransaction.replace(R.id.container, fragment);
-                    fragmentTransaction.addToBackStack(null);
-                    fragmentTransaction.commit();
-                }
+                openFragment(OneRepeatHighsFragment.class);
             }
         });
+    }
+
+    private void openFragment(Class fragmentClass) {
+        try {
+            Fragment fragment = (Fragment) fragmentClass.newInstance();
+            FragmentManager fragmentManager = getFragmentManager();
+            if (fragmentManager != null) {
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.setCustomAnimations(
+                        R.anim.pull_in_right,
+                        R.anim.push_out_left,
+                        R.anim.pull_in_left,
+                        R.anim.push_out_right);
+                fragmentTransaction.replace(R.id.container, fragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
