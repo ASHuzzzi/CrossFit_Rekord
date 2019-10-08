@@ -108,6 +108,7 @@
     <string name="title_OneRepeatHighs_Fragment">Мои максимумы</string>
     <string name="title_AlarmSettings_Fragment">Уведомления</string>
     <string name="title_MyResult_Fragment">Мои результаты</string>
+    <string name="title_TrainingList_Fragment">Мои тренировки</string>
 
     <!-- Значения для фрагмента AboutMe -->
     <string name="strCardNumber">Номер моей карты</string>

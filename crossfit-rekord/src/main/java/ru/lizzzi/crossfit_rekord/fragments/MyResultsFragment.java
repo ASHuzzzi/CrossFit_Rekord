@@ -35,6 +35,8 @@ public class MyResultsFragment extends Fragment {
     private TextView textLastDateSession;
     private TextView textLastWodLevel;
     private TextView textLastWod;
+    private Button buttonMonthlyTraining;
+    private Button buttonPreviousMonthlyTraining;
 
     @Nullable
     @Override
@@ -52,18 +54,38 @@ public class MyResultsFragment extends Fragment {
         textLastDateSession = view.findViewById(R.id.textLastDateSession);
         textLastWodLevel = view.findViewById(R.id.textLastWodLevel);
         textLastWod = view.findViewById(R.id.textLastWod);
+        buttonMonthlyTraining = view.findViewById(R.id.buttonMonthlyTraining);
+        buttonMonthlyTraining.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putLong(TraningListFragment.TIME_START, viewModel.getStartThisMonth());
+                bundle.putLong(TraningListFragment.TIME_END, viewModel.getEndThisMonth());
+                openFragment(TraningListFragment.class, bundle);
+            }
+        });
+        buttonPreviousMonthlyTraining = view.findViewById(R.id.buttonPreviousMonthlyTraining);
+        buttonPreviousMonthlyTraining.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putLong(TraningListFragment.TIME_START, viewModel.getStartPreviousMonth());
+                bundle.putLong(TraningListFragment.TIME_END, viewModel.getStartThisMonth());
+                openFragment(TraningListFragment.class, bundle);
+            }
+        });
         initButtonShowPreviousTraining(view);
         initButtonOneRepeatHighs(view);
         return view;
     }
 
-    private void initButtonShowPreviousTraining(View rootview) {
-        Button buttonShowPreviousTraining = rootview.findViewById(R.id.buttonShowPreviousTraining);
+    private void initButtonShowPreviousTraining(View rootView) {
+        Button buttonShowPreviousTraining = rootView.findViewById(R.id.buttonShowPreviousTraining);
         buttonShowPreviousTraining.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 viewModel.saveDateInPrefs();
-                openFragment(WorkoutDetailsFragment.class);
+                openFragment(WorkoutDetailsFragment.class, null);
             }
         });
     }
@@ -73,14 +95,15 @@ public class MyResultsFragment extends Fragment {
         buttonOneRepeatHighs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openFragment(OneRepeatHighsFragment.class);
+                openFragment(OneRepeatHighsFragment.class, null);
             }
         });
     }
 
-    private void openFragment(Class fragmentClass) {
+    private void openFragment(Class fragmentClass, Bundle bundle) {
         try {
             Fragment fragment = (Fragment) fragmentClass.newInstance();
+            fragment.setArguments(bundle);
             FragmentManager fragmentManager = getFragmentManager();
             if (fragmentManager != null) {
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

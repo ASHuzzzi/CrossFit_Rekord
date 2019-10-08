@@ -243,6 +243,50 @@ public class SQLiteStorageWod extends SQLiteOpenHelper {
         return levels;
     }
 
+    public List<Map> getTrainingForPeriod(long timeStart, long timeEnd) {
+        database = this.getReadableDatabase();
+        String[] columns = new String[] { DbHelper.DATE_SESSION, DbHelper.WOD_LEVEL, DbHelper.WOD };
+        String selection =
+                DbHelper.DATE_SESSION + " >= '" + timeStart
+                        + "' AND " +
+                        DbHelper.DATE_SESSION + " <= '" + timeEnd + "'";
+        Cursor cursor = database.query(
+                DbHelper.TABLE_NAME,
+                columns,
+                selection,
+                null,
+                null,
+                null,
+                null,
+                null);
+        List<Map> trainingList = new ArrayList<>();
+        if (cursor != null && cursor.moveToFirst()) {
+            Map<String, String> training = new HashMap<>();
+            String dateSession;
+            String wodLevel;
+            String wod;
+            do {
+                dateSession = String.valueOf(cursor.getLong(cursor.getColumnIndex(DbHelper.DATE_SESSION)));
+                wodLevel = cursor.getString(cursor.getColumnIndex(DbHelper.WOD_LEVEL));
+                wod = cursor.getString(cursor.getColumnIndex(DbHelper.WOD));
+                training.put(DATE_SESSION, dateSession);
+                if (wodLevel != null) {
+                    training.put(WOD_LEVEL, wodLevel);
+                } else {
+                    training.put(WOD_LEVEL, String.valueOf(EMPTY_VALUE));
+                }
+                if (wod != null) {
+                    training.put(WOD, wod);
+                } else {
+                    training.put(WOD, String.valueOf(EMPTY_VALUE));
+                }
+                trainingList.add(training);
+            } while (cursor.moveToNext());
+            cursor.close();
+        }
+        return trainingList;
+    }
+
     private static final class DbHelper {
 
         final static String TABLE_NAME = "calendarWod";

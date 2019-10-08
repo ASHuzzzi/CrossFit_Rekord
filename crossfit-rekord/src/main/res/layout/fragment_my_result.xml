@@ -73,6 +73,17 @@
                     android:textColor="@color/colorRedPrimary"
                     android:layout_gravity="center_horizontal"/>
 
+                <Button
+                    android:id="@+id/buttonMonthlyTraining"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginBottom="15dp"
+                    android:text="тренировки"
+                    android:layout_gravity="center_horizontal"/>
+
             </LinearLayout>
 
             <View
@@ -107,6 +118,16 @@
                     android:textColor="@color/colorRedPrimary"
                     android:layout_gravity="center_horizontal" />
 
+                <Button
+                    android:id="@+id/buttonPreviousMonthlyTraining"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginBottom="15dp"
+                    android:text="тренировки"
+                    android:layout_gravity="center_horizontal"/>
 
             </LinearLayout>
 

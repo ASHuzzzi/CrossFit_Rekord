@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -27,7 +26,6 @@ public class MyResultViewModel extends AndroidViewModel {
     private long startPreviousMonth;
     private long startThisMonth;
     private long endThisMonth;
-    private SharedPreferences sharedPreferences;
 
     public MyResultViewModel(@NonNull Application application) {
         super(application);
@@ -141,11 +139,23 @@ public class MyResultViewModel extends AndroidViewModel {
         String selectedDate = Month + "/" + Day + "/" + calendar.get(Calendar.YEAR);
         String APP_PREFERENCES_SELECTEDDAY = "SelectedDay";
         String APP_PREFERENCES = "audata";
-        sharedPreferences = getApplication().getSharedPreferences(
+        SharedPreferences sharedPreferences = getApplication().getSharedPreferences(
                 APP_PREFERENCES,
                 Context.MODE_PRIVATE);
         sharedPreferences.edit()
                 .putString(APP_PREFERENCES_SELECTEDDAY, selectedDate)
                 .apply();
+    }
+
+    public long getStartPreviousMonth() {
+        return startPreviousMonth;
+    }
+
+    public long getStartThisMonth() {
+        return startThisMonth;
+    }
+
+    public long getEndThisMonth() {
+        return endThisMonth;
     }
 }
