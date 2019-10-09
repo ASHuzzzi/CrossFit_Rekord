@@ -52,6 +52,9 @@ public class UriParser {
             case "Muay Thai":
                 workoutType = "Muay%20Thai";
                 break;
+
+            case "FBB+Power":
+                workoutType = "FBB+POWER";
         }
         return workoutType;
     }
