@@ -59,9 +59,9 @@ public class MyResultsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
-                bundle.putLong(TraningListFragment.TIME_START, viewModel.getStartThisMonth());
-                bundle.putLong(TraningListFragment.TIME_END, viewModel.getEndThisMonth());
-                openFragment(TraningListFragment.class, bundle);
+                bundle.putLong(TrainingListFragment.TIME_START, viewModel.getStartThisMonth());
+                bundle.putLong(TrainingListFragment.TIME_END, viewModel.getEndThisMonth());
+                openFragment(TrainingListFragment.class, bundle);
             }
         });
         buttonPreviousMonthlyTraining = view.findViewById(R.id.buttonPreviousMonthlyTraining);
@@ -69,9 +69,9 @@ public class MyResultsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
-                bundle.putLong(TraningListFragment.TIME_START, viewModel.getStartPreviousMonth());
-                bundle.putLong(TraningListFragment.TIME_END, viewModel.getStartThisMonth());
-                openFragment(TraningListFragment.class, bundle);
+                bundle.putLong(TrainingListFragment.TIME_START, viewModel.getStartPreviousMonth());
+                bundle.putLong(TrainingListFragment.TIME_END, viewModel.getStartThisMonth());
+                openFragment(TrainingListFragment.class, bundle);
             }
         });
         initButtonShowPreviousTraining(view);
@@ -119,7 +119,6 @@ public class MyResultsFragment extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     @Override

@@ -257,11 +257,10 @@ public class SQLiteStorageWod extends SQLiteOpenHelper {
                 null,
                 null,
                 null,
-                null,
+                DbHelper.DATE_SESSION,
                 null);
         List<Map> trainingList = new ArrayList<>();
         if (cursor != null && cursor.moveToFirst()) {
-            Map<String, String> training = new HashMap<>();
             String dateSession;
             String wodLevel;
             String wod;
@@ -269,6 +268,7 @@ public class SQLiteStorageWod extends SQLiteOpenHelper {
                 dateSession = String.valueOf(cursor.getLong(cursor.getColumnIndex(DbHelper.DATE_SESSION)));
                 wodLevel = cursor.getString(cursor.getColumnIndex(DbHelper.WOD_LEVEL));
                 wod = cursor.getString(cursor.getColumnIndex(DbHelper.WOD));
+                Map<String, String> training = new HashMap<>();
                 training.put(DATE_SESSION, dateSession);
                 if (wodLevel != null) {
                     training.put(WOD_LEVEL, wodLevel);

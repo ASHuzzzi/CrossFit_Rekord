@@ -5,22 +5,25 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
 
 import ru.lizzzi.crossfit_rekord.R;
+import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterTraining;
 import ru.lizzzi.crossfit_rekord.interfaces.TitleChange;
 import ru.lizzzi.crossfit_rekord.model.TrainingListViewModel;
 
-public class TraningListFragment extends Fragment {
+public class TrainingListFragment extends Fragment {
 
     private TrainingListViewModel viewModel;
-    private List<Map> trainingList;
+    private RecyclerAdapterTraining adapter;
 
     public static final String TIME_START = "timeStart";
     public static final String TIME_END = "timeEnd";
@@ -40,6 +43,11 @@ public class TraningListFragment extends Fragment {
                 ? bundle.getLong(TIME_END)
                 : Calendar.getInstance().getTimeInMillis());
 
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerTraining);
+        adapter = new RecyclerAdapterTraining(this);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
         return view;
     }
 
@@ -53,6 +61,28 @@ public class TraningListFragment extends Fragment {
                     R.string.title_TrainingList_Fragment,
                     R.string.title_MyResult_Fragment);
         }
-        trainingList = viewModel.getTraining();
+        adapter.add(viewModel.getTraining());
+        adapter.notifyDataSetChanged();
+    }
+
+    public void openFragment(String dateSassion) {
+        viewModel.saveDateInPrefs(dateSassion);
+        try {
+            WorkoutDetailsFragment fragment = new WorkoutDetailsFragment();
+            FragmentManager fragmentManager = getFragmentManager();
+            if (fragmentManager != null) {
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.setCustomAnimations(
+                        R.anim.pull_in_right,
+                        R.anim.push_out_left,
+                        R.anim.pull_in_left,
+                        R.anim.push_out_right);
+                fragmentTransaction.replace(R.id.container, fragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
