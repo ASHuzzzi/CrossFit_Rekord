@@ -75,16 +75,22 @@ public class EnterResultViewModel extends AndroidViewModel {
                         SimpleDateFormat dateFormat =
                                 new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
                         Date date = dateFormat.parse(selectedDay);
-                        long dateForLoader = date.getTime();
+                        long dateSession = date.getTime();
                         SQLiteStorageWod dbStorage = new SQLiteStorageWod(getApplication());
                         switch (action) {
                             case ACTION_SAVE:
-                            case ACTION_UPLOAD:
                                 dbStorage.saveDate(
+                                        dateSession,
+                                        userSkill,
+                                        wodLevel,
+                                        userWodResult);
+                                break;
+                            case ACTION_UPLOAD:
+                                dbStorage.uploadDate(
                                         sharedPreferences.getString(
                                                 APP_PREFERENCES_OBJECTID,
                                                 ""),
-                                        dateForLoader,
+                                        dateSession,
                                         userSkill,
                                         wodLevel,
                                         userWodResult);
@@ -95,7 +101,7 @@ public class EnterResultViewModel extends AndroidViewModel {
                                         sharedPreferences.getString(
                                                 APP_PREFERENCES_OBJECTID,
                                                 ""),
-                                        dateForLoader);
+                                        dateSession);
                                 break;
                         }
                     } catch (ParseException e) {

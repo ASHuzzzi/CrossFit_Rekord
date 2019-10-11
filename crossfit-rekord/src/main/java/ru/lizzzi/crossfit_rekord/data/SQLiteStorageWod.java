@@ -125,11 +125,26 @@ public class SQLiteStorageWod extends SQLiteOpenHelper {
         database.close();
     }
 
-    public void saveDate(String userId,
-                         long date,
+    public void saveDate(long date,
                          String userSkill,
                          String wodLevel,
                          String userWodResult) {
+        database = this.getWritableDatabase();
+        ContentValues newValues = new ContentValues();
+        newValues.put(DbHelper.SKILL, userSkill);
+        newValues.put(DbHelper.WOD_LEVEL, wodLevel);
+        newValues.put(DbHelper.WOD, userWodResult);
+        String whereClause = DbHelper.DATE_SESSION + "=?";
+        String[] whereArg = new String[]{ String.valueOf(date) };
+        database.update(DbHelper.TABLE_NAME, newValues, whereClause, whereArg);
+        database.close();
+    }
+
+    public void uploadDate(String userId,
+                           long date,
+                           String userSkill,
+                           String wodLevel,
+                           String userWodResult) {
         database = this.getWritableDatabase();
         ContentValues newValues = new ContentValues();
         newValues.put(DbHelper.OBJECT_ID, userId);
