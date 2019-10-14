@@ -8,8 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -55,15 +58,27 @@ public class RecyclerAdapterTraining extends RecyclerView.Adapter<RecyclerAdapte
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final int itemPosition = position;
-        holder.textDate.setText(Objects.requireNonNull(trainingList.get(itemPosition).get(SQLiteStorageWod.DATE_SESSION)).toString());
-        holder.textWodLevel.setText(Objects.requireNonNull(trainingList.get(itemPosition).get(SQLiteStorageWod.WOD_LEVEL)).toString());
-        holder.textWod.setText(Objects.requireNonNull(trainingList.get(itemPosition).get(SQLiteStorageWod.WOD)).toString());
+        String dateSession = convertDate(Objects.requireNonNull(
+                trainingList.get(itemPosition).get(SQLiteStorageWod.DATE_SESSION)).toString());
+        holder.textDate.setText(dateSession);
+        holder.textWodLevel.setText(Objects.requireNonNull(
+                trainingList.get(itemPosition).get(SQLiteStorageWod.WOD_LEVEL)).toString());
+        holder.textWod.setText(Objects.requireNonNull(
+                trainingList.get(itemPosition).get(SQLiteStorageWod.WOD)).toString());
         holder.cardTraining.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fragment.openFragment(Objects.requireNonNull(trainingList.get(itemPosition).get(SQLiteStorageWod.DATE_SESSION)).toString());
+                fragment.openFragment(Objects.requireNonNull(
+                        trainingList.get(itemPosition).get(SQLiteStorageWod.DATE_SESSION)).toString());
             }
         });
+    }
+
+    private String convertDate(String dateSession) {
+        Date date = new Date();
+        date.setTime(Long.parseLong(dateSession));
+        SimpleDateFormat dateFormat = new SimpleDateFormat("d MMMM", Locale.getDefault());
+        return dateFormat.format(date);
     }
 
     @Override

@@ -35,8 +35,6 @@ public class MyResultsFragment extends Fragment {
     private TextView textLastDateSession;
     private TextView textLastWodLevel;
     private TextView textLastWod;
-    private Button buttonMonthlyTraining;
-    private Button buttonPreviousMonthlyTraining;
 
     @Nullable
     @Override
@@ -54,7 +52,15 @@ public class MyResultsFragment extends Fragment {
         textLastDateSession = view.findViewById(R.id.textLastDateSession);
         textLastWodLevel = view.findViewById(R.id.textLastWodLevel);
         textLastWod = view.findViewById(R.id.textLastWod);
-        buttonMonthlyTraining = view.findViewById(R.id.buttonMonthlyTraining);
+        initButtonMonthlyTraining(view);
+        initButtonPreviousMonthlyTraining(view);
+        initButtonShowPreviousTraining(view);
+        initButtonOneRepeatHighs(view);
+        return view;
+    }
+
+    private void initButtonMonthlyTraining(View rootView) {
+        Button buttonMonthlyTraining = rootView.findViewById(R.id.buttonMonthlyTraining);
         buttonMonthlyTraining.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,7 +70,10 @@ public class MyResultsFragment extends Fragment {
                 openFragment(TrainingListFragment.class, bundle);
             }
         });
-        buttonPreviousMonthlyTraining = view.findViewById(R.id.buttonPreviousMonthlyTraining);
+    }
+
+    private void initButtonPreviousMonthlyTraining(View rootView) {
+        Button buttonPreviousMonthlyTraining = rootView.findViewById(R.id.buttonPreviousMonthlyTraining);
         buttonPreviousMonthlyTraining.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,9 +83,6 @@ public class MyResultsFragment extends Fragment {
                 openFragment(TrainingListFragment.class, bundle);
             }
         });
-        initButtonShowPreviousTraining(view);
-        initButtonOneRepeatHighs(view);
-        return view;
     }
 
     private void initButtonShowPreviousTraining(View rootView) {
@@ -144,7 +150,7 @@ public class MyResultsFragment extends Fragment {
             Date date = new Date();
             date.setTime(Long.parseLong(viewModel.getDateSession()));
             SimpleDateFormat dateFormat =
-                    new SimpleDateFormat(" dd MMMM (EEEE)", Locale.getDefault());
+                    new SimpleDateFormat("d MMMM (EEEE)", Locale.getDefault());
             String formatDate = dateFormat.format(date);
             textLastDateSession.setText(formatDate);
             textLastWodLevel.setText(viewModel.getWodLevel());

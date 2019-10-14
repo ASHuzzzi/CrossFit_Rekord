@@ -6,18 +6,15 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import ru.lizzzi.crossfit_rekord.data.SQLiteStorageWod;
 
 public class TrainingListViewModel extends AndroidViewModel {
 
     private SQLiteStorageWod storage;
-    private List<Map> lastTraining;
     private long timeStart;
     private long timeEnd;
 
@@ -25,9 +22,7 @@ public class TrainingListViewModel extends AndroidViewModel {
     public TrainingListViewModel(@NonNull Application application) {
         super(application);
         storage = new SQLiteStorageWod(getApplication());
-        lastTraining = new ArrayList<>();
-        timeStart = Calendar.getInstance().getTimeInMillis();
-        timeEnd = Calendar.getInstance().getTimeInMillis();
+        timeStart = timeEnd = Calendar.getInstance().getTimeInMillis();
     }
 
     public void setTimeEnd(long timeEnd) {
@@ -39,11 +34,11 @@ public class TrainingListViewModel extends AndroidViewModel {
     }
 
     public List<Map> getTraining() {
-        return lastTraining = storage.getTrainingForPeriod(timeStart, timeEnd);
+        return storage.getTrainingForPeriod(timeStart, timeEnd);
     }
 
-    public void saveDateInPrefs(String dateSassion) {
-        long dateSession = Long.parseLong(dateSassion);
+    public void saveDateInPrefs(String dateOfSession) {
+        long dateSession = Long.parseLong(dateOfSession);
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(dateSession);
         String Day = (calendar.get(Calendar.DATE) < 10)

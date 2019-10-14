@@ -30,7 +30,9 @@ public class TrainingListFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_training_list, container, false);
         viewModel = ViewModelProviders.of(this).get(TrainingListViewModel.class);
 
@@ -65,8 +67,8 @@ public class TrainingListFragment extends Fragment {
         adapter.notifyDataSetChanged();
     }
 
-    public void openFragment(String dateSassion) {
-        viewModel.saveDateInPrefs(dateSassion);
+    public void openFragment(String dateSession) {
+        viewModel.saveDateInPrefs(dateSession);
         try {
             WorkoutDetailsFragment fragment = new WorkoutDetailsFragment();
             FragmentManager fragmentManager = getFragmentManager();
