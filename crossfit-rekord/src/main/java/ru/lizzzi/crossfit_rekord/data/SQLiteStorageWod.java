@@ -125,34 +125,39 @@ public class SQLiteStorageWod extends SQLiteOpenHelper {
         database.close();
     }
 
-    public void saveDate(long date,
+    public void saveDate(String userId,
+                         long date,
                          String userSkill,
                          String wodLevel,
                          String userWodResult) {
         database = this.getWritableDatabase();
-        ContentValues newValues = new ContentValues();
-        newValues.put(DbHelper.SKILL, userSkill);
-        newValues.put(DbHelper.WOD_LEVEL, wodLevel);
-        newValues.put(DbHelper.WOD, userWodResult);
-        String whereClause = DbHelper.DATE_SESSION + "=?";
-        String[] whereArg = new String[]{ String.valueOf(date) };
-        database.update(DbHelper.TABLE_NAME, newValues, whereClause, whereArg);
-        database.close();
-    }
-
-    public void uploadDate(String userId,
-                           long date,
-                           String userSkill,
-                           String wodLevel,
-                           String userWodResult) {
-        database = this.getWritableDatabase();
-        ContentValues newValues = new ContentValues();
-        newValues.put(DbHelper.OBJECT_ID, userId);
-        newValues.put(DbHelper.DATE_SESSION, date);
-        newValues.put(DbHelper.SKILL, userSkill);
-        newValues.put(DbHelper.WOD_LEVEL, wodLevel);
-        newValues.put(DbHelper.WOD, userWodResult);
-        database.insert(DbHelper.TABLE_NAME, null, newValues);
+        String selection =
+                DbHelper.DATE_SESSION + " = '" + date
+                + "' AND " +
+                DbHelper.OBJECT_ID + " = '" + userId + "'";
+        Cursor cursor = database.query(
+                DbHelper.TABLE_NAME,
+                null,
+                selection,
+                null,
+                null,
+                null,
+                null,
+                null);
+        ContentValues storedValues = new ContentValues();
+        storedValues.put(DbHelper.SKILL, userSkill);
+        storedValues.put(DbHelper.WOD_LEVEL, wodLevel);
+        storedValues.put(DbHelper.WOD, userWodResult);
+        if (cursor != null && cursor.moveToFirst()) {
+            String whereClause = DbHelper.DATE_SESSION + "=?";
+            String[] whereArg = new String[]{ String.valueOf(date) };
+            database.update(DbHelper.TABLE_NAME, storedValues, whereClause, whereArg);
+            cursor.close();
+        } else {
+            storedValues.put(DbHelper.OBJECT_ID, userId);
+            storedValues.put(DbHelper.DATE_SESSION, date);
+            database.insert(DbHelper.TABLE_NAME, null, storedValues);
+        }
         database.close();
     }
 

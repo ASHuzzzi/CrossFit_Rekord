@@ -12,6 +12,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 import java.util.concurrent.Executor;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -74,22 +75,15 @@ public class EnterResultViewModel extends AndroidViewModel {
                                 sharedPreferences.getString(APP_PREFERENCES_SELECTEDDAY, "");
                         SimpleDateFormat dateFormat =
                                 new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
+                        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
                         Date date = dateFormat.parse(selectedDay);
                         long dateSession = date.getTime();
                         SQLiteStorageWod dbStorage = new SQLiteStorageWod(getApplication());
                         switch (action) {
                             case ACTION_SAVE:
-                                dbStorage.saveDate(
-                                        dateSession,
-                                        userSkill,
-                                        wodLevel,
-                                        userWodResult);
-                                break;
                             case ACTION_UPLOAD:
-                                dbStorage.uploadDate(
-                                        sharedPreferences.getString(
-                                                APP_PREFERENCES_OBJECTID,
-                                                ""),
+                                dbStorage.saveDate(
+                                        sharedPreferences.getString(APP_PREFERENCES_OBJECTID, ""),
                                         dateSession,
                                         userSkill,
                                         wodLevel,
@@ -98,16 +92,13 @@ public class EnterResultViewModel extends AndroidViewModel {
 
                             case ACTION_DELETE:
                                 dbStorage.deleteDate(
-                                        sharedPreferences.getString(
-                                                APP_PREFERENCES_OBJECTID,
-                                                ""),
+                                        sharedPreferences.getString(APP_PREFERENCES_OBJECTID, ""),
                                         dateSession);
                                 break;
                         }
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
-
                 }
                 liveData.postValue(isDataSaved);
             }
