@@ -29,7 +29,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Level"
+            android:text="Уровень"
             android:gravity="center_horizontal"
             android:textColor="@color/colorPrimary"
             android:textStyle="bold"/>
@@ -39,7 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Result"
+            android:text="Результат"
             android:gravity="center_horizontal"
             android:textColor="@color/colorPrimary"
             android:textStyle="bold"/>
@@ -51,9 +51,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/captionTrainingList"
-        android:layout_marginLeft="26dp"
+        android:layout_marginLeft="20dp"
         android:layout_marginTop="10dp"
-        android:layout_marginRight="26dp">
+        android:layout_marginBottom="20dp"
+        android:layout_marginRight="20dp">
     </android.support.v7.widget.RecyclerView>
 
 </RelativeLayout>

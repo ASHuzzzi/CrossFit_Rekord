@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -35,6 +36,9 @@ public class MyResultsFragment extends Fragment {
     private TextView textLastDateSession;
     private TextView textLastWodLevel;
     private TextView textLastWod;
+    private ProgressBar progressBarSc;
+    private ProgressBar progressBarRx;
+    private ProgressBar progressBarRxPlus;
 
     @Nullable
     @Override
@@ -52,6 +56,9 @@ public class MyResultsFragment extends Fragment {
         textLastDateSession = view.findViewById(R.id.textLastDateSession);
         textLastWodLevel = view.findViewById(R.id.textLastWodLevel);
         textLastWod = view.findViewById(R.id.textLastWod);
+        progressBarSc = view.findViewById(R.id.progressBarSc);
+        progressBarRx = view.findViewById(R.id.progressBarRx);
+        progressBarRxPlus = view.findViewById(R.id.progressBarRxPlus);
         initButtonMonthlyTraining(view);
         initButtonPreviousMonthlyTraining(view);
         initButtonShowPreviousTraining(view);
@@ -145,6 +152,12 @@ public class MyResultsFragment extends Fragment {
         textSc.setText(String.valueOf(viewModel.getScLevel()));
         textRx.setText(String.valueOf(viewModel.getRxLevel()));
         textRxPlus.setText(String.valueOf(viewModel.getRxPlusLevel()));
+        progressBarSc.setMax(viewModel.getMonthlyTraining());
+        progressBarSc.setProgress(viewModel.getScLevel());
+        progressBarRx.setMax(viewModel.getMonthlyTraining());
+        progressBarRx.setProgress(viewModel.getRxLevel());
+        progressBarRxPlus.setMax(viewModel.getMonthlyTraining());
+        progressBarRxPlus.setProgress(viewModel.getRxPlusLevel());
         if (!viewModel.isLastTrainingEmpty()) {
             layoutPreviousTraining.setVisibility(View.VISIBLE);
             Date date = new Date();
