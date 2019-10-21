@@ -311,5 +311,17 @@
     <string name="resultExercise">result</string>\
 
     <!-- Значения для фрагмента MyResult -->
+    <string name="defaultValue">0</string>
+    <string name="trainingStatistics">Статистика по тренировкам</string>
+    <string name="currentMonth">текущий месяц</string>
+    <string name="previousMonth">прошлый месяц</string>
+    <string name="trainings">тренировки</string>
+    <string name="numberOfVisitsPerMonth">количество посещений</string>
+    <string name="byLevelsForTheCurrentMonth">по уровням за текущий месяц</string>
+    <string name="show">показать</string>
+    <string name="lastTrainingDate">"Дата: "</string>
+    <string name="lastTrainingWodLevel">"Уровень комплекса: "</string>
+    <string name="lastTrainingResult">"Результат: "</string>
+    <string name="previousWorkout">предыдущая тренировка</string>
     <string name="oneRepeatHighs">Мои максимумы</string>
 </resources>

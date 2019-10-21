@@ -28,7 +28,6 @@ public class MyResultsFragment extends Fragment {
     private MyResultViewModel viewModel;
     private TextView textMonthlyTraining;
     private TextView textPreviousMonthlyTraining;
-    private TextView textTrainingDynamics;
     private TextView textSc;
     private TextView textRx;
     private TextView textRxPlus;
@@ -48,7 +47,6 @@ public class MyResultsFragment extends Fragment {
 
         textMonthlyTraining = view.findViewById(R.id.textMonthlyTraining);
         textPreviousMonthlyTraining = view.findViewById(R.id.textPreviousMonthlyTraining);
-        textTrainingDynamics = view.findViewById(R.id.textTrainingDynamics);
         textSc = view.findViewById(R.id.textSc);
         textRx = view.findViewById(R.id.textRx);
         textRxPlus = view.findViewById(R.id.textRxPlus);
@@ -147,8 +145,6 @@ public class MyResultsFragment extends Fragment {
 
         textMonthlyTraining.setText(String.valueOf(viewModel.getMonthlyTraining()));
         textPreviousMonthlyTraining.setText(String.valueOf(viewModel.getPreviousMonthlyTraining()));
-        String dynamics = "(" + viewModel.getTrainingRatio() + "%)";
-        textTrainingDynamics.setText(dynamics);
         textSc.setText(String.valueOf(viewModel.getScLevel()));
         textRx.setText(String.valueOf(viewModel.getRxLevel()));
         textRxPlus.setText(String.valueOf(viewModel.getRxPlusLevel()));

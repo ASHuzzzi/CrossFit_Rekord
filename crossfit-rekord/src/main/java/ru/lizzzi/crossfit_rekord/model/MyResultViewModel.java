@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.TimeZone;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.data.SQLiteStorageWod;
@@ -22,7 +23,6 @@ public class MyResultViewModel extends AndroidViewModel {
     private List<String> wodLevels;
     private int quantityTrainingThisMonth;
     private int quantityTrainingPreviousMonth;
-    private double trainingRatio;
     private long startPreviousMonth;
     private long startThisMonth;
     private long endThisMonth;
@@ -37,18 +37,18 @@ public class MyResultViewModel extends AndroidViewModel {
         calculatePeriods();
         calculationOfWorkoutsPerMonth();
         calculationOfWorkoutsPreviousMonth();
-        receiveTrainingRatio();
         getWodLevelForMonth();
         loadLastTraining();
     }
 
     private void calculatePeriods() {
-        Calendar calendar = Calendar.getInstance();
-        endThisMonth = calendar.getTimeInMillis();
+        Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
+        int timeZoneOffset = TimeZone.getDefault().getRawOffset();
+        endThisMonth = calendar.getTimeInMillis() + timeZoneOffset;
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        startThisMonth = calendar.getTimeInMillis() + timeZoneOffset;
         calendar.add(Calendar.MONTH, -1);
-        startThisMonth = calendar.getTimeInMillis();
-        calendar.add(Calendar.MONTH, -1);
-        startPreviousMonth = calendar.getTimeInMillis();
+        startPreviousMonth = calendar.getTimeInMillis() + timeZoneOffset;
     }
 
     private void calculationOfWorkoutsPerMonth() {
@@ -65,21 +65,6 @@ public class MyResultViewModel extends AndroidViewModel {
 
     public int getPreviousMonthlyTraining() {
         return quantityTrainingPreviousMonth;
-    }
-
-    private void receiveTrainingRatio() {
-        trainingRatio = (quantityTrainingPreviousMonth > 0) ? calculateRatio() : 0;
-    }
-
-    private double calculateRatio() {
-        double ratio = (double) quantityTrainingThisMonth / (double) quantityTrainingPreviousMonth;
-        double inverseRatio = ratio - 1;
-        long ratioInPercent = (long) (inverseRatio * 100);
-        return Math.round(ratioInPercent);
-    }
-
-    public double getTrainingRatio() {
-        return trainingRatio;
     }
 
     private void getWodLevelForMonth() {
