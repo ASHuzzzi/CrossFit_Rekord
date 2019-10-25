@@ -8,14 +8,19 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp">
 
         <LinearLayout
             android:id="@+id/layoutMyWeight"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toStartOf="@id/editResult"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_alignTop="@id/editResult"
+            android:layout_alignBottom="@id/editResult"
+            android:gravity="center_vertical">
 
             <TextView
                 android:id="@+id/textCaption"
@@ -32,11 +37,11 @@
                 android:id="@+id/textCaptionRu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
+                android:layout_marginStart="20dp"
                 android:ellipsize="end"
                 android:text="@string/strDBMyResultDeadliftRU"
                 android:textColor="@color/colorRedPrimary"
-                android:textSize="14sp" />
+                android:textSize="12sp" />
         </LinearLayout>
 
         <EditText
@@ -50,7 +55,7 @@
             android:gravity="center"
             android:inputType="phone"
             android:maxWidth="100dp"
-            android:minWidth="30dp"
+            android:minWidth="50dp"
             android:text="@string/empty"
             android:textColor="@color/colorRedPrimary"
             android:theme="@style/Theme.App.Base.MyResult" />

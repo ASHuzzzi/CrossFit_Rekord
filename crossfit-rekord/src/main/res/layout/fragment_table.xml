@@ -1,25 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.widget.RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.widget.RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_margin="2dp">
+    android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/ivTable"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/Layout_Button_Day_of_Week"
-        android:layout_centerHorizontal="true"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
-        android:scaleType="centerCrop" />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/ivTable"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:scaleType="centerCrop"
+            android:layout_gravity="center_horizontal"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/gradient_background_up">
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/gradient_background_down">
+            </FrameLayout>
+        </LinearLayout>
+    </FrameLayout>
+
+
 
     <LinearLayout
         android:id="@+id/Layout_Button_Day_of_Week"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp">
 
         <Button
             android:id="@+id/day_1"
@@ -91,7 +119,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/Layout_Button_Day_of_Week"
         android:layout_centerVertical="true"
-        android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp" />
 
     <LinearLayout

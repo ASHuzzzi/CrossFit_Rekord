@@ -10,11 +10,11 @@
         android:id="@+id/sliding_tabs_record"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="10dp"
         app:tabIndicatorColor="@color/colorRedPrimary"
         app:tabIndicatorHeight="7dp"
         app:tabSelectedTextColor="@color/colorRedPrimary"
-        app:tabTextColor="@color/colorWhite">
+        app:tabTextColor="@color/colorWhite"
+        app:tabBackground="@drawable/tab_color_selector">
 
         <android.support.design.widget.TabItem
             style="@style/MainTextStyle"

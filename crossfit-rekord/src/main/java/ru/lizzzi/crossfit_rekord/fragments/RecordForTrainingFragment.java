@@ -34,7 +34,7 @@ import ru.lizzzi.crossfit_rekord.model.RecordForTrainingViewModel;
 public class RecordForTrainingFragment extends Fragment {
 
     private LinearLayout layoutError;
-    private LinearLayout layoutSchedule;
+    private RecyclerView layoutSchedule;
     private ProgressBar progressBar;
     private Button buttonToday;
     private Button buttonTomorrow;
@@ -65,7 +65,7 @@ public class RecordForTrainingFragment extends Fragment {
         initButtonsOfDay(view);
 
         layoutError = view.findViewById(R.id.llEror_RfTS);
-        layoutSchedule = view.findViewById(R.id.llListTime);
+        layoutSchedule = view.findViewById(R.id.rvTrainingTime);
         progressBar = view.findViewById(R.id.pbRfTS);
         imageBackground = view.findViewById(R.id.iv_RfTS);
 
