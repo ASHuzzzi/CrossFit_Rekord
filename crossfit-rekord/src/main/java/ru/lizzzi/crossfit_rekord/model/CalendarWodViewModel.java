@@ -18,6 +18,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.concurrent.Executor;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -160,12 +161,7 @@ public class CalendarWodViewModel  extends AndroidViewModel {
                 date = calendar.getTime();
             }
         }
-        calendar.setTime(date);
-        calendar.add(Calendar.DAY_OF_MONTH, -(Calendar.DAY_OF_MONTH));
-        timeStart = (calendar.getTimeInMillis());
-        calendar.setTime(date);
-        calendar.add(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
-        timeFinish = date.getTime();
+        setTimePeriod(date);
         return date;
     }
 
@@ -174,13 +170,16 @@ public class CalendarWodViewModel  extends AndroidViewModel {
     }
 
     public void monthChanged(CalendarDay calendarDay) {
-        Date date = calendarDay.getDate();
+        setTimePeriod(calendarDay.getDate());
+    }
+
+    private void setTimePeriod(Date date) {
         calendar.setTime(date);
-        calendar.add(Calendar.DAY_OF_MONTH, 0);
-        timeStart = (calendar.getTimeInMillis());
-        calendar.setTime(date);
-        calendar.add(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
-        timeFinish = (calendar.getTimeInMillis());
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        int timeZoneOffset = TimeZone.getDefault().getRawOffset();
+        timeStart = calendar.getTimeInMillis() + timeZoneOffset;
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+        timeFinish = calendar.getTimeInMillis() + timeZoneOffset;
     }
 
     public boolean earlierThanToday(Date selectedDate) {

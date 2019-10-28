@@ -37,7 +37,6 @@ import ru.lizzzi.crossfit_rekord.fragments.AboutMeFragment;
 import ru.lizzzi.crossfit_rekord.fragments.CalendarWodFragment;
 import ru.lizzzi.crossfit_rekord.fragments.CharacterFragment;
 import ru.lizzzi.crossfit_rekord.fragments.MyResultsFragment;
-import ru.lizzzi.crossfit_rekord.fragments.OneRepeatHighsFragment;
 import ru.lizzzi.crossfit_rekord.fragments.AlarmSettingsFragment;
 import ru.lizzzi.crossfit_rekord.inspectionСlasses.AuthDataCheck;
 import ru.lizzzi.crossfit_rekord.fragments.ContactsFragment;
