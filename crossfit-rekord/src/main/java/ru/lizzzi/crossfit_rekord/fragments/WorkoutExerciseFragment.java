@@ -54,7 +54,7 @@ public class WorkoutExerciseFragment extends Fragment {
         textLevelRxPlus = view.findViewById(R.id.tvLevelRxplus);
         textEmptyData = view.findViewById(R.id.tvTL1ED1);
 
-        layoutMain = view.findViewById(R.id.llMain);
+        layoutMain = view.findViewById(R.id.layoutMain);
         Button buttonError = view.findViewById(R.id.buttonError);
         layoutError = view.findViewById(R.id.linLayError);
         layoutEmptyData = view.findViewById(R.id.llEmptyData);

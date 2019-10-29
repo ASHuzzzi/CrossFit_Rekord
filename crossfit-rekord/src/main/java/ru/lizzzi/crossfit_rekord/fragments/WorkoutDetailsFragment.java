@@ -83,7 +83,7 @@ public class WorkoutDetailsFragment extends Fragment {
                     Locale.getDefault());
             Date parse = dateFormat.parse(savedDate);
             SimpleDateFormat dateFormat2 = new SimpleDateFormat(
-                    "EEEE dd MMMM",
+                    "dd MMMM (EEEE)",
                     Locale.getDefault());
             String parseDate = dateFormat2.format(parse);
             textSelectedDay.setText(parseDate);
