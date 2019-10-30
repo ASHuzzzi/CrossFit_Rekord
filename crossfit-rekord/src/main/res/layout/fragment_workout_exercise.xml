@@ -240,7 +240,7 @@
 
                 <android.support.v7.widget.CardView
                     android:id="@+id/cardRx"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
                     android:layout_marginEnd="5dp"
@@ -249,7 +249,7 @@
                     android:layout_weight="1">
 
                     <LinearLayout
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:layout_marginStart="15dp"
@@ -294,7 +294,7 @@
 
                 <android.support.v7.widget.CardView
                     android:id="@+id/cardRxPlus"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
                     app:cardBackgroundColor="@color/colorPrimaryDark"
@@ -345,6 +345,59 @@
 
                 </android.support.v7.widget.CardView>
             </LinearLayout>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/cardPostWorkout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                app:cardBackgroundColor="@color/colorPrimaryDark"
+                app:cardCornerRadius="15dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginBottom="15dp">
+
+                    <TextView
+                        android:id="@+id/textView26"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:gravity="center"
+                        android:text="@string/TL1PostWorkout"
+                        android:textColor="@color/colorRedPrimary"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <View
+                        android:id="@+id/divider4"
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_below="@id/textView26"
+                        android:background="@drawable/divider" />
+
+                    <TextView
+                        android:id="@+id/tvPostWorkout"
+                        style="@style/MainTextStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
+                        android:singleLine="false"
+                        android:textSize="14sp"
+                        android:layout_below="@id/divider4"/>
+
+                </RelativeLayout>
+
+            </android.support.v7.widget.CardView>
+
         </LinearLayout>
     </ScrollView>
 
