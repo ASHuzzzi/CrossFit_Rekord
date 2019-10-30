@@ -54,7 +54,7 @@ public class CalendarWodFragment extends Fragment {
             public void onClick(View view) {
                 layoutError.setVisibility(View.GONE);
                 progressBar.setVisibility(View.VISIBLE);
-                getDates();
+                getAndShowDates();
             }
         });
         return view;
@@ -111,15 +111,15 @@ public class CalendarWodFragment extends Fragment {
             @Override
             public void onMonthChanged(MaterialCalendarView widget, CalendarDay date) {
                 viewModel.monthChanged(date);
-                getDates();
+                getAndShowDates();
             }
         });
         calendarView.setSaveEnabled(true);
     }
 
     @Override
-    public  void onResume() {
-        super.onResume();
+    public  void onStart() {
+        super.onStart();
         TitleChange listenerTitleChange = (TitleChange) getActivity();
         if (listenerTitleChange != null) {
             listenerTitleChange.changeTitle(
@@ -132,11 +132,13 @@ public class CalendarWodFragment extends Fragment {
         }
 
         if (viewModel.getSelectDates() == null) {
-            getDates();
+            getAndShowDates();
+        } else {
+            showSelectedDates();
         }
     }
 
-    private void getDates() {
+    private void getAndShowDates() {
         if (viewModel.getDates().isEmpty()) {
             layoutError.setVisibility(View.GONE);
             calendarView.setVisibility(View.INVISIBLE);
