@@ -2,7 +2,6 @@
 
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -21,18 +20,13 @@
         android:id="@+id/sliding_tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tvSelectedDay"
-        app:tabIndicatorColor="@color/colorRedPrimary"
-        app:tabIndicatorHeight="7dp"
-        app:tabSelectedTextColor="@color/colorRedPrimary"
-        app:tabTextColor="@color/colorWhite"
-        app:tabBackground="@drawable/tab_color_selector">
+        android:layout_below="@+id/tvSelectedDay">
 
         <android.support.design.widget.TabItem
             style="@style/MainTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Тренировка" />
+            android:text="@string/strWorkoutDetailsTraining" />
 
         <android.support.design.widget.TabItem
             style="@style/MainTextStyle"

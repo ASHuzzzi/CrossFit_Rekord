@@ -80,7 +80,7 @@
         <item name="android:textColor">@color/colorRedPrimary</item>
     </style>
 
-    <style name="calendarweekDayStyle" parent="AppTheme">
+    <style name="calendarWeekDayStyle" parent="AppTheme">
         <item name="android:textSize">18sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:typeface">sans</item>
@@ -115,9 +115,11 @@
 
     <!-- Стиль табов на экране деталей тренировки-->
     <style name="Base.Widget.Design.TabLayout" parent="android:Widget" tools:ignore="PrivateResource">
-        <item name="tabBackground">@drawable/tab_background</item>
-        <item name="tabIndicatorColor">@color/colorAccent</item>
-        <item name="tabIndicatorHeight">3dp</item>
+        <item name="tabBackground">@drawable/tab_color_selector</item>
+        <item name="tabIndicatorColor">@color/colorRedPrimary</item>
+        <item name="tabIndicatorHeight">4dp</item>
+        <item name="tabSelectedTextColor">@color/colorRedPrimary</item>
+        <item name="tabTextColor">@color/colorWhite</item>
     </style>
 
 

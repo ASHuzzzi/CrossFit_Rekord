@@ -69,6 +69,7 @@ public class RecyclerAdapterSchedule extends RecyclerView.Adapter<RecyclerAdapte
         BackgroundDrawable backgroundDrawable = new BackgroundDrawable();
         int drawable = backgroundDrawable.getBackgroundDrawable(workoutType);
         holder.typesItem.setBackgroundResource(drawable);
+        holder.startTimeItem.setBackgroundResource(drawable);
 
         holder.layoutItem.setOnClickListener(new View.OnClickListener() {
             @Override

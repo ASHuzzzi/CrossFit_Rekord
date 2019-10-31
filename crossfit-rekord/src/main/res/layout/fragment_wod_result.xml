@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="10dp"
     tools:context=".fragments.WodResultFragment">
 
     <LinearLayout
@@ -50,9 +52,6 @@
         android:id="@+id/linLayMain"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="5dp"
         android:orientation="vertical"
         android:visibility="invisible">
 
@@ -64,56 +63,62 @@
 
             <TextView
                 android:id="@+id/tvName2"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1.5"
+                android:layout_weight="0.5"
                 android:gravity="center"
                 android:maxWidth="100dp"
                 android:minWidth="100dp"
                 android:text="@string/strHeaderName"
-                android:textColor="?attr/colorPrimary"
+                android:textColor="@color/colorPrimary"
                 android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:paddingStart="15dp"
+                android:paddingEnd="0dp"/>
 
             <TextView
                 android:id="@+id/tvSkill2"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
+                android:layout_weight="1"
+                android:maxWidth="100dp"
+                android:minWidth="100dp"
                 android:gravity="center"
                 android:text="@string/strHeaderSkill"
-                android:textColor="?attr/colorPrimary"
+                android:textColor="@color/colorPrimary"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tvWod_level2"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
+                android:layout_weight="1"
+                android:maxWidth="50dp"
                 android:gravity="center"
                 android:text="@string/strHeaderLevel"
-                android:textColor="?attr/colorPrimary"
+                android:textColor="@color/colorPrimary"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tvWod_result2"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
+                android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/strHeaderResult"
-                android:textColor="?attr/colorPrimary"
+                android:textColor="@color/colorPrimary"
                 android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:paddingStart="0dp"
+                android:paddingEnd="15dp"/>
         </LinearLayout>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recViewUsers"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="5dp"
             android:layout_weight="1">
 
         </android.support.v7.widget.RecyclerView>
@@ -124,7 +129,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="20dp"
-            android:layout_marginBottom="30dp"
+            android:layout_marginBottom="20dp"
             android:paddingStart="30dp"
             android:paddingLeft="30dp"
             android:paddingEnd="30dp"

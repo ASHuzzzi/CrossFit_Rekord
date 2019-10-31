@@ -281,7 +281,7 @@
     <string name="strDBMyResultRowCalRU">гребля (25 кал)</string>
 
     <!-- Значения для фрагмента WorkoutDetails -->
-    <string name="strWorkoutDetailsWod">Wod</string>
+    <string name="strWorkoutDetailsTraining">Тренировка</string>
     <string name="strWorkoutDetailsResult">Результаты</string>
 
     <!-- Значения для фрагмента DefinitionFragment -->

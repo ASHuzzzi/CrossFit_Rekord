@@ -7,7 +7,6 @@
                 android:endColor="@color/color_Table_Gymnastics"
                 android:startColor="@color/color_Table_Defence_Class"
                 android:type="linear"/>
-            <corners android:radius="10dp"/>
         </shape>
     </item>
 </selector>

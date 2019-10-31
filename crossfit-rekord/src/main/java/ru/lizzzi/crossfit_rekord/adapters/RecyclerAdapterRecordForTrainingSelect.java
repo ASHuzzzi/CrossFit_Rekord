@@ -1,6 +1,5 @@
 package ru.lizzzi.crossfit_rekord.adapters;
 
-import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
@@ -78,7 +77,9 @@ public class RecyclerAdapterRecordForTrainingSelect
             //проверяем чтобы выбранное время было позже чем сейчас
             if (fragment.isToday() && (selectedTime.getTime() < timeNow.getTime())) {
                 holder.typesItem.setBackgroundResource(R.drawable.table_item_out_of_time);
-                holder.startTimeItem.setTextColor(Color.BLACK);
+                holder.typesItem.setTextColor(fragment.getResources().getColor(R.color.colorRedPrimary));
+                holder.startTimeItem.setTextColor(fragment.getResources().getColor(R.color.colorRedPrimary));
+                holder.startTimeItem.setBackgroundResource(R.drawable.table_item_out_of_time);
                 holder.layoutItem.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -94,6 +95,7 @@ public class RecyclerAdapterRecordForTrainingSelect
                 BackgroundDrawable backgroundDrawable = new BackgroundDrawable();
                 int background = backgroundDrawable.getBackgroundDrawable(workoutType);
                 holder.typesItem.setBackgroundResource(background);
+                holder.startTimeItem.setBackgroundResource(background);
                 holder.layoutItem.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
