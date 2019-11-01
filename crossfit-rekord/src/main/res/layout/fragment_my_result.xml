@@ -383,6 +383,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/textCaptionPreviousTraining"
                         android:text="@string/lastTrainingDate"
+                        android:textStyle="bold"
                         android:textColor="@color/colorRedPrimary" />
 
                     <TextView
@@ -400,6 +401,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/textLastDateSession"
                         android:text="@string/lastTrainingWodLevel"
+                        android:textStyle="bold"
                         android:textColor="@color/colorRedPrimary" />
 
                     <TextView
@@ -417,6 +419,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/textLastWodLevel"
                         android:text="@string/lastTrainingResult"
+                        android:textStyle="bold"
                         android:textColor="@color/colorRedPrimary" />
 
                     <TextView

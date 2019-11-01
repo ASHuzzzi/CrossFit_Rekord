@@ -27,11 +27,13 @@ public class RecyclerAdapterSchedule extends RecyclerView.Adapter<RecyclerAdapte
     private List<Map> scheduleItems;
     private ScheduleItem item;
     private GymScheduleFragment fragment;
+    private List<Integer> daysWhenRecordingIsPossible;
 
     public RecyclerAdapterSchedule(GymScheduleFragment fragment) {
         this.fragment = fragment;
         item = new ScheduleItem(fragment.getContext());
         scheduleItems = new ArrayList<>();
+        daysWhenRecordingIsPossible = fragment.setDaysWhenRecordingIsPossible();
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -41,9 +43,9 @@ public class RecyclerAdapterSchedule extends RecyclerView.Adapter<RecyclerAdapte
 
         ViewHolder(View view) {
             super(view);
-            startTimeItem = view.findViewById(R.id.start_time);
-            typesItem = view.findViewById(R.id.type);
-            layoutItem = view.findViewById(R.id.ll_item_table);
+            startTimeItem = view.findViewById(R.id.textStartTime);
+            typesItem = view.findViewById(R.id.textType);
+            layoutItem = view.findViewById(R.id.layoutItemTable);
         }
     }
 
@@ -68,52 +70,33 @@ public class RecyclerAdapterSchedule extends RecyclerView.Adapter<RecyclerAdapte
 
         BackgroundDrawable backgroundDrawable = new BackgroundDrawable();
         int drawable = backgroundDrawable.getBackgroundDrawable(workoutType);
-        holder.typesItem.setBackgroundResource(drawable);
-        holder.startTimeItem.setBackgroundResource(drawable);
-
+        holder.layoutItem.setBackgroundResource(drawable);
         holder.layoutItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 int selectedDay = fragment.getSelectedDay();
-                Calendar calendar = Calendar.getInstance();
-                List<Integer> daysWhenRecordingIsPossible = new ArrayList<>();
-                for (int i = 0; i < 3; i++) {
-                    calendar.add(Calendar.DAY_OF_WEEK, i);
-                    daysWhenRecordingIsPossible.add(calendar.get(Calendar.DAY_OF_WEEK));
-                    calendar.clear();
-                    calendar = Calendar.getInstance();
-                }
+                boolean canSignUp = false;
+                String toastText = "Выберите более позднее время";
+
                 if (daysWhenRecordingIsPossible.contains(selectedDay)) {
-                    try {
-                        SimpleDateFormat dateFormat =
-                                new SimpleDateFormat("HH:mm", Locale.getDefault());
-                        calendar = Calendar.getInstance();
-                        int hourNow = calendar.get(Calendar.HOUR_OF_DAY);
-                        calendar.setTime(dateFormat.parse(startTime));
-                        int selectHour = calendar.get(Calendar.HOUR_OF_DAY);
-                        boolean selectedToday =
-                                daysWhenRecordingIsPossible.get(0).equals(selectedDay);
-                        //проверяем чтобы выбранное время было позже чем сейчас
-                        if (selectedToday && (selectHour <= hourNow)) {
-                            showToast("Выберите более позднее время.", view);
-                        } else {
-                            fragment.openBrowserForRecording(
-                                    daysWhenRecordingIsPossible.indexOf(selectedDay),
-                                    startTime,
-                                    workoutType);
+                    if (selectedToday(selectedDay)) {
+                        if (canSignUpToday(startTime)) {
+                            canSignUp = true;
                         }
-                    } catch (ParseException e) {
-                        e.printStackTrace();
+                    } else {
+                        canSignUp = true;
                     }
                 } else {
-                    String nameDayOfWeek = calendar.getDisplayName(
-                            Calendar.DAY_OF_WEEK,
-                            Calendar.LONG, Locale.getDefault());
-                    showToast(
-                            "Запись возможна на сегодня (" +
-                                    nameDayOfWeek  +
-                                    ") и два дня вперед",
-                            view);
+                    toastText = getToastText();
+                }
+
+                if (canSignUp) {
+                    fragment.openBrowserForRecording(
+                            daysWhenRecordingIsPossible.indexOf(selectedDay),
+                            startTime,
+                            workoutType);
+                } else {
+                    showToast(toastText);
                 }
             }
         });
@@ -137,8 +120,35 @@ public class RecyclerAdapterSchedule extends RecyclerView.Adapter<RecyclerAdapte
         return scheduleItems.isEmpty();
     }
 
-    private void showToast(String toastText, View view) {
-        Toast toast = Toast.makeText(view.getContext(), toastText, Toast.LENGTH_LONG);
+    private boolean selectedToday(int selectedDay) {
+        return daysWhenRecordingIsPossible.get(0).equals(selectedDay);
+    }
+
+    private boolean canSignUpToday(String startTime) {
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+            Calendar calendar = Calendar.getInstance();
+            int hourNow = calendar.get(Calendar.HOUR_OF_DAY);
+            calendar.setTime(dateFormat.parse(startTime));
+            int selectHour = calendar.get(Calendar.HOUR_OF_DAY);
+
+            //проверяем чтобы выбранное время было позже чем сейчас
+            return selectHour > hourNow;
+        } catch (ParseException e) {
+            return false;
+        }
+    }
+
+    private String getToastText() {
+        String nameDayOfWeek = Calendar.getInstance().getDisplayName(
+                Calendar.DAY_OF_WEEK,
+                Calendar.LONG,
+                Locale.getDefault());
+        return "Запись возможна на сегодня (" + nameDayOfWeek  + ") и два дня вперед";
+    }
+
+    private void showToast(String toastText) {
+        Toast toast = Toast.makeText(fragment.getContext(), toastText, Toast.LENGTH_LONG);
         toast.setGravity(Gravity.CENTER, 0, 0);
         toast.show();
     }

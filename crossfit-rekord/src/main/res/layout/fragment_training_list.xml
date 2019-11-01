@@ -10,38 +10,43 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:background="@color/colorRedPrimary"
-        android:paddingLeft="26dp"
-        android:layout_marginTop="20dp"
-        android:paddingRight="26dp">
+        android:paddingTop="3dp"
+        android:paddingLeft="29dp"
+        android:paddingBottom="3dp"
+        android:layout_marginTop="10dp"
+        android:paddingRight="29dp">
 
         <TextView
             android:id="@+id/textDate"
+            style="@style/TextAppearance.AppCompat.Medium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center_horizontal"
-            android:text="Дата"
-            android:textColor="@color/colorPrimary"
+            android:text="@string/date"
+            android:textColor="@color/colorPrimaryDark"
             android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/textWodLevel"
+            style="@style/TextAppearance.AppCompat.Medium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Уровень"
+            android:text="@string/level"
             android:gravity="center_horizontal"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/colorPrimaryDark"
             android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/textWod"
+            style="@style/TextAppearance.AppCompat.Medium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Результат"
+            android:text="@string/result"
             android:gravity="center_horizontal"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/colorPrimaryDark"
             android:textStyle="bold"/>
 
     </LinearLayout>

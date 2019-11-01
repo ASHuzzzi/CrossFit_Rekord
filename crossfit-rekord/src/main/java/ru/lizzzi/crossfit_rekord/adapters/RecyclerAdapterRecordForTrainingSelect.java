@@ -1,5 +1,6 @@
 package ru.lizzzi.crossfit_rekord.adapters;
 
+import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
@@ -44,9 +45,9 @@ public class RecyclerAdapterRecordForTrainingSelect
 
         ViewHolder(View view) {
             super(view);
-            startTimeItem = view.findViewById(R.id.start_time);
-            typesItem = view.findViewById(R.id.type);
-            layoutItem = view.findViewById(R.id.ll_item_table);
+            startTimeItem = view.findViewById(R.id.textStartTime);
+            typesItem = view.findViewById(R.id.textType);
+            layoutItem = view.findViewById(R.id.layoutItemTable);
         }
     }
 
@@ -74,28 +75,22 @@ public class RecyclerAdapterRecordForTrainingSelect
             SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
             Date timeNow = dateFormat.parse(dateFormat.format(today));
             Date selectedTime = dateFormat.parse(startTime);
+            Resources resources = fragment.getResources();
+            int resourcesColor, background;
             //проверяем чтобы выбранное время было позже чем сейчас
             if (fragment.isToday() && (selectedTime.getTime() < timeNow.getTime())) {
-                holder.typesItem.setBackgroundResource(R.drawable.table_item_out_of_time);
-                holder.typesItem.setTextColor(fragment.getResources().getColor(R.color.colorRedPrimary));
-                holder.startTimeItem.setTextColor(fragment.getResources().getColor(R.color.colorRedPrimary));
-                holder.startTimeItem.setBackgroundResource(R.drawable.table_item_out_of_time);
+                background = R.drawable.table_item_out_of_time;
+                resourcesColor = resources.getColor(R.color.colorRedPrimary);
                 holder.layoutItem.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Toast toast = Toast.makeText(
-                                view.getContext(),
-                                "Тренировка уже прошла. Выбери более позднее время!",
-                                Toast.LENGTH_LONG);
-                        toast.setGravity(Gravity.CENTER, 0, 0);
-                        toast.show();
+                        showToast(view);
                     }
                 });
             } else {
                 BackgroundDrawable backgroundDrawable = new BackgroundDrawable();
-                int background = backgroundDrawable.getBackgroundDrawable(workoutType);
-                holder.typesItem.setBackgroundResource(background);
-                holder.startTimeItem.setBackgroundResource(background);
+                background = backgroundDrawable.getBackgroundDrawable(workoutType);
+                resourcesColor = resources.getColor(R.color.colorPrimaryDark);
                 holder.layoutItem.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -103,6 +98,9 @@ public class RecyclerAdapterRecordForTrainingSelect
                     }
                 });
             }
+            holder.typesItem.setTextColor(resourcesColor);
+            holder.startTimeItem.setTextColor(resourcesColor);
+            holder.layoutItem.setBackgroundResource(background);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -124,5 +122,14 @@ public class RecyclerAdapterRecordForTrainingSelect
 
     public boolean isEmpty () {
         return scheduleItems.isEmpty();
+    }
+
+    private void showToast(View rootView) {
+        Toast toast = Toast.makeText(
+                rootView.getContext(),
+                "Тренировка уже прошла. Выбери более позднее время!",
+                Toast.LENGTH_LONG);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.show();
     }
 }

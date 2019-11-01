@@ -52,7 +52,7 @@
     <string name="record_training">Записаться на тренировку</string>
     <string name="contacts">Контакты</string>
     <string name="definition">Словарь CrossFit</string>
-    <string name="result">Результаты</string>
+    <string name="result">Результат</string>
     <string name="profile">Мои данные</string>
     <string name="calendar_wod">Результаты тренировок</string>
     <string name="myResults">Мои результаты</string>
@@ -325,4 +325,8 @@
     <string name="lastTrainingResult">"Результат: "</string>
     <string name="previousWorkout">предыдущая тренировка</string>
     <string name="oneRepeatHighs">Мои максимумы</string>
+
+    <!-- Значения для фрагмента TraningList -->
+    <string name="date">Дата</string>
+    <string name="level">Уровень</string>
 </resources>
