@@ -5,7 +5,6 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -24,7 +23,6 @@ import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.interfaces.TitleChange;
@@ -107,13 +105,6 @@ public class CalendarWodFragment extends Fragment {
                 }
             }
         });
-        calendarView.setOnMonthChangedListener(new OnMonthChangedListener() {
-            @Override
-            public void onMonthChanged(MaterialCalendarView widget, CalendarDay date) {
-                viewModel.monthChanged(date);
-                getAndShowDates();
-            }
-        });
         calendarView.setSaveEnabled(true);
     }
 
@@ -126,10 +117,7 @@ public class CalendarWodFragment extends Fragment {
                     R.string.title_CalendarWod_Fragment,
                     R.string.title_CalendarWod_Fragment);
         }
-        Date date = viewModel.getDate();
-        if (date != null) {
-            calendarView.setCurrentDate(date);
-        }
+        calendarView.setCurrentDate(viewModel.getDate());
 
         if (viewModel.getSelectDates() == null) {
             getAndShowDates();
@@ -138,42 +126,57 @@ public class CalendarWodFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        calendarView.setOnMonthChangedListener(new OnMonthChangedListener() {
+            @Override
+            public void onMonthChanged(MaterialCalendarView widget, CalendarDay date) {
+                viewModel.monthChanged(date);
+                getAndShowDates();
+            }
+        });
+    }
+
     private void getAndShowDates() {
-        if (viewModel.getDates().isEmpty()) {
-            layoutError.setVisibility(View.GONE);
-            calendarView.setVisibility(View.INVISIBLE);
-            progressBar.setVisibility(View.VISIBLE);
-            LiveData<Boolean> liveDataConnection = viewModel.checkNetwork();
-            liveDataConnection.observe(CalendarWodFragment.this, new Observer<Boolean>() {
-                @Override
-                public void onChanged(Boolean isConnected) {
-                    if (isConnected) {
-                        LiveData<List<Date>> listLiveData = viewModel.loadDates();
-                        listLiveData.observe(CalendarWodFragment.this, new Observer<List<Date>>() {
-                            @Override
-                            public void onChanged(@Nullable List<Date> dates) {
-                                if (dates != null) {
-                                    viewModel.setSelectDates(dates);
-                                    showSelectedDates();
-                                } else {
-                                    layoutError.setVisibility(View.VISIBLE);
-                                    progressBar.setVisibility(View.INVISIBLE);
-                                    Toast.makeText(
-                                            getContext(),
-                                            "Нет данных",
-                                            Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
-                    } else {
-                        layoutError.setVisibility(View.VISIBLE);
-                        progressBar.setVisibility(View.INVISIBLE);
-                    }
-                }
-            });
+        if (viewModel.localDatesIsNotAvailable()) {
+            loadDatesFromNetworkAndShow();
         } else {
             showSelectedDates();
         }
+    }
+
+    private void loadDatesFromNetworkAndShow() {
+        layoutError.setVisibility(View.GONE);
+        calendarView.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
+        LiveData<Boolean> liveDataConnection = viewModel.checkNetwork();
+        liveDataConnection.observe(CalendarWodFragment.this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isConnected) {
+                if (isConnected) {
+                    LiveData<Boolean> listLiveData = viewModel.loadingDates();
+                    listLiveData.observe(CalendarWodFragment.this, new Observer<Boolean>() {
+                        @Override
+                        public void onChanged(Boolean datesIsUploaded) {
+                            if (datesIsUploaded) {
+                                showSelectedDates();
+                            } else {
+                                layoutError.setVisibility(View.VISIBLE);
+                                progressBar.setVisibility(View.INVISIBLE);
+                                Toast.makeText(
+                                        getContext(),
+                                        "Нет данных",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                } else {
+                    layoutError.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
     }
 
     private void showSelectedDates() {

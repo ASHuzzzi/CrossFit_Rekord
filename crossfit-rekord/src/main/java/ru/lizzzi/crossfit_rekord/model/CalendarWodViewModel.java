@@ -33,7 +33,7 @@ public class CalendarWodViewModel  extends AndroidViewModel {
     private SQLiteStorageWod dbStorage;
 
     private List<Date> selectDates;
-    private MutableLiveData<List<Date>> liveData;
+    private MutableLiveData<Boolean> liveData;
     private MutableLiveData<Boolean> liveDataConnection;
     private Executor executor = new ThreadPoolExecutor(
             0,
@@ -62,11 +62,12 @@ public class CalendarWodViewModel  extends AndroidViewModel {
         calendar = Calendar.getInstance();
     }
 
-    public LiveData<List<Date>> loadDates() {
+    public LiveData<Boolean> loadingDates() {
         liveData = new MutableLiveData<>();
         executor.execute(new Runnable() {
             @Override
             public void run() {
+                boolean datesIsLoading = false;
                 BackendlessQueries backendlessQuery = new BackendlessQueries();
                 List<Map> trainingResults = backendlessQuery.loadingCalendarWod(
                         userObjectID,
@@ -88,13 +89,12 @@ public class CalendarWodViewModel  extends AndroidViewModel {
                             e.printStackTrace();
                         }
                     }
-                    selectDates = datesForLoadInLocalDb;
                     String userId = sharedPreferences.getString(APP_PREFERENCES_OBJECTID, "");
                     dbStorage.saveDates(userId, trainingResults);
-                    liveData.postValue(selectDates);
-                } else {
-                    liveData.postValue(null);
+                    selectDates = datesForLoadInLocalDb;
+                    datesIsLoading = true;
                 }
+                liveData.postValue(datesIsLoading);
             }
         });
         return liveData;
@@ -113,11 +113,12 @@ public class CalendarWodViewModel  extends AndroidViewModel {
         return liveDataConnection;
     }
 
-    public List<Date> getDates() {
-        return selectDates = dbStorage.selectDates(
+    public Boolean localDatesIsNotAvailable() {
+        selectDates = dbStorage.selectDates(
                 sharedPreferences.getString(APP_PREFERENCES_OBJECTID, ""),
                 timeStart,
                 timeFinish);
+        return selectDates.isEmpty();
     }
 
     public List<Date> getSelectDates() {
@@ -126,10 +127,6 @@ public class CalendarWodViewModel  extends AndroidViewModel {
 
     public int getSelectDatesSize() {
         return selectDates.size();
-    }
-
-    public void setSelectDates(List<Date> selectDates) {
-        this.selectDates = selectDates;
     }
 
     public void saveDateInPrefs(Date date) {
@@ -147,18 +144,13 @@ public class CalendarWodViewModel  extends AndroidViewModel {
     }
 
     public Date getDate() {
-        Date date;
+        Date date = calendar.getTime();
         String selectedDay = getDateFromPreferences();
-        if (selectedDay.equals("0") || selectedDay.equals("")) {
-            date = calendar.getTime();
-        } else {
+        if (!selectedDay.isEmpty() && !selectedDay.equals("0")) {
             try {
-                SimpleDateFormat dateFormat = new SimpleDateFormat(
-                        "MM/dd/yyyy",
-                        Locale.getDefault());
+                SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
                 date = dateFormat.parse(selectedDay);
-            } catch (ParseException e) {
-                date = calendar.getTime();
+            } catch (ParseException ignored) {
             }
         }
         setTimePeriod(date);
