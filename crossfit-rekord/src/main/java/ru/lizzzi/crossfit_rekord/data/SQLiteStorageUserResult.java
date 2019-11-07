@@ -24,7 +24,7 @@ public class SQLiteStorageUserResult extends SQLiteOpenHelper {
     private static String DATABASE_NAME = "MyResult.db";
     private SQLiteDatabase database;
     private final Context context;
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 5;//для debug'a была 4ая
 
     public SQLiteStorageUserResult(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -110,14 +110,13 @@ public class SQLiteStorageUserResult extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
         switch (oldVersion) {
             case 1:
-                ContentValues newValues = new ContentValues();
-                newValues.put(MyResultDB.EXERCISE, "MyWeight");
-                newValues.put(MyResultDB.RESULT, "0");
-                database.insert(
-                        MyResultDB.TABLE_NAME,
-                        null,
-                        newValues);
+                updateDBForVersion1(database);
                 break;
+
+            case 5:
+                updateDBForVersion5(database);
+                break;
+
             default:
                 try {
                     InputStream inputStream = context.getAssets().open("db/" + DATABASE_NAME);
@@ -140,71 +139,69 @@ public class SQLiteStorageUserResult extends SQLiteOpenHelper {
         }
     }
 
-    private void upgradeDbToThirdVersion(SQLiteDatabase database) {
-        List<Map<String, String>> valueFromDb = getResultForOldDB(database);
-        context.deleteDatabase(MyResultDB.TABLE_NAME);
-        onCreate(database);
-        try {
-            InputStream inputStream = context.getAssets().open("db/" + DATABASE_NAME);
-            String outFileName = database.getPath();
-            OutputStream outputStream = new FileOutputStream(outFileName);
-
-            byte[] buffer = new byte[1024];
-            int length;
-            while ((length = inputStream.read(buffer)) > 0) {
-                outputStream.write(buffer, 0, length);
-            }
-
-            outputStream.flush();
-            outputStream.close();
-            inputStream.close();
-        } catch (IOException exception) {
-            Log.w("RekordWarning", "");
-            exception.printStackTrace();
-        }
-
-        for (int i = 0; i < valueFromDb.size(); i++) {
-            for (Map.Entry<String, String> entry : valueFromDb.get(i).entrySet()) {
-                String exercise = entry.getKey();
-                String result = entry.getValue();
-                ContentValues newValues2 = new ContentValues();
-                newValues2.put(MyResultDB.EXERCISE, exercise);
-                newValues2.put(MyResultDB.RESULT, result);
-                database.update(
-                        MyResultDB.TABLE_NAME,
-                        newValues2,
-                        MyResultDB.EXERCISE + "= ?",
-                        new String[]{exercise});
-            }
-        }
-    }
-
-    private List<Map<String, String>> getResultForOldDB(SQLiteDatabase database) {
-        List<Map<String, String>> results = new ArrayList<>();
-
-        Cursor cursor = database.query(
+    private void updateDBForVersion1(SQLiteDatabase database) {
+        ContentValues newValues = new ContentValues();
+        newValues.put(MyResultDB.EXERCISE, "MyWeight");
+        newValues.put(MyResultDB.RESULT, "0");
+        database.insert(
                 MyResultDB.TABLE_NAME,
                 null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null);
-        if (cursor != null && cursor.moveToFirst()) {
-            String exercise;
-            String result;
-            do {
-                Map<String, String> exerciseResult =  new HashMap<>();
-                exercise = cursor.getString(cursor.getColumnIndex(MyResultDB.EXERCISE));
-                result = cursor.getString(cursor.getColumnIndex(MyResultDB.RESULT));
-                exerciseResult.put("result", result);
-                exerciseResult.put("exercise", exercise);
-                results.add(exerciseResult);
-            } while (cursor.moveToNext());
-            cursor.close();
+                newValues);
+    }
+
+    private void updateDBForVersion5(SQLiteDatabase database) {
+        Map<String, String> changeMapForExercise = new HashMap<>();
+        changeMapForExercise.put("Clean", "Power Clean");
+        changeMapForExercise.put("Row (m)", "Row (500m.)");
+        changeMapForExercise.put("Row (cal)", "Row (20 cal.)");
+        updateDBValue(database, changeMapForExercise, MyResultDB.EXERCISE, MyResultDB.EXERCISE);
+
+        Map<String, String> changeMapForExerciseRu = new HashMap<>();
+        changeMapForExerciseRu.put("Гребля (25 кал)", "Гребля (20 кал)");
+        changeMapForExerciseRu.put("Гребля (500м)", "Гребля (500м.)");
+        updateDBValue(database, changeMapForExerciseRu, MyResultDB.EXERCISE_RU, MyResultDB.EXERCISE_RU);
+
+        database.execSQL(
+                "ALTER TABLE " +
+                        MyResultDB.TABLE_NAME +
+                        " ADD COLUMN " +
+                        MyResultDB.UNIT +
+                        " TEXT;");
+
+        Map<String, String> unitForExercise = new HashMap<>();
+        unitForExercise.put("Deadlift", "кг");
+        unitForExercise.put("Snatch", "кг");
+        unitForExercise.put("Squat Clean", "кг");
+        unitForExercise.put("Power Clean", "кг");
+        unitForExercise.put("Squat Snatches", "кг");
+        unitForExercise.put("Clean and jerk", "кг");
+        unitForExercise.put("Front Squat", "кг");
+        unitForExercise.put("Back Squat", "кг");
+        unitForExercise.put("Shoulder Press", "кг");
+        unitForExercise.put("Push Press", "кг");
+        unitForExercise.put("Bench Press", "кг");
+        unitForExercise.put("Sumo Deadlift", "кг");
+        unitForExercise.put("Thruster", "кг");
+        unitForExercise.put("Dumbell Snatch", "кг");
+        unitForExercise.put("Row (500m.)", "время");
+        unitForExercise.put("Row (20 cal.)", "время");
+        unitForExercise.put("MyWeight", "кг");
+        updateDBValue(database, unitForExercise, MyResultDB.UNIT, MyResultDB.EXERCISE);
+    }
+
+    private void updateDBValue(SQLiteDatabase database,
+                               Map<String, String> changeMap,
+                               String whatChange,
+                               String whereChanging) {
+        for (Map.Entry<String, String> entry : changeMap.entrySet()) {
+            ContentValues newValues = new ContentValues();
+            newValues.put(whatChange, entry.getValue());
+            database.update(
+                    MyResultDB.TABLE_NAME,
+                    newValues,
+                    whereChanging + "= ?",
+                    new String[]{entry.getKey()});
         }
-        return results;
     }
 
     public void setResult(String exercise, String result) {
@@ -276,10 +273,10 @@ public class SQLiteStorageUserResult extends SQLiteOpenHelper {
     }
 
     public static final class MyResultDB implements BaseColumns {
-
         final static String TABLE_NAME = "myResult";
         final static String EXERCISE = "Exercise";
         final static String EXERCISE_RU = "ExerciseRu";
+        final static String UNIT = "Unit";
         final static String RESULT = "Result";
     }
 }
