@@ -228,6 +228,7 @@
 
     <!-- Значения для фрагмента OneRepeatHighs -->
     <string name="strButtonSaveOneRepeatHighs">Сохранить</string>
+    <string name="strDefaultUnt">кг</string>
 
     <string name="strDBMyResultMyWeightEN">MyWeight</string>
     <string name="strDBMyResultMyWeightRu">Мой вес</string>
@@ -306,10 +307,6 @@
     <string name="friday">Пятница</string>
     <string name="saturday">Суббота</string>
     <string name="sunday">Воскресенье</string>
-
-    <string name="exercise">exercise</string>
-    <string name="exerciseRu">exerciseRu</string>
-    <string name="resultExercise">result</string>\
 
     <!-- Значения для фрагмента MyResult -->
     <string name="defaultValue">0</string>

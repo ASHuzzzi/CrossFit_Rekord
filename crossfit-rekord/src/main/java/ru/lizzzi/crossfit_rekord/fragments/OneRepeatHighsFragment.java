@@ -114,6 +114,6 @@ public class OneRepeatHighsFragment extends Fragment {
     }
 
     public void setExercise(String exercise, String result) {
-        viewModel.setExercises(exercise, result);
+        viewModel.setResult(exercise, result);
     }
 }

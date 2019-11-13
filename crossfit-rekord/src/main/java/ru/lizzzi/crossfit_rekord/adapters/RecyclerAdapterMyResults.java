@@ -27,7 +27,7 @@ public class RecyclerAdapterMyResults
 
     public RecyclerAdapterMyResults(OneRepeatHighsFragment fragment) {
         this.fragment = fragment;
-        item = new ResultItem(fragment.getContext());
+        item = new ResultItem();
         exercises = new ArrayList<>();
     }
 
@@ -36,12 +36,14 @@ public class RecyclerAdapterMyResults
         private TextView textCaptionRu;
         private TextView textCaptionEn;
         private EditText editResult;
+        private TextView textUnit;
 
         ViewHolder(View view) {
             super(view);
             textCaptionRu = view.findViewById(R.id.textCaptionRu);
             textCaptionEn = view.findViewById(R.id.textCaption);
             editResult = view.findViewById(R.id.editResult);
+            textUnit = view.findViewById(R.id.textUnit);
         }
     }
 
@@ -61,6 +63,7 @@ public class RecyclerAdapterMyResults
         final String exercise = exercises.get(position).get(item.getExercise());
         final String exerciseRu = exercises.get(position).get(item.getExerciseRu());
         final String result = exercises.get(position).get(item.getResult());
+        final String unit = exercises.get(position).get(item.getUnit());
 
         holder.textCaptionEn.setText(exercise);
         holder.textCaptionRu.setText(exerciseRu);
@@ -92,6 +95,7 @@ public class RecyclerAdapterMyResults
                 }
             }
         });
+        holder.textUnit.setText(unit);
     }
 
     @Override
