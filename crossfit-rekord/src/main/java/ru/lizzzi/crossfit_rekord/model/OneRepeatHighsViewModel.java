@@ -11,16 +11,16 @@ import java.util.Map;
 
 import ru.lizzzi.crossfit_rekord.data.SQLiteStorageUserResult;
 
-public class MyResultsViewModel extends AndroidViewModel {
+public class OneRepeatHighsViewModel extends AndroidViewModel {
 
     private SQLiteStorageUserResult dbStorage;
     private List<Map<String, String>> exercisesForShow;
     private List<Map<String, String>> exercisesForSave;
-    private String EXERCISE = "exercise";
-    private String RESULT = "result";
+    private String EXERCISE = SQLiteStorageUserResult.MyResultDB.EXERCISE;
+    private String RESULT = SQLiteStorageUserResult.MyResultDB.RESULT;
     private String myWeight;
 
-    public MyResultsViewModel(@NonNull Application application) {
+    public OneRepeatHighsViewModel(@NonNull Application application) {
         super(application);
         dbStorage = new SQLiteStorageUserResult(getApplication());
         exercisesForShow = dbStorage.getResult();
@@ -40,7 +40,7 @@ public class MyResultsViewModel extends AndroidViewModel {
         }
     }
 
-    public void setExercises(String exercise, String result) {
+    public void setResult(String exercise, String result) {
         Map<String, String> exerciseResult =  new HashMap<>();
         exerciseResult.put(RESULT, result);
         exerciseResult.put(EXERCISE, exercise);
@@ -56,6 +56,6 @@ public class MyResultsViewModel extends AndroidViewModel {
     }
 
     public void saveWeight() {
-        dbStorage.setResult("MyWeight", myWeight);
+        dbStorage.setResult(SQLiteStorageUserResult.MY_WEIGHT, myWeight);
     }
 }

@@ -6,13 +6,13 @@
 
     <TextView
         android:id="@+id/tvTimeNotificationND"
-        style="@style/MainTextStyle"
+        style="@style/TextAppearance.AppCompat.Small"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="end"
-        android:padding="5dp"
+        android:layout_marginEnd="5dp"
         android:text="@string/empty"
-        android:textSize="12sp" />
+        android:textColor="@color/colorRedPrimary"/>
 
     <TextView
         android:id="@+id/tvHeaderNotificationND"
@@ -20,22 +20,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvTimeNotificationND"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
         android:gravity="center"
-        android:paddingStart="25dp"
-        android:paddingTop="5dp"
-        android:paddingEnd="5dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginEnd="25dp"
         android:text="@string/empty"
         android:textStyle="bold" />
 
     <View
         android:id="@+id/divider3"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="2dp"
         android:layout_below="@+id/tvHeaderNotificationND"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
         android:background="@drawable/divider" />
 
     <ScrollView
@@ -58,17 +55,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
                 android:layout_marginRight="10dp"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="10dp"
                 android:text="@string/empty" />
 
             <View
                 android:id="@+id/divider2"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
+                android:layout_height="2dp"
                 android:layout_marginBottom="10dp"
                 android:background="@drawable/divider" />
 

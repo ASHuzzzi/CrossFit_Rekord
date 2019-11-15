@@ -31,8 +31,8 @@ public class WorkoutExerciseViewModel extends AndroidViewModel {
     public static String SC = "Sc";
     public static String RX = "Rx";
     public static String RX_PLUS = "Rxplus";
-    private String NULL = "null";
-    private String DASH = "—";
+    public static String POST_WORKOUT = "postworkout";
+    private String EMPTY_TEXT = "";
 
 
     private String selectedDay;
@@ -62,29 +62,33 @@ public class WorkoutExerciseViewModel extends AndroidViewModel {
                 Map<String, String> wod = new HashMap<>();
                 if (resultQuery != null && !resultQuery.isEmpty()) {
                     wod.put(WARM_UP,
-                            String.valueOf(resultQuery.get(0).get(WARM_UP)).equals(NULL)
-                                    ? DASH
+                            resultQuery.get(0).get(WARM_UP) == null
+                                    ? EMPTY_TEXT
                                     : String.valueOf(resultQuery.get(0).get(WARM_UP)));
                     wod.put(SKILL,
-                            String.valueOf(resultQuery.get(0).get(SKILL)).equals(NULL)
-                                    ? DASH
+                            resultQuery.get(0).get(SKILL) == null
+                                    ? EMPTY_TEXT
                                     : String.valueOf(resultQuery.get(0).get(SKILL)));
                     wod.put(WOD,
-                            String.valueOf(resultQuery.get(0).get(WOD)).equals(NULL)
-                                    ? DASH
+                            resultQuery.get(0).get(WOD) == null
+                                    ? EMPTY_TEXT
                                     : String.valueOf(resultQuery.get(0).get(WOD)));
                     wod.put(SC,
-                            String.valueOf(resultQuery.get(0).get(SC)).equals(NULL)
-                                    ? DASH
+                            resultQuery.get(0).get(SC) == null
+                                    ? EMPTY_TEXT
                                     : String.valueOf(resultQuery.get(0).get(SC)));
                     wod.put(RX,
-                            String.valueOf(resultQuery.get(0).get(RX)).equals(NULL)
-                                    ? DASH
+                            resultQuery.get(0).get(RX) == null
+                                    ? EMPTY_TEXT
                                     : String.valueOf(resultQuery.get(0).get(RX)));
                     wod.put(RX_PLUS,
-                            String.valueOf(resultQuery.get(0).get(RX_PLUS)).equals(NULL)
-                                    ? DASH
+                            resultQuery.get(0).get(RX_PLUS) == null
+                                    ? EMPTY_TEXT
                                     : String.valueOf(resultQuery.get(0).get(RX_PLUS)));
+                    wod.put(POST_WORKOUT,
+                            resultQuery.get(0).get(POST_WORKOUT) == null
+                                    ? EMPTY_TEXT
+                                    : String.valueOf(resultQuery.get(0).get(POST_WORKOUT)));
                 }
                 liveData.postValue(wod);
             }
@@ -126,5 +130,13 @@ public class WorkoutExerciseViewModel extends AndroidViewModel {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public Boolean checkMapValueOnEmptiness(Map<String, String> map, String value) {
+        return getMapValue(map, value).isEmpty();
+    }
+
+    private String getMapValue(Map<String, String> map, String value) {
+        return (map.get(value) == null) ? "" : map.get(value);
     }
 }

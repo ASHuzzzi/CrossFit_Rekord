@@ -1,45 +1,45 @@
 package ru.lizzzi.crossfit_rekord.items;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 
-import ru.lizzzi.crossfit_rekord.R;
+import ru.lizzzi.crossfit_rekord.data.SQLiteStorageUserResult;
 
 public class ResultItem {
-    private Context context;
-
-    public ResultItem(Context context) {
-        this.context = context;
-    }
 
     public enum Fields {
-        exercise(R.string.exercise),
-        exerciseRu(R.string.exerciseRu),
-        result(R.string.resultExercise);
+        exercise(SQLiteStorageUserResult.MyResultDB.EXERCISE),
+        exerciseRu(SQLiteStorageUserResult.MyResultDB.EXERCISE_RU),
+        result(SQLiteStorageUserResult.MyResultDB.RESULT),
+        unit(SQLiteStorageUserResult.MyResultDB.UNIT);
 
-        private int fieldNameId;
+        private String fieldNameId;
 
-        Fields(int fieldNameId) {
-            this.fieldNameId = fieldNameId;
+        Fields(String fieldName) {
+            this.fieldNameId = fieldName;
         }
 
-        int getFieldNameId() {
+        String getFieldName() {
             return fieldNameId;
         }
     }
 
     @NonNull
     public String getExercise() {
-        return context.getString(Fields.exercise.getFieldNameId());
+        return Fields.exercise.getFieldName();
     }
 
     @NonNull
     public String getExerciseRu() {
-        return context.getString(Fields.exerciseRu.getFieldNameId());
+        return Fields.exerciseRu.getFieldName();
     }
 
     @NonNull
     public String getResult() {
-        return context.getString(Fields.result.getFieldNameId());
+        return Fields.result.getFieldName();
+    }
+
+    @NonNull
+    public String getUnit() {
+        return Fields.unit.getFieldName();
     }
 }

@@ -42,10 +42,10 @@ public class BackgroundDrawable {
                     backgroundColor = R.drawable.table_item_bjj;
                     break;
                 case "bjj kids":
-                    backgroundColor = R.drawable.table_item_bjj;
+                    backgroundColor = R.drawable.table_item_bjj_kids;
                     break;
                 case "Muay Thai kids":
-                    backgroundColor = R.drawable.table_item_muaythai;
+                    backgroundColor = R.drawable.table_item_muaythai_kids;
                     break;
                 case "Muay Thai":
                     backgroundColor = R.drawable.table_item_muaythai;

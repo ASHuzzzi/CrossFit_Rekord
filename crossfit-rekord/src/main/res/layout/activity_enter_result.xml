@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.widget.RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.widget.RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -35,148 +36,209 @@
         android:textStyle="bold"
         android:layout_below="@id/appbar"/>
 
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/textView6"
+        android:layout_above="@id/progressBarSaveUpload"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:id="@+id/layoutMain"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/cardSkill"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                app:cardBackgroundColor="@color/colorPrimaryDark"
+                app:cardCornerRadius="15dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginBottom="15dp">
+
+                    <TextView
+                        android:id="@+id/textView37"
+                        style="@style/TextAppearance.AppCompat.Medium"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/colorRedPrimary"
+                        android:gravity="center"
+                        android:text="@string/strActivityERSkill"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textStyle="bold" />
+
+                    <EditText
+                        android:id="@+id/etResultSkill"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/textView37"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
+                        android:autofillHints="@string/empty"
+                        android:ems="10"
+                        android:inputType="textPersonName"
+                        android:text="@string/empty"
+                        android:textColor="@color/colorRedPrimary"
+                        android:theme="@style/Theme.App.Base"
+                        tools:ignore="LabelFor"
+                        tools:targetApi="o" />
+
+                </RelativeLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/cardLevels"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                app:cardBackgroundColor="@color/colorPrimaryDark"
+                app:cardCornerRadius="15dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginBottom="15dp">
+
+                    <TextView
+                        android:id="@+id/textView38"
+                        style="@style/TextAppearance.AppCompat.Medium"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/colorRedPrimary"
+                        android:gravity="center"
+                        android:text="@string/strActivityERLevel"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textStyle="bold" />
+
+                    <RadioGroup
+                        android:id="@+id/rgSelectLevel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/textView38"
+                        android:layout_marginLeft="40dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginRight="25dp"
+                        android:orientation="horizontal"
+                        tools:ignore="RtlHardcoded">
+
+                        <RadioButton
+                            android:id="@+id/rbSc"
+                            style="@style/MainTextStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:paddingStart="10dp"
+                            android:paddingEnd="0dp"
+                            android:gravity="center_vertical"
+                            android:text="@string/strActivityERLevelSc"
+                            android:textStyle="bold"
+                            android:theme="@style/MyRadioButton" />
+
+                        <RadioButton
+                            android:id="@+id/rbRx"
+                            style="@style/MainTextStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:paddingStart="10dp"
+                            android:paddingEnd="0dp"
+                            android:gravity="center_vertical"
+                            android:text="@string/strActivityERLevelRx"
+                            android:textStyle="bold"
+                            android:theme="@style/MyRadioButton"
+                            tools:ignore="RtlSymmetry" />
+
+                        <RadioButton
+                            android:id="@+id/rbRxP"
+                            style="@style/MainTextStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:paddingStart="10dp"
+                            android:paddingEnd="0dp"
+                            android:gravity="center_vertical"
+                            android:text="@string/strActivityERLevelRxPlus"
+                            android:textIsSelectable="true"
+                            android:textStyle="bold"
+                            android:theme="@style/MyRadioButton" />
+                    </RadioGroup>
+
+                </RelativeLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/cardWoD"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                app:cardBackgroundColor="@color/colorPrimaryDark"
+                app:cardCornerRadius="15dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginBottom="15dp">
+
+                    <TextView
+                        android:id="@+id/textView39"
+                        style="@style/TextAppearance.AppCompat.Medium"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/colorRedPrimary"
+                        android:gravity="center"
+                        android:text="@string/strActivityERWod"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textStyle="bold" />
+
+                    <EditText
+                        android:id="@+id/etResultWoD"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/textView39"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
+                        android:autofillHints="@string/empty"
+                        android:ems="10"
+                        android:inputType="textPersonName"
+                        android:text="@string/empty"
+                        android:textColor="@color/colorRedPrimary"
+                        android:theme="@style/Theme.App.Base"
+                        tools:ignore="LabelFor"
+                        tools:targetApi="o" />
+                </RelativeLayout>
+
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
+    </ScrollView>
+
     <ProgressBar
         android:id="@+id/progressBarSaveUpload"
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/textView6"
+        android:layout_marginTop="5dp"
+        android:layout_above="@id/buttonSaveUpload"
         android:layout_centerHorizontal="true" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/progressBarSaveUpload"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp">
-
-        <TextView
-            android:id="@+id/textView37"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="?attr/colorAccent"
-            android:gravity="center"
-            android:text="@string/strActivityERSkill"
-            android:textColor="?attr/colorPrimary"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
-        <EditText
-            android:id="@+id/etResultSkill"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/textView37"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:autofillHints="@string/empty"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="@string/empty"
-            android:textColor="@color/colorRedPrimary"
-            android:theme="@style/Theme.App.Base"
-            tools:ignore="LabelFor"
-            tools:targetApi="o" />
-
-        <TextView
-            android:id="@+id/textView38"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/etResultSkill"
-            android:layout_marginTop="20dp"
-            android:background="?attr/colorAccent"
-            android:gravity="center"
-            android:text="@string/strActivityERLevel"
-            android:textColor="?attr/colorPrimary"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
-        <RadioGroup
-            android:id="@+id/rgSelectLevel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/textView38"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="20dp"
-            android:orientation="horizontal">
-
-            <RadioButton
-                android:id="@+id/rbSc"
-                style="@style/MainTextStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:paddingStart="10dp"
-                android:text="@string/strActivityERLevelSc"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:theme="@style/MyRadioButton"
-                tools:ignore="RtlSymmetry" />
-
-            <RadioButton
-                android:id="@+id/rbRx"
-                style="@style/MainTextStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:paddingStart="10dp"
-                android:text="@string/strActivityERLevelRx"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:theme="@style/MyRadioButton"
-                tools:ignore="RtlSymmetry" />
-
-            <RadioButton
-                android:id="@+id/rbRxP"
-                style="@style/MainTextStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:paddingStart="10dp"
-                android:text="@string/strActivityERLevelRxPlus"
-                android:textIsSelectable="true"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:theme="@style/MyRadioButton"
-                tools:ignore="RtlSymmetry" />
-        </RadioGroup>
-
-        <TextView
-            android:id="@+id/textView39"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/rgSelectLevel"
-            android:layout_marginTop="20dp"
-            android:background="?attr/colorAccent"
-            android:gravity="center"
-            android:text="@string/strActivityERWod"
-            android:textColor="?attr/colorPrimary"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
-        <EditText
-            android:id="@+id/etResultWoD"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/textView39"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:autofillHints="@string/empty"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="@string/empty"
-            android:textColor="@color/colorRedPrimary"
-            android:theme="@style/Theme.App.Base"
-            tools:ignore="LabelFor"
-            tools:targetApi="o" />
-
-    </RelativeLayout>
 
     <Button
         android:id="@+id/buttonSaveUpload"
@@ -191,6 +253,7 @@
         android:paddingLeft="25dp"
         android:paddingEnd="25dp"
         android:paddingRight="25dp"
+        android:textSize="16sp"
         android:text="@string/strActivityERSave" />
 
 </android.widget.RelativeLayout>

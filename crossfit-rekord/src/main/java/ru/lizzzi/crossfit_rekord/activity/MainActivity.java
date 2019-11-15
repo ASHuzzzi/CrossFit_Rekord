@@ -305,7 +305,7 @@ public class MainActivity extends AppCompatActivity implements
                 fragmentClass = NotificationFragment.class;
                 break;
             case (R.id.myResults):
-                viewModel.setOpenFragment(R.string.title_MyResults_Fragment);
+                viewModel.setOpenFragment(R.string.title_MyResult_Fragment);
                 fragmentClass = MyResultsFragment.class;
                 break;
             case (R.id.alarm):
@@ -369,7 +369,7 @@ public class MainActivity extends AppCompatActivity implements
             case (R.string.title_CalendarWod_Fragment):
                 item = 3;
                 break;
-            case (R.string.title_MyResults_Fragment):
+            case (R.string.title_MyResult_Fragment):
                 item = 4;
                 break;
             case (R.string.title_Character_Fragment):

@@ -15,19 +15,21 @@ import java.util.List;
 import java.util.Map;
 
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.fragments.MyResultsFragment;
+import ru.lizzzi.crossfit_rekord.fragments.OneRepeatHighsFragment;
 import ru.lizzzi.crossfit_rekord.items.ResultItem;
+
+import static android.text.InputType.TYPE_CLASS_DATETIME;
 
 public class RecyclerAdapterMyResults
         extends RecyclerView.Adapter<RecyclerAdapterMyResults.ViewHolder> {
 
-    private MyResultsFragment fragment;
+    private OneRepeatHighsFragment fragment;
     private List<Map<String, String>> exercises;
     private ResultItem item;
 
-    public RecyclerAdapterMyResults(MyResultsFragment fragment) {
+    public RecyclerAdapterMyResults(OneRepeatHighsFragment fragment) {
         this.fragment = fragment;
-        item = new ResultItem(fragment.getContext());
+        item = new ResultItem();
         exercises = new ArrayList<>();
     }
 
@@ -36,12 +38,14 @@ public class RecyclerAdapterMyResults
         private TextView textCaptionRu;
         private TextView textCaptionEn;
         private EditText editResult;
+        private TextView textUnit;
 
         ViewHolder(View view) {
             super(view);
             textCaptionRu = view.findViewById(R.id.textCaptionRu);
             textCaptionEn = view.findViewById(R.id.textCaption);
             editResult = view.findViewById(R.id.editResult);
+            textUnit = view.findViewById(R.id.textUnit);
         }
     }
 
@@ -61,6 +65,7 @@ public class RecyclerAdapterMyResults
         final String exercise = exercises.get(position).get(item.getExercise());
         final String exerciseRu = exercises.get(position).get(item.getExerciseRu());
         final String result = exercises.get(position).get(item.getResult());
+        final String unit = exercises.get(position).get(item.getUnit());
 
         holder.textCaptionEn.setText(exercise);
         holder.textCaptionRu.setText(exerciseRu);
@@ -92,6 +97,10 @@ public class RecyclerAdapterMyResults
                 }
             }
         });
+        holder.textUnit.setText(unit);
+        if (unit != null && unit.equals("время")) {
+            holder.editResult.setInputType(TYPE_CLASS_DATETIME);
+        }
     }
 
     @Override

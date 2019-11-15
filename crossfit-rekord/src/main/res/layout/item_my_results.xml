@@ -8,52 +8,74 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginBottom="10dp">
 
         <LinearLayout
             android:id="@+id/layoutMyWeight"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toStartOf="@id/editResult"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_alignTop="@id/editResult"
+            android:layout_alignBottom="@id/editResult"
+            android:gravity="center_vertical"
+            android:paddingStart="10dp"
+            android:paddingEnd="0dp">
 
             <TextView
                 android:id="@+id/textCaption"
+                style="@style/TextAppearance.AppCompat.Medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
                 android:ellipsize="end"
                 android:text="@string/strDBMyResultDeadliftEN"
                 android:textColor="@color/colorRedPrimary"
-                android:textSize="16sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/textCaptionRu"
+                style="@style/TextAppearance.AppCompat.Small"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
+                android:layout_marginStart="10dp"
                 android:ellipsize="end"
                 android:text="@string/strDBMyResultDeadliftRU"
                 android:textColor="@color/colorRedPrimary"
-                android:textSize="14sp" />
+                android:gravity="center_vertical"/>
         </LinearLayout>
 
         <EditText
             android:id="@+id/editResult"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="0dp"
+            android:layout_toStartOf="@id/textUnit"
             android:focusableInTouchMode="true"
             android:gravity="center"
-            android:inputType="phone"
+            android:inputType="numberDecimal"
             android:maxWidth="100dp"
-            android:minWidth="30dp"
+            android:minWidth="50dp"
             android:text="@string/empty"
             android:textColor="@color/colorRedPrimary"
             android:theme="@style/Theme.App.Base.MyResult" />
+
+        <TextView
+            android:id="@+id/textUnit"
+            style="@style/TextAppearance.AppCompat.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="0dp"
+            android:layout_marginEnd="20dp"
+            android:layout_alignTop="@id/editResult"
+            android:layout_alignBottom="@id/editResult"
+            android:layout_alignParentEnd="true"
+            android:ellipsize="end"
+            android:text="@string/strDefaultUnt"
+            android:textColor="@color/colorRedPrimary"
+            android:gravity="center_vertical"
+            android:minWidth="20dp"/>
 
     </RelativeLayout>
 

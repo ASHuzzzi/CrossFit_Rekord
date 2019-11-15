@@ -51,13 +51,13 @@ public class BackendlessQueries {
 
     //Поля таблицы results
     private final String TABLE_RESULTS_NAME = "results";
-    private final String TABLE_RESULTS_DATE_SESSION = "date_session";
+    public final String TABLE_RESULTS_DATE_SESSION = "date_session";
     private final String TABLE_RESULTS_USER_NAME = "Name";
     private final String TABLE_RESULTS_SURNAME = "surname";
-    private final String TABLE_RESULTS_SKILL = "skill";
+    public final String TABLE_RESULTS_SKILL = "skill";
     private final String TABLE_RESULTS_USER_ID = "ownerId";
-    private final String TABLE_RESULTS_WOD_LEVEL = "wod_level";
-    private final String TABLE_RESULTS_WOD_RESULT = "wod_result";
+    public final String TABLE_RESULTS_WOD_LEVEL = "wod_level";
+    public final String TABLE_RESULTS_WOD_RESULT = "wod_result";
 
     //Поля таблицы Users
     private final String TABLE_USERS_NAME = "Users";
@@ -67,6 +67,10 @@ public class BackendlessQueries {
     private final String TABLE_USERS_PASSWORD = "password";
     private final String TABLE_USERS_PHONE_NUBMER = "phoneNumber";
     private final String TABLE_USERS_SURNAME = "surname";
+
+    private final int ACTION_SAVE = 2;
+    private final int ACTION_DELETE = 3;
+    private final int ACTION_UPLOAD = 4;
 
     public List<Map> loadingCalendarWod(String userID, long startDate, long endDate) {
         try {
@@ -103,7 +107,7 @@ public class BackendlessQueries {
 
     public List<Map> loadingExerciseWorkout(String selectedDay) {
         try {
-            String whereClause = TABLE_RESULTS_DATE_SESSION + " = '" + selectedDay + "'" ;
+            String whereClause = TABLE_EXERCISES_DATE_SESSION + " = '" + selectedDay + "'" ;
             DataQueryBuilder queryBuilder = DataQueryBuilder.create();
             queryBuilder.setWhereClause(whereClause);
             queryBuilder.setPageSize(100);
@@ -203,7 +207,7 @@ public class BackendlessQueries {
                                      String userWodResult) {
         String tableName = TABLE_RESULTS_NAME;
         String dateSession = TABLE_RESULTS_DATE_SESSION;
-        String ownerID = TABLE_RECORDING_OWNER_ID;
+        String ownerID = TABLE_RESULTS_USER_ID;
         String name = TABLE_RESULTS_USER_NAME;
         String surname = TABLE_RESULTS_SURNAME;
         String skill = TABLE_RESULTS_SKILL;
@@ -212,7 +216,7 @@ public class BackendlessQueries {
         boolean resultOfQuery = false;
         String whereClause;
         switch (action) {
-            case 2:
+            case ACTION_SAVE:
                 Map<String, String> itemForSave = new HashMap<>();
                 itemForSave.put(dateSession, selectedDateSession);
                 itemForSave.put(ownerID, userId);
@@ -228,7 +232,7 @@ public class BackendlessQueries {
                     // failed, to get the error code, call exception.getFault().getCode()
                 }
                 break;
-            case 3:
+            case ACTION_DELETE:
                 whereClause =
                         dateSession + " = '" + selectedDateSession +
                         "' and " +
@@ -240,7 +244,7 @@ public class BackendlessQueries {
                     // failed, to get the error code, call exception.getFault().getCode()
                 }
                 break;
-            case 4:
+            case ACTION_UPLOAD:
                 Map<String, Object> itemForUpdate = new HashMap<>();
                 itemForUpdate.put(name, userName);
                 itemForUpdate.put(surname, userSurname);

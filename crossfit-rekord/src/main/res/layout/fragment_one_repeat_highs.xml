@@ -37,54 +37,63 @@
         </LinearLayout>
     </FrameLayout>
 
-    <LinearLayout
-        android:id="@+id/layoutMyWeight"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/textCaption"
+        style="@style/TextAppearance.AppCompat.Medium"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:ellipsize="end"
+        android:text="@string/strDBMyResultMyWeightRu"
+        android:textColor="@color/colorRedPrimary"
+        android:textStyle="bold"
         android:layout_alignTop="@id/editMyWeightResult"
         android:layout_alignBottom="@id/editMyWeightResult"
         android:layout_marginBottom="10dp"
-        android:layout_toStartOf="@id/editMyWeightResult"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/textCaption"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:ellipsize="end"
-            android:text="@string/strDBMyResultMyWeightRu"
-            android:textColor="@color/colorRedPrimary"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
-    </LinearLayout>
+        android:layout_alignParentStart="true"/>
 
     <EditText
         android:id="@+id/editMyWeightResult"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginEnd="00dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_toEndOf="@id/textCaption"
         android:focusableInTouchMode="true"
-        android:gravity="center"
+        android:gravity="center_horizontal"
         android:inputType="phone"
         android:maxWidth="100dp"
-        android:minWidth="30dp"
+        android:minWidth="50dp"
         android:text="@string/empty"
         android:textColor="@color/colorRedPrimary"
         android:theme="@style/Theme.App.Base.MyResult" />
 
+    <TextView
+        android:id="@+id/textUnit"
+        style="@style/TextAppearance.AppCompat.Medium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="0dp"
+        android:layout_marginEnd="20dp"
+        android:layout_alignTop="@id/editMyWeightResult"
+        android:layout_alignBottom="@id/editMyWeightResult"
+        android:layout_toEndOf="@id/editMyWeightResult"
+        android:ellipsize="end"
+        android:text="@string/strDefaultUnt"
+        android:textColor="@color/colorRedPrimary"
+        android:gravity="center_vertical"
+        android:minWidth="20dp"/>
+
     <View
         android:id="@+id/divider1"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="2dp"
         android:layout_below="@+id/editMyWeightResult"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:layout_marginTop="5dp"
         android:layout_marginBottom="10dp"
         android:background="@drawable/divider" />
 
@@ -100,20 +109,18 @@
     <View
         android:id="@+id/divider2"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="2dp"
         android:layout_below="@+id/recyclerResults"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="5dp"
         android:background="@drawable/divider" />
 
     <Button
         android:id="@+id/btnSaveMyResult"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="30dp"
         android:layout_marginBottom="20dp"
         android:paddingStart="25dp"
         android:paddingLeft="25dp"
@@ -121,5 +128,5 @@
         android:paddingRight="25dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:text="@string/strButtonSaveMyResult" />
+        android:text="@string/strButtonSaveOneRepeatHighs" />
 </android.widget.RelativeLayout>

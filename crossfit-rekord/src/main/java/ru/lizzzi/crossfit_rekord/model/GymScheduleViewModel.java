@@ -38,7 +38,7 @@ public class GymScheduleViewModel extends AndroidViewModel {
     public GymScheduleViewModel(@NonNull Application application) {
         super(application);
         backendlessQuery = new BackendlessQueries();
-        selectedDay = Calendar.MONDAY;
+        selectedDay = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
         selectedGym = GYM_PARNAS;
         scheduleParnas = new ArrayList<>();
         scheduleMyzhestvo = new ArrayList<>();
@@ -181,5 +181,17 @@ public class GymScheduleViewModel extends AndroidViewModel {
 
     public int getSelectedGym() {
         return selectedGym;
+    }
+
+    public List<Integer> setDaysWhenRecordingIsPossible() {
+        Calendar calendar = Calendar.getInstance();
+        List<Integer> daysWhenRecordingIsPossible = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            calendar.add(Calendar.DAY_OF_WEEK, i);
+            daysWhenRecordingIsPossible.add(calendar.get(Calendar.DAY_OF_WEEK));
+            calendar.clear();
+            calendar = Calendar.getInstance();
+        }
+        return daysWhenRecordingIsPossible;
     }
 }

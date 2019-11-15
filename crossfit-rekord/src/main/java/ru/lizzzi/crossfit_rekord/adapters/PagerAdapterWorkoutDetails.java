@@ -39,7 +39,7 @@ public class PagerAdapterWorkoutDetails extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         switch (position) {
             case 0:
-                return context.getString(R.string.strWorkoutDetailsWod);
+                return "Тренировка";
             case 1:
                 return context.getString(R.string.strWorkoutDetailsResult);
             default:

@@ -22,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import java.util.Calendar;
+import java.util.List;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterSchedule;
@@ -242,7 +243,6 @@ public class GymScheduleFragment extends Fragment {
             @Override
             public void onChanged(Boolean isConnected) {
                 if (isConnected) {
-                    viewModel.setSelectedDay(Calendar.MONDAY);
                     if (viewModel.isSelectedGymParnas()) {
                         loadScheduleParnas();
                     } else {
@@ -302,5 +302,9 @@ public class GymScheduleFragment extends Fragment {
         requireActivity().overridePendingTransition(
                 R.anim.pull_in_right,
                 R.anim.push_out_left);
+    }
+
+    public List<Integer> setDaysWhenRecordingIsPossible() {
+        return viewModel.setDaysWhenRecordingIsPossible();
     }
 }
