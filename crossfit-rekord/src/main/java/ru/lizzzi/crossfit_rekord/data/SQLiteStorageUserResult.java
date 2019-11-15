@@ -24,7 +24,7 @@ public class SQLiteStorageUserResult extends SQLiteOpenHelper {
     private static String DATABASE_NAME = "MyResult.db";
     private SQLiteDatabase database;
     private final Context context;
-    private static final int DATABASE_VERSION = 5;//для debug'a была 4ая
+    private static final int DATABASE_VERSION = 5;
     public static final String MY_WEIGHT = "MyWeight";
 
     public SQLiteStorageUserResult(Context context) {
@@ -114,8 +114,8 @@ public class SQLiteStorageUserResult extends SQLiteOpenHelper {
                 updateDBForVersion1(database);
                 break;
 
-            case 5:
-                updateDBForVersion5(database);
+            case 4:
+                updateDBForVersion4(database);
                 break;
 
             default:
@@ -150,7 +150,7 @@ public class SQLiteStorageUserResult extends SQLiteOpenHelper {
                 newValues);
     }
 
-    private void updateDBForVersion5(SQLiteDatabase database) {
+    private void updateDBForVersion4(SQLiteDatabase database) {
         Map<String, String> changeMapForExercise = new HashMap<>();
         changeMapForExercise.put("Clean", "Power Clean");
         changeMapForExercise.put("Row (m)", "Row (500m.)");

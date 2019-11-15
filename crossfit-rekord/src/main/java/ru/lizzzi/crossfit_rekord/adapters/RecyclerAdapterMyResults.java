@@ -18,6 +18,8 @@ import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.fragments.OneRepeatHighsFragment;
 import ru.lizzzi.crossfit_rekord.items.ResultItem;
 
+import static android.text.InputType.TYPE_CLASS_DATETIME;
+
 public class RecyclerAdapterMyResults
         extends RecyclerView.Adapter<RecyclerAdapterMyResults.ViewHolder> {
 
@@ -96,6 +98,9 @@ public class RecyclerAdapterMyResults
             }
         });
         holder.textUnit.setText(unit);
+        if (unit != null && unit.equals("время")) {
+            holder.editResult.setInputType(TYPE_CLASS_DATETIME);
+        }
     }
 
     @Override

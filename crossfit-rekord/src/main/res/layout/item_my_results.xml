@@ -54,12 +54,12 @@
             android:layout_toStartOf="@id/textUnit"
             android:focusableInTouchMode="true"
             android:gravity="center"
-            android:inputType="phone"
+            android:inputType="numberDecimal"
             android:maxWidth="100dp"
             android:minWidth="50dp"
             android:text="@string/empty"
             android:textColor="@color/colorRedPrimary"
-            android:theme="@style/Theme.App.Base.MyResult"/>
+            android:theme="@style/Theme.App.Base.MyResult" />
 
         <TextView
             android:id="@+id/textUnit"
