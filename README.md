@@ -14,46 +14,46 @@
 * показывать расписание зала (на выбранный день недели);
 
 <p align="center">
-<a> <img src="https://user-images.githubusercontent.com/25584477/55539453-566e5f80-56c9-11e9-9cdd-058e9bf2541f.png"  height="283" width="160"> </a>
+<a> <img src="https://user-images.githubusercontent.com/25584477/69123633-f17a4500-0ab2-11ea-982e-f7d3523b32f4.png"  height="283" width="160"> </a>
 <align="center">
-<a> <img src="https://user-images.githubusercontent.com/25584477/55540014-b3b6e080-56ca-11e9-9371-fe829a14755b.png"  height="283" width="160"> </a>
+<a> <img src="https://user-images.githubusercontent.com/25584477/69123634-f212db80-0ab2-11ea-90cf-7e6832342e0e.png"  height="283" width="160"> </a>
 </p>
 
 * записать пользователя на тренировку (с выбором дня и времени тренировки, но не далее чем за три дня до неё);
 
 <p align="center">
-<a> <img src="https://user-images.githubusercontent.com/25584477/55540016-b3b6e080-56ca-11e9-924f-6e8d51af9747.png"  height="283" width="160"> </a>
+<a> <img src="https://user-images.githubusercontent.com/25584477/69123643-f2ab7200-0ab2-11ea-9db0-de4a69dfb526.png"  height="283" width="160"> </a>
 <align="center">
-<a> <img src="https://user-images.githubusercontent.com/25584477/55539454-566e5f80-56c9-11e9-8928-70f238ddc367.png"  height="283" width="160"> </a>
+<a> <img src="https://user-images.githubusercontent.com/25584477/69123644-f3440880-0ab2-11ea-9aaf-24b9fda340a0.png"  height="283" width="160"> </a>
 </p>
 
 
 * посмотреть комплексы прошедших тренировок. Внести свои результаты тренировки, а также посмотреть результаты других пользователей;
 
 <p align="center">
-<a> <img src="https://user-images.githubusercontent.com/25584477/55539455-566e5f80-56c9-11e9-87e7-1e6602e9a9fb.png"  height="283" width="160"> </a>
-<a> <img src="https://user-images.githubusercontent.com/25584477/55539457-5706f600-56c9-11e9-87a8-f6a133dc83de.png"  height="283" width="160"> </a>
-<a> <img src="https://user-images.githubusercontent.com/25584477/55539458-5706f600-56c9-11e9-808d-dc9778cc0774.png"  height="283" width="160"> </a>
+<a> <img src="https://user-images.githubusercontent.com/25584477/69123635-f212db80-0ab2-11ea-9257-ae0cddbb85db.png"  height="283" width="160"> </a>
+<a> <img src="https://user-images.githubusercontent.com/25584477/69123636-f212db80-0ab2-11ea-9fc7-e441902df4b8.png"  height="283" width="160"> </a>
+<a> <img src="https://user-images.githubusercontent.com/25584477/69123637-f212db80-0ab2-11ea-8faf-393d2854476a.png"  height="283" width="160"> </a>
 </p>
 
 * просмотр новостей от зала (пока только текст). Загрузка новостей происходит в фоне через сервис при старте приложения;
 
 <p align="center">
-<a> <img src="https://user-images.githubusercontent.com/25584477/53003829-e8cfe200-3440-11e9-9fa8-774ed0b2cdd9.png"  height="283" width="160"> </a>
+<a> <img src="https://user-images.githubusercontent.com/25584477/69123638-f212db80-0ab2-11ea-8423-e80f36ca0929.png"  height="283" width="160"> </a>
 </p>
 
 * посмотреть/изменить данные пользователя;
 * имеется небольшой словарь с терминами по кроссфиту (пока только в виде текста);
 
 <p align="center">
-<a> <img src="https://user-images.githubusercontent.com/25584477/53003826-e8374b80-3440-11e9-95cf-27a39d9bd287.png"  height="283" width="160"> </a>
-<a> <img src="https://user-images.githubusercontent.com/25584477/55540017-b44f7700-56ca-11e9-8231-d55448887337.png"  height="283" width="160"> </a>
+<a> <img src="https://user-images.githubusercontent.com/25584477/69123640-f2ab7200-0ab2-11ea-8074-c079467b5687.png"  height="283" width="160"> </a>
+<a> <img src="https://user-images.githubusercontent.com/25584477/69123642-f2ab7200-0ab2-11ea-8b57-bcc12ef5970d.png"  height="283" width="160"> </a>
 </p>
 
 * имеется форма для сохранения одноповторных максимумов основных упражнений по тяжелой атлетике;
 
 <p align="center">
-<a> <img src="https://user-images.githubusercontent.com/25584477/56209522-76543a80-605c-11e9-9a2c-436384057fbe.png"  height="283" width="160"> </a>
+<a> <img src="https://user-images.githubusercontent.com/25584477/69123639-f2ab7200-0ab2-11ea-9f5d-e8b1d6ea955b.png"  height="283" width="160"> </a>
 </p>
 
 ### В процессе:
