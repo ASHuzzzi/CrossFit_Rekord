@@ -77,24 +77,19 @@ public class RecyclerAdapterMyResults
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                String newResult = holder.editResult.getText().toString();
+            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+                String newResult = charSequence.toString();
                 if (newResult.startsWith("0")) {
                     holder.editResult.setText("");
+                }
+
+                if (newResult.length() > 1) {
+                    fragment.setResult(exercise, newResult);
                 }
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-                String newResult = holder.editResult.getText().toString();
-
-                if (newResult.startsWith("0")) {
-                    newResult = newResult.substring(1);
-                }
-
-                if (newResult.length() > 1) {
-                    fragment.setExercise(exercise, newResult);
-                }
+            public void afterTextChanged(Editable editable) {
             }
         });
         holder.textUnit.setText(unit);

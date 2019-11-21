@@ -63,7 +63,6 @@ public class OneRepeatHighsFragment extends Fragment {
     }
 
     private void initRecyclerResults(View rootView) {
-        recyclerResults = rootView.findViewById(R.id.recyclerResults);
         adapter = new RecyclerAdapterMyResults(OneRepeatHighsFragment.this);
         LinearLayoutManager layoutManager =
                 new LinearLayoutManager(getContext());
@@ -105,6 +104,7 @@ public class OneRepeatHighsFragment extends Fragment {
             adapter.setExercises(viewModel.getResults());
             adapter.notifyDataSetChanged();
             recyclerResults.setVisibility(View.VISIBLE);
+            recyclerResults.setItemViewCacheSize(viewModel.getResults().size());
         }
     }
 
@@ -113,7 +113,7 @@ public class OneRepeatHighsFragment extends Fragment {
         viewModel.saveWeight();
     }
 
-    public void setExercise(String exercise, String result) {
+    public void setResult(String exercise, String result) {
         viewModel.setResult(exercise, result);
     }
 }

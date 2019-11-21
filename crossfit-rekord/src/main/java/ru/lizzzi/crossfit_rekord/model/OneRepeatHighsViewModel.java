@@ -41,10 +41,37 @@ public class OneRepeatHighsViewModel extends AndroidViewModel {
     }
 
     public void setResult(String exercise, String result) {
-        Map<String, String> exerciseResult =  new HashMap<>();
-        exerciseResult.put(RESULT, result);
-        exerciseResult.put(EXERCISE, exercise);
-        exercisesForSave.add(exerciseResult);
+        if (exercisesForSave.isEmpty()) {
+            Map<String, String> exerciseResult =  new HashMap<>();
+            exerciseResult.put(RESULT, result);
+            exerciseResult.put(EXERCISE, exercise);
+            exercisesForSave.add(exerciseResult);
+        } else {
+            boolean exerciseIsListed = findDuplicateThenUpdate(exercise, result);
+            if(!exerciseIsListed) {
+                Map<String, String> exerciseResult =  new HashMap<>();
+                exerciseResult.put(RESULT, result);
+                exerciseResult.put(EXERCISE, exercise);
+                exercisesForSave.add(exerciseResult);
+            }
+        }
+        for (int i = 0; i < exercisesForShow.size(); i++) {
+            if (exercisesForShow.get(i).containsValue(exercise)) {
+                exercisesForShow.get(i).put(RESULT, result);
+            }
+        }
+    }
+
+    private boolean findDuplicateThenUpdate(String exercise, String result) {
+        for (int i = 0; i < exercisesForSave.size(); i++) {
+            for (Map.Entry<String, String> entry : exercisesForSave.get(i).entrySet()) {
+                if (entry.getValue().equals(exercise)) {
+                     exercisesForSave.get(i).put(RESULT, result);
+                     return true;
+                }
+            }
+        }
+        return false;
     }
 
     public String getMyWeight() {
