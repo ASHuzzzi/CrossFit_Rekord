@@ -42,6 +42,12 @@
 <a> <img src="https://user-images.githubusercontent.com/25584477/69123638-f212db80-0ab2-11ea-8423-e80f36ca0929.png"  height="283" width="160"> </a>
 </p>
 
+
+* предоставляет аналитику по базовым метрикам;
+<p align="center">
+<a> <img src="https://user-images.githubusercontent.com/25584477/69321561-6638b500-0c54-11ea-92da-7f9034c6e02a.png"  height="283" width="160"> </a>
+</p>
+
 * посмотреть/изменить данные пользователя;
 * имеется небольшой словарь с терминами по кроссфиту (пока только в виде текста);
 
@@ -55,9 +61,6 @@
 <p align="center">
 <a> <img src="https://user-images.githubusercontent.com/25584477/69123639-f2ab7200-0ab2-11ea-9f5d-e8b1d6ea955b.png"  height="283" width="160"> </a>
 </p>
-
-### В процессе:
-* добавление аналитики результатов тренировок пользователя.
 
 В качестве бэкенда используется [Backendless](https://backendless.com/)
 
