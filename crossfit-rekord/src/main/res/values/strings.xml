@@ -193,7 +193,7 @@
     <string name="TL1NoTime1">Комплекс будет выложен после 21:00.</string>
 
     <!-- Значения для активити EnterResultActivity -->
-    <string name="strActivityERText">Введите свои результаты прошедшей тренировки</string>
+    <string name="strActivityERText">Покажи чего ты достиг\nна тренировке </string>
     <string name="strActivityERWod">WoD</string>
     <string name="strActivityERLevel">Level</string>
     <string name="strActivityERLevelSc">Sc</string>

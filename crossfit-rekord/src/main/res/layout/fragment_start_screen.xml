@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/fragment_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,46 +10,46 @@
     <android.support.v4.view.ViewPager
         android:id="@+id/viewPagerSlider"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="2" />
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintHeight_percent="0.5"/>
 
     <LinearLayout
         android:id="@+id/linLayoutDots"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dots_height"
-        android:layout_marginBottom="@dimen/dots_margin_bottom"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal|top"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/viewPagerSlider"
+        app:layout_constraintHeight_percent="0.05">
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/linLayoutDots"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHeight_percent="0.5"
         android:layout_marginStart="30dp"
-        android:layout_marginLeft="30dp"
         android:layout_marginEnd="30dp"
-        android:layout_marginRight="30dp"
-        android:layout_marginBottom="15dp"
-        android:layout_weight="3"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:gravity="center_vertical">
 
         <Button
             android:id="@+id/buttonSchedule"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
+            android:layout_marginBottom="12dp"
             android:padding="5dp"
             android:text="@string/button_shedule"
-            android:textAlignment="gravity"
-            tools:ignore="NestedWeights" />
+            android:textAlignment="gravity" />
 
         <Button
             android:id="@+id/buttonRecordTraining"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
+            android:layout_marginBottom="12dp"
             android:padding="5dp"
             android:text="@string/button_record_training"
             android:textAlignment="gravity"
@@ -58,8 +59,7 @@
             android:id="@+id/buttonCalendarWod"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
+            android:layout_marginBottom="12dp"
             android:padding="5dp"
             android:text="@string/button_calendar_wod" />
 
@@ -67,8 +67,7 @@
             android:id="@+id/buttonDefinition"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
+            android:layout_marginBottom="12dp"
             android:padding="5dp"
             android:text="@string/button_definition" />
 
@@ -76,11 +75,10 @@
             android:id="@+id/buttonContacts"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
+            android:layout_marginBottom="12dp"
             android:padding="5dp"
             android:text="@string/button_contacts" />
 
     </LinearLayout>
 
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>

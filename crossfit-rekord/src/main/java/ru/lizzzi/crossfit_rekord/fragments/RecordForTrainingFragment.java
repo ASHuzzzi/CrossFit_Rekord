@@ -92,7 +92,7 @@ public class RecordForTrainingFragment extends Fragment {
     @SuppressLint("ClickableViewAccessibility")
     private void initButtonsOfDay(View rootView) {
         SimpleDateFormat simpleDateFormat =
-                new SimpleDateFormat("EEE.\n d MMMM", Locale.getDefault());
+                new SimpleDateFormat("EEEE\n d MMM.", Locale.getDefault());
 
         buttonToday = rootView.findViewById(R.id.btToday);
         buttonToday.setText(simpleDateFormat.format(viewModel.getToday()));
@@ -109,7 +109,7 @@ public class RecordForTrainingFragment extends Fragment {
             }
         });
 
-        buttonTomorrow = rootView.findViewById(R.id.btTommorow);
+        buttonTomorrow = rootView.findViewById(R.id.btTomorrow);
         buttonTomorrow.setText(simpleDateFormat.format(viewModel.getTomorrow()));
         buttonTomorrow.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -124,7 +124,7 @@ public class RecordForTrainingFragment extends Fragment {
             }
         });
 
-        buttonAfterTomorrow = rootView.findViewById(R.id.btAftertommorow);
+        buttonAfterTomorrow = rootView.findViewById(R.id.btAfterTomorrow);
         buttonAfterTomorrow.setText(simpleDateFormat.format(viewModel.getAfterTomorrow()));
         buttonAfterTomorrow.setOnTouchListener(new View.OnTouchListener() {
             @Override

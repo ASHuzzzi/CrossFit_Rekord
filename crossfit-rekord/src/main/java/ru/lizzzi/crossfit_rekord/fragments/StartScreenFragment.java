@@ -31,7 +31,7 @@ public class StartScreenFragment extends Fragment {
     private int numberOfPage;
     private ViewPager viewPager;
     private Handler handlerStartScreen;
-    private int DELAY = 2000;
+    private int DELAY_IN_MICROS = 2000;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -126,7 +126,7 @@ public class StartScreenFragment extends Fragment {
 
     public void onResume() {
         super.onResume();
-        handlerStartScreen.postDelayed(runnable, DELAY);
+        handlerStartScreen.postDelayed(runnable, DELAY_IN_MICROS);
     }
 
     @Override
@@ -170,9 +170,13 @@ public class StartScreenFragment extends Fragment {
 
     Runnable runnable = new Runnable() {
         public void run() {
-            numberOfPage = (adapterSlider.getCount() == numberOfPage) ? 0 : numberOfPage++;
+            if (adapterSlider.getCount() == numberOfPage) {
+                numberOfPage = 0;
+            } else {
+                numberOfPage++;
+            }
             viewPager.setCurrentItem(numberOfPage, true);
-            handlerStartScreen.postDelayed(this, DELAY);
+            handlerStartScreen.postDelayed(this, DELAY_IN_MICROS);
         }
     };
 }

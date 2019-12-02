@@ -3,19 +3,19 @@
     <color name="colorPrimary">#141414</color>
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorPrimaryLight">#3A3A3A</color>
-    <color name="colorAccent">#EA0E0E</color>
+    <color name="colorAccent">#d80404</color>
 
-    <color name="colorRedPrimary">#EA0E0E</color>
-    <color name="colorRedDark">#c20000</color>
-    <color name="colorRedLight">#ff5a36</color>
+    <color name="colorRedPrimary">#d80404</color>
+    <color name="colorRedDark">#9e0000</color>
+    <color name="colorRedLight">#ff5334</color>
 
-    <color name="colorWhite">#DCDCDC</color>
+    <color name="colorWhite">#FFFFFF</color>
 
     <color name="color_Table_CrossFit">#F90000</color>
     <color name="color_Table_On_Ramp">#00B53E</color>
-    <color name="color_Table_Stretching">#929f8E</color>
+    <color name="color_Table_Stretching">#8E9F93</color>
     <color name="color_Table_Rowing">#217597</color>
-    <color name="color_Table_Open_Gym">#969F46</color>
+    <color name="color_Table_Open_Gym">#E6C200</color>
     <color name="color_Table_Endurance">#a17778</color>
     <color name="color_Table_Lady_Class">#FD0077</color>
     <color name="color_Table_Gymnastics">#277A4C</color>
@@ -26,7 +26,7 @@
     <color name="color_Table_Out_of_Time">#000000</color>
     <color name="color_Table_TRX">#FF7700</color>
     <color name="color_Table_Muay_Thai">#A17778</color>
-    <color name="color_Table_Muay_Thai_Kids">#2DC031</color>
+    <color name="color_Table_Muay_Thai_Kids">#249A27</color>
     <color name="color_Table_FBB_Power">#B73678</color>
     <color name="color_Table_BJJ_Kids">#FD7900</color>
     <color name="color_Table_BJJ">#3E825B</color>

@@ -25,7 +25,6 @@ import ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck;
 
 public class EnterResultViewModel extends AndroidViewModel {
 
-    private final String APP_PREFERENCES = "audata";
     private final String APP_PREFERENCES_SELECTEDDAY = "SelectedDay";
     private final String APP_PREFERENCES_OBJECTID = "ObjectId";
     private final String APP_PREFERENCES_USERNAME = "Username";
@@ -37,6 +36,9 @@ public class EnterResultViewModel extends AndroidViewModel {
 
     private int action;
     private String wodLevel;
+    private String dateForShow;
+    private long dateSession;
+    private SharedPreferences sharedPreferences;
 
     private Executor executor = new ThreadPoolExecutor(
             0,
@@ -50,6 +52,27 @@ public class EnterResultViewModel extends AndroidViewModel {
         super(application);
         wodLevel = getApplication().getResources().getString(R.string.strActivityERLevelSc);
         action = ACTION_SAVE;
+        String APP_PREFERENCES = "audata";
+        sharedPreferences = getApplication().getSharedPreferences(
+                APP_PREFERENCES,
+                Context.MODE_PRIVATE);
+        getSelectedDay();
+    }
+
+    private void getSelectedDay() {
+        try {
+            String savedDate =  sharedPreferences.getString(APP_PREFERENCES_SELECTEDDAY, "");
+            SimpleDateFormat parseFormat =
+                    new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
+            parseFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+            Date parsedDate = parseFormat.parse(savedDate);
+            SimpleDateFormat titleFormat =
+                    new SimpleDateFormat("d MMMM (EEEE)", Locale.getDefault());
+            dateForShow = titleFormat.format(parsedDate);
+            dateSession = parsedDate.getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     public LiveData<Boolean> saveWorkoutDetails(final String userSkill, final String userWodResult) {
@@ -57,8 +80,6 @@ public class EnterResultViewModel extends AndroidViewModel {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                SharedPreferences sharedPreferences =
-                        getApplication().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
                 BackendlessQueries backendlessQuery = new BackendlessQueries();
                 boolean isDataSaved = backendlessQuery.setWorkoutDetails(
                         action,
@@ -70,34 +91,23 @@ public class EnterResultViewModel extends AndroidViewModel {
                         wodLevel,
                         userWodResult);
                 if (isDataSaved) {
-                    try {
-                        String selectedDay =
-                                sharedPreferences.getString(APP_PREFERENCES_SELECTEDDAY, "");
-                        SimpleDateFormat dateFormat =
-                                new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
-                        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-                        Date date = dateFormat.parse(selectedDay);
-                        long dateSession = date.getTime();
-                        SQLiteStorageWod dbStorage = new SQLiteStorageWod(getApplication());
-                        switch (action) {
-                            case ACTION_SAVE:
-                            case ACTION_UPLOAD:
-                                dbStorage.saveDate(
-                                        sharedPreferences.getString(APP_PREFERENCES_OBJECTID, ""),
-                                        dateSession,
-                                        userSkill,
-                                        wodLevel,
-                                        userWodResult);
-                                break;
+                    SQLiteStorageWod dbStorage = new SQLiteStorageWod(getApplication());
+                    switch (action) {
+                        case ACTION_SAVE:
+                        case ACTION_UPLOAD:
+                            dbStorage.saveDate(
+                                    sharedPreferences.getString(APP_PREFERENCES_OBJECTID, ""),
+                                    dateSession,
+                                    userSkill,
+                                    wodLevel,
+                                    userWodResult);
+                            break;
 
-                            case ACTION_DELETE:
-                                dbStorage.deleteDate(
-                                        sharedPreferences.getString(APP_PREFERENCES_OBJECTID, ""),
-                                        dateSession);
-                                break;
-                        }
-                    } catch (ParseException e) {
-                        e.printStackTrace();
+                        case ACTION_DELETE:
+                            dbStorage.deleteDate(
+                                    sharedPreferences.getString(APP_PREFERENCES_OBJECTID, ""),
+                                    dateSession);
+                            break;
                     }
                 }
                 liveData.postValue(isDataSaved);
@@ -139,5 +149,9 @@ public class EnterResultViewModel extends AndroidViewModel {
 
     public void setActionDelete() {
         action = ACTION_DELETE;
+    }
+
+    public String getDateForShow() {
+        return dateForShow;
     }
 }

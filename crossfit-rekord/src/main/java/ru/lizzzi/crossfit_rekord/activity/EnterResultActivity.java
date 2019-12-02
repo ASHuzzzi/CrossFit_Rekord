@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Objects;
@@ -36,6 +37,7 @@ public class EnterResultActivity extends AppCompatActivity {
     private RadioButton radioButtonSc;
     private RadioButton radioButtonRx;
     private RadioButton radioButtonRxPlus;
+    private TextView textEnterResult;
 
     private EnterResultViewModel viewModel;
 
@@ -51,6 +53,7 @@ public class EnterResultActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBarSaveUpload);
 
         initActionBar();
+        initTextEnterResult();
         initRadioGroup();
         initButtonSaveUpload();
     }
@@ -65,6 +68,12 @@ public class EnterResultActivity extends AppCompatActivity {
         }
     }
 
+    private void initTextEnterResult() {
+        textEnterResult = findViewById(R.id.textEnterResult);
+        String enterResultText = getResources().getString(R.string.strActivityERText) + " " + viewModel.getDateForShow();
+        textEnterResult.setText(enterResultText);
+    }
+
     private void initRadioGroup() {
         radioButtonSc = findViewById(R.id.rbSc);
         radioButtonRx = findViewById(R.id.rbRx);
@@ -75,16 +84,13 @@ public class EnterResultActivity extends AppCompatActivity {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId) {
                     case R.id.rbSc:
-                        viewModel.setWodLevel(
-                                getResources().getString(R.string.strActivityERLevelSc));
+                        viewModel.setWodLevel(getResources().getString(R.string.strActivityERLevelSc));
                         break;
                     case R.id.rbRx:
-                        viewModel.setWodLevel(
-                                getResources().getString(R.string.strActivityERLevelRx));
+                        viewModel.setWodLevel(getResources().getString(R.string.strActivityERLevelRx));
                         break;
                     case R.id.rbRxP:
-                        viewModel.setWodLevel(
-                                getResources().getString(R.string.strActivityERLevelRxPlus));
+                        viewModel.setWodLevel(getResources().getString(R.string.strActivityERLevelRxPlus));
                 }
             }
         });
@@ -151,7 +157,7 @@ public class EnterResultActivity extends AppCompatActivity {
 
         progressBar.setVisibility(View.INVISIBLE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            Objects.requireNonNull(getSupportActionBar()).setTitle("Мои результаты тренировки");
+            Objects.requireNonNull(getSupportActionBar()).setTitle("Результаты тренировки");
         }
 
         radioButtonSc.setChecked(true);

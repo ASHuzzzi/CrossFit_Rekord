@@ -1,72 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.widget.RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.widget.ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/svTextNotificationND"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_margin="10dp">
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp"
+    android:scrollbarSize="3dp"
+    android:scrollbarThumbVertical="@drawable/scrollbar">
 
-    <TextView
-        android:id="@+id/tvTimeNotificationND"
-        style="@style/TextAppearance.AppCompat.Small"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="end"
-        android:layout_marginEnd="5dp"
-        android:text="@string/empty"
-        android:textColor="@color/colorRedPrimary"/>
+        android:orientation="vertical"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp">
 
-    <TextView
-        android:id="@+id/tvHeaderNotificationND"
-        style="@style/MainTextStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tvTimeNotificationND"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:gravity="center"
-        android:layout_marginStart="25dp"
-        android:layout_marginEnd="25dp"
-        android:text="@string/empty"
-        android:textStyle="bold" />
-
-    <View
-        android:id="@+id/divider3"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_below="@+id/tvHeaderNotificationND"
-        android:background="@drawable/divider" />
-
-    <ScrollView
-        android:id="@+id/svTextNotificationND"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tvHeaderNotificationND"
-        android:layout_marginTop="10dp"
-        android:scrollbarSize="3dp"
-        android:scrollbarThumbVertical="@drawable/scrollbar">
-
-        <LinearLayout
+        <TextView
+            android:id="@+id/tvHeaderNotificationND"
+            style="@style/TextAppearance.AppCompat.Large"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="15dp"
+            android:lineSpacingExtra="2dp"
+            android:text="@string/empty"
+            android:textStyle="bold"
+            android:textColor="@color/colorWhite"/>
 
-            <TextView
-                android:id="@+id/tvTextNotificationND"
-                style="@style/MainTextStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="10dp"
-                android:text="@string/empty" />
+        <TextView
+            android:id="@+id/tvTextNotificationND"
+            style="@style/MainTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:text="@string/empty"
+            android:lineSpacingExtra="5dp"
+            android:textColor="@color/colorWhite"/>
 
-            <View
-                android:id="@+id/divider2"
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/divider" />
+        <TextView
+            android:id="@+id/tvTimeNotificationND"
+            style="@style/TextAppearance.AppCompat.Small"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:text="@string/empty"
+            android:textColor="@color/colorWhite"/>
 
-        </LinearLayout>
-    </ScrollView>
+    </LinearLayout>
 
-</android.widget.RelativeLayout>
+</android.widget.ScrollView>

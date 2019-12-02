@@ -22,20 +22,18 @@
         android:paddingEnd="15dp">
 
         <TextView
+            android:id="@+id/tvTimeNotification"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimary"
+            android:textSize="12sp" />
+
+        <TextView
             android:id="@+id/tvHeaderNotification"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/colorPrimary"
-            android:textSize="16sp" />
-
-        <TextView
-            android:id="@+id/tvTimeNotification"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:gravity="end"
-            android:textColor="@color/colorPrimary"
-            android:textSize="12sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/tvForLong"

@@ -16,7 +16,8 @@
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
             android:scaleType="centerCrop"
-            android:layout_gravity="center_horizontal"/>
+            android:layout_gravity="center_horizontal"
+            tools:ignore="ContentDescription" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -47,7 +48,9 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp">
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp">
 
         <Button
             android:id="@+id/day_1"
@@ -119,7 +122,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/Layout_Button_Day_of_Week"
         android:layout_centerVertical="true"
-        android:layout_marginBottom="20dp" />
+        android:layout_marginBottom="20dp"
+        android:paddingStart="30dp"
+        android:paddingEnd="30dp"/>
 
     <LinearLayout
         android:id="@+id/linLayError"

@@ -86,7 +86,7 @@
 
     <style name="calendarSelectDayStyle" parent="AppTheme">
         <item name="android:background">@color/colorRedPrimary</item>
-        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textColor">@color/colorPrimaryDark</item>
     </style>
 
     <style name="Theme.App.Base" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -117,7 +117,12 @@
         <item name="tabIndicatorHeight">4dp</item>
         <item name="tabSelectedTextColor">@color/colorRedPrimary</item>
         <item name="tabTextColor">@color/colorWhite</item>
+        <item name="tabTextAppearance">@style/MyCustomTabTextAppearance</item>
     </style>
 
+    <style name="MyCustomTabTextAppearance" parent="TextAppearance.Design.Tab">
+        <item name="textAllCaps">false</item>
+        <item name="android:textSize">18sp</item>
+    </style>
 
 </resources>

@@ -85,13 +85,12 @@ public class RecyclerAdapterNotification
         holder.textTime.setText(String.valueOf(noteTime));
 
         holder.textDateNote.setTypeface(null, (isViewed) ? Typeface.NORMAL : Typeface.BOLD);
-        holder.textHeader.setTypeface(null, (isViewed) ? Typeface.NORMAL : Typeface.BOLD);
         holder.notificationLayout.setBackgroundResource(
                 (isViewed) ? R.color.colorPrimaryDark : R.color.colorRedPrimary);
         holder.textDateNote.setTextColor(fragment.getResources().getColor(
-                (isViewed) ? R.color.colorRedPrimary : R.color.colorPrimaryDark));
+                (isViewed) ? R.color.colorWhite : R.color.colorPrimaryDark));
         holder.textHeader.setTextColor(fragment.getResources().getColor(
-                (isViewed) ? R.color.colorRedPrimary : R.color.colorPrimaryDark));
+                (isViewed) ? R.color.colorWhite : R.color.colorPrimaryDark));
 
         holder.notificationLayout.setOnClickListener(new View.OnClickListener() {
             @Override

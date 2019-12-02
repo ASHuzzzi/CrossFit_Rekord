@@ -1,449 +1,436 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginStart="20dp"
-    android:layout_marginEnd="20dp">
+    android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/buttonOneRepeatHighs"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="10dp"
-        android:padding="10dp"
-        android:text="@string/oneRepeatHighs" />
-
-    <TextView
-        android:id="@+id/captionTraining"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/buttonOneRepeatHighs"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="15dp"
-        android:text="@string/trainingStatistics"
-        android:textAppearance="@android:style/TextAppearance.Large"
-        android:textColor="@color/colorRedPrimary" />
-
-
-    <ScrollView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/captionTraining"
-        android:layout_marginBottom="5dp"
-        android:scrollbars="none">
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp">
 
-        <RelativeLayout
+        <Button
+            android:id="@+id/buttonOneRepeatHighs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="10dp"
+            android:padding="8dp"
+            android:text="@string/oneRepeatHighs" />
+
+        <TextView
+            android:id="@+id/captionTraining"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/buttonOneRepeatHighs"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp"
+            android:text="@string/trainingStatistics"
+            android:textAppearance="@android:style/TextAppearance.Large"
+            android:textColor="@color/colorRedPrimary" />
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/cardQuantity"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_below="@id/captionTraining"
+            android:layout_marginBottom="15dp"
+            app:cardBackgroundColor="@color/colorPrimaryDark"
+            app:cardCornerRadius="15dp">
 
-            <android.support.v7.widget.CardView
-                android:id="@+id/cardQuantity"
+            <RelativeLayout
+                android:id="@+id/layoutNumberOfWorkouts"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp"
-                app:cardBackgroundColor="@color/colorPrimaryDark"
-                app:cardCornerRadius="15dp">
+                android:layout_marginStart="25dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="25dp"
+                android:layout_marginBottom="20dp"
+                android:orientation="horizontal">
 
-                <RelativeLayout
-                    android:id="@+id/layoutNumberOfWorkouts"
+                <TextView
+                    android:id="@+id/captionQuantity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="5dp"
+                    android:text="@string/numberOfVisitsPerMonth"
+                    android:textAppearance="@android:style/TextAppearance.Medium"
+                    android:textColor="@color/colorRedPrimary" />
+
+                <LinearLayout
+                    android:id="@+id/layoutQuantity"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="15dp"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginEnd="15dp"
-                    android:layout_marginBottom="15dp"
+                    android:layout_below="@id/captionQuantity"
                     android:orientation="horizontal">
 
                     <LinearLayout
-                        android:id="@+id/layoutQuantity"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/captionQuantity"
-                        android:layout_marginBottom="10dp"
-                        android:orientation="horizontal">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="0.48"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:id="@+id/captionMonthlyTraining"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_horizontal"
-                                android:layout_marginBottom="5dp"
-                                android:text="@string/currentMonth"
-                                android:textColor="@color/colorRedPrimary" />
-
-                            <TextView
-                                android:id="@+id/textMonthlyTraining"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_horizontal"
-                                android:text="@string/defaultValue"
-                                android:textAppearance="@android:style/TextAppearance.Large"
-                                android:textColor="@color/colorRedPrimary"
-                                android:textStyle="bold" />
-
-                            <Button
-                                android:id="@+id/buttonMonthlyTraining"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_horizontal"
-                                android:layout_marginStart="5dp"
-                                android:layout_marginTop="15dp"
-                                android:layout_marginEnd="5dp"
-                                android:layout_marginBottom="15dp"
-                                android:padding="7dp"
-                                android:text="@string/trainings" />
-
-                        </LinearLayout>
-
-                        <View
-                            android:id="@+id/divider3"
-                            android:layout_width="2dp"
-                            android:layout_height="match_parent"
-                            android:layout_marginLeft="15dp"
-                            android:layout_marginRight="15dp"
-                            android:background="@drawable/divider" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="0.48"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:id="@+id/captionPreviousMonthlyTraining"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_horizontal"
-                                android:layout_marginBottom="5dp"
-                                android:text="@string/previousMonth"
-                                android:textColor="@color/colorRedPrimary" />
-
-                            <TextView
-                                android:id="@+id/textPreviousMonthlyTraining"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_horizontal"
-                                android:text="@string/defaultValue"
-                                android:textAppearance="@android:style/TextAppearance.Large"
-                                android:textColor="@color/colorRedPrimary"
-                                android:textStyle="bold" />
-
-                            <Button
-                                android:id="@+id/buttonPreviousMonthlyTraining"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_horizontal"
-                                android:layout_marginStart="5dp"
-                                android:layout_marginTop="15dp"
-                                android:layout_marginEnd="5dp"
-                                android:layout_marginBottom="15dp"
-                                android:padding="7dp"
-                                android:text="@string/trainings" />
-
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                    <TextView
-                        android:id="@+id/captionQuantity"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginBottom="10dp"
-                        android:text="@string/numberOfVisitsPerMonth"
-                        android:textAppearance="@android:style/TextAppearance.Medium"
-                        android:textColor="@color/colorRedPrimary" />
-
-                </RelativeLayout>
-            </android.support.v7.widget.CardView>
-
-            <android.support.v7.widget.CardView
-                android:id="@+id/cardLevelsOfWorkouts"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/cardQuantity"
-                android:layout_marginBottom="15dp"
-                app:cardBackgroundColor="@color/colorPrimaryDark"
-                app:cardCornerRadius="15dp">
-
-                <RelativeLayout
-                    android:id="@+id/layoutLevelsOfWorkouts"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="15dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginEnd="15dp"
-                    android:layout_marginBottom="15dp">
-
-                    <LinearLayout
-                        android:id="@+id/ttest"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/textCaptionLevelsOfWorkouts"
+                        android:layout_weight="0.48"
                         android:orientation="vertical">
 
+                        <TextView
+                            android:id="@+id/captionMonthlyTraining"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginBottom="5dp"
+                            android:text="@string/currentMonth"
+                            android:textColor="@color/colorRedPrimary" />
+
+                        <TextView
+                            android:id="@+id/textMonthlyTraining"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:text="@string/defaultValue"
+                            android:textAppearance="@android:style/TextAppearance.Large"
+                            android:textColor="@color/colorRedPrimary"
+                            android:textStyle="bold" />
+
+                        <Button
+                            android:id="@+id/buttonMonthlyTraining"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginStart="5dp"
+                            android:layout_marginTop="15dp"
+                            android:layout_marginEnd="5dp"
+                            android:padding="7dp"
+                            android:text="@string/trainings" />
+
                     </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/textCaptionLevelsOfWorkouts"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginBottom="10dp"
-                        android:gravity="center_horizontal"
-                        android:text="@string/byLevelsForTheCurrentMonth"
-                        android:textAppearance="@android:style/TextAppearance.Medium"
-                        android:textColor="@color/colorRedPrimary" />
+                    <View
+                        android:id="@+id/divider3"
+                        android:layout_width="2dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
+                        android:background="@drawable/divider" />
 
-                    <android.support.constraint.ConstraintLayout
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/textCaptionLevelsOfWorkouts"
+                        android:layout_weight="0.48"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/captionPreviousMonthlyTraining"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginBottom="5dp"
+                            android:text="@string/previousMonth"
+                            android:textColor="@color/colorRedPrimary" />
+
+                        <TextView
+                            android:id="@+id/textPreviousMonthlyTraining"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:text="@string/defaultValue"
+                            android:textAppearance="@android:style/TextAppearance.Large"
+                            android:textColor="@color/colorRedPrimary"
+                            android:textStyle="bold" />
+
+                        <Button
+                            android:id="@+id/buttonPreviousMonthlyTraining"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginStart="5dp"
+                            android:layout_marginTop="15dp"
+                            android:layout_marginEnd="5dp"
+                            android:padding="7dp"
+                            android:text="@string/trainings" />
+
+                    </LinearLayout>
+                </LinearLayout>
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/cardLevelsOfWorkouts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/cardQuantity"
+            android:layout_marginBottom="15dp"
+            app:cardBackgroundColor="@color/colorPrimaryDark"
+            app:cardCornerRadius="15dp">
+
+            <RelativeLayout
+                android:id="@+id/layoutLevelsOfWorkouts"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="25dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="25dp"
+                android:layout_marginBottom="20dp">
+
+                <LinearLayout
+                    android:id="@+id/ttest"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/textCaptionLevelsOfWorkouts"
+                    android:orientation="vertical">
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/textCaptionLevelsOfWorkouts"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="5dp"
+                    android:gravity="center_horizontal"
+                    android:text="@string/byLevelsForTheCurrentMonth"
+                    android:textAppearance="@android:style/TextAppearance.Medium"
+                    android:textColor="@color/colorRedPrimary" />
+
+                <android.support.constraint.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/textCaptionLevelsOfWorkouts"
+                    >
+
+                    <ProgressBar
+                        android:id="@+id/progressBarSc"
+                        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:max="10"
+                        android:progress="5"
+                        android:secondaryProgress="10"
+                        app:layout_constraintBottom_toBottomOf="@id/textSc"
+                        app:layout_constraintLeft_toRightOf="@id/captionRxPlus"
+                        app:layout_constraintRight_toLeftOf="@id/textSc"
+                        app:layout_constraintTop_toTopOf="@id/textSc">
+
+                    </ProgressBar>
+
+                    <ProgressBar
+                        android:id="@+id/progressBarRx"
+                        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:max="10"
+                        android:progress="5"
+                        android:secondaryProgress="10"
+                        app:layout_constraintBottom_toBottomOf="@id/textRx"
+                        app:layout_constraintLeft_toRightOf="@id/captionRxPlus"
+                        app:layout_constraintRight_toLeftOf="@id/textRx"
+                        app:layout_constraintTop_toTopOf="@id/textRx">
+
+                    </ProgressBar>
+
+                    <ProgressBar
+                        android:id="@+id/progressBarRxPlus"
+                        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:max="10"
+                        android:progress="5"
+                        android:secondaryProgress="10"
+                        app:layout_constraintBottom_toBottomOf="@id/textRxPlus"
+                        app:layout_constraintLeft_toRightOf="@id/captionRxPlus"
+                        app:layout_constraintRight_toLeftOf="@id/textRxPlus"
+                        app:layout_constraintTop_toTopOf="@id/textRxPlus">
+
+                    </ProgressBar>
+
+                    <TextView
+                        android:id="@+id/captionRx"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:text="@string/TL1Rx"
+                        android:textColor="@color/colorRedPrimary"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="@id/textRx"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/textRx" />
+
+                    <TextView
+                        android:id="@+id/captionSc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:text="@string/TL1Sc"
+                        android:textColor="@color/colorRedPrimary"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="@id/textSc"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/textSc" />
+
+                    <TextView
+                        android:id="@+id/textRx"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
-                        android:layout_marginEnd="10dp">
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginBottom="2dp"
+                        android:text="@string/defaultValue"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@color/colorRedPrimary"
+                        app:layout_constraintBottom_toTopOf="@+id/textRxPlus"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/progressBarRx"
+                        app:layout_constraintTop_toBottomOf="@id/textSc" />
 
-                        <ProgressBar
-                            android:id="@+id/progressBarSc"
-                            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:max="10"
-                            android:progress="5"
-                            android:secondaryProgress="10"
-                            app:layout_constraintBottom_toBottomOf="@id/textSc"
-                            app:layout_constraintLeft_toRightOf="@id/captionRxPlus"
-                            app:layout_constraintRight_toLeftOf="@id/textSc"
-                            app:layout_constraintTop_toTopOf="@id/textSc">
+                    <TextView
+                        android:id="@+id/captionRxPlus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="false"
+                        android:paddingStart="0dp"
+                        android:paddingEnd="5dp"
+                        android:text="@string/TL1RxPlus"
+                        android:textColor="@color/colorRedPrimary"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="@id/textRxPlus"
+                        app:layout_constraintEnd_toStartOf="@+id/progressBarRxPlus"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/textRxPlus" />
 
-                        </ProgressBar>
+                    <TextView
+                        android:id="@+id/textSc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginBottom="2dp"
+                        android:text="@string/defaultValue"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@color/colorRedPrimary"
+                        app:layout_constraintBottom_toTopOf="@+id/textRx"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/progressBarSc"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-                        <ProgressBar
-                            android:id="@+id/progressBarRx"
-                            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:max="10"
-                            android:progress="5"
-                            android:secondaryProgress="10"
-                            app:layout_constraintBottom_toBottomOf="@id/textRx"
-                            app:layout_constraintLeft_toRightOf="@id/captionRxPlus"
-                            app:layout_constraintRight_toLeftOf="@id/textRx"
-                            app:layout_constraintTop_toTopOf="@id/textRx">
+                    <TextView
+                        android:id="@+id/textRxPlus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="5dp"
+                        android:text="@string/defaultValue"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@color/colorRedPrimary"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/progressBarRxPlus"
+                        app:layout_constraintTop_toBottomOf="@id/textRx" />
 
-                        </ProgressBar>
+                </android.support.constraint.ConstraintLayout>
 
-                        <ProgressBar
-                            android:id="@+id/progressBarRxPlus"
-                            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:max="10"
-                            android:progress="5"
-                            android:secondaryProgress="10"
-                            app:layout_constraintBottom_toBottomOf="@id/textRxPlus"
-                            app:layout_constraintLeft_toRightOf="@id/captionRxPlus"
-                            app:layout_constraintRight_toLeftOf="@id/textRxPlus"
-                            app:layout_constraintTop_toTopOf="@id/textRxPlus">
+            </RelativeLayout>
 
-                        </ProgressBar>
+        </android.support.v7.widget.CardView>
 
-                        <TextView
-                            android:id="@+id/captionRx"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:text="@string/TL1Rx"
-                            android:textColor="@color/colorRedPrimary"
-                            android:textStyle="bold"
-                            app:layout_constraintBottom_toBottomOf="@id/textRx"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="@id/textRx" />
+        <android.support.v7.widget.CardView
+            android:id="@+id/cardPreviousTraining"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/cardLevelsOfWorkouts"
+            android:layout_marginBottom="15dp"
+            app:cardBackgroundColor="@color/colorPrimaryDark"
+            app:cardCornerRadius="15dp">
 
-                        <TextView
-                            android:id="@+id/captionSc"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:text="@string/TL1Sc"
-                            android:textColor="@color/colorRedPrimary"
-                            android:textStyle="bold"
-                            app:layout_constraintBottom_toBottomOf="@id/textSc"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="@id/textSc" />
-
-                        <TextView
-                            android:id="@+id/textRx"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:layout_marginEnd="5dp"
-                            android:layout_marginBottom="2dp"
-                            android:text="@string/defaultValue"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                            android:textColor="@color/colorRedPrimary"
-                            app:layout_constraintBottom_toTopOf="@+id/textRxPlus"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toEndOf="@+id/progressBarRx"
-                            app:layout_constraintTop_toBottomOf="@id/textSc" />
-
-                        <TextView
-                            android:id="@+id/captionRxPlus"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="false"
-                            android:paddingStart="0dp"
-                            android:paddingEnd="5dp"
-                            android:text="@string/TL1RxPlus"
-                            android:textColor="@color/colorRedPrimary"
-                            android:textStyle="bold"
-                            app:layout_constraintBottom_toBottomOf="@id/textRxPlus"
-                            app:layout_constraintEnd_toStartOf="@+id/progressBarRxPlus"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="@id/textRxPlus" />
-
-                        <TextView
-                            android:id="@+id/textSc"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:layout_marginEnd="5dp"
-                            android:layout_marginBottom="2dp"
-                            android:text="@string/defaultValue"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                            android:textColor="@color/colorRedPrimary"
-                            app:layout_constraintBottom_toTopOf="@+id/textRx"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toEndOf="@+id/progressBarSc"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <TextView
-                            android:id="@+id/textRxPlus"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:layout_marginEnd="5dp"
-                            android:text="@string/defaultValue"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                            android:textColor="@color/colorRedPrimary"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toEndOf="@+id/progressBarRxPlus"
-                            app:layout_constraintTop_toBottomOf="@id/textRx" />
-
-                    </android.support.constraint.ConstraintLayout>
-
-                </RelativeLayout>
-
-            </android.support.v7.widget.CardView>
-
-            <android.support.v7.widget.CardView
-                android:id="@+id/cardPreviousTraining"
+            <RelativeLayout
+                android:id="@+id/layoutPreviousTraining"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/cardLevelsOfWorkouts"
-                app:cardBackgroundColor="@color/colorPrimaryDark"
-                app:cardCornerRadius="15dp">
+                android:layout_marginStart="25dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="25dp"
+                android:layout_marginBottom="20dp">
 
-                <RelativeLayout
-                    android:id="@+id/layoutPreviousTraining"
-                    android:layout_width="match_parent"
+                <Button
+                    android:id="@+id/buttonShowPreviousTraining"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/cardLevelsOfWorkouts"
-                    android:layout_marginStart="15dp"
+                    android:layout_below="@id/captionLastWod"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginStart="5dp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginEnd="15dp"
-                    android:layout_marginBottom="15dp">
+                    android:layout_marginEnd="5dp"
+                    android:padding="7dp"
+                    android:text="@string/show" />
 
-                    <Button
-                        android:id="@+id/buttonShowPreviousTraining"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/captionLastWod"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginStart="5dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginEnd="5dp"
-                        android:padding="8dp"
-                        android:text="@string/show" />
+                <TextView
+                    android:id="@+id/captionLastDateSession"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/textCaptionPreviousTraining"
+                    android:text="@string/lastTrainingDate"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorRedPrimary" />
 
-                    <TextView
-                        android:id="@+id/captionLastDateSession"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/textCaptionPreviousTraining"
-                        android:text="@string/lastTrainingDate"
-                        android:textStyle="bold"
-                        android:textColor="@color/colorRedPrimary" />
+                <TextView
+                    android:id="@+id/textLastDateSession"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/textCaptionPreviousTraining"
+                    android:layout_toEndOf="@id/captionLastDateSession"
+                    android:text="@string/defaultValue"
+                    android:textColor="@color/colorRedPrimary" />
 
-                    <TextView
-                        android:id="@+id/textLastDateSession"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/textCaptionPreviousTraining"
-                        android:layout_toEndOf="@id/captionLastDateSession"
-                        android:text="@string/defaultValue"
-                        android:textColor="@color/colorRedPrimary" />
+                <TextView
+                    android:id="@+id/captionLastWodLevel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/textLastDateSession"
+                    android:text="@string/lastTrainingWodLevel"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorRedPrimary" />
 
-                    <TextView
-                        android:id="@+id/captionLastWodLevel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/textLastDateSession"
-                        android:text="@string/lastTrainingWodLevel"
-                        android:textStyle="bold"
-                        android:textColor="@color/colorRedPrimary" />
+                <TextView
+                    android:id="@+id/textLastWodLevel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/captionLastDateSession"
+                    android:layout_toEndOf="@id/captionLastWodLevel"
+                    android:text="@string/defaultValue"
+                    android:textColor="@color/colorRedPrimary" />
 
-                    <TextView
-                        android:id="@+id/textLastWodLevel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/captionLastDateSession"
-                        android:layout_toEndOf="@id/captionLastWodLevel"
-                        android:text="@string/defaultValue"
-                        android:textColor="@color/colorRedPrimary" />
+                <TextView
+                    android:id="@+id/captionLastWod"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/textLastWodLevel"
+                    android:text="@string/lastTrainingResult"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorRedPrimary" />
 
-                    <TextView
-                        android:id="@+id/captionLastWod"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/textLastWodLevel"
-                        android:text="@string/lastTrainingResult"
-                        android:textStyle="bold"
-                        android:textColor="@color/colorRedPrimary" />
+                <TextView
+                    android:id="@+id/textLastWod"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/captionLastWodLevel"
+                    android:layout_toEndOf="@id/captionLastWod"
+                    android:text="@string/defaultValue"
+                    android:textColor="@color/colorRedPrimary" />
 
-                    <TextView
-                        android:id="@+id/textLastWod"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/captionLastWodLevel"
-                        android:layout_toEndOf="@id/captionLastWod"
-                        android:text="@string/defaultValue"
-                        android:textColor="@color/colorRedPrimary" />
+                <TextView
+                    android:id="@+id/textCaptionPreviousTraining"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="5dp"
+                    android:text="@string/previousWorkout"
+                    android:textAppearance="@android:style/TextAppearance.Medium"
+                    android:textColor="@color/colorRedPrimary" />
 
-                    <TextView
-                        android:id="@+id/textCaptionPreviousTraining"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginBottom="10dp"
-                        android:text="@string/previousWorkout"
-                        android:textAppearance="@android:style/TextAppearance.Medium"
-                        android:textColor="@color/colorRedPrimary" />
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+    </RelativeLayout>
 
-                </RelativeLayout>
-            </android.support.v7.widget.CardView>
-        </RelativeLayout>
-    </ScrollView>
-
-</RelativeLayout>
+</ScrollView>

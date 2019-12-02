@@ -24,14 +24,14 @@
     </android.support.design.widget.AppBarLayout>
 
     <TextView
-        android:id="@+id/textView6"
+        android:id="@+id/textEnterResult"
         style="@style/MainTextStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:gravity="center"
-        android:text="@string/strActivityERText"
+        android:text="@string/empty"
         android:textSize="16sp"
         android:textStyle="bold"
         android:layout_below="@id/appbar"/>
@@ -40,7 +40,7 @@
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/textView6"
+        android:layout_below="@id/textEnterResult"
         android:layout_above="@id/progressBarSaveUpload"
         android:layout_marginStart="15dp"
         android:layout_marginEnd="15dp"
@@ -73,10 +73,9 @@
                         style="@style/TextAppearance.AppCompat.Medium"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/colorRedPrimary"
                         android:gravity="center"
                         android:text="@string/strActivityERSkill"
-                        android:textColor="@color/colorPrimaryDark"
+                        android:textColor="@color/colorRedPrimary"
                         android:textStyle="bold" />
 
                     <EditText
@@ -120,10 +119,9 @@
                         style="@style/TextAppearance.AppCompat.Medium"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/colorRedPrimary"
                         android:gravity="center"
                         android:text="@string/strActivityERLevel"
-                        android:textColor="@color/colorPrimaryDark"
+                        android:textColor="@color/colorRedPrimary"
                         android:textStyle="bold" />
 
                     <RadioGroup
@@ -204,10 +202,9 @@
                         style="@style/TextAppearance.AppCompat.Medium"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/colorRedPrimary"
                         android:gravity="center"
                         android:text="@string/strActivityERWod"
-                        android:textColor="@color/colorPrimaryDark"
+                        android:textColor="@color/colorRedPrimary"
                         android:textStyle="bold" />
 
                     <EditText

@@ -104,13 +104,6 @@ public class WorkoutExerciseFragment extends Fragment {
                 layoutEmptyData.setVisibility(View.VISIBLE);
             }
         }
-
-        TitleChange listenerTitleChange = (TitleChange) getActivity();
-        if (listenerTitleChange != null) {
-            listenerTitleChange.changeTitle(
-                    R.string.title_WorkoutDetails_Fragment,
-                    R.string.title_CalendarWod_Fragment);
-        }
     }
 
     private void checkNetworkConnection() {
