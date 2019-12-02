@@ -16,7 +16,6 @@ import android.widget.Button;
 import android.widget.TimePicker;
 
 import java.util.Calendar;
-import java.util.Objects;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.fragments.AlarmSettingsFragment;
@@ -38,11 +37,11 @@ public class SelectTimeDialog extends DialogFragment {
     }
 
     private View createDialogView() {
-        final LayoutInflater inflater = Objects.requireNonNull(getActivity()).getLayoutInflater();
+        final LayoutInflater inflater = requireActivity().getLayoutInflater();
         @SuppressLint("InflateParams")
         View view = inflater.inflate(R.layout.fragment_select_time, null);
         sharedPreferences =
-                getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+                requireContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         timePicker = view.findViewById(R.id.timePicker);
         timePicker.setIs24HourView(true);
         timePicker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
@@ -75,8 +74,7 @@ public class SelectTimeDialog extends DialogFragment {
 
     private void setTimeOfNotification(int selectedHour, int selectedMinute) {
         if (getFragmentManager() != null) {
-            String fragmentTag =
-                    getResources().getString(R.string.title_AlarmSettings_Fragment);
+            String fragmentTag = getResources().getString(R.string.title_AlarmSettings_Fragment);
             AlarmSettingsFragment alarmSettingsFragment =
                     (AlarmSettingsFragment) getFragmentManager().findFragmentByTag(fragmentTag);
             if (alarmSettingsFragment != null) {
@@ -100,7 +98,7 @@ public class SelectTimeDialog extends DialogFragment {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             timePicker.setHour(hourForShow);
             timePicker.setMinute(minuteForShow);
-        }else {
+        } else {
             timePicker.setCurrentHour(hourForShow);
             timePicker.setCurrentMinute(minuteForShow);
         }

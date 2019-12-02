@@ -35,6 +35,7 @@ import ru.lizzzi.crossfit_rekord.services.LoadNotificationsService;
 public class RegistryFragment extends Fragment {
 
     private EditText editTextUserName;
+    private EditText editTextUserSurname;
     private EditText editTextUserPassword;
     private EditText editTextCheckUserPassword;
     private EditText editTextUserEmail;
@@ -54,6 +55,7 @@ public class RegistryFragment extends Fragment {
         viewModel =
                 ViewModelProviders.of(RegistryFragment.this).get(RegistryViewModel.class);
         editTextUserName = view.findViewById(R.id.editTextUserName);
+        editTextUserSurname = view.findViewById(R.id.ediTextUserSurname);
         editTextUserPassword = view.findViewById(R.id.EditTextUserPassword);
         editTextCheckUserPassword = view.findViewById(R.id.editTextUserPassword);
         editTextUserEmail = view.findViewById(R.id.editTextUserEmail);
@@ -112,6 +114,7 @@ public class RegistryFragment extends Fragment {
                         if (isConnected) {
                             LiveData<Boolean> liveData = viewModel.registered(
                                     editTextUserName.getText().toString(),
+                                    editTextUserSurname.getText().toString(),
                                     editTextUserEmail.getText().toString(),
                                     editTextUserPassword.getText().toString());
                             liveData.observe(RegistryFragment.this, new Observer<Boolean>() {

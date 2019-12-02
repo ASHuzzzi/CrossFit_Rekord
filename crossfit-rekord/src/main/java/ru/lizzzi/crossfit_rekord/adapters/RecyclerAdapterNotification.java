@@ -1,12 +1,16 @@
 package ru.lizzzi.crossfit_rekord.adapters;
 
 import android.graphics.Typeface;
+import android.graphics.drawable.AnimationDrawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -39,14 +43,16 @@ public class RecyclerAdapterNotification
         private TextView textDateNote;
         private TextView textHeader;
         private TextView textTime;
-        private LinearLayout notificationLayout;
+        private RelativeLayout notificationLayout;
+        private ImageView imageHighPriority;
 
         ViewHolder(View view) {
             super(view);
             textDateNote = view.findViewById(R.id.tvTimeNotification);
             textHeader = view.findViewById(R.id.tvHeaderNotification);
-            textTime = view.findViewById(R.id.tvForLong);
-            notificationLayout = view.findViewById(R.id.llNotification);
+            textTime = view.findViewById(R.id.tvLongTime);
+            notificationLayout = view.findViewById(R.id.layoutNotification);
+            imageHighPriority = view.findViewById(R.id.imagePriorityHigh);
         }
     }
 
@@ -83,15 +89,13 @@ public class RecyclerAdapterNotification
         holder.textDateNote.setText(dateNote);
         holder.textHeader.setText(header);
         holder.textTime.setText(String.valueOf(noteTime));
-
-        holder.textDateNote.setTypeface(null, (isViewed) ? Typeface.NORMAL : Typeface.BOLD);
-        holder.textHeader.setTypeface(null, (isViewed) ? Typeface.NORMAL : Typeface.BOLD);
-        holder.notificationLayout.setBackgroundResource(
-                (isViewed) ? R.color.colorPrimaryDark : R.color.colorRedPrimary);
-        holder.textDateNote.setTextColor(fragment.getResources().getColor(
-                (isViewed) ? R.color.colorRedPrimary : R.color.colorPrimaryDark));
-        holder.textHeader.setTextColor(fragment.getResources().getColor(
-                (isViewed) ? R.color.colorRedPrimary : R.color.colorPrimaryDark));
+        Animation animation = AnimationUtils.loadAnimation(fragment.getContext(), R.anim.pulse);
+        if (isViewed) {
+            holder.imageHighPriority.setVisibility(View.GONE);
+        } else {
+            holder.imageHighPriority.setVisibility(View.VISIBLE);
+            holder.imageHighPriority.startAnimation(animation);
+        }
 
         holder.notificationLayout.setOnClickListener(new View.OnClickListener() {
             @Override

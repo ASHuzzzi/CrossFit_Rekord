@@ -29,7 +29,7 @@
         android:inputType="textEmailAddress"
         android:labelFor="@+id/editTextNewEmail"
         android:text="@string/empty"
-        android:textColor="@color/colorRedPrimary"
+        android:textColor="@color/colorWhite"
         android:theme="@style/Theme.App.Base"
         tools:ignore="LabelFor"
         tools:targetApi="o" />
@@ -51,10 +51,10 @@
         android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="10dp"
-        android:paddingStart="15dp"
-        android:paddingLeft="15dp"
-        android:paddingEnd="15dp"
-        android:paddingRight="15dp"
+        android:paddingStart="30dp"
+        android:paddingLeft="30dp"
+        android:paddingEnd="30dp"
+        android:paddingRight="30dp"
         android:text="@string/strDialogBtnSend" />
 
 </android.widget.RelativeLayout>

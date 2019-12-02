@@ -25,6 +25,7 @@ android {
         versionCode 37
         versionName "3.17.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         release {

@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,11 +32,12 @@ public class StartScreenFragment extends Fragment {
     private int numberOfPage;
     private ViewPager viewPager;
     private Handler handlerStartScreen;
-    private int DELAY = 2000;
+    private int DELAY_IN_MICROS = 2000;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        ((AppCompatActivity) requireActivity()).getSupportActionBar().show();
         View view = inflater.inflate(R.layout.fragment_start_screen, container, false);
 
         Button buttonSchedule = view.findViewById(R.id.buttonSchedule);
@@ -126,7 +128,7 @@ public class StartScreenFragment extends Fragment {
 
     public void onResume() {
         super.onResume();
-        handlerStartScreen.postDelayed(runnable, DELAY);
+        handlerStartScreen.postDelayed(runnable, DELAY_IN_MICROS);
     }
 
     @Override
@@ -170,9 +172,13 @@ public class StartScreenFragment extends Fragment {
 
     Runnable runnable = new Runnable() {
         public void run() {
-            numberOfPage = (adapterSlider.getCount() == numberOfPage) ? 0 : numberOfPage++;
+            if (adapterSlider.getCount() == numberOfPage) {
+                numberOfPage = 0;
+            } else {
+                numberOfPage++;
+            }
             viewPager.setCurrentItem(numberOfPage, true);
-            handlerStartScreen.postDelayed(this, DELAY);
+            handlerStartScreen.postDelayed(this, DELAY_IN_MICROS);
         }
     };
 }

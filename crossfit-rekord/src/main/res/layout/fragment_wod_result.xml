@@ -70,7 +70,7 @@
                 android:maxWidth="100dp"
                 android:minWidth="100dp"
                 android:text="@string/strHeaderName"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/colorWhite"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:paddingStart="15dp"
@@ -85,7 +85,7 @@
                 android:minWidth="100dp"
                 android:gravity="center"
                 android:text="@string/strHeaderSkill"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/colorWhite"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -97,7 +97,7 @@
                 android:maxWidth="50dp"
                 android:gravity="center"
                 android:text="@string/strHeaderLevel"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/colorWhite"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -108,7 +108,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/strHeaderResult"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/colorWhite"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:paddingStart="0dp"

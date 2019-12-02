@@ -38,12 +38,14 @@
     </FrameLayout>
 
     <LinearLayout
-        android:id="@+id/llSekectDay_buttons"
+        android:id="@+id/llSelectDay_buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp">
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp">
 
         <Button
             android:id="@+id/btToday"
@@ -55,7 +57,7 @@
             android:text="@string/empty"/>
 
         <Button
-            android:id="@+id/btTommorow"
+            android:id="@+id/btTomorrow"
             style="@style/TableButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -64,7 +66,7 @@
             android:text="@string/empty"/>
 
         <Button
-            android:id="@+id/btAftertommorow"
+            android:id="@+id/btAfterTomorrow"
             style="@style/TableButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -77,8 +79,11 @@
         android:id="@+id/rvTrainingTime"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/llSekectDay_buttons"
-        android:isScrollContainer="false" />
+        android:layout_below="@+id/llSelectDay_buttons"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="20dp"
+        android:paddingStart="30dp"
+        android:paddingEnd="30dp"/>
 
 
     <LinearLayout

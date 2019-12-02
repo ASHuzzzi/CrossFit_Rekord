@@ -24,14 +24,14 @@
     </android.support.design.widget.AppBarLayout>
 
     <TextView
-        android:id="@+id/textView6"
+        android:id="@+id/textEnterResult"
         style="@style/MainTextStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:gravity="center"
-        android:text="@string/strActivityERText"
+        android:text="@string/empty"
         android:textSize="16sp"
         android:textStyle="bold"
         android:layout_below="@id/appbar"/>
@@ -40,7 +40,7 @@
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/textView6"
+        android:layout_below="@id/textEnterResult"
         android:layout_above="@id/progressBarSaveUpload"
         android:layout_marginStart="15dp"
         android:layout_marginEnd="15dp"
@@ -73,24 +73,33 @@
                         style="@style/TextAppearance.AppCompat.Medium"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/colorRedPrimary"
+                        android:layout_marginBottom="5dp"
                         android:gravity="center"
                         android:text="@string/strActivityERSkill"
-                        android:textColor="@color/colorPrimaryDark"
+                        android:textColor="@color/colorWhite"
                         android:textStyle="bold" />
+
+                    <View
+                        android:id="@+id/divider1"
+                        android:layout_width="match_parent"
+                        android:layout_height="4dp"
+                        android:layout_marginLeft="6dp"
+                        android:layout_marginRight="6dp"
+                        android:layout_below="@id/textView37"
+                        android:background="@drawable/divider" />
 
                     <EditText
                         android:id="@+id/etResultSkill"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/textView37"
+                        android:layout_below="@+id/divider1"
                         android:layout_marginLeft="15dp"
                         android:layout_marginRight="15dp"
                         android:autofillHints="@string/empty"
                         android:ems="10"
                         android:inputType="textPersonName"
                         android:text="@string/empty"
-                        android:textColor="@color/colorRedPrimary"
+                        android:textColor="@color/colorWhite"
                         android:theme="@style/Theme.App.Base"
                         tools:ignore="LabelFor"
                         tools:targetApi="o" />
@@ -120,17 +129,26 @@
                         style="@style/TextAppearance.AppCompat.Medium"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/colorRedPrimary"
+                        android:layout_marginBottom="5dp"
                         android:gravity="center"
                         android:text="@string/strActivityERLevel"
-                        android:textColor="@color/colorPrimaryDark"
+                        android:textColor="@color/colorWhite"
                         android:textStyle="bold" />
+
+                    <View
+                        android:id="@+id/divider2"
+                        android:layout_width="match_parent"
+                        android:layout_height="4dp"
+                        android:layout_marginLeft="6dp"
+                        android:layout_marginRight="6dp"
+                        android:layout_below="@id/textView38"
+                        android:background="@drawable/divider" />
 
                     <RadioGroup
                         android:id="@+id/rgSelectLevel"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/textView38"
+                        android:layout_below="@+id/divider2"
                         android:layout_marginLeft="40dp"
                         android:layout_marginTop="15dp"
                         android:layout_marginRight="25dp"
@@ -148,6 +166,7 @@
                             android:gravity="center_vertical"
                             android:text="@string/strActivityERLevelSc"
                             android:textStyle="bold"
+                            android:textColor="@color/radio_buttons_style"
                             android:theme="@style/MyRadioButton" />
 
                         <RadioButton
@@ -161,6 +180,7 @@
                             android:gravity="center_vertical"
                             android:text="@string/strActivityERLevelRx"
                             android:textStyle="bold"
+                            android:textColor="@color/radio_buttons_style"
                             android:theme="@style/MyRadioButton"
                             tools:ignore="RtlSymmetry" />
 
@@ -176,6 +196,7 @@
                             android:text="@string/strActivityERLevelRxPlus"
                             android:textIsSelectable="true"
                             android:textStyle="bold"
+                            android:textColor="@color/radio_buttons_style"
                             android:theme="@style/MyRadioButton" />
                     </RadioGroup>
 
@@ -204,24 +225,33 @@
                         style="@style/TextAppearance.AppCompat.Medium"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/colorRedPrimary"
+                        android:layout_marginBottom="5dp"
                         android:gravity="center"
                         android:text="@string/strActivityERWod"
-                        android:textColor="@color/colorPrimaryDark"
+                        android:textColor="@color/colorWhite"
                         android:textStyle="bold" />
+
+                    <View
+                        android:id="@+id/divider3"
+                        android:layout_width="match_parent"
+                        android:layout_height="4dp"
+                        android:layout_marginLeft="6dp"
+                        android:layout_marginRight="6dp"
+                        android:layout_below="@id/textView39"
+                        android:background="@drawable/divider" />
 
                     <EditText
                         android:id="@+id/etResultWoD"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/textView39"
+                        android:layout_below="@+id/divider3"
                         android:layout_marginLeft="15dp"
                         android:layout_marginRight="15dp"
                         android:autofillHints="@string/empty"
                         android:ems="10"
                         android:inputType="textPersonName"
                         android:text="@string/empty"
-                        android:textColor="@color/colorRedPrimary"
+                        android:textColor="@color/colorWhite"
                         android:theme="@style/Theme.App.Base"
                         tools:ignore="LabelFor"
                         tools:targetApi="o" />

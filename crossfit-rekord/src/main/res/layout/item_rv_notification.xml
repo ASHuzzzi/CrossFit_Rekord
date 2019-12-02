@@ -2,6 +2,7 @@
 <android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="15dp"
@@ -10,11 +11,11 @@
     android:orientation="vertical"
     app:cardCornerRadius="10dp">
 
-    <LinearLayout
-        android:id="@+id/llNotification"
+    <RelativeLayout
+        android:id="@+id/layoutNotification"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorRedPrimary"
+        android:background="@color/colorPrimaryDark"
         android:orientation="vertical"
         android:paddingTop="10dp"
         android:paddingBottom="15dp"
@@ -22,25 +23,38 @@
         android:paddingEnd="15dp">
 
         <TextView
-            android:id="@+id/tvHeaderNotification"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/colorPrimary"
-            android:textSize="16sp" />
-
-        <TextView
             android:id="@+id/tvTimeNotification"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:gravity="end"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/colorWhite"
             android:textSize="12sp" />
 
         <TextView
-            android:id="@+id/tvForLong"
+            android:id="@+id/tvHeaderNotification"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvTimeNotification"
+            android:layout_toStartOf="@id/imagePriorityHigh"
+            android:textColor="@color/colorWhite"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/imagePriorityHigh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/tvTimeNotification"
+            android:layout_alignBottom="@id/tvHeaderNotification"
+            android:layout_alignParentEnd="true"
+            android:tint="@color/colorRedPrimary"
+            app:srcCompat="@drawable/ic_priority_high"
+            tools:ignore="ContentDescription">
+
+        </ImageView>
+
+        <TextView
+            android:id="@+id/tvLongTime"
             android:layout_width="0dp"
             android:layout_height="0dp" />
-    </LinearLayout>
+    </RelativeLayout>
 
 </android.support.v7.widget.CardView>

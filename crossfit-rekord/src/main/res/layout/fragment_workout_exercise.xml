@@ -44,14 +44,14 @@
                         android:layout_marginBottom="5dp"
                         android:gravity="center"
                         android:text="@string/TL1WarmUp"
-                        android:textColor="@color/colorRedPrimary"
+                        android:textColor="@color/colorWhite"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <View
                         android:id="@+id/divider1"
                         android:layout_width="match_parent"
-                        android:layout_height="2dp"
+                        android:layout_height="4dp"
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
                         android:layout_below="@id/textView19"
@@ -96,14 +96,14 @@
                         android:layout_marginBottom="5dp"
                         android:gravity="center"
                         android:text="@string/TL1Skill"
-                        android:textColor="@color/colorRedPrimary"
+                        android:textColor="@color/colorWhite"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <View
                         android:id="@+id/divider2"
                         android:layout_width="match_parent"
-                        android:layout_height="2dp"
+                        android:layout_height="4dp"
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
                         android:layout_below="@id/textView20"
@@ -148,14 +148,14 @@
                         android:layout_marginBottom="5dp"
                         android:gravity="center"
                         android:text="@string/TL1WOD"
-                        android:textColor="@color/colorRedPrimary"
+                        android:textColor="@color/colorWhite"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <View
                         android:id="@+id/divider3"
                         android:layout_width="match_parent"
-                        android:layout_height="2dp"
+                        android:layout_height="4dp"
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
                         android:layout_below="@id/textView21"
@@ -210,14 +210,14 @@
                             android:layout_marginBottom="5dp"
                             android:gravity="center"
                             android:text="@string/TL1Sc"
-                            android:textColor="@color/colorRedPrimary"
+                            android:textColor="@color/colorWhite"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
                         <View
                             android:id="@+id/divider6"
                             android:layout_width="match_parent"
-                            android:layout_height="2dp"
+                            android:layout_height="4dp"
                             android:layout_marginLeft="6dp"
                             android:layout_marginRight="6dp"
                             android:background="@drawable/divider" />
@@ -264,14 +264,14 @@
                             android:layout_marginBottom="5dp"
                             android:gravity="center"
                             android:text="@string/TL1Rx"
-                            android:textColor="@color/colorRedPrimary"
+                            android:textColor="@color/colorWhite"
                             android:textSize="16sp"
                             android:textStyle="bold"/>
 
                         <View
                             android:id="@+id/divider7"
                             android:layout_width="match_parent"
-                            android:layout_height="2dp"
+                            android:layout_height="4dp"
                             android:layout_marginLeft="6dp"
                             android:layout_marginRight="6dp"
                             android:background="@drawable/divider"/>
@@ -317,14 +317,14 @@
                             android:layout_marginBottom="5dp"
                             android:gravity="center"
                             android:text="@string/TL1RxPlus"
-                            android:textColor="@color/colorRedPrimary"
+                            android:textColor="@color/colorWhite"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
                         <View
                             android:id="@+id/divider8"
                             android:layout_width="match_parent"
-                            android:layout_height="2dp"
+                            android:layout_height="4dp"
                             android:layout_marginLeft="6dp"
                             android:layout_marginRight="6dp"
                             android:background="@drawable/divider" />
@@ -369,14 +369,14 @@
                         android:layout_marginBottom="5dp"
                         android:gravity="center"
                         android:text="@string/TL1PostWorkout"
-                        android:textColor="@color/colorRedPrimary"
+                        android:textColor="@color/colorWhite"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <View
                         android:id="@+id/divider4"
                         android:layout_width="match_parent"
-                        android:layout_height="2dp"
+                        android:layout_height="4dp"
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
                         android:layout_below="@id/textView26"
