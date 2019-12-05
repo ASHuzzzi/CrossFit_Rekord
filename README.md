@@ -1,4 +1,4 @@
-# CrossFit_Rekord
+# CrossFit Rekord
 
 В данный момент это мой текущий pet project, находящийся в стадии разработки.
 
