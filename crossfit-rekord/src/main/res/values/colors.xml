@@ -13,11 +13,11 @@
 
     <color name="colorTransparent">#00000000</color>
 
-    <color name="color_Table_CrossFit">#D50000</color>
-    <color name="color_Table_On_Ramp">#43A047</color>
+    <color name="color_Table_CrossFit">#b71c1c</color>
+    <color name="color_Table_On_Ramp">#2e7d32</color>
     <color name="color_Table_Stretching">#1565C0</color>
     <color name="color_Table_Rowing">#0D47A1</color>
-    <color name="color_Table_Open_Gym">#FB8C00</color>
+    <color name="color_Table_Open_Gym">#f57c00</color>
     <color name="color_Table_Endurance">#880E4F</color>
     <color name="color_Table_Lady_Class">#FD0077</color>
     <color name="color_Table_Gymnastics">#277A4C</color>
@@ -29,7 +29,7 @@
     <color name="color_Table_TRX">#E65100</color>
     <color name="color_Table_Muay_Thai">#A17778</color>
     <color name="color_Table_Muay_Thai_Kids">#249A27</color>
-    <color name="color_Table_FBB_Power">#AD1457</color>
+    <color name="color_Table_FBB_Power">#673ab7</color>
     <color name="color_Table_BJJ_Kids">#FF6D00</color>
     <color name="color_Table_BJJ">#3E825B</color>
     <color name="color_Table_MMA">#c62828</color>

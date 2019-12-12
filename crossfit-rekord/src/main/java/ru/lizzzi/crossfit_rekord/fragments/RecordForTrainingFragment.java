@@ -92,7 +92,7 @@ public class RecordForTrainingFragment extends Fragment {
     @SuppressLint("ClickableViewAccessibility")
     private void initButtonsOfDay(View rootView) {
         SimpleDateFormat simpleDateFormat =
-                new SimpleDateFormat("EEEE\n d MMM.", Locale.getDefault());
+                new SimpleDateFormat("EEEE\n d MMM", Locale.getDefault());
 
         buttonToday = rootView.findViewById(R.id.btToday);
         buttonToday.setText(simpleDateFormat.format(viewModel.getToday()));
