@@ -59,6 +59,9 @@ public class BackgroundDrawable {
                 case "FBB+Power":
                     backgroundColor = R.drawable.table_item_fbb_power;
                     break;
+                case "MMA":
+                    backgroundColor = R.drawable.table_item_mma;
+                    break;
             }
         }
         return  backgroundColor;

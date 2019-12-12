@@ -67,6 +67,7 @@
                         android:layout_marginRight="15dp"
                         android:layout_below="@id/divider1"
                         android:singleLine="false"
+                        android:lineSpacingExtra="2dp"
                         android:textSize="14sp" />
 
                 </RelativeLayout>
@@ -118,6 +119,7 @@
                         android:layout_marginLeft="15dp"
                         android:layout_marginRight="15dp"
                         android:singleLine="false"
+                        android:lineSpacingExtra="2dp"
                         android:textSize="14sp"
                         android:layout_below="@id/divider2"/>
 
@@ -170,6 +172,7 @@
                         android:layout_marginLeft="15dp"
                         android:layout_marginRight="15dp"
                         android:singleLine="false"
+                        android:lineSpacingExtra="2dp"
                         android:textSize="14sp"
                         android:layout_below="@id/divider3"/>
 
@@ -232,6 +235,7 @@
                             android:layout_marginRight="10dp"
                             android:gravity="center"
                             android:singleLine="false"
+                            android:lineSpacingExtra="2dp"
                             android:textSize="14sp" />
 
                     </LinearLayout>
@@ -286,6 +290,7 @@
                             android:layout_marginRight="10dp"
                             android:gravity="center"
                             android:singleLine="false"
+                            android:lineSpacingExtra="2dp"
                             android:textSize="14sp" />
 
                     </LinearLayout>
@@ -339,6 +344,7 @@
                             android:layout_marginRight="10dp"
                             android:gravity="center"
                             android:singleLine="false"
+                            android:lineSpacingExtra="2dp"
                             android:textSize="14sp" />
 
                     </LinearLayout>
@@ -391,6 +397,7 @@
                         android:layout_marginLeft="15dp"
                         android:layout_marginRight="15dp"
                         android:singleLine="false"
+                        android:lineSpacingExtra="2dp"
                         android:textSize="14sp"
                         android:layout_below="@id/divider4"/>
 
