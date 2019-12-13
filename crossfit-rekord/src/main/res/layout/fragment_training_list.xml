@@ -55,8 +55,8 @@
         android:layout_below="@id/captionTrainingList"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="10dp"
+        android:layout_marginRight="20dp"
         android:layout_marginBottom="20dp"
-        android:layout_marginRight="20dp">
-    </android.support.v7.widget.RecyclerView>
+        android:layoutAnimation="@anim/layout_animation_fall_down"></android.support.v7.widget.RecyclerView>
 
 </RelativeLayout>
