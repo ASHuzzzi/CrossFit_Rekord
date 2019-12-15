@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,7 @@ import ru.lizzzi.crossfit_rekord.interfaces.NotificationSetting;
 
 public class AlarmSettingsFragment extends Fragment implements NotificationSetting {
 
+    private CardView cardAlarm;
     private TextView textSelectedDay;
     private TextView textHour;
     private TextView textMinute;
@@ -42,11 +44,9 @@ public class AlarmSettingsFragment extends Fragment implements NotificationSetti
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                             Bundle savedInstanceState) {
-        View view = inflater.inflate(
-                R.layout.fragment_alarm_settings,
-                container,
-                false);
+        View view = inflater.inflate(R.layout.fragment_alarm_settings, container, false);
 
+        cardAlarm = view.findViewById(R.id.cardAlarm);
         textSelectedDay = view.findViewById(R.id.textSelectedDay);
         textHour = view.findViewById(R.id.textHour);
         textMinute = view.findViewById(R.id.textMinute);
@@ -67,7 +67,7 @@ public class AlarmSettingsFragment extends Fragment implements NotificationSetti
             }
         });
 
-        sharedPreferences = getContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        sharedPreferences = requireContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         return view;
     }
 
@@ -89,14 +89,12 @@ public class AlarmSettingsFragment extends Fragment implements NotificationSetti
         setAlarmOn();
     }
 
-
-
     @Override
     public void onStart(){
         super.onStart();
         if (getActivity() instanceof TitleChange) {
-            TitleChange listernerTitleChange = (TitleChange) getActivity();
-            listernerTitleChange.changeTitle(R.string.title_AlarmSettings_Fragment, R.string.title_AlarmSettings_Fragment);
+            TitleChange listenerTitleChange = (TitleChange) getActivity();
+            listenerTitleChange.changeTitle(R.string.title_AlarmSettings_Fragment, R.string.title_AlarmSettings_Fragment);
         }
 
         Calendar calendar = Calendar.getInstance();
@@ -124,6 +122,9 @@ public class AlarmSettingsFragment extends Fragment implements NotificationSetti
 
         if (isAlarmEnable()) {
             switchAlarm.setChecked(true);
+            cardAlarm.setCardBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+        } else {
+            cardAlarm.setCardBackgroundColor(getResources().getColor(R.color.colorPrimaryLight));
         }
         switchAlarm.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -134,11 +135,13 @@ public class AlarmSettingsFragment extends Fragment implements NotificationSetti
                         enableAlarm();
                         AlarmHelper.enableBootReceiver(context);
                         setAlarmEnable(true);
+                        cardAlarm.setCardBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
                     }
                 } else {
                     AlarmHelper.cancelAlarm();
                     AlarmHelper.disableBootReceiver(context);
                     setAlarmEnable(false);
+                    cardAlarm.setCardBackgroundColor(getResources().getColor(R.color.colorPrimaryLight));
                 }
             }
         });
@@ -148,6 +151,7 @@ public class AlarmSettingsFragment extends Fragment implements NotificationSetti
         enableAlarm();
         setAlarmEnable(true);
         switchAlarm.setChecked(true);
+        cardAlarm.setCardBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
     }
 
     private void setAlarmEnable(boolean state) {

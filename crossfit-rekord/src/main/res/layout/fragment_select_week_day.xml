@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.widget.RelativeLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/colorPrimary">
 
     <TextView
         android:id="@+id/textView12"
@@ -222,4 +223,8 @@
             android:layout_weight="1"
             android:text="@string/strDialogBtnOk" />
     </LinearLayout>
-</android.widget.RelativeLayout>
+
+
+
+
+</RelativeLayout>

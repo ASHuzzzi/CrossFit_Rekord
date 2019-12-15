@@ -42,11 +42,11 @@
         style="@style/TextAppearance.AppCompat.Medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="15dp"
         android:layout_marginTop="10dp"
         android:ellipsize="end"
         android:text="@string/strDBMyResultMyWeightRu"
-        android:textColor="@color/colorRedPrimary"
+        android:textColor="@color/colorWhite"
         android:textStyle="bold"
         android:layout_alignTop="@id/editMyWeightResult"
         android:layout_alignBottom="@id/editMyWeightResult"
@@ -68,7 +68,7 @@
         android:maxWidth="100dp"
         android:minWidth="50dp"
         android:text="@string/empty"
-        android:textColor="@color/colorRedPrimary"
+        android:textColor="@color/colorWhite"
         android:theme="@style/Theme.App.Base.MyResult" />
 
     <TextView
@@ -83,17 +83,17 @@
         android:layout_toEndOf="@id/editMyWeightResult"
         android:ellipsize="end"
         android:text="@string/strDefaultUnt"
-        android:textColor="@color/colorRedPrimary"
+        android:textColor="@color/colorWhite"
         android:gravity="center_vertical"
         android:minWidth="20dp"/>
 
     <View
         android:id="@+id/divider1"
         android:layout_width="match_parent"
-        android:layout_height="2dp"
+        android:layout_height="4dp"
         android:layout_below="@+id/editMyWeightResult"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:layout_marginBottom="10dp"
         android:background="@drawable/divider" />
 
@@ -109,10 +109,10 @@
     <View
         android:id="@+id/divider2"
         android:layout_width="match_parent"
-        android:layout_height="2dp"
+        android:layout_height="4dp"
         android:layout_below="@+id/recyclerResults"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
         android:background="@drawable/divider" />
 

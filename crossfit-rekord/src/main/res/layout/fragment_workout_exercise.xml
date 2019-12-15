@@ -19,6 +19,7 @@
             android:id="@+id/layoutMain"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layoutAnimation="@anim/layout_animation_from_bottom"
             android:orientation="vertical">
 
             <android.support.v7.widget.CardView
@@ -32,8 +33,8 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
                     android:layout_marginStart="15dp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginEnd="15dp"
                     android:layout_marginBottom="15dp">
 
@@ -44,17 +45,17 @@
                         android:layout_marginBottom="5dp"
                         android:gravity="center"
                         android:text="@string/TL1WarmUp"
-                        android:textColor="@color/colorRedPrimary"
+                        android:textColor="@color/colorWhite"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <View
                         android:id="@+id/divider1"
                         android:layout_width="match_parent"
-                        android:layout_height="2dp"
+                        android:layout_height="4dp"
+                        android:layout_below="@id/textView19"
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
-                        android:layout_below="@id/textView19"
                         android:background="@drawable/divider" />
 
                     <TextView
@@ -62,10 +63,11 @@
                         style="@style/MainTextStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginRight="15dp"
                         android:layout_below="@id/divider1"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="15dp"
+                        android:lineSpacingExtra="2dp"
                         android:singleLine="false"
                         android:textSize="14sp" />
 
@@ -84,8 +86,8 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
                     android:layout_marginStart="15dp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginEnd="15dp"
                     android:layout_marginBottom="15dp">
 
@@ -96,17 +98,17 @@
                         android:layout_marginBottom="5dp"
                         android:gravity="center"
                         android:text="@string/TL1Skill"
-                        android:textColor="@color/colorRedPrimary"
+                        android:textColor="@color/colorWhite"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <View
                         android:id="@+id/divider2"
                         android:layout_width="match_parent"
-                        android:layout_height="2dp"
+                        android:layout_height="4dp"
+                        android:layout_below="@id/textView20"
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
-                        android:layout_below="@id/textView20"
                         android:background="@drawable/divider" />
 
                     <TextView
@@ -114,12 +116,13 @@
                         style="@style/MainTextStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
+                        android:layout_below="@id/divider2"
                         android:layout_marginLeft="15dp"
+                        android:layout_marginTop="5dp"
                         android:layout_marginRight="15dp"
+                        android:lineSpacingExtra="2dp"
                         android:singleLine="false"
-                        android:textSize="14sp"
-                        android:layout_below="@id/divider2"/>
+                        android:textSize="14sp" />
 
                 </RelativeLayout>
 
@@ -136,8 +139,8 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
                     android:layout_marginStart="15dp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginEnd="15dp"
                     android:layout_marginBottom="15dp">
 
@@ -148,17 +151,17 @@
                         android:layout_marginBottom="5dp"
                         android:gravity="center"
                         android:text="@string/TL1WOD"
-                        android:textColor="@color/colorRedPrimary"
+                        android:textColor="@color/colorWhite"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <View
                         android:id="@+id/divider3"
                         android:layout_width="match_parent"
-                        android:layout_height="2dp"
+                        android:layout_height="4dp"
+                        android:layout_below="@id/textView21"
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
-                        android:layout_below="@id/textView21"
                         android:background="@drawable/divider" />
 
                     <TextView
@@ -166,12 +169,13 @@
                         style="@style/MainTextStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
+                        android:layout_below="@id/divider3"
                         android:layout_marginLeft="15dp"
+                        android:layout_marginTop="5dp"
                         android:layout_marginRight="15dp"
+                        android:lineSpacingExtra="2dp"
                         android:singleLine="false"
-                        android:textSize="14sp"
-                        android:layout_below="@id/divider3"/>
+                        android:textSize="14sp" />
 
                 </RelativeLayout>
 
@@ -187,11 +191,11 @@
                     android:id="@+id/cardSc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
                     android:layout_marginEnd="5dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_weight="1"
                     app:cardBackgroundColor="@color/colorPrimaryDark"
-                    app:cardCornerRadius="15dp"
-                    android:layout_weight="1">
+                    app:cardCornerRadius="15dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -210,14 +214,14 @@
                             android:layout_marginBottom="5dp"
                             android:gravity="center"
                             android:text="@string/TL1Sc"
-                            android:textColor="@color/colorRedPrimary"
+                            android:textColor="@color/colorWhite"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
                         <View
                             android:id="@+id/divider6"
                             android:layout_width="match_parent"
-                            android:layout_height="2dp"
+                            android:layout_height="4dp"
                             android:layout_marginLeft="6dp"
                             android:layout_marginRight="6dp"
                             android:background="@drawable/divider" />
@@ -231,6 +235,7 @@
                             android:layout_marginTop="5dp"
                             android:layout_marginRight="10dp"
                             android:gravity="center"
+                            android:lineSpacingExtra="2dp"
                             android:singleLine="false"
                             android:textSize="14sp" />
 
@@ -242,17 +247,17 @@
                     android:id="@+id/cardRx"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
                     android:layout_marginEnd="5dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_weight="1"
                     app:cardBackgroundColor="@color/colorPrimaryDark"
-                    app:cardCornerRadius="15dp"
-                    android:layout_weight="1">
+                    app:cardCornerRadius="15dp">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
                         android:layout_marginStart="15dp"
+                        android:layout_marginTop="10dp"
                         android:layout_marginEnd="15dp"
                         android:layout_marginBottom="15dp"
                         android:orientation="vertical">
@@ -264,27 +269,28 @@
                             android:layout_marginBottom="5dp"
                             android:gravity="center"
                             android:text="@string/TL1Rx"
-                            android:textColor="@color/colorRedPrimary"
+                            android:textColor="@color/colorWhite"
                             android:textSize="16sp"
-                            android:textStyle="bold"/>
+                            android:textStyle="bold" />
 
                         <View
                             android:id="@+id/divider7"
                             android:layout_width="match_parent"
-                            android:layout_height="2dp"
+                            android:layout_height="4dp"
                             android:layout_marginLeft="6dp"
                             android:layout_marginRight="6dp"
-                            android:background="@drawable/divider"/>
+                            android:background="@drawable/divider" />
 
                         <TextView
                             android:id="@+id/tvLevelRx"
                             style="@style/MainTextStyle"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_marginTop="5dp"
                             android:layout_marginLeft="10dp"
+                            android:layout_marginTop="5dp"
                             android:layout_marginRight="10dp"
                             android:gravity="center"
+                            android:lineSpacingExtra="2dp"
                             android:singleLine="false"
                             android:textSize="14sp" />
 
@@ -297,9 +303,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
+                    android:layout_weight="1"
                     app:cardBackgroundColor="@color/colorPrimaryDark"
-                    app:cardCornerRadius="15dp"
-                    android:layout_weight="1">
+                    app:cardCornerRadius="15dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -317,14 +323,14 @@
                             android:layout_marginBottom="5dp"
                             android:gravity="center"
                             android:text="@string/TL1RxPlus"
-                            android:textColor="@color/colorRedPrimary"
+                            android:textColor="@color/colorWhite"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
                         <View
                             android:id="@+id/divider8"
                             android:layout_width="match_parent"
-                            android:layout_height="2dp"
+                            android:layout_height="4dp"
                             android:layout_marginLeft="6dp"
                             android:layout_marginRight="6dp"
                             android:background="@drawable/divider" />
@@ -338,6 +344,7 @@
                             android:layout_marginTop="5dp"
                             android:layout_marginRight="10dp"
                             android:gravity="center"
+                            android:lineSpacingExtra="2dp"
                             android:singleLine="false"
                             android:textSize="14sp" />
 
@@ -357,8 +364,8 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
                     android:layout_marginStart="15dp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginEnd="15dp"
                     android:layout_marginBottom="15dp">
 
@@ -369,17 +376,17 @@
                         android:layout_marginBottom="5dp"
                         android:gravity="center"
                         android:text="@string/TL1PostWorkout"
-                        android:textColor="@color/colorRedPrimary"
+                        android:textColor="@color/colorWhite"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <View
                         android:id="@+id/divider4"
                         android:layout_width="match_parent"
-                        android:layout_height="2dp"
+                        android:layout_height="4dp"
+                        android:layout_below="@id/textView26"
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
-                        android:layout_below="@id/textView26"
                         android:background="@drawable/divider" />
 
                     <TextView
@@ -387,12 +394,13 @@
                         style="@style/MainTextStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
+                        android:layout_below="@id/divider4"
                         android:layout_marginLeft="15dp"
+                        android:layout_marginTop="5dp"
                         android:layout_marginRight="15dp"
+                        android:lineSpacingExtra="2dp"
                         android:singleLine="false"
-                        android:textSize="14sp"
-                        android:layout_below="@id/divider4"/>
+                        android:textSize="14sp" />
 
                 </RelativeLayout>
 

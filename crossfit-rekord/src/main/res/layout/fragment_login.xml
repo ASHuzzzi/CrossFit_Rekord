@@ -1,106 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.widget.LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/linLayLogo"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="2"
-        android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_gravity="center_horizontal"
-            android:scaleType="centerInside"
-            app:srcCompat="@drawable/logo_rekord_main"
-            tools:ignore="ContentDescription" />
-    </LinearLayout>
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:scaleType="centerInside"
+        app:layout_constraintBottom_toTopOf="@+id/relativeLayEnterData"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/logo_rekord_main"
+        tools:ignore="ContentDescription" />
+
+    <ProgressBar
+        android:id="@+id/progressbar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/textContacts"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/relativeLayEnterData" />
 
     <RelativeLayout
         android:id="@+id/relativeLayEnterData"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="10dp"
-        android:layout_weight="1"
-        android:gravity="center"
+        android:layout_height="wrap_content"
         android:isScrollContainer="true"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/textView10"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:gravity="start"
-            android:text="@string/strEnterEmail"
-            android:textColor="@color/colorRedPrimary" />
-
-        <EditText
-            android:id="@+id/editTextEmail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/textView10"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="10dp"
-            android:autofillHints="@string/empty"
-            android:gravity="start"
-            android:inputType="textWebEmailAddress"
-            android:textColor="@color/colorRedPrimary"
-            android:theme="@style/Theme.App.Base"
-            tools:ignore="LabelFor"
-            tools:targetApi="o" />
-
-        <TextView
-            android:id="@+id/textView11"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/editTextEmail"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:gravity="start"
-            android:text="@string/strEnterPassword"
-            android:textColor="@color/colorRedPrimary" />
-
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/editPasswordLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/textView11"
-            app:passwordToggleEnabled="true"
-            app:passwordToggleTint= "@color/colorRedPrimary"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="10dp"
-            android:textColor="@color/colorRedPrimary"
-            android:theme="@style/Theme.App.Base">
-
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/editTextPassword"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint=""
-                android:inputType="textPassword"
-                android:maxLines="1"
-                android:textColor="@color/colorRedPrimary"
-                android:theme="@style/Theme.App.Base" />
-        </android.support.design.widget.TextInputLayout>
+        app:layout_constraintBottom_toTopOf="@+id/progressbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView2">
 
         <Button
             android:id="@+id/buttonLogin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/editPasswordLayout"
+            android:layout_below="@id/layoutPassword"
             android:layout_alignStart="@id/buttonRegistration"
             android:layout_alignEnd="@id/buttonRegistration"
             android:layout_centerHorizontal="true"
@@ -120,6 +67,23 @@
             android:paddingRight="20dp"
             android:text="@string/strButtonRegistration" />
 
+        <EditText
+            android:id="@+id/editTextEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="10dp"
+            android:gravity="start"
+            android:hint="@string/strEnterEmail"
+            android:importantForAutofill="no"
+            android:inputType="textWebEmailAddress"
+            android:textColor="@color/colorWhite"
+            android:textColorHint="@color/colorWhite"
+            android:theme="@style/Theme.App.Base"
+            tools:ignore="LabelFor"
+            tools:targetApi="o" />
+
         <TextView
             android:id="@+id/textRecoveryPassword"
             android:layout_width="wrap_content"
@@ -131,41 +95,49 @@
             android:layout_marginTop="20dp"
             android:gravity="center"
             android:text="@string/strRecoveryPas"
-            android:textColor="@color/colorRedPrimary" />
+            android:textColor="@color/colorWhite" />
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/layoutPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/editTextEmail"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="10dp"
+            android:textColor="@color/colorWhite"
+            android:textColorHint="@color/colorWhite"
+            android:theme="@style/Theme.App.Base"
+            app:passwordToggleEnabled="true"
+            app:passwordToggleTint="@color/colorWhite">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/editTextPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/strEnterPassword"
+                android:inputType="textPassword"
+                android:maxLines="1"
+                android:textColor="@color/colorWhite"
+                android:textColorHint="@color/colorWhite"
+                android:theme="@style/Theme.App.Base" />
+        </android.support.design.widget.TextInputLayout>
 
     </RelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/relativeLayContacts"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="2">
+    <TextView
+        android:id="@+id/textContacts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="false"
+        android:layout_alignParentBottom="false"
+        android:layout_centerHorizontal="true"
+        android:padding="10dp"
+        android:layout_marginBottom="15dp"
+        android:text="@string/contacts"
+        android:textColor="@color/colorWhite"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-        <ProgressBar
-            android:id="@+id/progressbar"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerInParent="false"
-            android:layout_gravity="center"
-            android:visibility="invisible" />
-
-        <TextView
-            android:id="@+id/textContacts"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="false"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="20dp"
-            android:padding="10dp"
-            android:gravity="center"
-            android:text="@string/contacts"
-            android:textColor="@color/colorRedPrimary" />
-    </RelativeLayout>
-
-</android.widget.LinearLayout>
+</android.support.constraint.ConstraintLayout>

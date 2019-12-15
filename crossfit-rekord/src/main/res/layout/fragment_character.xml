@@ -23,5 +23,6 @@
         android:layout_height="match_parent"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginBottom="20dp"/>
+        android:layout_marginBottom="20dp"
+        android:layoutAnimation="@anim/layout_animation_fall_down" />
 </LinearLayout>

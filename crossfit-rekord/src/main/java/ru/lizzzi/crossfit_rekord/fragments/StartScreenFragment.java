@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,6 +37,7 @@ public class StartScreenFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        ((AppCompatActivity) requireActivity()).getSupportActionBar().show();
         View view = inflater.inflate(R.layout.fragment_start_screen, container, false);
 
         Button buttonSchedule = view.findViewById(R.id.buttonSchedule);

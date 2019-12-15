@@ -31,7 +31,7 @@
             android:layout_marginBottom="10dp"
             android:text="@string/trainingStatistics"
             android:textAppearance="@android:style/TextAppearance.Large"
-            android:textColor="@color/colorRedPrimary" />
+            android:textColor="@color/colorWhite" />
 
         <android.support.v7.widget.CardView
             android:id="@+id/cardQuantity"
@@ -60,7 +60,7 @@
                     android:layout_marginBottom="5dp"
                     android:text="@string/numberOfVisitsPerMonth"
                     android:textAppearance="@android:style/TextAppearance.Medium"
-                    android:textColor="@color/colorRedPrimary" />
+                    android:textColor="@color/colorWhite" />
 
                 <LinearLayout
                     android:id="@+id/layoutQuantity"
@@ -82,7 +82,7 @@
                             android:layout_gravity="center_horizontal"
                             android:layout_marginBottom="5dp"
                             android:text="@string/currentMonth"
-                            android:textColor="@color/colorRedPrimary" />
+                            android:textColor="@color/colorWhite" />
 
                         <TextView
                             android:id="@+id/textMonthlyTraining"
@@ -91,7 +91,7 @@
                             android:layout_gravity="center_horizontal"
                             android:text="@string/defaultValue"
                             android:textAppearance="@android:style/TextAppearance.Large"
-                            android:textColor="@color/colorRedPrimary"
+                            android:textColor="@color/colorWhite"
                             android:textStyle="bold" />
 
                         <Button
@@ -128,7 +128,7 @@
                             android:layout_gravity="center_horizontal"
                             android:layout_marginBottom="5dp"
                             android:text="@string/previousMonth"
-                            android:textColor="@color/colorRedPrimary" />
+                            android:textColor="@color/colorWhite" />
 
                         <TextView
                             android:id="@+id/textPreviousMonthlyTraining"
@@ -137,7 +137,7 @@
                             android:layout_gravity="center_horizontal"
                             android:text="@string/defaultValue"
                             android:textAppearance="@android:style/TextAppearance.Large"
-                            android:textColor="@color/colorRedPrimary"
+                            android:textColor="@color/colorWhite"
                             android:textStyle="bold" />
 
                         <Button
@@ -192,7 +192,7 @@
                     android:gravity="center_horizontal"
                     android:text="@string/byLevelsForTheCurrentMonth"
                     android:textAppearance="@android:style/TextAppearance.Medium"
-                    android:textColor="@color/colorRedPrimary" />
+                    android:textColor="@color/colorWhite" />
 
                 <android.support.constraint.ConstraintLayout
                     android:layout_width="match_parent"
@@ -251,7 +251,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:text="@string/TL1Rx"
-                        android:textColor="@color/colorRedPrimary"
+                        android:textColor="@color/colorWhite"
                         android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="@id/textRx"
                         app:layout_constraintStart_toStartOf="parent"
@@ -263,7 +263,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:text="@string/TL1Sc"
-                        android:textColor="@color/colorRedPrimary"
+                        android:textColor="@color/colorWhite"
                         android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="@id/textSc"
                         app:layout_constraintStart_toStartOf="parent"
@@ -278,7 +278,7 @@
                         android:layout_marginBottom="2dp"
                         android:text="@string/defaultValue"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:textColor="@color/colorRedPrimary"
+                        android:textColor="@color/colorWhite"
                         app:layout_constraintBottom_toTopOf="@+id/textRxPlus"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/progressBarRx"
@@ -292,7 +292,7 @@
                         android:paddingStart="0dp"
                         android:paddingEnd="5dp"
                         android:text="@string/TL1RxPlus"
-                        android:textColor="@color/colorRedPrimary"
+                        android:textColor="@color/colorWhite"
                         android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="@id/textRxPlus"
                         app:layout_constraintEnd_toStartOf="@+id/progressBarRxPlus"
@@ -308,7 +308,7 @@
                         android:layout_marginBottom="2dp"
                         android:text="@string/defaultValue"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:textColor="@color/colorRedPrimary"
+                        android:textColor="@color/colorWhite"
                         app:layout_constraintBottom_toTopOf="@+id/textRx"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/progressBarSc"
@@ -322,7 +322,7 @@
                         android:layout_marginEnd="5dp"
                         android:text="@string/defaultValue"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:textColor="@color/colorRedPrimary"
+                        android:textColor="@color/colorWhite"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/progressBarRxPlus"
@@ -372,7 +372,7 @@
                     android:layout_below="@id/textCaptionPreviousTraining"
                     android:text="@string/lastTrainingDate"
                     android:textStyle="bold"
-                    android:textColor="@color/colorRedPrimary" />
+                    android:textColor="@color/colorWhite" />
 
                 <TextView
                     android:id="@+id/textLastDateSession"
@@ -381,7 +381,7 @@
                     android:layout_below="@id/textCaptionPreviousTraining"
                     android:layout_toEndOf="@id/captionLastDateSession"
                     android:text="@string/defaultValue"
-                    android:textColor="@color/colorRedPrimary" />
+                    android:textColor="@color/colorWhite" />
 
                 <TextView
                     android:id="@+id/captionLastWodLevel"
@@ -390,7 +390,7 @@
                     android:layout_below="@id/textLastDateSession"
                     android:text="@string/lastTrainingWodLevel"
                     android:textStyle="bold"
-                    android:textColor="@color/colorRedPrimary" />
+                    android:textColor="@color/colorWhite" />
 
                 <TextView
                     android:id="@+id/textLastWodLevel"
@@ -399,7 +399,7 @@
                     android:layout_below="@id/captionLastDateSession"
                     android:layout_toEndOf="@id/captionLastWodLevel"
                     android:text="@string/defaultValue"
-                    android:textColor="@color/colorRedPrimary" />
+                    android:textColor="@color/colorWhite" />
 
                 <TextView
                     android:id="@+id/captionLastWod"
@@ -408,7 +408,7 @@
                     android:layout_below="@id/textLastWodLevel"
                     android:text="@string/lastTrainingResult"
                     android:textStyle="bold"
-                    android:textColor="@color/colorRedPrimary" />
+                    android:textColor="@color/colorWhite" />
 
                 <TextView
                     android:id="@+id/textLastWod"
@@ -417,7 +417,7 @@
                     android:layout_below="@id/captionLastWodLevel"
                     android:layout_toEndOf="@id/captionLastWod"
                     android:text="@string/defaultValue"
-                    android:textColor="@color/colorRedPrimary" />
+                    android:textColor="@color/colorWhite" />
 
                 <TextView
                     android:id="@+id/textCaptionPreviousTraining"
@@ -427,7 +427,7 @@
                     android:layout_marginBottom="5dp"
                     android:text="@string/previousWorkout"
                     android:textAppearance="@android:style/TextAppearance.Medium"
-                    android:textColor="@color/colorRedPrimary" />
+                    android:textColor="@color/colorWhite" />
 
             </RelativeLayout>
         </android.support.v7.widget.CardView>

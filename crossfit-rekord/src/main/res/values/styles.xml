@@ -33,7 +33,7 @@
     </style>
 
     <style name="MainTextStyle">
-        <item name="android:textColor">@color/colorRedPrimary</item>
+        <item name="android:textColor">@color/colorWhite</item>
         <item name="android:textSize">16sp</item>
     </style>
 
@@ -75,22 +75,22 @@
     <style name="calendarHeaderStyle" parent="AppTheme">
         <item name="android:textSize">22sp</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/colorRedPrimary</item>
+        <item name="android:textColor">@color/colorWhite</item>
     </style>
 
     <style name="calendarWeekDayStyle" parent="AppTheme">
         <item name="android:textSize">20sp</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/colorRedPrimary</item>
+        <item name="android:textColor">@color/colorWhite</item>
     </style>
 
     <style name="calendarSelectDayStyle" parent="AppTheme">
         <item name="android:background">@color/colorRedPrimary</item>
-        <item name="android:textColor">@color/colorPrimaryDark</item>
+        <item name="android:textColor">@color/colorWhite</item>
     </style>
 
     <style name="Theme.App.Base" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorControlNormal">@color/colorRedDark</item>
+        <item name="colorControlNormal">@color/colorRedPrimary</item>
         <item name="colorControlActivated">@color/colorWhite</item>
         <item name="colorControlHighlight">@color/colorPrimary</item>
     </style>
@@ -106,7 +106,7 @@
     </style>
 
     <style name="MyRadioButton" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorControlNormal">@color/colorRedDark</item>
+        <item name="colorControlNormal">@color/colorWhite</item>
         <item name="colorControlActivated">@color/colorRedPrimary</item>
     </style>
 
@@ -115,7 +115,7 @@
         <item name="tabBackground">@drawable/tab_color_selector</item>
         <item name="tabIndicatorColor">@color/colorRedPrimary</item>
         <item name="tabIndicatorHeight">4dp</item>
-        <item name="tabSelectedTextColor">@color/colorRedPrimary</item>
+        <item name="tabSelectedTextColor">@color/colorWhite</item>
         <item name="tabTextColor">@color/colorWhite</item>
         <item name="tabTextAppearance">@style/MyCustomTabTextAppearance</item>
     </style>

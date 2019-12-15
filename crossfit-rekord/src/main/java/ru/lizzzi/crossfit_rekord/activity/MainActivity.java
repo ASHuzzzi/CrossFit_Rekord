@@ -23,6 +23,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -128,6 +130,9 @@ public class MainActivity extends AppCompatActivity implements
     private void initNotificationCounter() {
         textNotificationCounter =
                 (TextView) navigationView.getMenu().findItem(R.id.notification).getActionView();
+        textNotificationCounter.setGravity(Gravity.CENTER_VERTICAL);
+        textNotificationCounter.setTypeface(null, Typeface.BOLD);
+        textNotificationCounter.setTextColor(getResources().getColor(R.color.colorRedPrimary));
     }
 
     @Override
@@ -190,7 +195,9 @@ public class MainActivity extends AppCompatActivity implements
                             int result = intent.getIntExtra(PARAM_RESULT, 0);
                             if (result > 0) {
                                 initializeCountDrawer();
-                                drawer.openDrawer(GravityCompat.START   );
+                                drawer.openDrawer(GravityCompat.START);
+                                Animation animation = AnimationUtils.loadAnimation(MainActivity.this, R.anim.pulse);
+                                textNotificationCounter.setAnimation(animation);
                                 Toast toast = Toast.makeText(
                                         MainActivity.this,
                                         "Появились свежие новости!",
@@ -216,9 +223,6 @@ public class MainActivity extends AppCompatActivity implements
         new Thread(new Runnable() {
             public void run() {
                 int unreadNotifications = viewModel.getUnreadNotifications();
-                textNotificationCounter.setGravity(Gravity.CENTER_VERTICAL);
-                textNotificationCounter.setTypeface(null, Typeface.BOLD);
-                textNotificationCounter.setTextColor(getResources().getColor(R.color.colorRedPrimary));
                 textNotificationCounter.setText(
                         (unreadNotifications > 0)
                         ? String.valueOf(unreadNotifications)

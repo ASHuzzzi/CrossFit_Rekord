@@ -123,8 +123,9 @@
         android:layout_below="@+id/Layout_Button_Day_of_Week"
         android:layout_centerVertical="true"
         android:layout_marginBottom="20dp"
+        android:layoutAnimation="@anim/layout_animation_fall_down"
         android:paddingStart="30dp"
-        android:paddingEnd="30dp"/>
+        android:paddingEnd="30dp" />
 
     <LinearLayout
         android:id="@+id/linLayError"

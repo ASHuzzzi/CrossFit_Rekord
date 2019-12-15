@@ -2,7 +2,8 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="10dp">
 
     <LinearLayout
         android:id="@+id/captionTrainingList"
@@ -13,7 +14,6 @@
         android:paddingTop="3dp"
         android:paddingLeft="29dp"
         android:paddingBottom="3dp"
-        android:layout_marginTop="10dp"
         android:paddingRight="29dp">
 
         <TextView
@@ -24,8 +24,7 @@
             android:layout_weight="1"
             android:gravity="center_horizontal"
             android:text="@string/date"
-            android:textColor="@color/colorPrimaryDark"
-            android:textStyle="bold"/>
+            android:textColor="@color/colorWhite"/>
 
         <TextView
             android:id="@+id/textWodLevel"
@@ -35,8 +34,7 @@
             android:layout_weight="1"
             android:text="@string/level"
             android:gravity="center_horizontal"
-            android:textColor="@color/colorPrimaryDark"
-            android:textStyle="bold"/>
+            android:textColor="@color/colorWhite"/>
 
         <TextView
             android:id="@+id/textWod"
@@ -46,8 +44,7 @@
             android:layout_weight="1"
             android:text="@string/result"
             android:gravity="center_horizontal"
-            android:textColor="@color/colorPrimaryDark"
-            android:textStyle="bold"/>
+            android:textColor="@color/colorWhite"/>
 
     </LinearLayout>
 
@@ -58,8 +55,8 @@
         android:layout_below="@id/captionTrainingList"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="10dp"
+        android:layout_marginRight="20dp"
         android:layout_marginBottom="20dp"
-        android:layout_marginRight="20dp">
-    </android.support.v7.widget.RecyclerView>
+        android:layoutAnimation="@anim/layout_animation_fall_down"></android.support.v7.widget.RecyclerView>
 
 </RelativeLayout>

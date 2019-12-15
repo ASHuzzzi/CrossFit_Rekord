@@ -282,12 +282,13 @@ public class BackendlessQueries {
         }
     }
 
-    public String userRegistration(String userName, String email, String password) {
+    public String userRegistration(String userName, String userSurname, String email, String password) {
         try {
             BackendlessUser backendlessUser = new BackendlessUser();
             backendlessUser.setEmail(email);
             backendlessUser.setPassword(password);
-            backendlessUser.setProperty("name", userName);
+            backendlessUser.setProperty(TABLE_USERS_USER_NAME, userName);
+            backendlessUser.setProperty(TABLE_USERS_SURNAME, userSurname);
             backendlessUser = Backendless.UserService.register(backendlessUser);
             return backendlessUser.getObjectId();
         } catch (BackendlessException exception) {

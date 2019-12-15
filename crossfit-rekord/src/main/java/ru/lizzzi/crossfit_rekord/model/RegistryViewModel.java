@@ -29,27 +29,29 @@ public class RegistryViewModel extends AndroidViewModel {
         super(application);
     }
 
-    public LiveData<Boolean> registered(
-            final String userName,
-            final String userEmail,
-            final String userPassword) {
+    public LiveData<Boolean> registered(final String userName,
+                                        final String userSurname,
+                                        final String userEmail,
+                                        final String userPassword) {
         final MutableLiveData<Boolean> liveData = new MutableLiveData<>();
         executor.execute(new Runnable() {
             @Override
             public void run() {
                 BackendlessQueries backendlessQuery = new BackendlessQueries();
-                String userID = backendlessQuery.userRegistration(userName, userEmail, userPassword);
+                String userID = backendlessQuery.userRegistration(userName, userSurname, userEmail, userPassword);
                 if (userID != null) {
                     String APP_PREFERENCES = "audata";
                     String APP_PREFERENCES_EMAIL = "Email";
                     String APP_PREFERENCES_PASSWORD = "Password";
                     String APP_PREFERENCES_OBJECTID = "ObjectId";
                     String APP_PREFERENCES_USERNAME = "Username";
+                    String APP_PREFERENCES_USERSURNAME = "Usersurname";
                     SharedPreferences sharedPreferences = getApplication().getSharedPreferences(
                             APP_PREFERENCES,
                             Context.MODE_PRIVATE);
                     sharedPreferences.edit()
                             .putString(APP_PREFERENCES_USERNAME, userName)
+                            .putString(APP_PREFERENCES_USERSURNAME, userSurname)
                             .putString(APP_PREFERENCES_EMAIL, userEmail)
                             .putString(APP_PREFERENCES_PASSWORD, userPassword)
                             .putString(APP_PREFERENCES_OBJECTID, userID)

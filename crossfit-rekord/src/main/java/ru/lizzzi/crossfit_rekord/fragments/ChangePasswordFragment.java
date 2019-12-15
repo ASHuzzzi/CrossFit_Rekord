@@ -44,11 +44,11 @@ public class ChangePasswordFragment extends Fragment {
         viewModel = ViewModelProviders.of(ChangePasswordFragment.this)
                 .get(ChangePasswordViewModel.class);
 
-        editOldPassword = view.findViewById(R.id.etPasswordOld);
-        editNewPassword = view.findViewById(R.id.etPasswordNew);
-        editRepeatPassword = view.findViewById(R.id.etPasswordRepeat);
-        progressBar = view.findViewById(R.id.pbChangePassword);
-        buttonChangePassword = view.findViewById(R.id.btnChangePassword);
+        editOldPassword = view.findViewById(R.id.editPasswordOld);
+        editNewPassword = view.findViewById(R.id.editPasswordNew);
+        editRepeatPassword = view.findViewById(R.id.editPasswordRepeat);
+        progressBar = view.findViewById(R.id.progressBar);
+        buttonChangePassword = view.findViewById(R.id.buttonChangePassword);
 
         buttonChangePassword.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -51,7 +51,7 @@
         android:layout_marginEnd="10dp"
         android:longClickable="false"
         app:mcv_allowClickDaysOutsideCurrentMonth="false"
-        app:mcv_arrowColor="@color/colorRedPrimary"
+        app:mcv_arrowColor="@color/colorWhite"
         app:mcv_calendarMode="month"
         app:mcv_dateTextAppearance="@style/CalendarStyle"
         app:mcv_headerTextAppearance="@style/calendarHeaderStyle"
