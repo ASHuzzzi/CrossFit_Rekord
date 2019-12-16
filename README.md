@@ -5,61 +5,61 @@
 Стартовый экран приложения:
 
 <p align="center">
-<a> <img src="https://user-images.githubusercontent.com/25584477/55539450-566e5f80-56c9-11e9-8143-e44938a3c1cb.png"  height="283" width="160"> </a>
-<a> <img src="https://user-images.githubusercontent.com/25584477/56209520-75bba400-605c-11e9-92c3-66420dc50ccc.png"  height="283" width="160"> </a>
+<a> <img src="https://user-images.githubusercontent.com/25584477/70885382-c61f4300-1fe9-11ea-9286-9c88a69a10a1.png"  height="283" width="160"> </a>
+<a> <img src="https://user-images.githubusercontent.com/25584477/70885384-c6b7d980-1fe9-11ea-9174-007d2ea86785.png"  height="283" width="160"> </a>
 </p>
 
-### Что уже умеет приложение:
+### Что умеет приложение:
 * авторизация/регистрация пользователя (через стандартные формы почта/пароль). 
 * показывать расписание зала (на выбранный день недели);
 
 <p align="center">
-<a> <img src="https://user-images.githubusercontent.com/25584477/70217986-3e1c7c00-1753-11ea-953f-5293e787820f.png"  height="283" width="160"> </a>
+<a> <img src="https://user-images.githubusercontent.com/25584477/70885385-c6b7d980-1fe9-11ea-85d0-d5eedbe076b0.png"  height="283" width="160"> </a>
 <align="center">
-<a> <img src="https://user-images.githubusercontent.com/25584477/70217975-3ceb4f00-1753-11ea-934f-f214633087af.png"  height="283" width="160"> </a>
+<a> <img src="https://user-images.githubusercontent.com/25584477/70885386-c6b7d980-1fe9-11ea-89da-d731c741e776.png"  height="283" width="160"> </a>
 </p>
 
 * записать пользователя на тренировку (с выбором дня и времени тренировки, но не далее чем за три дня до неё);
 
 <p align="center">
-<a> <img src="https://user-images.githubusercontent.com/25584477/70218475-1aa60100-1754-11ea-95c0-e65cf75a746c.png"  height="283" width="160"> </a>
+<a> <img src="https://user-images.githubusercontent.com/25584477/70885387-c7507000-1fe9-11ea-92b4-ec8ff4f0c98b.png"  height="283" width="160"> </a>
 <align="center">
-<a> <img src="https://user-images.githubusercontent.com/25584477/70217973-3ceb4f00-1753-11ea-8c24-91142be9e523.png"  height="283" width="160"> </a>
+<a> <img src="https://user-images.githubusercontent.com/25584477/70885388-c7507000-1fe9-11ea-999e-9c201595b82b.png"  height="283" width="160"> </a>
 </p>
 
 
 * посмотреть комплексы прошедших тренировок. Внести свои результаты тренировки, а также посмотреть результаты других пользователей;
 
 <p align="center">
-<a> <img src="https://user-images.githubusercontent.com/25584477/70217984-3e1c7c00-1753-11ea-9430-daa46c5905c8.png"  height="283" width="160"> </a>
-<a> <img src="https://user-images.githubusercontent.com/25584477/70217982-3d83e580-1753-11ea-8dd0-94d34cbfd693.png"  height="283" width="160"> </a>
-<a> <img src="https://user-images.githubusercontent.com/25584477/70217981-3d83e580-1753-11ea-946e-e7c227c8aa3f.png"  height="283" width="160"> </a>
+<a> <img src="https://user-images.githubusercontent.com/25584477/70885390-c7507000-1fe9-11ea-9ab4-4d06f58a9d01.png"  height="283" width="160"> </a>
+<a> <img src="https://user-images.githubusercontent.com/25584477/70885392-c7507000-1fe9-11ea-8d77-bbddc0a11de2.png"  height="283" width="160"> </a>
+<a> <img src="https://user-images.githubusercontent.com/25584477/70885393-c7e90680-1fe9-11ea-98c6-8f945cb347cb.png"  height="283" width="160"> </a>
 </p>
 
 * просмотр новостей от зала (пока только текст). Загрузка новостей происходит в фоне через сервис при старте приложения;
 
 <p align="center">
-<a> <img src="https://user-images.githubusercontent.com/25584477/70217980-3d83e580-1753-11ea-926d-98c720912415.png"  height="283" width="160"> </a>
+<a> <img src="https://user-images.githubusercontent.com/25584477/70885394-c7e90680-1fe9-11ea-9de8-33b8675e190a.png"  height="283" width="160"> </a>
 </p>
 
 
 * предоставляет аналитику по базовым метрикам;
 <p align="center">
-<a> <img src="https://user-images.githubusercontent.com/25584477/69321561-6638b500-0c54-11ea-92da-7f9034c6e02a.png"  height="283" width="160"> </a>
+<a> <img src="https://user-images.githubusercontent.com/25584477/70885396-c7e90680-1fe9-11ea-8652-a2f08a120e4a.png"  height="283" width="160"> </a>
 </p>
 
 * посмотреть/изменить данные пользователя;
 * имеется небольшой словарь с терминами по кроссфиту (пока только в виде текста);
 
 <p align="center">
-<a> <img src="https://user-images.githubusercontent.com/25584477/70217979-3ceb4f00-1753-11ea-8a86-c051ba17f99c.png"  height="283" width="160"> </a>
-<a> <img src="https://user-images.githubusercontent.com/25584477/69123642-f2ab7200-0ab2-11ea-8b57-bcc12ef5970d.png"  height="283" width="160"> </a>
+<a> <img src="https://user-images.githubusercontent.com/25584477/70885397-c7e90680-1fe9-11ea-8c4e-6324cb7e16a6.png"  height="283" width="160"> </a>
+<a> <img src="https://user-images.githubusercontent.com/25584477/70885398-c7e90680-1fe9-11ea-8164-09a7f303e425.png"  height="283" width="160"> </a>
 </p>
 
 * имеется форма для сохранения одноповторных максимумов основных упражнений по тяжелой атлетике;
 
 <p align="center">
-<a> <img src="https://user-images.githubusercontent.com/25584477/69123639-f2ab7200-0ab2-11ea-9f5d-e8b1d6ea955b.png"  height="283" width="160"> </a>
+<a> <img src="https://user-images.githubusercontent.com/25584477/70885399-c8819d00-1fe9-11ea-84c4-783b3e5ecc6a.png"  height="283" width="160"> </a>
 </p>
 
 В качестве бэкенда используется [Backendless](https://backendless.com/)
