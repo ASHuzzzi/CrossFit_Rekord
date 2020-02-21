@@ -19,6 +19,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import ru.lizzzi.crossfit_rekord.items.ExerciseItem;
+
 public class SQLiteStorageUserResult extends SQLiteOpenHelper {
 
     private static String DATABASE_NAME = "MyResult.db";
@@ -205,22 +207,22 @@ public class SQLiteStorageUserResult extends SQLiteOpenHelper {
         }
     }
 
-    public void setResult(String exercise, String result) {
+    public void saveResult(ExerciseItem exerciseItem) {
         database = this.getWritableDatabase();
         ContentValues newValues = new ContentValues();
-        newValues.put(MyResultDB.EXERCISE, exercise);
-        newValues.put(MyResultDB.RESULT, result);
+        newValues.put(MyResultDB.EXERCISE, exerciseItem.getExercise());
+        newValues.put(MyResultDB.RESULT, exerciseItem.getResult());
         database.update(
                 MyResultDB.TABLE_NAME,
                 newValues,
                 MyResultDB.EXERCISE + "= ?",
-                new String[]{exercise});
+                new String[]{exerciseItem.getExercise()});
         database.close();
     }
 
-    public List<Map<String, String>> getResult() {
+    public List<ExerciseItem> getListExercises() {
         database = this.getReadableDatabase();
-        List<Map<String, String>> results = new ArrayList<>();
+        List<ExerciseItem> listExercises = new ArrayList<>();
 
         Cursor cursor = database.query(
                 MyResultDB.TABLE_NAME,
@@ -237,21 +239,21 @@ public class SQLiteStorageUserResult extends SQLiteOpenHelper {
             String result;
             String unit;
             do {
-                Map<String, String> exerciseResult =  new HashMap<>();
                 exercise = cursor.getString(cursor.getColumnIndex(MyResultDB.EXERCISE));
                 exerciseRu = cursor.getString(cursor.getColumnIndex(MyResultDB.EXERCISE_RU));
                 result = cursor.getString(cursor.getColumnIndex(MyResultDB.RESULT));
                 unit = cursor.getString(cursor.getColumnIndex(MyResultDB.UNIT));
-                exerciseResult.put(MyResultDB.RESULT, result);
-                exerciseResult.put(MyResultDB.EXERCISE, exercise);
-                exerciseResult.put(MyResultDB.EXERCISE_RU, exerciseRu);
-                exerciseResult.put(MyResultDB.UNIT, unit);
-                results.add(exerciseResult);
+                ExerciseItem exerciseItem = new ExerciseItem(
+                        exercise,
+                        exerciseRu,
+                        result,
+                        unit);
+                listExercises.add(exerciseItem);
             } while (cursor.moveToNext());
             cursor.close();
         }
         database.close();
-        return results;
+        return listExercises;
     }
 
     public String getWeight() {
@@ -277,10 +279,10 @@ public class SQLiteStorageUserResult extends SQLiteOpenHelper {
     }
 
     public static final class MyResultDB implements BaseColumns {
-        private final static String TABLE_NAME = "myResult";
-        public final static String EXERCISE = "Exercise";
-        public final static String EXERCISE_RU = "ExerciseRu";
-        public final static String UNIT = "Unit";
-        public final static String RESULT = "Result";
+        final static String TABLE_NAME = "myResult";
+        final static String EXERCISE = "Exercise";
+        final static String EXERCISE_RU = "ExerciseRu";
+        final static String UNIT = "Unit";
+        final static String RESULT = "Result";
     }
 }

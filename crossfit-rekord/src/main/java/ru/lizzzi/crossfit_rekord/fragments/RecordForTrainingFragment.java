@@ -186,7 +186,8 @@ public class RecordForTrainingFragment extends Fragment {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             imageBackground.setImageDrawable(getResources().getDrawable(
-                    backgroundImage, Objects.requireNonNull(getContext()).getTheme()));
+                    backgroundImage,
+                    getActivity().getTheme()));
         } else {
             imageBackground.setImageDrawable(getResources().getDrawable(backgroundImage));
         }
@@ -216,12 +217,12 @@ public class RecordForTrainingFragment extends Fragment {
     }
 
     private void loadScheduleParnas() {
-        LiveData<Boolean> liveDataParnas = viewModel.loadScheduleParnas();
+        LiveData<Boolean> liveDataParnas = viewModel.getScheduleParnas();
         setObserveForLiveData(liveDataParnas);
     }
 
     private void loadScheduleMyzhestvo() {
-        LiveData<Boolean> liveDataMyzhestvo = viewModel.loadScheduleMyzhestvo();
+        LiveData<Boolean> liveDataMyzhestvo = viewModel.getScheduleMyzhestvo();
         setObserveForLiveData(liveDataMyzhestvo);
     }
 
@@ -242,21 +243,19 @@ public class RecordForTrainingFragment extends Fragment {
         });
     }
 
-    public void openBrowserForRecording(String startTime, String scheduleType) {
+    public void openBrowserForRecording(String startTime, String workoutType) {
         UriParser uriParser = new UriParser();
         Uri uri = uriParser.getURI(
                 viewModel.getSelectedGym(),
                 viewModel.getSelectedDayForUri(),
                 startTime,
-                scheduleType);
+                workoutType);
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
         intent.addCategory(Intent.CATEGORY_BROWSABLE);
         intent.setData(uri);
         startActivity(intent);
-        Objects.requireNonNull(getActivity()).overridePendingTransition(
-                R.anim.pull_in_right,
-                R.anim.push_out_left);
+        requireActivity().overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
     }
 
     public boolean isToday() {

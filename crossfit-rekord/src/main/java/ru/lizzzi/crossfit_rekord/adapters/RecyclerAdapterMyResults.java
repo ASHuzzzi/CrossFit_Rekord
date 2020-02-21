@@ -12,24 +12,20 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.fragments.OneRepeatHighsFragment;
-import ru.lizzzi.crossfit_rekord.items.ResultItem;
+import ru.lizzzi.crossfit_rekord.items.ExerciseItem;
 
 import static android.text.InputType.TYPE_CLASS_DATETIME;
 
-public class RecyclerAdapterMyResults
-        extends RecyclerView.Adapter<RecyclerAdapterMyResults.ViewHolder> {
+public class RecyclerAdapterMyResults extends RecyclerView.Adapter<RecyclerAdapterMyResults.ViewHolder> {
 
     private OneRepeatHighsFragment fragment;
-    private List<Map<String, String>> exercises;
-    private ResultItem item;
+    private List<ExerciseItem> exercises;
 
     public RecyclerAdapterMyResults(OneRepeatHighsFragment fragment) {
         this.fragment = fragment;
-        item = new ResultItem();
         exercises = new ArrayList<>();
     }
 
@@ -62,10 +58,10 @@ public class RecyclerAdapterMyResults
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
-        final String exercise = exercises.get(position).get(item.getExercise());
-        final String exerciseRu = exercises.get(position).get(item.getExerciseRu());
-        final String result = exercises.get(position).get(item.getResult());
-        final String unit = exercises.get(position).get(item.getUnit());
+        final String exercise = exercises.get(position).getExercise();
+        final String exerciseRu = exercises.get(position).getExerciseRu();
+        final String result = exercises.get(position).getResult();
+        final String unit = exercises.get(position).getUnit();
 
         holder.textCaptionEn.setText(exercise);
         holder.textCaptionRu.setText(exerciseRu);
@@ -84,7 +80,8 @@ public class RecyclerAdapterMyResults
                 }
 
                 if (newResult.length() > 1) {
-                    fragment.setResult(exercise, newResult);
+                    ExerciseItem exerciseItem = new ExerciseItem(exercise, exerciseRu, newResult, unit);
+                    fragment.setResult(exerciseItem);
                 }
             }
 
@@ -103,7 +100,7 @@ public class RecyclerAdapterMyResults
         return exercises.size();
     }
 
-    public void setExercises(List<Map<String, String>> exercises) {
+    public void setExercises(List<ExerciseItem> exercises) {
         this.exercises = exercises;
     }
 

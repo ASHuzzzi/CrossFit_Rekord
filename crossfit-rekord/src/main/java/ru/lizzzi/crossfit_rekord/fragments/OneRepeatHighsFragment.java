@@ -18,18 +18,20 @@ import android.widget.Toast;
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterMyResults;
 import ru.lizzzi.crossfit_rekord.interfaces.TitleChange;
+import ru.lizzzi.crossfit_rekord.items.ExerciseItem;
 import ru.lizzzi.crossfit_rekord.model.OneRepeatHighsViewModel;
 
 public class OneRepeatHighsFragment extends Fragment {
 
-    private RecyclerView recyclerResults;
+    private RecyclerView recyclerExercises;
     private EditText editMyWeightResult;
 
     private RecyclerAdapterMyResults adapter;
 
     private OneRepeatHighsViewModel viewModel;
 
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container,
                              Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.fragment_one_repeat_highs, container, false);
         viewModel =
@@ -66,10 +68,10 @@ public class OneRepeatHighsFragment extends Fragment {
         adapter = new RecyclerAdapterMyResults(OneRepeatHighsFragment.this);
         LinearLayoutManager layoutManager =
                 new LinearLayoutManager(getContext());
-        recyclerResults = rootView.findViewById(R.id.recyclerResults);
-        recyclerResults.setLayoutManager(layoutManager);
-        recyclerResults.setAdapter(adapter);
-        recyclerResults.setVisibility(View.INVISIBLE);
+        recyclerExercises = rootView.findViewById(R.id.recyclerResults);
+        recyclerExercises.setLayoutManager(layoutManager);
+        recyclerExercises.setAdapter(adapter);
+        recyclerExercises.setVisibility(View.INVISIBLE);
     }
 
     private void initButtonSaveMyResult(View rootView) {
@@ -95,16 +97,14 @@ public class OneRepeatHighsFragment extends Fragment {
         }
 
         editMyWeightResult.setText(
-                (viewModel.getMyWeight().equals("0"))
-                        ? ""
-                        : viewModel.getMyWeight());
+                (viewModel.getMyWeight().equals("0")) ? "" : viewModel.getMyWeight());
 
 
         if (adapter.isEmpty()) {
-            adapter.setExercises(viewModel.getResults());
+            adapter.setExercises(viewModel.getListExercises());
             adapter.notifyDataSetChanged();
-            recyclerResults.setVisibility(View.VISIBLE);
-            recyclerResults.setItemViewCacheSize(viewModel.getResults().size());
+            recyclerExercises.setVisibility(View.VISIBLE);
+            recyclerExercises.setItemViewCacheSize(viewModel.getListExercises().size());
         }
     }
 
@@ -113,7 +113,7 @@ public class OneRepeatHighsFragment extends Fragment {
         viewModel.saveWeight();
     }
 
-    public void setResult(String exercise, String result) {
-        viewModel.setResult(exercise, result);
+    public void setResult(ExerciseItem exerciseItem) {
+        viewModel.setResult(exerciseItem);
     }
 }

@@ -6,10 +6,11 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
+import com.backendless.exceptions.BackendlessFault;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -17,137 +18,113 @@ import java.util.concurrent.TimeUnit;
 
 import ru.lizzzi.crossfit_rekord.backendless.BackendlessQueries;
 import ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck;
+import ru.lizzzi.crossfit_rekord.items.ScheduleItem;
+import ru.lizzzi.crossfit_rekord.items.ScheduleWeekly;
+import ru.lizzzi.crossfit_rekord.interfaces.BackendlessResponseCallback;
 
 public class GymScheduleViewModel extends AndroidViewModel {
 
-    private List<List<Map>> scheduleParnas;
-    private List<List<Map>> scheduleMyzhestvo;
+    private ScheduleWeekly scheduleParnas, scheduleMyzhestvo;
     private Executor executor = new ThreadPoolExecutor(
             0,
             1,
             60,
             TimeUnit.SECONDS,
             new LinkedBlockingQueue<Runnable>());
-    private MutableLiveData<Boolean> liveDataParnas;
-    private MutableLiveData<Boolean> liveDataMyzhestvo;
+    private MutableLiveData<Boolean> liveDataParnas, liveDataMyzhestvo;
     private BackendlessQueries backendlessQuery;
     private int GYM_PARNAS = 1;
-    private int selectedDay;
-    private int selectedGym;
+    private int selectedDay, selectedGym;
 
     public GymScheduleViewModel(@NonNull Application application) {
         super(application);
         backendlessQuery = new BackendlessQueries();
         selectedDay = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
         selectedGym = GYM_PARNAS;
-        scheduleParnas = new ArrayList<>();
-        scheduleMyzhestvo = new ArrayList<>();
     }
 
-    public LiveData<Boolean> loadScheduleParnas() {
+    public LiveData<Boolean> getScheduleParnas() {
         if (liveDataParnas == null) {
             liveDataParnas = new MutableLiveData<>();
         }
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                List<Map> loadedSchedule =
-                        backendlessQuery.loadingSchedule(String.valueOf(selectedGym));
-                if ((loadedSchedule != null) && !loadedSchedule.isEmpty()) {
-                    scheduleParnas = splitRawSchedule(loadedSchedule);
-                    liveDataParnas.postValue(true);
-                } else {
-                    liveDataParnas.postValue(false);
-                }
+                backendlessQuery.getScheduleWeekly(
+                        String.valueOf(selectedGym),
+                        new BackendlessResponseCallback<ScheduleWeekly>() {
+                    @Override
+                    public void handleSuccess(ScheduleWeekly scheduleWeekly) {
+                        scheduleParnas = scheduleWeekly;
+                        liveDataParnas.postValue(true);
+                    }
+
+                    @Override
+                    public void handleFault(BackendlessFault fault) {
+                        liveDataParnas.postValue(false);
+                    }
+                });
             }
         });
         return liveDataParnas;
     }
 
-    public LiveData<Boolean> loadScheduleMyzhestvo() {
+    public LiveData<Boolean> getScheduleMyzhestvo() {
         if (liveDataMyzhestvo == null) {
             liveDataMyzhestvo = new MutableLiveData<>();
         }
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                List<Map> loadedSchedule =
-                        backendlessQuery.loadingSchedule(String.valueOf(selectedGym));
-                if ((loadedSchedule != null) && !loadedSchedule.isEmpty()) {
-                    scheduleMyzhestvo = splitRawSchedule(loadedSchedule);
-                    liveDataMyzhestvo.postValue(true);
-                } else {
-                    liveDataMyzhestvo.postValue(false);
-                }
+                backendlessQuery.getScheduleWeekly(String.valueOf(selectedGym), new BackendlessResponseCallback<ScheduleWeekly>() {
+                    @Override
+                    public void handleSuccess(ScheduleWeekly scheduleWeekly) {
+                        scheduleMyzhestvo = scheduleWeekly;
+                        liveDataMyzhestvo.postValue(true);
+                    }
+
+                    @Override
+                    public void handleFault(BackendlessFault fault) {
+                        liveDataMyzhestvo.postValue(false);
+                    }
+                });
             }
         });
         return liveDataMyzhestvo;
     }
 
-    private List<List<Map>> splitRawSchedule(List<Map> loadedSchedule){
-        List<Map> scheduleMonday = new ArrayList<>();
-        List<Map> scheduleTuesday = new ArrayList<>();
-        List<Map> scheduleWednesday = new ArrayList<>();
-        List<Map> scheduleThursday = new ArrayList<>();
-        List<Map> scheduleFriday = new ArrayList<>();
-        List<Map> scheduleSaturday = new ArrayList<>();
-        List<Map> scheduleSunday = new ArrayList<>();
-        int numberOfWeekday;
-        for (int i = 0; i < loadedSchedule.size(); i++) {
-            numberOfWeekday = (int) loadedSchedule.get(i).get("day_of_week");
-            switch (numberOfWeekday){
-                case 1:
-                    scheduleMonday.add(loadedSchedule.get(i));
-                    break;
-                case 2:
-                    scheduleTuesday.add(loadedSchedule.get(i));
-                    break;
-                case 3:
-                    scheduleWednesday.add(loadedSchedule.get(i));
-                    break;
-                case 4:
-                    scheduleThursday.add(loadedSchedule.get(i));
-                    break;
-                case 5:
-                    scheduleFriday.add(loadedSchedule.get(i));
-                    break;
-                case 6:
-                    scheduleSaturday.add(loadedSchedule.get(i));
-                    break;
-                case 7:
-                    scheduleSunday.add(loadedSchedule.get(i));
-                    break;
-            }
+    public List<ScheduleItem> getSchedule() {
+        switch (selectedDay) {
+            case Calendar.SUNDAY:
+                return  (isSelectedGymParnas())
+                        ? scheduleParnas.getScheduleSunday()
+                        : scheduleMyzhestvo.getScheduleSunday();
+            case Calendar.MONDAY:
+            default:
+                return  (isSelectedGymParnas())
+                        ? scheduleParnas.getScheduleMonday()
+                        : scheduleMyzhestvo.getScheduleMonday();
+            case Calendar.TUESDAY:
+                return  (isSelectedGymParnas())
+                        ? scheduleParnas.getScheduleTuesday()
+                        : scheduleMyzhestvo.getScheduleTuesday();
+            case Calendar.WEDNESDAY:
+                return  (isSelectedGymParnas())
+                        ? scheduleParnas.getScheduleWednesday()
+                        : scheduleMyzhestvo.getScheduleWednesday();
+            case Calendar.THURSDAY:
+                return  (isSelectedGymParnas())
+                        ? scheduleParnas.getScheduleThursday()
+                        : scheduleMyzhestvo.getScheduleThursday();
+            case Calendar.FRIDAY:
+                return  (isSelectedGymParnas())
+                        ? scheduleParnas.getScheduleFriday()
+                        : scheduleMyzhestvo.getScheduleFriday();
+            case Calendar.SATURDAY:
+                return  (isSelectedGymParnas())
+                        ? scheduleParnas.getScheduleSaturday()
+                        : scheduleMyzhestvo.getScheduleSaturday();
         }
-        List<List<Map>> scheduleForGym = new ArrayList<>();
-        if (scheduleSunday.size() > 0) {
-            scheduleForGym.add(scheduleSunday);
-        }
-        if (scheduleMonday.size() > 0) {
-            scheduleForGym.add(scheduleMonday);
-        }
-        if (scheduleTuesday.size() > 0) {
-            scheduleForGym.add(scheduleTuesday);
-        }
-        if (scheduleWednesday.size() > 0) {
-            scheduleForGym.add(scheduleWednesday);
-        }
-        if (scheduleThursday.size() > 0) {
-            scheduleForGym.add(scheduleThursday);
-        }
-        if (scheduleFriday.size() > 0) {
-            scheduleForGym.add(scheduleFriday);
-        }
-        if (scheduleSaturday.size() > 0) {
-            scheduleForGym.add(scheduleSaturday);
-        }
-        return scheduleForGym;
-    }
-
-    public List<Map> getSchedule() {
-        return  (isSelectedGymParnas())
-                ? scheduleParnas.get(selectedDay - 1)
-                : scheduleMyzhestvo.get(selectedDay - 1);
     }
 
     public LiveData<Boolean> checkNetwork() {

@@ -1,41 +1,36 @@
 package ru.lizzzi.crossfit_rekord.items;
 
-import android.content.Context;
-import android.support.annotation.NonNull;
-
-import ru.lizzzi.crossfit_rekord.R;
-
 public class ScheduleItem {
-    private Context context;
 
-    public ScheduleItem(Context context) {
-        this.context = context;
+    private int gym;
+    private String description;
+    private String startTime;
+    private String type;
+
+    public ScheduleItem(
+            int gym,
+            String description,
+            String startTime,
+            String type) {
+        this.gym = gym;
+        this.description = description;
+        this.startTime = startTime;
+        this.type = type;
     }
 
-    public enum Fields {
-
-        startTime(R.string.start_time),
-        type(R.string.type);
-
-        private int fieldNameId;
-
-        Fields(int fieldNameId) {
-            this.fieldNameId = fieldNameId;
-        }
-
-        int getNameId() {
-            return fieldNameId;
-        }
-
+    public int getGym() {
+        return gym;
     }
 
-    @NonNull
+    public String getDescription() {
+        return description;
+    }
+
     public String getStartTime() {
-        return context.getString(Fields.startTime.getNameId());
+        return startTime;
     }
 
-    @NonNull
     public String getType() {
-        return context.getString(Fields.type.getNameId());
+        return type;
     }
 }

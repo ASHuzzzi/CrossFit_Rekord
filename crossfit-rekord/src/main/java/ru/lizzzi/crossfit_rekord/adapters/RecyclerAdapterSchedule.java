@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.fragments.GymScheduleFragment;
@@ -24,14 +23,12 @@ import ru.lizzzi.crossfit_rekord.items.ScheduleItem;
 import ru.lizzzi.crossfit_rekord.inspectionСlasses.BackgroundDrawable;
 
 public class RecyclerAdapterSchedule extends RecyclerView.Adapter<RecyclerAdapterSchedule.ViewHolder> {
-    private List<Map> scheduleItems;
-    private ScheduleItem item;
+    private List<ScheduleItem> scheduleItems;
     private GymScheduleFragment fragment;
     private List<Integer> daysWhenRecordingIsPossible;
 
     public RecyclerAdapterSchedule(GymScheduleFragment fragment) {
         this.fragment = fragment;
-        item = new ScheduleItem(fragment.getContext());
         scheduleItems = new ArrayList<>();
         daysWhenRecordingIsPossible = fragment.setDaysWhenRecordingIsPossible();
     }
@@ -62,8 +59,8 @@ public class RecyclerAdapterSchedule extends RecyclerView.Adapter<RecyclerAdapte
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position){
         final String startTime =
-                String.valueOf(scheduleItems.get(position).get(item.getStartTime()));
-        final String workoutType = String.valueOf(scheduleItems.get(position).get(item.getType()));
+                String.valueOf(scheduleItems.get(position).getStartTime());
+        final String workoutType = String.valueOf(scheduleItems.get(position).getType());
 
         holder.startTimeItem.setText(startTime);
         holder.typesItem.setText(workoutType);
@@ -112,7 +109,7 @@ public class RecyclerAdapterSchedule extends RecyclerView.Adapter<RecyclerAdapte
         return position;
     }
 
-    public void setScheduleItems(List<Map> scheduleItems) {
+    public void setScheduleItems(List<ScheduleItem> scheduleItems) {
         this.scheduleItems = scheduleItems;
     }
 

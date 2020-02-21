@@ -141,8 +141,7 @@ public class GymScheduleFragment extends Fragment {
 
     private void initItemsInTable(View rootView) {
         adapter = new RecyclerAdapterSchedule(GymScheduleFragment.this);
-        LinearLayoutManager layoutManager =
-                new LinearLayoutManager(getContext());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         itemsInTable = rootView.findViewById(R.id.recyclerResults);
         itemsInTable.setLayoutManager(layoutManager);
         itemsInTable.setAdapter(adapter);
@@ -231,7 +230,8 @@ public class GymScheduleFragment extends Fragment {
                 : R.drawable.background_foto_2;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             imageTable.setImageDrawable(getResources().getDrawable(
-                    backgroundImage, getActivity().getTheme()));
+                    backgroundImage,
+                    getActivity().getTheme()));
         } else {
             imageTable.setImageDrawable(getResources().getDrawable(backgroundImage));
         }
@@ -257,14 +257,12 @@ public class GymScheduleFragment extends Fragment {
     }
 
     private void loadScheduleParnas() {
-        LiveData<Boolean> liveDataParnas =
-                viewModel.loadScheduleParnas();
+        LiveData<Boolean> liveDataParnas = viewModel.getScheduleParnas();
         setObserveForLiveData(liveDataParnas);
     }
 
     private void loadScheduleMyzhestvo() {
-        LiveData<Boolean> liveDataMyzhestvo =
-                viewModel.loadScheduleMyzhestvo();
+        LiveData<Boolean> liveDataMyzhestvo = viewModel.getScheduleMyzhestvo();
         setObserveForLiveData(liveDataMyzhestvo);
     }
 
@@ -278,10 +276,7 @@ public class GymScheduleFragment extends Fragment {
                     setPressedButtons();
                     itemsInTable.setVisibility(View.VISIBLE);
                 }
-                layoutError.setVisibility(
-                        (scheduleIsLoaded)
-                                ? View.INVISIBLE
-                                : View.VISIBLE);
+                layoutError.setVisibility((scheduleIsLoaded) ? View.INVISIBLE : View.VISIBLE);
                 progressBar.setVisibility(View.INVISIBLE);
             }
         });
@@ -291,17 +286,15 @@ public class GymScheduleFragment extends Fragment {
         return viewModel.getSelectedDay();
     }
 
-    public void openBrowserForRecording(int selectedDay, String startTime, String scheduleType) {
+    public void openBrowserForRecording(int selectedDay, String startTime, String workoutType) {
         UriParser uriParser = new UriParser();
-        Uri uri = uriParser.getURI(viewModel.getSelectedGym(), selectedDay, startTime, scheduleType);
+        Uri uri = uriParser.getURI(viewModel.getSelectedGym(), selectedDay, startTime, workoutType);
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
         intent.addCategory(Intent.CATEGORY_BROWSABLE);
         intent.setData(uri);
         startActivity(intent);
-        requireActivity().overridePendingTransition(
-                R.anim.pull_in_right,
-                R.anim.push_out_left);
+        requireActivity().overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
     }
 
     public List<Integer> setDaysWhenRecordingIsPossible() {

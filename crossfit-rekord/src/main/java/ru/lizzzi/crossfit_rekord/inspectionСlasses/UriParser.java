@@ -8,11 +8,11 @@ public class UriParser {
 
     public Uri getURI(int selectedGym,
                       int selectedDay,
-                      String startTime,
-                      String selectType) {
-        String workoutType = (selectType.equals("CrossFit"))
-                ? selectType
-                : getWorkoutType(selectType);
+                      @NonNull String startTime,
+                      @NonNull String workoutType) {
+        String selectedWorkoutType = (workoutType.equals("CrossFit"))
+                ? workoutType
+                : getWorkoutType(workoutType);
 
         String selectedGymForURL = (selectedGym != 2) ? "" : "2";
 
@@ -24,10 +24,10 @@ public class UriParser {
                 + "&time="
                 + startTime
                 + "%20"
-                + workoutType);
+                + selectedWorkoutType);
     }
 
-    private String getWorkoutType(@NonNull String workoutType) {
+    private String getWorkoutType(String workoutType) {
         switch (workoutType) {
             case "Open Gym":
                 workoutType = "Open%20Gym";

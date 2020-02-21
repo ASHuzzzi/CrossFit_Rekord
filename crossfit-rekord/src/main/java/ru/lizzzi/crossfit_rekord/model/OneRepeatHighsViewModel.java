@@ -5,70 +5,52 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import ru.lizzzi.crossfit_rekord.data.SQLiteStorageUserResult;
+import ru.lizzzi.crossfit_rekord.items.ExerciseItem;
 
 public class OneRepeatHighsViewModel extends AndroidViewModel {
 
     private SQLiteStorageUserResult dbStorage;
-    private List<Map<String, String>> exercisesForShow;
-    private List<Map<String, String>> exercisesForSave;
-    private String EXERCISE = SQLiteStorageUserResult.MyResultDB.EXERCISE;
-    private String RESULT = SQLiteStorageUserResult.MyResultDB.RESULT;
+    private List<ExerciseItem> exercisesForShow;
+    private List<ExerciseItem> exercisesForSave;
     private String myWeight;
 
     public OneRepeatHighsViewModel(@NonNull Application application) {
         super(application);
         dbStorage = new SQLiteStorageUserResult(getApplication());
-        exercisesForShow = dbStorage.getResult();
+        exercisesForShow = dbStorage.getListExercises();
         exercisesForSave = new ArrayList<>();
         myWeight = dbStorage.getWeight();
     }
 
-    public List<Map<String, String>> getResults() {
+    public List<ExerciseItem> getListExercises() {
         return exercisesForShow;
     }
 
     public void saveResults() {
         for (int i = 0; i < exercisesForSave.size(); i++) {
-            String exercise = exercisesForSave.get(i).get(EXERCISE);
-            String result = exercisesForSave.get(i).get(RESULT);
-            dbStorage.setResult(exercise, result);
+            dbStorage.saveResult(exercisesForSave.get(i));
         }
     }
 
-    public void setResult(String exercise, String result) {
+    public void setResult(ExerciseItem exerciseItem) {
         if (exercisesForSave.isEmpty()) {
-            Map<String, String> exerciseResult =  new HashMap<>();
-            exerciseResult.put(RESULT, result);
-            exerciseResult.put(EXERCISE, exercise);
-            exercisesForSave.add(exerciseResult);
+            exercisesForSave.add(exerciseItem);
         } else {
-            boolean exerciseIsListed = findDuplicateThenUpdate(exercise, result);
+            boolean exerciseIsListed = findDuplicateThenUpdate(exerciseItem);
             if(!exerciseIsListed) {
-                Map<String, String> exerciseResult =  new HashMap<>();
-                exerciseResult.put(RESULT, result);
-                exerciseResult.put(EXERCISE, exercise);
-                exercisesForSave.add(exerciseResult);
-            }
-        }
-        for (int i = 0; i < exercisesForShow.size(); i++) {
-            if (exercisesForShow.get(i).containsValue(exercise)) {
-                exercisesForShow.get(i).put(RESULT, result);
+                exercisesForSave.add(exerciseItem);
             }
         }
     }
 
-    private boolean findDuplicateThenUpdate(String exercise, String result) {
+    private boolean findDuplicateThenUpdate(ExerciseItem exerciseItem) {
         for (int i = 0; i < exercisesForSave.size(); i++) {
-            for (Map.Entry<String, String> entry : exercisesForSave.get(i).entrySet()) {
-                if (entry.getValue().equals(exercise)) {
-                     exercisesForSave.get(i).put(RESULT, result);
-                     return true;
-                }
+            if (exerciseItem.getExercise().equals(exercisesForSave.get(i).getExercise())) {
+                exercisesForSave.get(i).setResult(exerciseItem.getResult());
+                return true;
             }
         }
         return false;
@@ -83,6 +65,6 @@ public class OneRepeatHighsViewModel extends AndroidViewModel {
     }
 
     public void saveWeight() {
-        dbStorage.setResult(SQLiteStorageUserResult.MY_WEIGHT, myWeight);
+        dbStorage.saveResult(new ExerciseItem(SQLiteStorageUserResult.MY_WEIGHT, "", myWeight, ""));
     }
 }

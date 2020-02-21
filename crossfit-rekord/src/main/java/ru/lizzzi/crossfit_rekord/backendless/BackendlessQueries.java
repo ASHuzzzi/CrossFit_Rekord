@@ -2,12 +2,18 @@ package ru.lizzzi.crossfit_rekord.backendless;
 
 import com.backendless.Backendless;
 import com.backendless.BackendlessUser;
+import com.backendless.async.callback.BackendlessCallback;
 import com.backendless.exceptions.BackendlessException;
+import com.backendless.exceptions.BackendlessFault;
 import com.backendless.persistence.DataQueryBuilder;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import ru.lizzzi.crossfit_rekord.items.ScheduleWeekly;
+import ru.lizzzi.crossfit_rekord.inspectionСlasses.Utils;
+import ru.lizzzi.crossfit_rekord.interfaces.BackendlessResponseCallback;
 
 public class BackendlessQueries {
 
@@ -33,11 +39,11 @@ public class BackendlessQueries {
 
     //Поля таблицы schedule
     private final String TABLE_SCHEDULE_NAME = "schedule";
-    private final String TABLE_SCHEDULE_GYM = "gym";
-    private final String TABLE_SCHEDULE_DAY_OF_WEEK = "day_of_week";
-    private final String TABLE_SCHEDULE_DESCRIPTION = "description";
-    private final String TABLE_SCHEDULE_START_TIME = "start_time";
-    private final String TABLE_SCHEDULE_TYPE = "type";
+    public final String TABLE_SCHEDULE_GYM = "gym";
+    public final String TABLE_SCHEDULE_DAY_OF_WEEK = "day_of_week";
+    public final String TABLE_SCHEDULE_DESCRIPTION = "description";
+    public final String TABLE_SCHEDULE_START_TIME = "start_time";
+    public final String TABLE_SCHEDULE_TYPE = "type";
 
     //Поля таблицы recording
     private final String TABLE_RECORDING_NAME = "recording";
@@ -89,20 +95,32 @@ public class BackendlessQueries {
         }
     }
 
-    public List<Map> loadingSchedule(String selectedGym) {
+    public void getScheduleWeekly(String selectedGym,
+                                  final BackendlessResponseCallback<ScheduleWeekly> callback) {
         //Пока никак не обрабатываю ошибки от сервера. Т.е. если данные есть, то строю список
         //если данных нет, то список не строится и выскакивает стандартная заглушка.
-        try {
-            String whereClause = TABLE_SCHEDULE_GYM + " = '" + selectedGym + "'";
-            DataQueryBuilder queryBuilder = DataQueryBuilder.create();
-            queryBuilder.setSortBy(TABLE_SCHEDULE_DAY_OF_WEEK);
-            queryBuilder.setSortBy(TABLE_SCHEDULE_START_TIME);
-            queryBuilder.setWhereClause(whereClause);
-            queryBuilder.setPageSize(100);
-            return Backendless.Data.of(TABLE_SCHEDULE_NAME).find(queryBuilder);
-        } catch (BackendlessException exception) {
-            return null;
-        }
+        String whereClause = TABLE_SCHEDULE_GYM + " = '" + selectedGym + "'";
+        DataQueryBuilder queryBuilder = DataQueryBuilder.create();
+        queryBuilder.setSortBy(TABLE_SCHEDULE_DAY_OF_WEEK);
+        queryBuilder.setSortBy(TABLE_SCHEDULE_START_TIME);
+        queryBuilder.setWhereClause(whereClause);
+        queryBuilder.setPageSize(100);
+        Backendless.Data.of(TABLE_SCHEDULE_NAME).find(queryBuilder, new BackendlessCallback<List<Map>>() {
+            @Override
+            public void handleResponse(List<Map> response) {
+                if ((response != null) && !response.isEmpty()) {
+                    ScheduleWeekly scheduleWeekly = new Utils().splitLoadedSchedule(response);
+                    callback.handleSuccess(scheduleWeekly);
+                } else {
+                    callback.handleFault(null);
+                }
+            }
+
+            @Override
+            public void handleFault(BackendlessFault fault) {
+                callback.handleFault(fault);
+            }
+        });
     }
 
     public List<Map> loadingExerciseWorkout(String selectedDay) {
