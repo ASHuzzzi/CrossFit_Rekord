@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.List;
+
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterCharacter;
 import ru.lizzzi.crossfit_rekord.data.SQLiteStorageDefinition;
@@ -21,10 +23,9 @@ public class CharacterFragment extends Fragment {
     private RecyclerAdapterCharacter adapter;
 
     @Override
-    public View onCreateView(
-            @NonNull LayoutInflater inflater,
-            ViewGroup container,
-            Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container,
+                             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_character, container, false);
 
         RecyclerView recViewCharacter = view.findViewById(R.id.rvCharacter);
@@ -46,7 +47,8 @@ public class CharacterFragment extends Fragment {
         }
 
         SQLiteStorageDefinition dbStorage = new SQLiteStorageDefinition(getContext());
-        adapter.add(dbStorage.getListCharacters());
+        List<String> listCharacters = dbStorage.getListCharacters();
+        adapter.add(listCharacters);
         adapter.notifyDataSetChanged();
 
     }

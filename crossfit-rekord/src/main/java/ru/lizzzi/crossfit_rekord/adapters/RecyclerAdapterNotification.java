@@ -1,7 +1,5 @@
 package ru.lizzzi.crossfit_rekord.adapters;
 
-import android.graphics.Typeface;
-import android.graphics.drawable.AnimationDrawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -19,7 +17,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.fragments.NotificationFragment;
@@ -28,14 +25,12 @@ import ru.lizzzi.crossfit_rekord.items.NotificationItem;
 public class RecyclerAdapterNotification
         extends RecyclerView.Adapter<RecyclerAdapterNotification.ViewHolder> {
 
-    private List<Map<String, Object>> notifications;
-    private NotificationItem item;
+    private List<NotificationItem> notifications;
     private NotificationFragment fragment;
 
     public RecyclerAdapterNotification(NotificationFragment fragment) {
         this.fragment = fragment;
         notifications = new ArrayList<>();
-        item = new NotificationItem(fragment.getContext());
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -69,10 +64,9 @@ public class RecyclerAdapterNotification
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final int itemPosition = position;
-        String dateNote = String.valueOf(notifications.get(itemPosition).get(item.getDateField()));
-        String header = String.valueOf(notifications.get(itemPosition).get(item.getHeaderField()));
-        boolean isViewed = Boolean.parseBoolean(
-                String.valueOf(notifications.get(itemPosition).get(item.getViewedField())));
+        String dateNote = String.valueOf(notifications.get(position).getDate());
+        String header = notifications.get(position).getHeader();
+        boolean isViewed = notifications.get(position).isView();
 
         long noteTime = Long.valueOf(dateNote);
 
@@ -100,16 +94,14 @@ public class RecyclerAdapterNotification
         holder.notificationLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fragment.openNotificationDataFragment(Long.valueOf(
-                        String.valueOf(notifications.get(itemPosition).get(item.getDateField()))));
+                fragment.openNotificationDataFragment(notifications.get(itemPosition).getDate());
             }
         });
 
         holder.notificationLayout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                fragment.showAlertDialog(Long.valueOf(
-                        String.valueOf(notifications.get(itemPosition).get(item.getDateField()))));
+                fragment.showAlertDialog(notifications.get(itemPosition).getDate());
                 return true;
             }
         });
@@ -129,7 +121,7 @@ public class RecyclerAdapterNotification
         return notifications.isEmpty();
     }
 
-    public void setNotifications(List<Map<String, Object>> notifications) {
+    public void setNotifications(List<NotificationItem> notifications) {
         this.notifications = notifications;
     }
 }

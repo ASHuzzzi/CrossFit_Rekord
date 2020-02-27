@@ -7,6 +7,7 @@ import java.util.Map;
 import ru.lizzzi.crossfit_rekord.backendless.BackendlessQueries;
 import ru.lizzzi.crossfit_rekord.items.ScheduleItem;
 import ru.lizzzi.crossfit_rekord.items.ScheduleWeekly;
+import ru.lizzzi.crossfit_rekord.items.WorkoutResultItem;
 
 public class Utils {
 
@@ -62,9 +63,25 @@ public class Utils {
     }
 
     private ScheduleItem getScheduleItem(Map fullScheduleItem) {
-        return new ScheduleItem(Integer.valueOf(String.valueOf(fullScheduleItem.get(backendlessQuery.TABLE_SCHEDULE_GYM))),
+        return new ScheduleItem(
+                Integer.valueOf(String.valueOf(fullScheduleItem.get(backendlessQuery.TABLE_SCHEDULE_GYM))),
                 String.valueOf(fullScheduleItem.get(backendlessQuery.TABLE_SCHEDULE_DESCRIPTION)),
                 String.valueOf(fullScheduleItem.get(backendlessQuery.TABLE_SCHEDULE_START_TIME)),
                 String.valueOf(fullScheduleItem.get(backendlessQuery.TABLE_SCHEDULE_TYPE)));
+    }
+
+    public List<WorkoutResultItem> getWorkoutResults(List<Map> loadedResults) {
+        List<WorkoutResultItem> workoutResults = new ArrayList<>();
+        for (Map resultItem: loadedResults) {
+                WorkoutResultItem workoutResultItem = new WorkoutResultItem(
+                        String.valueOf(resultItem.get(backendlessQuery.TABLE_RESULTS_USER_NAME)),
+                        String.valueOf(resultItem.get(backendlessQuery.TABLE_RESULTS_SURNAME)),
+                        String.valueOf(resultItem.get(backendlessQuery.TABLE_RESULTS_SKILL)),
+                        String.valueOf(resultItem.get(backendlessQuery.TABLE_RESULTS_USER_ID)),
+                        String.valueOf(resultItem.get(backendlessQuery.TABLE_RESULTS_WOD_LEVEL)),
+                        String.valueOf(resultItem.get(backendlessQuery.TABLE_RESULTS_WOD_RESULT)));
+                workoutResults.add(workoutResultItem);
+        }
+        return workoutResults;
     }
 }

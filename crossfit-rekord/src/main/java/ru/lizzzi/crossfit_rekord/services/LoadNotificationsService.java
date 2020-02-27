@@ -6,6 +6,7 @@ import android.os.IBinder;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -17,6 +18,7 @@ import ru.lizzzi.crossfit_rekord.activity.MainActivity;
 import ru.lizzzi.crossfit_rekord.backendless.BackendlessQueries;
 import ru.lizzzi.crossfit_rekord.data.SQLiteStorageNotification;
 import ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck;
+import ru.lizzzi.crossfit_rekord.items.NotificationItem;
 
 public class LoadNotificationsService extends Service {
 
@@ -43,9 +45,10 @@ public class LoadNotificationsService extends Service {
                     if (checkDone) {
                         String lastDateCheck = getLastDateCheck();
                         String currentTime = getCurrentTimeMillis();
-                        List<Map> notificationList = getNotificationList(lastDateCheck, currentTime);
+                        List<NotificationItem> notificationList =
+                                getNotificationList(lastDateCheck, currentTime);
                         if (notificationList != null && !notificationList.isEmpty()) {
-                            writeNotificationInLocalStorage(notificationList);
+                            saveNotificationsInLocalStorage(notificationList);
                             Intent intent = new Intent(MainActivity.BROADCAST_ACTION);
                             intent
                                     .putExtra(MainActivity.PARAM_TASK, task)
@@ -84,36 +87,38 @@ public class LoadNotificationsService extends Service {
         return dateFormat.format(currentTimeMillis);
     }
 
-    private List<Map> getNotificationList(String lastDateCheck, String currentTime) {
+    private List<NotificationItem> getNotificationList(String lastDateCheck, String currentTime) {
+        List<NotificationItem> notificationList = new ArrayList<>();
         BackendlessQueries backendlessQuery = new BackendlessQueries();
-        return backendlessQuery.downloadNotifications(lastDateCheck, currentTime);
-    }
-
-    private void writeNotificationInLocalStorage(List<Map> notificationList) {
-        SQLiteStorageNotification SQLiteStorageNotification =
-                new SQLiteStorageNotification(getApplicationContext());
-        for(int notificationItem = 0; notificationItem < notificationList.size(); notificationItem++) {
+        List<Map> downloadNotifications = backendlessQuery.downloadNotifications(
+                lastDateCheck,
+                currentTime);
+        for (Map notification: downloadNotifications) {
             try {
-                String headerNotification =
-                        String.valueOf(notificationList.get(notificationItem).get("header"));
-                String textNotification =
-                        String.valueOf(notificationList.get(notificationItem).get("text"));
-                String codeNotification =
-                        String.valueOf(notificationList.get(notificationItem).get("codeNote"));
-                String dateNotification =
-                        String.valueOf(notificationList.get(notificationItem).get("dateNote"));
+                String dateNotification = String.valueOf(notification.get(backendlessQuery.TABLE_NOTIFICATION_DATE_NOTE));
                 dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.UK);
                 Date notificationDate = dateFormat.parse(dateNotification);
                 long timeNotification = notificationDate.getTime();
-                SQLiteStorageNotification.saveNotification(
+                NotificationItem notificationItem = new NotificationItem(
+                        String.valueOf(notification.get(backendlessQuery.TABLE_NOTIFICATION_CODE_NOTE)),
                         timeNotification,
-                        headerNotification,
-                        textNotification,
-                        codeNotification,
+                        String.valueOf(notification.get(backendlessQuery.TABLE_NOTIFICATION_HEADER)),
+                        String.valueOf(notification.get(backendlessQuery.TABLE_NOTIFICATION_TEXT)),
                         false);
-            } catch (ParseException exception) {
-                exception.printStackTrace();
+                notificationList.add(notificationItem);
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
+
+        }
+        return notificationList;
+    }
+
+    private void saveNotificationsInLocalStorage(List<NotificationItem> notificationList) {
+        SQLiteStorageNotification notificationStorage =
+                new SQLiteStorageNotification(getApplicationContext());
+        for (NotificationItem notificationItem: notificationList) {
+            notificationStorage.saveNotification(notificationItem);
         }
     }
 }

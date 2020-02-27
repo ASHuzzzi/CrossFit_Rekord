@@ -16,6 +16,7 @@ import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.adapters.RecyclerAdapterDefinition;
 import ru.lizzzi.crossfit_rekord.data.SQLiteStorageDefinition;
 import ru.lizzzi.crossfit_rekord.interfaces.TitleChange;
+import ru.lizzzi.crossfit_rekord.items.TermItem;
 
 public class DefinitionFragment extends Fragment {
 
@@ -32,7 +33,7 @@ public class DefinitionFragment extends Fragment {
         selectedCharacter = (bundle != null) ? bundle.getString("tag") : "A";
 
         RecyclerView recViewDefinitions = view.findViewById(R.id.rvDefinition);
-        adapter = new RecyclerAdapterDefinition(DefinitionFragment.this);
+        adapter = new RecyclerAdapterDefinition();
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         recViewDefinitions.setLayoutManager(mLayoutManager);
         recViewDefinitions.setAdapter(adapter);
@@ -54,7 +55,7 @@ public class DefinitionFragment extends Fragment {
 
     }
 
-    private List<Map<String, String>> getListDefinitions(String selectedCharacter) {
+    private List<TermItem> getListDefinitions(String selectedCharacter) {
         SQLiteStorageDefinition dbStorage = new SQLiteStorageDefinition(getContext());
         return dbStorage.getTermsAndDefinitions(selectedCharacter);
     }

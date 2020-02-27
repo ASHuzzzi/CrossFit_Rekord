@@ -56,7 +56,7 @@ public class WodResultFragment extends Fragment {
         RecyclerView recViewUsers = rootView.findViewById(R.id.recViewUsers);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recViewUsers.setLayoutManager(layoutManager);
-        adapter = new RecyclerAdapterWorkoutDetails(WodResultFragment.this);
+        adapter = new RecyclerAdapterWorkoutDetails();
         recViewUsers.setAdapter(adapter);
     }
 
@@ -75,12 +75,12 @@ public class WodResultFragment extends Fragment {
         buttonSaveResults.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                boolean isUserResultsAvailable = viewModel.userResultsAvailable();
+                boolean isUserResultsAvailable = viewModel.userResultIsAvailable();
                 Intent intent = new Intent(view.getContext(), EnterResultActivity.class);
                 if (isUserResultsAvailable) {
-                    intent.putExtra("skill", viewModel.getUserResults().get("skill"));
-                    intent.putExtra("level", viewModel.getUserResults().get("wodLevel"));
-                    intent.putExtra("results", viewModel.getUserResults().get("wodResult"));
+                    intent.putExtra("skill", viewModel.getUserResult().getSkillResult());
+                    intent.putExtra("level", viewModel.getUserResult().getWodLevel());
+                    intent.putExtra("results", viewModel.getUserResult().getWodResult());
                 }
                 intent.putExtra("flag", isUserResultsAvailable);
                 startActivityForResult(intent, ACTIVITY_CODE);
@@ -133,14 +133,14 @@ public class WodResultFragment extends Fragment {
             @Override
             public void onChanged(Boolean isLoaded) {
                 if (isLoaded) {
-                    adapter.setWodItems(viewModel.getWorkoutResult());
+                    adapter.setWorkoutResults(viewModel.getWorkoutResult());
                     adapter.notifyDataSetChanged();
                 }
 
                 progressBar.setVisibility(View.INVISIBLE);
                 layoutMain.setVisibility(View.VISIBLE);
                 buttonSaveResults.setText(
-                        viewModel.userResultsAvailable()
+                        viewModel.userResultIsAvailable()
                                 ? R.string.strEditDeleteResult
                                 : R.string.strEnterResult);
             }

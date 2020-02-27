@@ -9,22 +9,17 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.fragments.WodResultFragment;
-import ru.lizzzi.crossfit_rekord.items.WorkoutDetailsItem;
-
+import ru.lizzzi.crossfit_rekord.items.WorkoutResultItem;
 
 public class RecyclerAdapterWorkoutDetails
         extends RecyclerView.Adapter<RecyclerAdapterWorkoutDetails.ViewHolder> {
 
-    private List<Map> wodItems;
-    private WorkoutDetailsItem wordkoutItem;
+    private List<WorkoutResultItem> workoutResults;
 
-    public RecyclerAdapterWorkoutDetails(WodResultFragment fragment) {
-        wordkoutItem = new WorkoutDetailsItem(fragment.getContext());
-        wodItems = new ArrayList<>();
+    public RecyclerAdapterWorkoutDetails() {
+        workoutResults = new ArrayList<>();
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -56,15 +51,11 @@ public class RecyclerAdapterWorkoutDetails
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position){
-        String userName = String.valueOf(wodItems.get(position).get(wordkoutItem.getNameField()));
-        String userSurname =
-                String.valueOf(wodItems.get(position).get(wordkoutItem.getSurnameField()));
-        String skillResult =
-                String.valueOf(wodItems.get(position).get(wordkoutItem.getSkillField()));
-        String wodLevel =
-                String.valueOf(wodItems.get(position).get(wordkoutItem.getWodLevelField()));
-        String wodResult =
-                String.valueOf(wodItems.get(position).get(wordkoutItem.getWodResultField()));
+        String userName = workoutResults.get(position).getName();
+        String userSurname = workoutResults.get(position).getSurname();
+        String skillResult = workoutResults.get(position).getSkillResult();
+        String wodLevel = workoutResults.get(position).getWodLevel();
+        String wodResult = workoutResults.get(position).getWodResult();
 
         holder.userName.setText(userName);
         holder.userSurname.setText(userSurname);
@@ -80,14 +71,14 @@ public class RecyclerAdapterWorkoutDetails
 
     @Override
     public int getItemCount() {
-        return wodItems.size();
+        return workoutResults.size();
     }
 
-    public void setWodItems(List<Map> wodItems) {
-        this.wodItems = wodItems;
+    public void setWorkoutResults(List<WorkoutResultItem> workoutResults) {
+        this.workoutResults = workoutResults;
     }
 
     public boolean isEmpty() {
-        return wodItems.isEmpty();
+        return workoutResults.isEmpty();
     }
 }

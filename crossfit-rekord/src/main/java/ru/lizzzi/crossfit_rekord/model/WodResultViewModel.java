@@ -9,7 +9,6 @@ import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executor;
@@ -19,6 +18,8 @@ import java.util.concurrent.TimeUnit;
 
 import ru.lizzzi.crossfit_rekord.backendless.BackendlessQueries;
 import ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck;
+import ru.lizzzi.crossfit_rekord.inspectionСlasses.Utils;
+import ru.lizzzi.crossfit_rekord.items.WorkoutResultItem;
 
 public class WodResultViewModel extends AndroidViewModel {
 
@@ -28,14 +29,14 @@ public class WodResultViewModel extends AndroidViewModel {
             60,
             TimeUnit.SECONDS,
             new LinkedBlockingQueue<Runnable>());
-    private Map<String,String> userResults;
+    private WorkoutResultItem userResult;
     private SharedPreferences sharedPreferences;
-    private List<Map> workoutResult;
+    private List<WorkoutResultItem> workoutResults;
 
     public WodResultViewModel(@NonNull Application application) {
         super(application);
-        userResults = new HashMap<>();
-        workoutResult = new ArrayList<>();
+        userResult = new WorkoutResultItem("", "", "", "", "", "");
+        workoutResults = new ArrayList<>();
     }
 
     public LiveData<Boolean> loadingWorkoutResult() {
@@ -46,27 +47,24 @@ public class WodResultViewModel extends AndroidViewModel {
                 BackendlessQueries backendlessQuery = new BackendlessQueries();
                 String APP_PREFERENCES = "audata";
                 String APP_PREFERENCES_SELECTEDDAY = "SelectedDay";
+                String APP_PREFERENCES_OBJECTID = "ObjectId";
                 sharedPreferences = getApplication().getSharedPreferences(
                         APP_PREFERENCES,
                         Context.MODE_PRIVATE);
-                String selectedDay = sharedPreferences.getString(
-                        APP_PREFERENCES_SELECTEDDAY,
-                        "");
-                workoutResult = backendlessQuery.loadingWorkoutResults(selectedDay);
-                for (int i = 0; i < workoutResult.size(); i++) {
-                    String APP_PREFERENCES_OBJECTID = "ObjectId";
-                    String currentUserId =
-                            sharedPreferences.getString(APP_PREFERENCES_OBJECTID, "");
-                    if (workoutResult.get(i).containsValue(currentUserId)) {
-                        userResults.put(
-                                "skill",
-                                String.valueOf(workoutResult.get(i).get("skill")));
-                        userResults.put(
-                                "wodLevel",
-                                String.valueOf(workoutResult.get(i).get("wod_level")));
-                        userResults.put(
-                                "wodResult",
-                                String.valueOf(workoutResult.get(i).get("wod_result")));
+                String selectedDay = sharedPreferences.getString(APP_PREFERENCES_SELECTEDDAY, "");
+                String currentUserId = sharedPreferences.getString(APP_PREFERENCES_OBJECTID, "");
+                List<Map> rawLoadedResults = backendlessQuery.loadingWorkoutResults(selectedDay);
+                workoutResults = new Utils().getWorkoutResults(rawLoadedResults);
+                for (WorkoutResultItem resultItem: workoutResults) {
+                    if (resultItem.getUserId().equals(currentUserId)) {
+                        userResult = new WorkoutResultItem(
+                                resultItem.getName(),
+                                resultItem.getSurname(),
+                                resultItem.getSkillResult(),
+                                resultItem.getUserId(),
+                                resultItem.getWodLevel(),
+                                resultItem.getWodResult()
+                        );
                     }
                 }
                 liveData.postValue(true);
@@ -88,15 +86,15 @@ public class WodResultViewModel extends AndroidViewModel {
         return liveDataConnection;
     }
 
-    public Map<String, String> getUserResults() {
-        return userResults;
+    public WorkoutResultItem getUserResult() {
+        return userResult;
     }
 
-    public boolean userResultsAvailable() {
-        return !userResults.isEmpty();
+    public boolean userResultIsAvailable() {
+        return !userResult.isEmpty();
     }
 
-    public List<Map> getWorkoutResult() {
-        return workoutResult;
+    public List<WorkoutResultItem> getWorkoutResult() {
+        return workoutResults;
     }
 }

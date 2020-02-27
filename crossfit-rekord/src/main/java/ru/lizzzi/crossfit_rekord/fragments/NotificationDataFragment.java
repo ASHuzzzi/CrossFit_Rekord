@@ -22,12 +22,10 @@ public class NotificationDataFragment extends Fragment {
     private NotificationDataViewModel viewModel;
 
     @Override
-    public View onCreateView(
-            @NonNull LayoutInflater inflater,
-            ViewGroup container,
-            Bundle savedInstanceState) {
-        View view =
-                inflater.inflate(R.layout.fragment_notificationdata, container, false);
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_notificationdata, container, false);
         viewModel = ViewModelProviders.of(NotificationDataFragment.this)
                 .get(NotificationDataViewModel.class);
 
@@ -35,12 +33,15 @@ public class NotificationDataFragment extends Fragment {
         textHeader = view.findViewById(R.id.tvHeaderNotificationND);
         textText = view.findViewById(R.id.tvTextNotificationND);
 
-        viewModel.getNotification(getArguments());
+        if (getArguments() != null) {
+            long dateNote = getArguments().getLong("dateNote");
+            viewModel.getNotification(dateNote);
+        }
         return view;
     }
 
     @Override
-    public  void onStart() {
+    public void onStart() {
         super.onStart();
         TitleChange listenerTitleChange = (TitleChange) getActivity();
         if (listenerTitleChange != null) {

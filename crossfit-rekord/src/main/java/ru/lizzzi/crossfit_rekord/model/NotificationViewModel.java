@@ -8,13 +8,13 @@ import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import ru.lizzzi.crossfit_rekord.data.SQLiteStorageNotification;
+import ru.lizzzi.crossfit_rekord.items.NotificationItem;
 
 public class NotificationViewModel extends AndroidViewModel {
 
@@ -25,12 +25,12 @@ public class NotificationViewModel extends AndroidViewModel {
             TimeUnit.SECONDS,
             new LinkedBlockingQueue<Runnable>());
     private SQLiteStorageNotification dbStorage;
-    private List<Map<String, Object>> notifications;
+    private List<NotificationItem> notificationList;
 
     public NotificationViewModel(@NonNull Application application) {
         super(application);
         dbStorage = new SQLiteStorageNotification(getApplication());
-        notifications = new ArrayList<>();
+        notificationList = new ArrayList<>();
     }
 
     public LiveData<Boolean> loadNotification() {
@@ -38,18 +38,18 @@ public class NotificationViewModel extends AndroidViewModel {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                notifications = dbStorage.loadNotification();
-                liveData.postValue((notifications != null) && !notifications.isEmpty());
+                notificationList = dbStorage.getNotification();
+                liveData.postValue((notificationList != null) && !notificationList.isEmpty());
             }
         });
         return liveData;
     }
 
-    public List<Map<String, Object>> getNotifications() {
-        return notifications;
+    public List<NotificationItem> getNotificationList() {
+        return notificationList;
     }
 
-    public void deleteNotification(Long selectedDateNote) {
+    public void deleteNotification(long selectedDateNote) {
         dbStorage.deleteNotification(selectedDateNote);
     }
 }

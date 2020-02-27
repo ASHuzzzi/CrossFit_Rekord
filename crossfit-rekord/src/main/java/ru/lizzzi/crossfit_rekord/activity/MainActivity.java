@@ -222,10 +222,10 @@ public class MainActivity extends AppCompatActivity implements
     private void initializeCountDrawer() {
         new Thread(new Runnable() {
             public void run() {
-                int unreadNotifications = viewModel.getUnreadNotifications();
+                int quantityUnreadNotifications = viewModel.getQuantityUnreadNotifications();
                 textNotificationCounter.setText(
-                        (unreadNotifications > 0)
-                        ? String.valueOf(unreadNotifications)
+                        (quantityUnreadNotifications > 0)
+                        ? String.valueOf(quantityUnreadNotifications)
                         : "");
             }
         }).run();

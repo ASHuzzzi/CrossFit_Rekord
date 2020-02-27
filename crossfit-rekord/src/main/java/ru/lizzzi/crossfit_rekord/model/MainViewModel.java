@@ -17,9 +17,9 @@ public class MainViewModel extends AndroidViewModel {
         fragmentName = 0;
     }
 
-    public int getUnreadNotifications() {
+    public int getQuantityUnreadNotifications() {
         SQLiteStorageNotification dbStorage = new SQLiteStorageNotification(getApplication());
-        return dbStorage.getUnreadNotifications();
+        return dbStorage.getQuantityUnreadNotifications();
     }
 
     public int getOpenFragment() {

@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import ru.lizzzi.crossfit_rekord.backendless.BackendlessQueries;
+import ru.lizzzi.crossfit_rekord.items.WorkoutResultItem;
 
 public class SQLiteStorageWod extends SQLiteOpenHelper {
 
@@ -125,16 +126,12 @@ public class SQLiteStorageWod extends SQLiteOpenHelper {
         database.close();
     }
 
-    public void saveDate(String userId,
-                         long date,
-                         String userSkill,
-                         String wodLevel,
-                         String userWodResult) {
+    public void saveDate(long date, WorkoutResultItem workoutResult) {
         database = this.getWritableDatabase();
         String selection =
                 DbHelper.DATE_SESSION + " = '" + date
                 + "' AND " +
-                DbHelper.OBJECT_ID + " = '" + userId + "'";
+                DbHelper.OBJECT_ID + " = '" + workoutResult.getUserId() + "'";
         Cursor cursor = database.query(
                 DbHelper.TABLE_NAME,
                 null,
@@ -145,23 +142,23 @@ public class SQLiteStorageWod extends SQLiteOpenHelper {
                 null,
                 null);
         ContentValues storedValues = new ContentValues();
-        storedValues.put(DbHelper.SKILL, userSkill);
-        storedValues.put(DbHelper.WOD_LEVEL, wodLevel);
-        storedValues.put(DbHelper.WOD, userWodResult);
+        storedValues.put(DbHelper.SKILL, workoutResult.getSkillResult());
+        storedValues.put(DbHelper.WOD_LEVEL, workoutResult.getWodLevel());
+        storedValues.put(DbHelper.WOD, workoutResult.getWodResult());
         if (cursor != null && cursor.moveToFirst()) {
             String whereClause = DbHelper.DATE_SESSION + "=?";
             String[] whereArg = new String[]{ String.valueOf(date) };
             database.update(DbHelper.TABLE_NAME, storedValues, whereClause, whereArg);
             cursor.close();
         } else {
-            storedValues.put(DbHelper.OBJECT_ID, userId);
+            storedValues.put(DbHelper.OBJECT_ID, workoutResult.getUserId());
             storedValues.put(DbHelper.DATE_SESSION, date);
             database.insert(DbHelper.TABLE_NAME, null, storedValues);
         }
         database.close();
     }
 
-    public void deleteDate(String userId, long date) {
+    public void deleteDate(long date, String userId) {
         database = this.getWritableDatabase();
 
         String selection =

@@ -9,29 +9,24 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.fragments.DefinitionFragment;
-import ru.lizzzi.crossfit_rekord.items.TerminsAndDefinitionItem;
+import ru.lizzzi.crossfit_rekord.items.TermItem;
 
 public class RecyclerAdapterDefinition extends RecyclerView.Adapter<RecyclerAdapterDefinition.ViewHolder> {
 
-    private List<Map<String, String>> termsItems;
-    private TerminsAndDefinitionItem terminsAndDefinitionItem;
+    private List<TermItem> terms;
 
-    public RecyclerAdapterDefinition(DefinitionFragment fragment) {
-        termsItems = new ArrayList<>();
-        terminsAndDefinitionItem = new TerminsAndDefinitionItem(fragment.getContext());
+    public RecyclerAdapterDefinition() {
+        terms = new ArrayList<>();
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView textTermin;
+        private TextView textTerm;
         private TextView textDescription;
         ViewHolder(View view) {
             super(view);
-            textTermin = view.findViewById(R.id.termin);
+            textTerm = view.findViewById(R.id.termin);
             textDescription = view.findViewById(R.id.description);
         }
     }
@@ -48,12 +43,9 @@ public class RecyclerAdapterDefinition extends RecyclerView.Adapter<RecyclerAdap
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        final Map mapTermsOfSelectedCharacter = termsItems.get(position);
-        String termin = Objects.requireNonNull(mapTermsOfSelectedCharacter.get(
-                terminsAndDefinitionItem.getTerminFields())).toString();
-        String definition = Objects.requireNonNull(mapTermsOfSelectedCharacter.get(
-                terminsAndDefinitionItem.getDefinitionFields())).toString();
-        holder.textTermin.setText(termin);
+        String term = terms.get(position).getTerm();
+        String definition = terms.get(position).getDefinition();
+        holder.textTerm.setText(term);
         holder.textDescription.setText(definition);
     }
 
@@ -64,10 +56,10 @@ public class RecyclerAdapterDefinition extends RecyclerView.Adapter<RecyclerAdap
 
     @Override
     public int getItemCount() {
-        return termsItems.size();
+        return terms.size();
     }
 
-    public void add(List<Map<String, String>> termsItems) {
-        this.termsItems = termsItems;
+    public void add(List<TermItem> terms) {
+        this.terms = terms;
     }
 }

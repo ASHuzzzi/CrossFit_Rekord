@@ -7,11 +7,10 @@ public class ScheduleItem {
     private String startTime;
     private String type;
 
-    public ScheduleItem(
-            int gym,
-            String description,
-            String startTime,
-            String type) {
+    public ScheduleItem(int gym,
+                        String description,
+                        String startTime,
+                        String type) {
         this.gym = gym;
         this.description = description;
         this.startTime = startTime;

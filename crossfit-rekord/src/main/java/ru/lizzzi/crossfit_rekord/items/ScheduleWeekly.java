@@ -11,14 +11,13 @@ public class ScheduleWeekly {
     private List<ScheduleItem> scheduleSaturday;
     private List<ScheduleItem> scheduleSunday;
 
-    public ScheduleWeekly(
-            List<ScheduleItem> scheduleMonday,
-            List<ScheduleItem> scheduleTuesday,
-            List<ScheduleItem> scheduleWednesday,
-            List<ScheduleItem> scheduleThursday,
-            List<ScheduleItem> scheduleFriday,
-            List<ScheduleItem> scheduleSaturday,
-            List<ScheduleItem> scheduleSunday) {
+    public ScheduleWeekly(List<ScheduleItem> scheduleMonday,
+                          List<ScheduleItem> scheduleTuesday,
+                          List<ScheduleItem> scheduleWednesday,
+                          List<ScheduleItem> scheduleThursday,
+                          List<ScheduleItem> scheduleFriday,
+                          List<ScheduleItem> scheduleSaturday,
+                          List<ScheduleItem> scheduleSunday) {
         this.scheduleMonday = scheduleMonday;
         this.scheduleTuesday = scheduleTuesday;
         this.scheduleWednesday = scheduleWednesday;
@@ -55,6 +54,4 @@ public class ScheduleWeekly {
     public List<ScheduleItem> getScheduleSunday() {
         return scheduleSunday;
     }
-
-
 }

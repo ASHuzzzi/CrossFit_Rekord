@@ -1,48 +1,45 @@
 package ru.lizzzi.crossfit_rekord.items;
 
-import android.content.Context;
-import android.support.annotation.NonNull;
-
-import ru.lizzzi.crossfit_rekord.R;
-
 public class NotificationItem {
-    private Context context;
+    private String codeNote;
+    private long date;
+    private String header;
+    private String text;
+    private boolean view;
 
-    public NotificationItem(Context context) {
-        this.context = context;
+    public NotificationItem(String codeNote,
+                            long date,
+                            String header,
+                            String text,
+                            boolean view) {
+        this.codeNote = codeNote;
+        this.date = date;
+        this.header = header;
+        this.text = text;
+        this.view = view;
     }
 
-    public enum Fields {
-
-        dateNote(R.string.dateNote),
-        header(R.string.header),
-        text(R.string.text),
-        viewed(R.string.viewed);
-
-        private  int fieldNameId;
-
-        Fields(int fieldNameId) {
-            this.fieldNameId = fieldNameId;
-        }
-
-        int getFieldNameId() {
-            return fieldNameId;
-        }
+    public String getCodeNote() {
+        return codeNote;
     }
 
-    public String getDateField() {
-        return  context.getString(Fields.dateNote.getFieldNameId());
+    public long getDate() {
+        return date;
     }
 
-    public String getHeaderField() {
-        return  context.getString(Fields.header.getFieldNameId());
+    public String getHeader() {
+        return header;
     }
 
-    public String getTextField() {
-        return  context.getString(Fields.text.getFieldNameId());
+    public String getText() {
+        return text;
     }
 
-    public String getViewedField() {
-        return  context.getString(Fields.viewed.getFieldNameId());
+    public boolean isView() {
+        return view;
+    }
+
+    public void setDate(long date) {
+        this.date = date;
     }
 }

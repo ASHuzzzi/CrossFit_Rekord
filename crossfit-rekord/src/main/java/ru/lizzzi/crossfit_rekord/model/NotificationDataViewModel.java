@@ -3,65 +3,54 @@ package ru.lizzzi.crossfit_rekord.model;
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.format.DateUtils;
 
 import java.text.SimpleDateFormat;
-import java.util.List;
 import java.util.Locale;
 
 import ru.lizzzi.crossfit_rekord.activity.MainActivity;
 import ru.lizzzi.crossfit_rekord.data.SQLiteStorageNotification;
+import ru.lizzzi.crossfit_rekord.items.NotificationItem;
 
 public class NotificationDataViewModel extends AndroidViewModel {
 
-    private long notificationTime;
-    private String notificationHeader;
-    private String notificationText;
+    private NotificationItem notification;
 
     public NotificationDataViewModel(@NonNull Application application) {
         super(application);
-        notificationHeader = "";
-        notificationText = "";
-        notificationTime = 0;
-
+        notification = new NotificationItem("", 0, "", "", false);
     }
 
-    public void getNotification(Bundle bundle) {
-        notificationTime = bundle.getLong("dateNote");
+    public void getNotification(long notificationTime) {
         SQLiteStorageNotification dbStorage = new SQLiteStorageNotification(getApplication());
-        List<String> notificationProperty = dbStorage.getNotification(notificationTime);
-        if (!notificationProperty.isEmpty()) {
-            boolean isViewed = Boolean.parseBoolean(notificationProperty.get(2));
+        notification = dbStorage.getNotification(notificationTime);
+        if (!notification.getText().isEmpty()) {
+            boolean isViewed = notification.isView();
             if (!isViewed) {
-                dbStorage.updateStatusNotification(notificationTime, true);
+                dbStorage.setNotificationViewed(notification.getDate());
                 Intent intent = new Intent(MainActivity.BROADCAST_ACTION);
                 intent.putExtra(MainActivity.PARAM_TASK, MainActivity.UPDATE_NOTIFICATION);
                 intent.putExtra(MainActivity.PARAM_STATUS, MainActivity.STATUS_FINISH);
                 intent.putExtra(MainActivity.PARAM_RESULT, MainActivity.LOAD_NOTIFICATION);
                 getApplication().sendBroadcast(intent);
             }
-            notificationHeader = notificationProperty.get(0);
-            notificationText = notificationProperty.get(1);
         }
     }
 
     public String getNotificationTime() {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-                DateUtils.isToday(notificationTime)
-                        ? "HH:mm"
-                        : "d MMM yyyy"
-                , Locale.getDefault());
-        return simpleDateFormat.format(notificationTime);
+                DateUtils.isToday(notification.getDate()) ? "HH:mm" : "d MMM yyyy",
+                Locale.getDefault());
+        return simpleDateFormat.format(notification.getDate());
     }
 
     public String getNotificationHeader() {
-        return notificationHeader;
+        return notification.getHeader();
     }
 
     public String getNotificationText() {
-        return notificationText;
+        return notification.getText();
     }
 
 

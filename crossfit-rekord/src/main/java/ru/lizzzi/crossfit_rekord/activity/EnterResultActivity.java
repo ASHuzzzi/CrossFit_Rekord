@@ -128,7 +128,7 @@ public class EnterResultActivity extends AppCompatActivity {
             @Override
             public void onChanged(Boolean isConnected) {
                 if (isConnected) {
-                    LiveData<Boolean> liveData = viewModel.saveWorkoutDetails(
+                    LiveData<Boolean> liveData = viewModel.saveWorkoutResult(
                             editResultOfSkill.getText().toString(),
                             editResultOfWoD.getText().toString());
                     liveData.observe(EnterResultActivity.this, new Observer<Boolean>() {

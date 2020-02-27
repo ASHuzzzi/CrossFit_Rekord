@@ -14,9 +14,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
+import ru.lizzzi.crossfit_rekord.items.TermItem;
 
 public class SQLiteStorageDefinition extends SQLiteOpenHelper{
 
@@ -101,7 +101,7 @@ public class SQLiteStorageDefinition extends SQLiteOpenHelper{
         copyDataBase();
     }
 
-    public ArrayList<String> getListCharacters() {
+    public List<String> getListCharacters() {
         database = this.getReadableDatabase();
         ArrayList<String> listCharacter = new ArrayList<>();
         String[] columns = new  String[] {DefinitionDB.CHARACTER};
@@ -131,12 +131,10 @@ public class SQLiteStorageDefinition extends SQLiteOpenHelper{
         return listCharacter;
     }
 
-    public List<Map<String, String>> getTermsAndDefinitions(String character){
+    public List<TermItem> getTermsAndDefinitions(String character){
         database = this.getReadableDatabase();
-        List<Map<String, String>> termsOfSelectedCharacter = new ArrayList<>();
-        String[] columns = new  String[] {
-                DefinitionDB.TERMIN,
-                DefinitionDB.DESCRIPTION};
+        List<TermItem> terms = new ArrayList<>();
+        String[] columns = new  String[] { DefinitionDB.TERM, DefinitionDB.DEFINITION};
         Cursor cursor = database.query(
                 DefinitionDB.TABLE_NAME,
                 columns,
@@ -147,28 +145,23 @@ public class SQLiteStorageDefinition extends SQLiteOpenHelper{
                 null);
         if (cursor !=null && cursor.moveToFirst()) {
             do {
-                Map<String, String> itemList = new HashMap<>();
-                String termin = cursor.getString(
-                        cursor.getColumnIndex(DefinitionDB.TERMIN));
-                String description = cursor.getString(
-                        cursor.getColumnIndex(DefinitionDB.DESCRIPTION));
-                itemList.put(DefinitionDB.TERMIN, termin);
-                itemList.put(DefinitionDB.DESCRIPTION, description);
-                termsOfSelectedCharacter.add(itemList);
+                String term = cursor.getString(cursor.getColumnIndex(DefinitionDB.TERM));
+                String definition = cursor.getString(cursor.getColumnIndex(DefinitionDB.DEFINITION));
+                TermItem termItem = new TermItem(term, definition);
+                terms.add(termItem);
             } while (cursor.moveToNext());
         }
         if (cursor != null) {
             cursor.close();
         }
         database.close();
-        return termsOfSelectedCharacter;
+        return terms;
     }
 
     public static final class DefinitionDB implements BaseColumns {
-
         final static String TABLE_NAME = "definition";
-        final static String TERMIN = "termin";
-        final static String DESCRIPTION = "description";
+        final static String TERM = "termin";
+        final static String DEFINITION = "description";
         final static String CHARACTER = "character";
     }
 }

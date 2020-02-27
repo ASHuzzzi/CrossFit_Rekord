@@ -14,6 +14,7 @@ import java.util.Map;
 import ru.lizzzi.crossfit_rekord.items.ScheduleWeekly;
 import ru.lizzzi.crossfit_rekord.inspectionСlasses.Utils;
 import ru.lizzzi.crossfit_rekord.interfaces.BackendlessResponseCallback;
+import ru.lizzzi.crossfit_rekord.items.WorkoutResultItem;
 
 public class BackendlessQueries {
 
@@ -31,11 +32,11 @@ public class BackendlessQueries {
 
     //Поля таблицы notification
     private final String TABLE_NOTIFICATION_NAME = "notification";
-    private final String TABLE_NOTIFICATION_CODE_NOTE = "codeNote";
-    private final String TABLE_NOTIFICATION_DATE_NOTE = "dateNote";
-    private final String TABLE_NOTIFICATION_HEADER = "header";
-    private final String TABLE_NOTIFICATION_NUMBER_NOTE = "notification";
-    private final String TABLE_NOTIFICATION_TEXT = "text";
+    public final String TABLE_NOTIFICATION_CODE_NOTE = "codeNote";
+    public final String TABLE_NOTIFICATION_DATE_NOTE = "dateNote";
+    public final String TABLE_NOTIFICATION_HEADER = "header";
+    public final String TABLE_NOTIFICATION_NUMBER_NOTE = "notification";
+    public final String TABLE_NOTIFICATION_TEXT = "text";
 
     //Поля таблицы schedule
     private final String TABLE_SCHEDULE_NAME = "schedule";
@@ -58,10 +59,10 @@ public class BackendlessQueries {
     //Поля таблицы results
     private final String TABLE_RESULTS_NAME = "results";
     public final String TABLE_RESULTS_DATE_SESSION = "date_session";
-    private final String TABLE_RESULTS_USER_NAME = "Name";
-    private final String TABLE_RESULTS_SURNAME = "surname";
+    public final String TABLE_RESULTS_USER_NAME = "Name";
+    public final String TABLE_RESULTS_SURNAME = "surname";
     public final String TABLE_RESULTS_SKILL = "skill";
-    private final String TABLE_RESULTS_USER_ID = "ownerId";
+    public final String TABLE_RESULTS_USER_ID = "ownerId";
     public final String TABLE_RESULTS_WOD_LEVEL = "wod_level";
     public final String TABLE_RESULTS_WOD_RESULT = "wod_result";
 
@@ -217,12 +218,7 @@ public class BackendlessQueries {
 
     public boolean setWorkoutDetails(int action,
                                      String selectedDateSession,
-                                     String userId,
-                                     String userName,
-                                     String userSurname,
-                                     String userSkill,
-                                     String userWoDLevel,
-                                     String userWodResult) {
+                                     WorkoutResultItem workoutResult) {
         String tableName = TABLE_RESULTS_NAME;
         String dateSession = TABLE_RESULTS_DATE_SESSION;
         String ownerID = TABLE_RESULTS_USER_ID;
@@ -231,21 +227,20 @@ public class BackendlessQueries {
         String skill = TABLE_RESULTS_SKILL;
         String wodLevel = TABLE_RESULTS_WOD_LEVEL;
         String wodResult = TABLE_RESULTS_WOD_RESULT;
-        boolean resultOfQuery = false;
         String whereClause;
         switch (action) {
             case ACTION_SAVE:
                 Map<String, String> itemForSave = new HashMap<>();
                 itemForSave.put(dateSession, selectedDateSession);
-                itemForSave.put(ownerID, userId);
-                itemForSave.put(name, userName);
-                itemForSave.put(surname, userSurname);
-                itemForSave.put(skill, userSkill);
-                itemForSave.put(wodLevel, userWoDLevel);
-                itemForSave.put(wodResult, userWodResult);
+                itemForSave.put(ownerID, workoutResult.getUserId());
+                itemForSave.put(name, workoutResult.getName());
+                itemForSave.put(surname, workoutResult.getSurname());
+                itemForSave.put(skill, workoutResult.getSkillResult());
+                itemForSave.put(wodLevel, workoutResult.getWodLevel());
+                itemForSave.put(wodResult, workoutResult.getWodResult());
                 try {
                     Backendless.Persistence.of(tableName).save(itemForSave);
-                    resultOfQuery = true;
+                    return true;
                 } catch ( BackendlessException exception ) {
                     // failed, to get the error code, call exception.getFault().getCode()
                 }
@@ -254,34 +249,34 @@ public class BackendlessQueries {
                 whereClause =
                         dateSession + " = '" + selectedDateSession +
                         "' and " +
-                        ownerID + " = '" + userId + "'";
+                        ownerID + " = '" + workoutResult.getUserId() + "'";
                 try {
                     Backendless.Persistence.of(tableName).remove(whereClause);
-                    resultOfQuery = true;
+                    return true;
                 } catch (BackendlessException exception) {
                     // failed, to get the error code, call exception.getFault().getCode()
                 }
                 break;
             case ACTION_UPLOAD:
                 Map<String, Object> itemForUpdate = new HashMap<>();
-                itemForUpdate.put(name, userName);
-                itemForUpdate.put(surname, userSurname);
-                itemForUpdate.put(skill, userSkill);
-                itemForUpdate.put(wodLevel, userWoDLevel);
-                itemForUpdate.put(wodResult, userWodResult);
+                itemForUpdate.put(name,workoutResult.getName());
+                itemForUpdate.put(surname, workoutResult.getSurname());
+                itemForUpdate.put(skill, workoutResult.getSkillResult());
+                itemForUpdate.put(wodLevel, workoutResult.getWodLevel());
+                itemForUpdate.put(wodResult, workoutResult.getWodLevel());
                 whereClause =
                         dateSession + " = '" + selectedDateSession +
                         "' and " +
-                        ownerID + " = '" + userId + "'";
+                        ownerID + " = '" + workoutResult.getUserId() + "'";
                 try {
                     Backendless.Persistence.of(tableName).update(whereClause, itemForUpdate);
-                    resultOfQuery = true;
+                    return true;
                 } catch (BackendlessException exception) {
                     // failed, to get the error code, call exception.getFault().getCode()
                 }
                 break;
         }
-        return resultOfQuery;
+        return false;
     }
 
     public List<Map> downloadNotifications(String dateLastCheck, String timeNow) {

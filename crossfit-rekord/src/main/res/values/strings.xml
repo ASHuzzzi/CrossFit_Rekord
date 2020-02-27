@@ -3,21 +3,6 @@
     <string name="empty"> </string>
     <string name="save">Сохранить</string>
 
-
-    <!-- Поля для составления списка по абониментам -->
-    <string name="period">period</string>
-    <string name="types_of_training">types_of_training</string>
-    <string name="price">cost</string>
-
-    <!-- Поля для составления расписания -->
-    <string name="day_of_week">day_of_week</string>
-    <string name="start_time">start_time</string>
-    <string name="type">type</string>
-    <string name="table">table</string>
-
-    <!-- Поля для составления списка по записавшимся -->
-    <string name="username">username</string>
-
     <!-- Значения для фрагмента Registry -->
     <string name="strUserNameR">Ваше имя</string>
     <string name="email">Email</string>
@@ -61,15 +46,6 @@
     <string name="error_connection1">При загрузке данных произошла ошибка.</string>
     <string name="error_connection2">Проверьте Ваше подключение к сети.</string>
     <string name="error_connection_button">Повторить попытку</string>
-
-    <!-- Поля для составления результатов тренировки -->
-    <string name="Name">Name</string>
-    <string name="Surname">surname</string>
-    <string name="skill">skill</string>
-    <string name="wod_level">wod_level</string>
-    <string name="wod_result">wod_result</string>
-
-    <string name="name">name</string>
 
     <!-- Значения для экрана Start_screen -->
     <string name="button_shedule">Расписание</string>
@@ -142,15 +118,6 @@
     <string name="strHeaderSkill">Skill</string>
     <string name="strHeaderLevel">Level</string>
     <string name="strHeaderResult">Result</string>
-
-
-    <!-- Поля для составления уведомлений -->
-    <string name="codeNote">codeNote</string>
-    <string name="dateNote">dateNote</string>
-    <string name="numberNote">numberNote</string>
-    <string name="header">header</string>
-    <string name="text">text</string>
-    <string name="viewed">viewed</string>
 
     <!-- Значения для фрагмента Contacts -->
     <string name="gymParnas">Зал Парнас</string>
@@ -283,10 +250,6 @@
     <!-- Значения для фрагмента WorkoutDetails -->
     <string name="strWorkoutDetailsTraining">Тренировка</string>
     <string name="strWorkoutDetailsResult">Результаты</string>
-
-    <!-- Значения для фрагмента DefinitionFragment -->
-    <string name="termin">termin</string>
-    <string name="description">description</string>
 
     <string name="channel_id">ru.lizzzi.crossfit_rekord.inspectionСlasses</string>
     <string name="channel_name">Общие</string>

@@ -104,7 +104,7 @@ public class NotificationFragment extends Fragment {
             @Override
             public void onChanged(Boolean notificationsIsLoaded) {
                 if (notificationsIsLoaded) {
-                    adapter.setNotifications(viewModel.getNotifications());
+                    adapter.setNotifications(viewModel.getNotificationList());
                     adapter.notifyDataSetChanged();
                     recyclerViewNotification.setVisibility(View.VISIBLE);
                 }
