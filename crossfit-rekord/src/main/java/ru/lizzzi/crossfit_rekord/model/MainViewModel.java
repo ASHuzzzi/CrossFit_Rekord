@@ -4,7 +4,7 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.support.annotation.NonNull;
 
-import ru.lizzzi.crossfit_rekord.data.SQLiteStorageNotification;
+import ru.lizzzi.crossfit_rekord.data.NotificationStorage;
 
 public class MainViewModel extends AndroidViewModel {
 
@@ -18,7 +18,7 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     public int getQuantityUnreadNotifications() {
-        SQLiteStorageNotification dbStorage = new SQLiteStorageNotification(getApplication());
+        NotificationStorage dbStorage = new NotificationStorage(getApplication());
         return dbStorage.getQuantityUnreadNotifications();
     }
 

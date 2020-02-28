@@ -14,15 +14,16 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
-import ru.lizzzi.crossfit_rekord.activity.MainActivity;
-import ru.lizzzi.crossfit_rekord.backendless.BackendlessQueries;
-import ru.lizzzi.crossfit_rekord.data.SQLiteStorageNotification;
-import ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck;
+import ru.lizzzi.crossfit_rekord.ui.activities.MainActivity;
+import ru.lizzzi.crossfit_rekord.backend.BackendApi;
+import ru.lizzzi.crossfit_rekord.data.NotificationStorage;
+import ru.lizzzi.crossfit_rekord.utils.NetworkCheck;
 import ru.lizzzi.crossfit_rekord.items.NotificationItem;
 
 public class LoadNotificationsService extends Service {
 
     SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.UK);
+    NotificationStorage dbStorage;
 
     public int onStartCommand(Intent intent, int flags, int startId) {
         int task = intent.getIntExtra(MainActivity.PARAM_TASK, 0);
@@ -40,6 +41,7 @@ public class LoadNotificationsService extends Service {
         new Thread(new Runnable() {
             public void run() {
                 for (int connectionAttempt = 0; connectionAttempt < 5; connectionAttempt++) {
+                    dbStorage = new NotificationStorage(getApplicationContext());
                     NetworkCheck network = new NetworkCheck(LoadNotificationsService.this);
                     boolean checkDone = network.checkConnection();
                     if (checkDone) {
@@ -71,7 +73,6 @@ public class LoadNotificationsService extends Service {
     }
 
     private String getLastDateCheck() {
-        SQLiteStorageNotification dbStorage = new SQLiteStorageNotification(getApplicationContext());
         long dateLastCheck = dbStorage.dateLastCheck();
         if (dateLastCheck == 0) {
             Calendar calendar = Calendar.getInstance();
@@ -89,21 +90,21 @@ public class LoadNotificationsService extends Service {
 
     private List<NotificationItem> getNotificationList(String lastDateCheck, String currentTime) {
         List<NotificationItem> notificationList = new ArrayList<>();
-        BackendlessQueries backendlessQuery = new BackendlessQueries();
-        List<Map> downloadNotifications = backendlessQuery.downloadNotifications(
+        BackendApi backendApi = new BackendApi();
+        List<Map> downloadNotifications = backendApi.downloadNotifications(
                 lastDateCheck,
                 currentTime);
         for (Map notification: downloadNotifications) {
             try {
-                String dateNotification = String.valueOf(notification.get(backendlessQuery.TABLE_NOTIFICATION_DATE_NOTE));
+                String dateNotification = String.valueOf(notification.get(backendApi.TABLE_NOTIFICATION_DATE_NOTE));
                 dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.UK);
                 Date notificationDate = dateFormat.parse(dateNotification);
                 long timeNotification = notificationDate.getTime();
                 NotificationItem notificationItem = new NotificationItem(
-                        String.valueOf(notification.get(backendlessQuery.TABLE_NOTIFICATION_CODE_NOTE)),
+                        String.valueOf(notification.get(backendApi.TABLE_NOTIFICATION_CODE_NOTE)),
                         timeNotification,
-                        String.valueOf(notification.get(backendlessQuery.TABLE_NOTIFICATION_HEADER)),
-                        String.valueOf(notification.get(backendlessQuery.TABLE_NOTIFICATION_TEXT)),
+                        String.valueOf(notification.get(backendApi.TABLE_NOTIFICATION_HEADER)),
+                        String.valueOf(notification.get(backendApi.TABLE_NOTIFICATION_TEXT)),
                         false);
                 notificationList.add(notificationItem);
             } catch (ParseException e) {
@@ -115,10 +116,8 @@ public class LoadNotificationsService extends Service {
     }
 
     private void saveNotificationsInLocalStorage(List<NotificationItem> notificationList) {
-        SQLiteStorageNotification notificationStorage =
-                new SQLiteStorageNotification(getApplicationContext());
         for (NotificationItem notificationItem: notificationList) {
-            notificationStorage.saveNotification(notificationItem);
+            dbStorage.saveNotification(notificationItem);
         }
     }
 }

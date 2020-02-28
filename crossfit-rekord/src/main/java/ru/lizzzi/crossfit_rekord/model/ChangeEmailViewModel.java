@@ -13,8 +13,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import ru.lizzzi.crossfit_rekord.backendless.BackendlessQueries;
-import ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck;
+import ru.lizzzi.crossfit_rekord.backend.BackendApi;
+import ru.lizzzi.crossfit_rekord.utils.NetworkCheck;
 
 public class ChangeEmailViewModel extends AndroidViewModel {
 
@@ -45,8 +45,8 @@ public class ChangeEmailViewModel extends AndroidViewModel {
             @Override
             public void run() {
                 String APP_PREFERENCES_PASSWORD = "Password";
-                BackendlessQueries backendlessQuery = new BackendlessQueries();
-                boolean mailChanged = backendlessQuery.changeEmail(
+                BackendApi backendApi = new BackendApi();
+                boolean mailChanged = backendApi.changeEmail(
                         userEmail,
                         userNewEmail,
                         sharedPreferences.getString(APP_PREFERENCES_PASSWORD, ""));

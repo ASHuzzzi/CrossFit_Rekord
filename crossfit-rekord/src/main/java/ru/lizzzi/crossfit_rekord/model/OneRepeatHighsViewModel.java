@@ -7,19 +7,19 @@ import android.support.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.List;
 
-import ru.lizzzi.crossfit_rekord.data.SQLiteStorageUserResult;
+import ru.lizzzi.crossfit_rekord.data.UserResultsStorage;
 import ru.lizzzi.crossfit_rekord.items.ExerciseItem;
 
 public class OneRepeatHighsViewModel extends AndroidViewModel {
 
-    private SQLiteStorageUserResult dbStorage;
+    private UserResultsStorage dbStorage;
     private List<ExerciseItem> exercisesForShow;
     private List<ExerciseItem> exercisesForSave;
     private String myWeight;
 
     public OneRepeatHighsViewModel(@NonNull Application application) {
         super(application);
-        dbStorage = new SQLiteStorageUserResult(getApplication());
+        dbStorage = new UserResultsStorage(getApplication());
         exercisesForShow = dbStorage.getListExercises();
         exercisesForSave = new ArrayList<>();
         myWeight = dbStorage.getWeight();
@@ -65,6 +65,6 @@ public class OneRepeatHighsViewModel extends AndroidViewModel {
     }
 
     public void saveWeight() {
-        dbStorage.saveResult(new ExerciseItem(SQLiteStorageUserResult.MY_WEIGHT, "", myWeight, ""));
+        dbStorage.saveResult(new ExerciseItem(UserResultsStorage.MY_WEIGHT, "", myWeight, ""));
     }
 }

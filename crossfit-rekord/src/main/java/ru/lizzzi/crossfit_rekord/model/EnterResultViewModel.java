@@ -19,9 +19,9 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.backendless.BackendlessQueries;
-import ru.lizzzi.crossfit_rekord.data.SQLiteStorageWod;
-import ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck;
+import ru.lizzzi.crossfit_rekord.backend.BackendApi;
+import ru.lizzzi.crossfit_rekord.data.WodStorage;
+import ru.lizzzi.crossfit_rekord.utils.NetworkCheck;
 import ru.lizzzi.crossfit_rekord.items.WorkoutResultItem;
 
 public class EnterResultViewModel extends AndroidViewModel {
@@ -87,15 +87,15 @@ public class EnterResultViewModel extends AndroidViewModel {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                BackendlessQueries backendlessQuery = new BackendlessQueries();
+                BackendApi backendApi = new BackendApi();
                 workoutResult.setSkillResult(skillResult);
                 workoutResult.setWodResult(wodResult);
-                boolean isDataSaved = backendlessQuery.setWorkoutDetails(
+                boolean isDataSaved = backendApi.setWorkoutDetails(
                         action,
                         selectedDay,
                         workoutResult);
                 if (isDataSaved) {
-                    SQLiteStorageWod dbStorage = new SQLiteStorageWod(getApplication());
+                    WodStorage dbStorage = new WodStorage(getApplication());
                     switch (action) {
                         case ACTION_SAVE:
                         case ACTION_UPLOAD:

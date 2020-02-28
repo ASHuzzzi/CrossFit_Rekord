@@ -14,11 +14,11 @@ import java.util.Objects;
 import java.util.TimeZone;
 
 import ru.lizzzi.crossfit_rekord.R;
-import ru.lizzzi.crossfit_rekord.data.SQLiteStorageWod;
+import ru.lizzzi.crossfit_rekord.data.WodStorage;
 
 public class MyResultViewModel extends AndroidViewModel {
 
-    private SQLiteStorageWod storage;
+    private WodStorage dbStorage;
     private Map<String, String> lastTraining;
     private List<String> wodLevels;
     private int quantityTrainingThisMonth;
@@ -29,7 +29,7 @@ public class MyResultViewModel extends AndroidViewModel {
 
     public MyResultViewModel(@NonNull Application application) {
         super(application);
-        storage = new SQLiteStorageWod(getApplication());
+        dbStorage = new WodStorage(getApplication());
         prepareData();
     }
 
@@ -52,11 +52,11 @@ public class MyResultViewModel extends AndroidViewModel {
     }
 
     private void calculationOfWorkoutsPerMonth() {
-        quantityTrainingThisMonth = storage.getTrainingQuantity(startThisMonth, endThisMonth);
+        quantityTrainingThisMonth = dbStorage.getTrainingQuantity(startThisMonth, endThisMonth);
     }
 
     private void calculationOfWorkoutsPreviousMonth() {
-        quantityTrainingPreviousMonth = storage.getTrainingQuantity(startPreviousMonth, startThisMonth);
+        quantityTrainingPreviousMonth = dbStorage.getTrainingQuantity(startPreviousMonth, startThisMonth);
     }
 
     public int getMonthlyTraining() {
@@ -68,7 +68,7 @@ public class MyResultViewModel extends AndroidViewModel {
     }
 
     private void getWodLevelForMonth() {
-        wodLevels = storage.getLevelsTrainingForPeriod(startThisMonth, endThisMonth);
+        wodLevels = dbStorage.getLevelsTrainingForPeriod(startThisMonth, endThisMonth);
     }
 
     public int getScLevel() {
@@ -90,29 +90,29 @@ public class MyResultViewModel extends AndroidViewModel {
     }
 
     private void loadLastTraining() {
-        lastTraining = storage.getLastTraining();
+        lastTraining = dbStorage.getLastTraining();
     }
 
     public boolean isLastTrainingEmpty() {
-        return Objects.requireNonNull(lastTraining.get(SQLiteStorageWod.DATE_SESSION))
-                .equals(String.valueOf(SQLiteStorageWod.EMPTY_VALUE));
+        return Objects.requireNonNull(lastTraining.get(WodStorage.DATE_SESSION))
+                .equals(String.valueOf(WodStorage.EMPTY_VALUE));
     }
 
     public String getDateSession() {
-        return lastTraining.get(SQLiteStorageWod.DATE_SESSION);
+        return lastTraining.get(WodStorage.DATE_SESSION);
     }
 
     public String getWodLevel() {
-        return lastTraining.get(SQLiteStorageWod.WOD_LEVEL);
+        return lastTraining.get(WodStorage.WOD_LEVEL);
     }
 
     public String getWod() {
-        return lastTraining.get(SQLiteStorageWod.WOD);
+        return lastTraining.get(WodStorage.WOD);
     }
 
     public void saveDateInPrefs() {
         long dateSession =
-                Long.parseLong(Objects.requireNonNull(lastTraining.get(SQLiteStorageWod.DATE_SESSION)));
+                Long.parseLong(Objects.requireNonNull(lastTraining.get(WodStorage.DATE_SESSION)));
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(dateSession);
         String Day = (calendar.get(Calendar.DATE) < 10)

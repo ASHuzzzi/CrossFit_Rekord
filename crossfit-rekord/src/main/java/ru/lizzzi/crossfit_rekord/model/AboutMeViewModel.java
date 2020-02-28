@@ -13,8 +13,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import ru.lizzzi.crossfit_rekord.backendless.BackendlessQueries;
-import ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck;
+import ru.lizzzi.crossfit_rekord.backend.BackendApi;
+import ru.lizzzi.crossfit_rekord.utils.NetworkCheck;
 
 public class AboutMeViewModel extends AndroidViewModel {
 
@@ -51,8 +51,8 @@ public class AboutMeViewModel extends AndroidViewModel {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                BackendlessQueries backendlessQuery = new BackendlessQueries();
-                boolean loggedIn = backendlessQuery.saveUserData(
+                BackendApi backendApi = new BackendApi();
+                boolean loggedIn = backendApi.saveUserData(
                         sharedPreferences.getString(APP_PREFERENCES_EMAIL, ""),
                         sharedPreferences.getString(APP_PREFERENCES_PASSWORD, ""),
                         userName,

@@ -11,8 +11,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import ru.lizzzi.crossfit_rekord.backendless.BackendlessQueries;
-import ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck;
+import ru.lizzzi.crossfit_rekord.backend.BackendApi;
+import ru.lizzzi.crossfit_rekord.utils.NetworkCheck;
 
 public class PasswordRecoveryViewModel extends AndroidViewModel {
 
@@ -32,8 +32,8 @@ public class PasswordRecoveryViewModel extends AndroidViewModel {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                BackendlessQueries backendlessQuery = new BackendlessQueries();
-                boolean passwordRecovered = backendlessQuery.recoverPassword(userEmail);
+                BackendApi backendApi = new BackendApi();
+                boolean passwordRecovered = backendApi.recoverPassword(userEmail);
                 liveData.postValue(passwordRecovered);
             }
         });

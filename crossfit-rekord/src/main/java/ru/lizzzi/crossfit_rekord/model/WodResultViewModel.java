@@ -16,9 +16,9 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import ru.lizzzi.crossfit_rekord.backendless.BackendlessQueries;
-import ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck;
-import ru.lizzzi.crossfit_rekord.inspectionСlasses.Utils;
+import ru.lizzzi.crossfit_rekord.backend.BackendApi;
+import ru.lizzzi.crossfit_rekord.utils.NetworkCheck;
+import ru.lizzzi.crossfit_rekord.utils.Utils;
 import ru.lizzzi.crossfit_rekord.items.WorkoutResultItem;
 
 public class WodResultViewModel extends AndroidViewModel {
@@ -44,7 +44,7 @@ public class WodResultViewModel extends AndroidViewModel {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                BackendlessQueries backendlessQuery = new BackendlessQueries();
+                BackendApi backendApi = new BackendApi();
                 String APP_PREFERENCES = "audata";
                 String APP_PREFERENCES_SELECTEDDAY = "SelectedDay";
                 String APP_PREFERENCES_OBJECTID = "ObjectId";
@@ -53,7 +53,7 @@ public class WodResultViewModel extends AndroidViewModel {
                         Context.MODE_PRIVATE);
                 String selectedDay = sharedPreferences.getString(APP_PREFERENCES_SELECTEDDAY, "");
                 String currentUserId = sharedPreferences.getString(APP_PREFERENCES_OBJECTID, "");
-                List<Map> rawLoadedResults = backendlessQuery.loadingWorkoutResults(selectedDay);
+                List<Map> rawLoadedResults = backendApi.loadingWorkoutResults(selectedDay);
                 workoutResults = new Utils().getWorkoutResults(rawLoadedResults);
                 for (WorkoutResultItem resultItem: workoutResults) {
                     if (resultItem.getUserId().equals(currentUserId)) {

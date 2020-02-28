@@ -2,7 +2,7 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="ru.lizzzi.crossfit_rekord.activity.EnterResultActivity">
+    tools:context=".ui.activities.EnterResultActivity">
 
     <item
         android:id="@+id/delete"

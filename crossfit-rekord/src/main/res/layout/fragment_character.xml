@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="ru.lizzzi.crossfit_rekord.fragments.CharacterFragment">
+    tools:context=".ui.fragments.CharacterFragment">
 
     <TextView
         android:id="@+id/textView5"

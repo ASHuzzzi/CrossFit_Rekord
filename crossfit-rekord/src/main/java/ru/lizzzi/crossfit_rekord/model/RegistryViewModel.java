@@ -13,8 +13,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import ru.lizzzi.crossfit_rekord.backendless.BackendlessQueries;
-import ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck;
+import ru.lizzzi.crossfit_rekord.backend.BackendApi;
+import ru.lizzzi.crossfit_rekord.utils.NetworkCheck;
 
 public class RegistryViewModel extends AndroidViewModel {
 
@@ -37,8 +37,8 @@ public class RegistryViewModel extends AndroidViewModel {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                BackendlessQueries backendlessQuery = new BackendlessQueries();
-                String userID = backendlessQuery.userRegistration(userName, userSurname, userEmail, userPassword);
+                BackendApi backendApi = new BackendApi();
+                String userID = backendApi.userRegistration(userName, userSurname, userEmail, userPassword);
                 if (userID != null) {
                     String APP_PREFERENCES = "audata";
                     String APP_PREFERENCES_EMAIL = "Email";

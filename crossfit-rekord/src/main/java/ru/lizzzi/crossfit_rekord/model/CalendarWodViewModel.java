@@ -24,13 +24,13 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import ru.lizzzi.crossfit_rekord.backendless.BackendlessQueries;
-import ru.lizzzi.crossfit_rekord.data.SQLiteStorageWod;
-import ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck;
+import ru.lizzzi.crossfit_rekord.backend.BackendApi;
+import ru.lizzzi.crossfit_rekord.data.WodStorage;
+import ru.lizzzi.crossfit_rekord.utils.NetworkCheck;
 
 public class CalendarWodViewModel  extends AndroidViewModel {
 
-    private SQLiteStorageWod dbStorage;
+    private WodStorage dbStorage;
 
     private List<Date> selectDates;
     private MutableLiveData<Boolean> liveData;
@@ -58,7 +58,7 @@ public class CalendarWodViewModel  extends AndroidViewModel {
                 APP_PREFERENCES,
                 Context.MODE_PRIVATE);
         userObjectID = sharedPreferences.getString(APP_PREFERENCES_OBJECTID, "");
-        dbStorage = new SQLiteStorageWod(getApplication());
+        dbStorage = new WodStorage(getApplication());
         calendar = Calendar.getInstance();
     }
 
@@ -68,8 +68,8 @@ public class CalendarWodViewModel  extends AndroidViewModel {
             @Override
             public void run() {
                 boolean datesIsLoading = false;
-                BackendlessQueries backendlessQuery = new BackendlessQueries();
-                List<Map> trainingResults = backendlessQuery.loadingCalendarWod(
+                BackendApi backendApi = new BackendApi();
+                List<Map> trainingResults = backendApi.loadingCalendarWod(
                         userObjectID,
                         timeStart,
                         timeFinish);
@@ -81,7 +81,7 @@ public class CalendarWodViewModel  extends AndroidViewModel {
                             Locale.ENGLISH);
                     for (int i = 0; i < trainingResults.size(); i++) {
                         String dateInStringFormat = String.valueOf(
-                                trainingResults.get(i).get(backendlessQuery.TABLE_RESULTS_DATE_SESSION));
+                                trainingResults.get(i).get(backendApi.TABLE_RESULTS_DATE_SESSION));
                         try {
                             parseDate = simpleDateFormat.parse(dateInStringFormat);
                             datesForLoadInLocalDb.add(parseDate);

@@ -9,8 +9,8 @@ import android.text.format.DateUtils;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-import ru.lizzzi.crossfit_rekord.activity.MainActivity;
-import ru.lizzzi.crossfit_rekord.data.SQLiteStorageNotification;
+import ru.lizzzi.crossfit_rekord.ui.activities.MainActivity;
+import ru.lizzzi.crossfit_rekord.data.NotificationStorage;
 import ru.lizzzi.crossfit_rekord.items.NotificationItem;
 
 public class NotificationDataViewModel extends AndroidViewModel {
@@ -23,7 +23,7 @@ public class NotificationDataViewModel extends AndroidViewModel {
     }
 
     public void getNotification(long notificationTime) {
-        SQLiteStorageNotification dbStorage = new SQLiteStorageNotification(getApplication());
+        NotificationStorage dbStorage = new NotificationStorage(getApplication());
         notification = dbStorage.getNotification(notificationTime);
         if (!notification.getText().isEmpty()) {
             boolean isViewed = notification.isView();

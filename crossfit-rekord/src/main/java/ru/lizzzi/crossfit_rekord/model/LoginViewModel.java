@@ -14,8 +14,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import ru.lizzzi.crossfit_rekord.backendless.BackendlessQueries;
-import ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck;
+import ru.lizzzi.crossfit_rekord.backend.BackendApi;
+import ru.lizzzi.crossfit_rekord.utils.NetworkCheck;
 
 public class LoginViewModel extends AndroidViewModel {
 
@@ -44,8 +44,8 @@ public class LoginViewModel extends AndroidViewModel {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                BackendlessQueries backendlessQuery = new BackendlessQueries();
-                Map<String, String> user = backendlessQuery.authUser(userEmail, userPassword);
+                BackendApi backendApi = new BackendApi();
+                Map<String, String> user = backendApi.authUser(userEmail, userPassword);
                 if (user != null) {
                     sharedPreferences = getApplication().getSharedPreferences(
                             APP_PREFERENCES,

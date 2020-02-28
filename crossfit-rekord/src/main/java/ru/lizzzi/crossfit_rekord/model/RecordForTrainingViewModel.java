@@ -16,11 +16,11 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import ru.lizzzi.crossfit_rekord.backendless.BackendlessQueries;
-import ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck;
+import ru.lizzzi.crossfit_rekord.backend.BackendApi;
+import ru.lizzzi.crossfit_rekord.utils.NetworkCheck;
 import ru.lizzzi.crossfit_rekord.items.ScheduleItem;
 import ru.lizzzi.crossfit_rekord.items.ScheduleWeekly;
-import ru.lizzzi.crossfit_rekord.interfaces.BackendlessResponseCallback;
+import ru.lizzzi.crossfit_rekord.interfaces.BackendResponseCallback;
 
 public class RecordForTrainingViewModel extends AndroidViewModel {
     private ScheduleWeekly scheduleParnas, scheduleMyzhestvo;
@@ -31,7 +31,7 @@ public class RecordForTrainingViewModel extends AndroidViewModel {
             TimeUnit.SECONDS,
             new LinkedBlockingQueue<Runnable>());
     private MutableLiveData<Boolean> liveDataParnas, liveDataMyzhestvo;
-    private BackendlessQueries backendlessQuery;
+    private BackendApi backendApi;
     private int GYM_PARNAS = 1;
     private int selectedDay, selectedDayForUri, selectedGym;
     private boolean isToday;
@@ -41,7 +41,7 @@ public class RecordForTrainingViewModel extends AndroidViewModel {
 
     public RecordForTrainingViewModel(@NonNull Application application) {
         super(application);
-        backendlessQuery = new BackendlessQueries();
+        backendApi = new BackendApi();
         calendar = Calendar.getInstance();
         selectedDay = calendar.get(Calendar.DAY_OF_WEEK);
         today = new Date();
@@ -61,7 +61,7 @@ public class RecordForTrainingViewModel extends AndroidViewModel {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                backendlessQuery.getScheduleWeekly(String.valueOf(selectedGym), new BackendlessResponseCallback<ScheduleWeekly>() {
+                backendApi.getScheduleWeekly(String.valueOf(selectedGym), new BackendResponseCallback<ScheduleWeekly>() {
                     @Override
                     public void handleSuccess(ScheduleWeekly scheduleWeekly) {
                         scheduleParnas = scheduleWeekly;
@@ -85,7 +85,7 @@ public class RecordForTrainingViewModel extends AndroidViewModel {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                backendlessQuery.getScheduleWeekly(String.valueOf(selectedGym), new BackendlessResponseCallback<ScheduleWeekly>() {
+                backendApi.getScheduleWeekly(String.valueOf(selectedGym), new BackendResponseCallback<ScheduleWeekly>() {
                     @Override
                     public void handleSuccess(ScheduleWeekly scheduleWeekly) {
                         scheduleMyzhestvo = scheduleWeekly;

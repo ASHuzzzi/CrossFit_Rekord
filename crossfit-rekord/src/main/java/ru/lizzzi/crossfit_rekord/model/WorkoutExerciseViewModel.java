@@ -20,8 +20,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import ru.lizzzi.crossfit_rekord.backendless.BackendlessQueries;
-import ru.lizzzi.crossfit_rekord.inspectionСlasses.NetworkCheck;
+import ru.lizzzi.crossfit_rekord.backend.BackendApi;
+import ru.lizzzi.crossfit_rekord.utils.NetworkCheck;
 
 public class WorkoutExerciseViewModel extends AndroidViewModel {
 
@@ -57,8 +57,8 @@ public class WorkoutExerciseViewModel extends AndroidViewModel {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                BackendlessQueries backendlessQuery = new BackendlessQueries();
-                List<Map> resultQuery = backendlessQuery.loadingExerciseWorkout(selectedDay);
+                BackendApi backendApi = new BackendApi();
+                List<Map> resultQuery = backendApi.loadingExerciseWorkout(selectedDay);
                 Map<String, String> wod = new HashMap<>();
                 if (resultQuery != null && !resultQuery.isEmpty()) {
                     wod.put(WARM_UP,

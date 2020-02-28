@@ -10,18 +10,18 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
-import ru.lizzzi.crossfit_rekord.data.SQLiteStorageWod;
+import ru.lizzzi.crossfit_rekord.data.WodStorage;
 
 public class TrainingListViewModel extends AndroidViewModel {
 
-    private SQLiteStorageWod storage;
+    private WodStorage dbStorage;
     private long timeStart;
     private long timeEnd;
 
 
     public TrainingListViewModel(@NonNull Application application) {
         super(application);
-        storage = new SQLiteStorageWod(getApplication());
+        dbStorage = new WodStorage(getApplication());
         timeStart = timeEnd = Calendar.getInstance().getTimeInMillis();
     }
 
@@ -34,7 +34,7 @@ public class TrainingListViewModel extends AndroidViewModel {
     }
 
     public List<Map> getTraining() {
-        return storage.getTrainingForPeriod(timeStart, timeEnd);
+        return dbStorage.getTrainingForPeriod(timeStart, timeEnd);
     }
 
     public void saveDateInPrefs(String dateOfSession) {
