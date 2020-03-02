@@ -37,7 +37,6 @@ public class EnterResultActivity extends AppCompatActivity {
     private RadioButton radioButtonSc;
     private RadioButton radioButtonRx;
     private RadioButton radioButtonRxPlus;
-    private TextView textEnterResult;
 
     private EnterResultViewModel viewModel;
 
@@ -69,7 +68,7 @@ public class EnterResultActivity extends AppCompatActivity {
     }
 
     private void initTextEnterResult() {
-        textEnterResult = findViewById(R.id.textEnterResult);
+        TextView textEnterResult = findViewById(R.id.textEnterResult);
         String enterResultText = getResources().getString(R.string.strActivityERText) + " " + viewModel.getDateForShow();
         textEnterResult.setText(enterResultText);
     }
@@ -84,13 +83,13 @@ public class EnterResultActivity extends AppCompatActivity {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId) {
                     case R.id.rbSc:
-                        viewModel.setWodLevel(getResources().getString(R.string.strActivityERLevelSc));
+                        viewModel.setWodLevel(getResources().getString(R.string.sc));
                         break;
                     case R.id.rbRx:
-                        viewModel.setWodLevel(getResources().getString(R.string.strActivityERLevelRx));
+                        viewModel.setWodLevel(getResources().getString(R.string.rx));
                         break;
                     case R.id.rbRxP:
-                        viewModel.setWodLevel(getResources().getString(R.string.strActivityERLevelRxPlus));
+                        viewModel.setWodLevel(getResources().getString(R.string.rxPlus));
                 }
             }
         });
@@ -177,7 +176,7 @@ public class EnterResultActivity extends AppCompatActivity {
             editResultOfWoD.setText(intent.getStringExtra("results"));
         } else {
             editResultOfSkill.setText("");
-            viewModel.setWodLevel(getResources().getString(R.string.strActivityERLevelSc));
+            viewModel.setWodLevel(getResources().getString(R.string.sc));
             editResultOfWoD.setText("");
         }
     }

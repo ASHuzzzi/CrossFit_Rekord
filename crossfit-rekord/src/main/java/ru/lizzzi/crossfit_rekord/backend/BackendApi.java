@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import ru.lizzzi.crossfit_rekord.items.ScheduleWeekly;
+import ru.lizzzi.crossfit_rekord.items.WodItem;
 import ru.lizzzi.crossfit_rekord.utils.Utils;
 import ru.lizzzi.crossfit_rekord.interfaces.BackendResponseCallback;
 import ru.lizzzi.crossfit_rekord.items.WorkoutResultItem;
@@ -21,14 +22,14 @@ public class BackendApi {
     //Поля таблицы exercises
     private final String TABLE_EXERCISES_NAME = "exercises";
     private final String TABLE_EXERCISES_CORE = "core";
-    private final String TABLE_EXERCISES_DATE_SESSION = "date_session";
-    private final String TABLE_EXERCISES_POSTWORKOUT = "postworkout";
-    private final String TABLE_EXERCISES_SC = "Sc";
-    private final String TABLE_EXERCISES_RX = "Rx";
-    private final String TABLE_EXERCISES_RX_PLUS = "Rxplus";
-    private final String TABLE_EXERCISES_SKILL = "skill";
-    private final String TABLE_EXERCISES_WARMUP = "warmup";
-    private final String TABLE_EXERCISES_WOD = "wod";
+    public final String TABLE_EXERCISES_DATE_SESSION = "date_session";
+    public final String TABLE_EXERCISES_POSTWORKOUT = "postworkout";
+    public final String TABLE_EXERCISES_SC = "Sc";
+    public final String TABLE_EXERCISES_RX = "Rx";
+    public final String TABLE_EXERCISES_RX_PLUS = "Rxplus";
+    public final String TABLE_EXERCISES_SKILL = "skill";
+    public final String TABLE_EXERCISES_WARMUP = "warmup";
+    public final String TABLE_EXERCISES_WOD = "wod";
 
     //Поля таблицы notification
     private final String TABLE_NOTIFICATION_NAME = "notification";
@@ -124,16 +125,28 @@ public class BackendApi {
         });
     }
 
-    public List<Map> loadingExerciseWorkout(String selectedDay) {
-        try {
-            String whereClause = TABLE_EXERCISES_DATE_SESSION + " = '" + selectedDay + "'" ;
-            DataQueryBuilder queryBuilder = DataQueryBuilder.create();
-            queryBuilder.setWhereClause(whereClause);
-            queryBuilder.setPageSize(100);
-            return Backendless.Data.of(TABLE_EXERCISES_NAME).find(queryBuilder);
-        } catch (BackendlessException exception) {
-            return null;
-        }
+    public void loadingExerciseWorkout(String selectedDay,
+                                       final BackendResponseCallback<WodItem> callback) {
+        String whereClause = TABLE_EXERCISES_DATE_SESSION + " = '" + selectedDay + "'" ;
+        DataQueryBuilder queryBuilder = DataQueryBuilder.create();
+        queryBuilder.setWhereClause(whereClause);
+        queryBuilder.setPageSize(100);
+        Backendless.Data.of(TABLE_EXERCISES_NAME).find(queryBuilder, new BackendlessCallback<List<Map>>() {
+            @Override
+            public void handleResponse(List<Map> response) {
+                if ((response != null) && !response.isEmpty()) {
+                    WodItem wod = new Utils().getExercise(response.get(0));
+                    callback.handleSuccess(wod);
+                } else {
+                    callback.handleFault(null);
+                }
+            }
+
+            @Override
+            public void handleFault(BackendlessFault fault) {
+                callback.handleFault(fault);
+            }
+        });
     }
 
     public List<Map> loadingWorkoutResults(String selectedDay) {

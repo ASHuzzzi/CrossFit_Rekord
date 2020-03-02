@@ -15,9 +15,8 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import java.util.Map;
-
 import ru.lizzzi.crossfit_rekord.R;
+import ru.lizzzi.crossfit_rekord.items.WodItem;
 import ru.lizzzi.crossfit_rekord.model.WorkoutExerciseViewModel;
 
 public class WorkoutExerciseFragment extends Fragment {
@@ -95,7 +94,7 @@ public class WorkoutExerciseFragment extends Fragment {
             layoutMain.setVisibility(View.INVISIBLE);
             layoutEmptyData.setVisibility(View.INVISIBLE);
             layoutError.setVisibility(View.INVISIBLE);
-            if (viewModel.canShowWodDetails()) {
+            if (viewModel.canShowWod()) {
                 checkNetworkConnection();
             } else {
                 textEmptyData.setText(getResources().getText(R.string.TL1NoTime1));
@@ -123,13 +122,13 @@ public class WorkoutExerciseFragment extends Fragment {
     }
 
     private void loadWorkoutExercise() {
-        LiveData<Map<String, String>> liveData = viewModel.getWorkout();
-        liveData.observe(WorkoutExerciseFragment.this, new Observer<Map<String, String>>() {
+        LiveData<WodItem> liveData = viewModel.getWorkout();
+        liveData.observe(WorkoutExerciseFragment.this, new Observer<WodItem>() {
             @Override
-            public void onChanged(Map<String, String> wodOfDay) {
+            public void onChanged(WodItem wodItem) {
                 progressBar.setVisibility(View.INVISIBLE);
-                if (wodOfDay != null && !wodOfDay.isEmpty()) {
-                    showWorkoutExercise(wodOfDay);
+                if (wodItem != null && !wodItem.isEmpty()) {
+                    showWorkoutExercise(wodItem);
                 } else {
                     textEmptyData.setText(getResources().getText(R.string.TL1NoData1));
                     layoutEmptyData.setVisibility(View.VISIBLE);
@@ -138,56 +137,56 @@ public class WorkoutExerciseFragment extends Fragment {
         });
     }
 
-    private void showWorkoutExercise(Map<String, String> wodOfDay) {
+    private void showWorkoutExercise(WodItem wodOfDay) {
         layoutMain.setVisibility(View.VISIBLE);
 
-        if (viewModel.checkMapValueOnEmptiness(wodOfDay, WorkoutExerciseViewModel.WARM_UP)) {
+        if (wodOfDay.getWarmUp().isEmpty()) {
             cardWarmUp.setVisibility(View.GONE);
         } else {
             cardWarmUp.setVisibility(View.VISIBLE);
-            textWarmUp.setText(wodOfDay.get(WorkoutExerciseViewModel.WARM_UP));
+            textWarmUp.setText(wodOfDay.getWarmUp());
         }
 
-        if (viewModel.checkMapValueOnEmptiness(wodOfDay, WorkoutExerciseViewModel.SKILL)) {
+        if (wodOfDay.getSkill().isEmpty()) {
             cardSkill.setVisibility(View.GONE);
         } else {
             cardSkill.setVisibility(View.VISIBLE);
-            textSkill.setText(wodOfDay.get(WorkoutExerciseViewModel.SKILL));
+            textSkill.setText(wodOfDay.getSkill());
         }
 
-        if (viewModel.checkMapValueOnEmptiness(wodOfDay, WorkoutExerciseViewModel.WOD)) {
+        if (wodOfDay.getWod().isEmpty()) {
             cardWOD.setVisibility(View.GONE);
         } else {
             cardWOD.setVisibility(View.VISIBLE);
-            textWOD.setText(wodOfDay.get(WorkoutExerciseViewModel.WOD));
+            textWOD.setText(wodOfDay.getWod());
         }
 
-        if (viewModel.checkMapValueOnEmptiness(wodOfDay, WorkoutExerciseViewModel.SC)) {
+        if (wodOfDay.getSc().isEmpty()) {
             cardSc.setVisibility(View.GONE);
         } else {
             cardSc.setVisibility(View.VISIBLE);
-            textLevelSc.setText(wodOfDay.get(WorkoutExerciseViewModel.SC));
+            textLevelSc.setText(wodOfDay.getSc());
         }
 
-        if (viewModel.checkMapValueOnEmptiness(wodOfDay, WorkoutExerciseViewModel.RX)) {
+        if (wodOfDay.getRx().isEmpty()) {
             cardRx.setVisibility(View.GONE);
         } else {
             cardRx.setVisibility(View.VISIBLE);
-            textLevelRx.setText(wodOfDay.get(WorkoutExerciseViewModel.RX));
+            textLevelRx.setText(wodOfDay.getRx());
         }
 
-        if (viewModel.checkMapValueOnEmptiness(wodOfDay, WorkoutExerciseViewModel.RX_PLUS)) {
+        if (wodOfDay.getRxPlus().isEmpty()) {
             cardRxPlus.setVisibility(View.GONE);
         } else {
             cardRxPlus.setVisibility(View.VISIBLE);
-            textLevelRxPlus.setText(wodOfDay.get(WorkoutExerciseViewModel.RX_PLUS));
+            textLevelRxPlus.setText(wodOfDay.getRxPlus());
         }
 
-        if (viewModel.checkMapValueOnEmptiness(wodOfDay, WorkoutExerciseViewModel.POST_WORKOUT)) {
+        if (wodOfDay.getPostWorkout().isEmpty()) {
             cardPostWorkout.setVisibility(View.GONE);
         } else {
             cardPostWorkout.setVisibility(View.VISIBLE);
-            textPostWorkout.setText(wodOfDay.get(WorkoutExerciseViewModel.POST_WORKOUT));
+            textPostWorkout.setText(wodOfDay.getPostWorkout());
         }
     }
 }

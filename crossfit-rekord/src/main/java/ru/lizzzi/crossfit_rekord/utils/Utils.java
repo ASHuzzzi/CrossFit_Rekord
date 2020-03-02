@@ -1,12 +1,17 @@
 package ru.lizzzi.crossfit_rekord.utils;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import ru.lizzzi.crossfit_rekord.backend.BackendApi;
 import ru.lizzzi.crossfit_rekord.items.ScheduleItem;
 import ru.lizzzi.crossfit_rekord.items.ScheduleWeekly;
+import ru.lizzzi.crossfit_rekord.items.WodItem;
 import ru.lizzzi.crossfit_rekord.items.WorkoutResultItem;
 
 public class Utils {
@@ -83,5 +88,46 @@ public class Utils {
                 workoutResults.add(workoutResultItem);
         }
         return workoutResults;
+    }
+
+    public WodItem getExercise(Map loadedExercise) {
+        String emptyText = "";
+        return new WodItem(
+                loadedExercise.get(backendApi.TABLE_EXERCISES_DATE_SESSION) == null
+                        ? 0
+                        : getDateAsLong(String.valueOf(loadedExercise.get(backendApi.TABLE_EXERCISES_DATE_SESSION))),
+                loadedExercise.get(backendApi.TABLE_EXERCISES_POSTWORKOUT) == null
+                        ? emptyText
+                        : String.valueOf(loadedExercise.get(backendApi.TABLE_EXERCISES_POSTWORKOUT)),
+                loadedExercise.get(backendApi.TABLE_EXERCISES_RX) == null
+                        ? emptyText
+                        : String.valueOf(loadedExercise.get(backendApi.TABLE_EXERCISES_RX)),
+                loadedExercise.get(backendApi.TABLE_EXERCISES_RX_PLUS) == null
+                        ? emptyText
+                        : String.valueOf(loadedExercise.get(backendApi.TABLE_EXERCISES_RX_PLUS)),
+                loadedExercise.get(backendApi.TABLE_EXERCISES_SC) == null
+                        ? emptyText
+                        : String.valueOf(loadedExercise.get(backendApi.TABLE_EXERCISES_SC)),
+                loadedExercise.get(backendApi.TABLE_EXERCISES_SKILL) == null
+                        ? emptyText
+                        : String.valueOf(loadedExercise.get(backendApi.TABLE_EXERCISES_SKILL)),
+                loadedExercise.get(backendApi.TABLE_EXERCISES_WARMUP) == null
+                        ? emptyText
+                        : String.valueOf(loadedExercise.get(backendApi.TABLE_EXERCISES_WARMUP)),
+                loadedExercise.get(backendApi.TABLE_EXERCISES_WOD) == null
+                        ? emptyText
+                        : String.valueOf(loadedExercise.get(backendApi.TABLE_EXERCISES_WOD))
+                );
+    }
+
+    private long getDateAsLong(String dateAsString) {
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.UK);
+            Date date = dateFormat.parse(dateAsString);
+            return date.getTime();
+        } catch (ParseException e) {
+            return 0;
+        }
+
     }
 }

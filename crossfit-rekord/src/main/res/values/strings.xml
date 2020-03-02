@@ -147,27 +147,22 @@
     <string name="EmptyListTV2">Покажи пример - будь первым!</string>
 
     <!-- Значения для фрагмента WorkoutExerciseFragment -->
-    <string name="TL1WarmUp">Warm-Up</string>
-    <string name="TL1Skill">Skill</string>
-    <string name="TL1WOD">WOD</string>
-    <string name="TL1Sc">Sc</string>
-    <string name="TL1Rx">Rx</string>
-    <string name="TL1RxPlus">Rx+</string>
-    <string name="TL1PostWorkout">Post-Workout</string>
     <string name="TL1NoData1">Данных по тренировке пока нет.</string>
     <string name="TL1NoData2">Но ты уже можешь записать свои результаты</string>
     <string name="TL1NoData3">для этого сдвинь экран влево.</string>
     <string name="TL1NoTime1">Комплекс будет выложен после 21:00.</string>
 
+    <string name="wod">WOD</string>
+    <string name="sc">Sc</string>
+    <string name="rx">Rx</string>
+    <string name="rxPlus">Rx+</string>
+    <string name="skill">Skill</string>
+    <string name="levelWod">Level</string>
+    <string name="postWorkout">Post-Workout</string>
+    <string name="warmUp">Warm-Up</string>
+
     <!-- Значения для активити EnterResultActivity -->
     <string name="strActivityERText">Покажи чего ты достиг\nна тренировке </string>
-    <string name="strActivityERWod">WoD</string>
-    <string name="strActivityERLevel">Level</string>
-    <string name="strActivityERLevelSc">Sc</string>
-    <string name="strActivityERLevelRx">Rx</string>
-    <string name="strActivityERLevelRxPlus">Rx+</string>
-    <string name="strActivityERLevelOver">Другое</string>
-    <string name="strActivityERSkill">Skill"</string>
     <string name="strActivityERDelete">Удалить"</string>
     <string name="strActivityERSave">Сохранить"</string>
 

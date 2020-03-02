@@ -47,7 +47,7 @@ public class EnterResultViewModel extends AndroidViewModel {
 
     public EnterResultViewModel(@NonNull Application application) {
         super(application);
-        wodLevel = getApplication().getResources().getString(R.string.strActivityERLevelSc);
+        wodLevel = getApplication().getResources().getString(R.string.sc);
         action = ACTION_SAVE;
         String APP_PREFERENCES = "audata";
         SharedPreferences sharedPreferences =

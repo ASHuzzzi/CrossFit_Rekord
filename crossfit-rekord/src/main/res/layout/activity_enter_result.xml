@@ -75,7 +75,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="5dp"
                         android:gravity="center"
-                        android:text="@string/strActivityERSkill"
+                        android:text="@string/skill"
                         android:textColor="@color/colorWhite"
                         android:textStyle="bold" />
 
@@ -131,7 +131,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="5dp"
                         android:gravity="center"
-                        android:text="@string/strActivityERLevel"
+                        android:text="@string/levelWod"
                         android:textColor="@color/colorWhite"
                         android:textStyle="bold" />
 
@@ -164,7 +164,7 @@
                             android:paddingStart="10dp"
                             android:paddingEnd="0dp"
                             android:gravity="center_vertical"
-                            android:text="@string/strActivityERLevelSc"
+                            android:text="@string/sc"
                             android:textStyle="bold"
                             android:textColor="@color/radio_buttons_style"
                             android:theme="@style/MyRadioButton" />
@@ -178,7 +178,7 @@
                             android:paddingStart="10dp"
                             android:paddingEnd="0dp"
                             android:gravity="center_vertical"
-                            android:text="@string/strActivityERLevelRx"
+                            android:text="@string/rx"
                             android:textStyle="bold"
                             android:textColor="@color/radio_buttons_style"
                             android:theme="@style/MyRadioButton"
@@ -193,7 +193,7 @@
                             android:paddingStart="10dp"
                             android:paddingEnd="0dp"
                             android:gravity="center_vertical"
-                            android:text="@string/strActivityERLevelRxPlus"
+                            android:text="@string/rxPlus"
                             android:textIsSelectable="true"
                             android:textStyle="bold"
                             android:textColor="@color/radio_buttons_style"
@@ -227,7 +227,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="5dp"
                         android:gravity="center"
-                        android:text="@string/strActivityERWod"
+                        android:text="@string/wod"
                         android:textColor="@color/colorWhite"
                         android:textStyle="bold" />
 

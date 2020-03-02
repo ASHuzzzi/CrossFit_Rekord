@@ -74,19 +74,19 @@ public class MyResultViewModel extends AndroidViewModel {
     public int getScLevel() {
         return Collections.frequency(
                 wodLevels,
-                getApplication().getResources().getString(R.string.strActivityERLevelSc));
+                getApplication().getResources().getString(R.string.sc));
     }
 
     public int getRxLevel() {
         return Collections.frequency(
                 wodLevels,
-                getApplication().getResources().getString(R.string.strActivityERLevelRx));
+                getApplication().getResources().getString(R.string.rx));
     }
 
     public int getRxPlusLevel() {
         return Collections.frequency(
                 wodLevels,
-                getApplication().getResources().getString(R.string.strActivityERLevelRxPlus));
+                getApplication().getResources().getString(R.string.rxPlus));
     }
 
     private void loadLastTraining() {

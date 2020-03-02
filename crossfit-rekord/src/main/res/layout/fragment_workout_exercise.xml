@@ -44,7 +44,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="5dp"
                         android:gravity="center"
-                        android:text="@string/TL1WarmUp"
+                        android:text="@string/warmUp"
                         android:textColor="@color/colorWhite"
                         android:textSize="16sp"
                         android:textStyle="bold" />
@@ -97,7 +97,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="5dp"
                         android:gravity="center"
-                        android:text="@string/TL1Skill"
+                        android:text="@string/skill"
                         android:textColor="@color/colorWhite"
                         android:textSize="16sp"
                         android:textStyle="bold" />
@@ -150,7 +150,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="5dp"
                         android:gravity="center"
-                        android:text="@string/TL1WOD"
+                        android:text="@string/wod"
                         android:textColor="@color/colorWhite"
                         android:textSize="16sp"
                         android:textStyle="bold" />
@@ -213,7 +213,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="5dp"
                             android:gravity="center"
-                            android:text="@string/TL1Sc"
+                            android:text="@string/sc"
                             android:textColor="@color/colorWhite"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -268,7 +268,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="5dp"
                             android:gravity="center"
-                            android:text="@string/TL1Rx"
+                            android:text="@string/rx"
                             android:textColor="@color/colorWhite"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -322,7 +322,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="5dp"
                             android:gravity="center"
-                            android:text="@string/TL1RxPlus"
+                            android:text="@string/rxPlus"
                             android:textColor="@color/colorWhite"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -375,7 +375,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="5dp"
                         android:gravity="center"
-                        android:text="@string/TL1PostWorkout"
+                        android:text="@string/postWorkout"
                         android:textColor="@color/colorWhite"
                         android:textSize="16sp"
                         android:textStyle="bold" />
