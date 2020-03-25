@@ -80,21 +80,35 @@ public class BackendApi {
     private final int ACTION_DELETE = 3;
     private final int ACTION_UPLOAD = 4;
 
-    public List<Map> loadingCalendarWod(String userID, long startDate, long endDate) {
-        try {
-            String whereClause =
-                    TABLE_RESULTS_USER_ID + " = '" + userID +
-                    "' and " +
-                    TABLE_RESULTS_DATE_SESSION + " >= '" + startDate +
-                    "' and " +
-                    TABLE_RESULTS_DATE_SESSION + " <= '" + endDate + "'";
-            DataQueryBuilder queryBuilder = DataQueryBuilder.create();
-            queryBuilder.setWhereClause(whereClause);
-            queryBuilder.setPageSize(100);
-            return Backendless.Data.of(TABLE_RESULTS_NAME).find(queryBuilder);
-        } catch (BackendlessException exception) {
-            return null;
-        }
+    public void loadingCalendarWod(String userID,
+                                   long startDate,
+                                   long endDate,
+                                   final BackendResponseCallback<List<WorkoutResultItem>> callback) {
+        String whereClause =
+                TABLE_RESULTS_USER_ID + " = '" + userID +
+                "' and " +
+                TABLE_RESULTS_DATE_SESSION + " >= '" + startDate +
+                "' and " +
+                TABLE_RESULTS_DATE_SESSION + " <= '" + endDate + "'";
+        DataQueryBuilder queryBuilder = DataQueryBuilder.create();
+        queryBuilder.setWhereClause(whereClause);
+        queryBuilder.setPageSize(100);
+        Backendless.Data.of(TABLE_RESULTS_NAME).find(queryBuilder, new BackendlessCallback<List<Map>>() {
+            @Override
+            public void handleResponse(List<Map> response) {
+                if ((response != null) && !response.isEmpty()) {
+                    List<WorkoutResultItem> workoutResults = new Utils().getWorkoutResults(response);
+                    callback.handleSuccess(workoutResults);
+                } else {
+                    callback.handleFault(null);
+                }
+            }
+
+            @Override
+            public void handleFault(BackendlessFault fault) {
+                callback.handleFault(fault);
+            }
+        });
     }
 
     public void getScheduleWeekly(String selectedGym,
@@ -149,16 +163,28 @@ public class BackendApi {
         });
     }
 
-    public List<Map> loadingWorkoutResults(String selectedDay) {
-        try {
-            String whereClause = TABLE_RESULTS_DATE_SESSION + " = '" + selectedDay + "'" ;
-            DataQueryBuilder queryBuilder = DataQueryBuilder.create();
-            queryBuilder.setWhereClause(whereClause);
-            queryBuilder.setPageSize(100);
-            return Backendless.Data.of(TABLE_RESULTS_NAME).find(queryBuilder);
-        } catch (BackendlessException exception) {
-            return null;
-        }
+    public void loadingWorkoutResults(String selectedDay,
+                                      final BackendResponseCallback<List<WorkoutResultItem>> callback) {
+        String whereClause = TABLE_RESULTS_DATE_SESSION + " = '" + selectedDay + "'" ;
+        DataQueryBuilder queryBuilder = DataQueryBuilder.create();
+        queryBuilder.setWhereClause(whereClause);
+        queryBuilder.setPageSize(100);
+        Backendless.Data.of(TABLE_RESULTS_NAME).find(queryBuilder, new BackendlessCallback<List<Map>>() {
+            @Override
+            public void handleResponse(List<Map> response) {
+                if ((response != null) && !response.isEmpty()) {
+                    List<WorkoutResultItem> workoutResults = new Utils().getWorkoutResults(response);
+                    callback.handleSuccess(workoutResults);
+                } else {
+                    callback.handleFault(null);
+                }
+            }
+
+            @Override
+            public void handleFault(BackendlessFault fault) {
+                callback.handleFault(fault);
+            }
+        });
     }
 
     public Map<String, String> authUser(String email, String password) {

@@ -8,17 +8,18 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 
+import com.backendless.exceptions.BackendlessFault;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import ru.lizzzi.crossfit_rekord.backend.BackendApi;
-import ru.lizzzi.crossfit_rekord.utils.NetworkCheck;
-import ru.lizzzi.crossfit_rekord.utils.Utils;
+import ru.lizzzi.crossfit_rekord.interfaces.BackendResponseCallback;
+import ru.lizzzi.crossfit_rekord.utils.NetworkUtils;
 import ru.lizzzi.crossfit_rekord.items.WorkoutResultItem;
 
 public class WodResultViewModel extends AndroidViewModel {
@@ -35,7 +36,7 @@ public class WodResultViewModel extends AndroidViewModel {
 
     public WodResultViewModel(@NonNull Application application) {
         super(application);
-        userResult = new WorkoutResultItem("", "", "", "", "", "");
+        userResult = new WorkoutResultItem(0,"", "", "", "", "", "");
         workoutResults = new ArrayList<>();
     }
 
@@ -52,22 +53,32 @@ public class WodResultViewModel extends AndroidViewModel {
                         APP_PREFERENCES,
                         Context.MODE_PRIVATE);
                 String selectedDay = sharedPreferences.getString(APP_PREFERENCES_SELECTEDDAY, "");
-                String currentUserId = sharedPreferences.getString(APP_PREFERENCES_OBJECTID, "");
-                List<Map> rawLoadedResults = backendApi.loadingWorkoutResults(selectedDay);
-                workoutResults = new Utils().getWorkoutResults(rawLoadedResults);
-                for (WorkoutResultItem resultItem: workoutResults) {
-                    if (resultItem.getUserId().equals(currentUserId)) {
-                        userResult = new WorkoutResultItem(
-                                resultItem.getName(),
-                                resultItem.getSurname(),
-                                resultItem.getSkillResult(),
-                                resultItem.getUserId(),
-                                resultItem.getWodLevel(),
-                                resultItem.getWodResult()
-                        );
+                final String currentUserId = sharedPreferences.getString(APP_PREFERENCES_OBJECTID, "");
+                backendApi.loadingWorkoutResults(selectedDay, new BackendResponseCallback<List<WorkoutResultItem>>() {
+                    @Override
+                    public void handleSuccess(List<WorkoutResultItem> response) {
+                        workoutResults = response;
+                        for (WorkoutResultItem resultItem: workoutResults) {
+                            if (resultItem.getUserId().equals(currentUserId)) {
+                                userResult = new WorkoutResultItem(
+                                        resultItem.getDateSession(),
+                                        resultItem.getName(),
+                                        resultItem.getSurname(),
+                                        resultItem.getSkillResult(),
+                                        resultItem.getUserId(),
+                                        resultItem.getWodLevel(),
+                                        resultItem.getWodResult()
+                                );
+                            }
+                        }
+                        liveData.postValue(true);
                     }
-                }
-                liveData.postValue(true);
+
+                    @Override
+                    public void handleFault(BackendlessFault fault) {
+                        liveData.postValue(false);
+                    }
+                });
             }
         });
         return liveData;
@@ -78,7 +89,7 @@ public class WodResultViewModel extends AndroidViewModel {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                NetworkCheck networkCheck = new NetworkCheck(getApplication());
+                NetworkUtils networkCheck = new NetworkUtils(getApplication());
                 boolean isConnected = networkCheck.checkConnection();
                 liveDataConnection.postValue(isConnected);
             }

@@ -1,6 +1,7 @@
 package ru.lizzzi.crossfit_rekord.items;
 
 public class WorkoutResultItem {
+    private long dateSession;
     private String name;
     private String surname;
     private String skillResult;
@@ -8,18 +9,24 @@ public class WorkoutResultItem {
     private String wodLevel;
     private String wodResult;
 
-    public WorkoutResultItem(String name,
+    public WorkoutResultItem(long dateSession,
+                             String name,
                              String surname,
                              String skillResult,
                              String userId,
                              String wodLevel,
                              String wodResult) {
+        this.dateSession = dateSession;
         this.name = name;
         this.surname = surname;
         this.skillResult = skillResult;
         this.userId = userId;
         this.wodLevel = wodLevel;
         this.wodResult = wodResult;
+    }
+
+    public long getDateSession() {
+        return dateSession;
     }
 
     public String getName() {

@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 import ru.lizzzi.crossfit_rekord.R;
 import ru.lizzzi.crossfit_rekord.backend.BackendApi;
 import ru.lizzzi.crossfit_rekord.data.WodStorage;
-import ru.lizzzi.crossfit_rekord.utils.NetworkCheck;
+import ru.lizzzi.crossfit_rekord.utils.NetworkUtils;
 import ru.lizzzi.crossfit_rekord.items.WorkoutResultItem;
 
 public class EnterResultViewModel extends AndroidViewModel {
@@ -56,6 +56,7 @@ public class EnterResultViewModel extends AndroidViewModel {
         String APP_PREFERENCES_OBJECTID = "ObjectId";
         String APP_PREFERENCES_USERNAME = "Username";
         workoutResult = new WorkoutResultItem(
+                dateSession,
                 sharedPreferences.getString(APP_PREFERENCES_USERNAME, ""),
                 sharedPreferences.getString(APP_PREFERENCES_USERSURNAME, ""),
                 "",
@@ -118,7 +119,7 @@ public class EnterResultViewModel extends AndroidViewModel {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                NetworkCheck networkCheck = new NetworkCheck(getApplication());
+                NetworkUtils networkCheck = new NetworkUtils(getApplication());
                 boolean isConnected = networkCheck.checkConnection();
                 liveDataConnection.postValue(isConnected);
             }

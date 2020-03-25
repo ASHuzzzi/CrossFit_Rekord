@@ -14,7 +14,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import ru.lizzzi.crossfit_rekord.backend.BackendApi;
-import ru.lizzzi.crossfit_rekord.utils.NetworkCheck;
+import ru.lizzzi.crossfit_rekord.utils.NetworkUtils;
 
 public class ChangeEmailViewModel extends AndroidViewModel {
 
@@ -64,7 +64,7 @@ public class ChangeEmailViewModel extends AndroidViewModel {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                NetworkCheck networkCheck = new NetworkCheck(getApplication());
+                NetworkUtils networkCheck = new NetworkUtils(getApplication());
                 boolean isConnected = networkCheck.checkConnection();
                 liveDataConnection.postValue(isConnected);
             }

@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import ru.lizzzi.crossfit_rekord.backend.BackendApi;
 import ru.lizzzi.crossfit_rekord.items.WorkoutResultItem;
 
 public class WodStorage extends SQLiteOpenHelper {
@@ -94,34 +93,17 @@ public class WodStorage extends SQLiteOpenHelper {
         return selectedDates;
     }
 
-    public void saveDates(String userId, List<Map> trainingResults) {
+    public void saveDates(List<WorkoutResultItem> trainingResults) {
         database = this.getWritableDatabase();
         ContentValues newValues = new ContentValues();
-        Date date;
-        String skillResult;
-        String wodLevel;
-        String wodResult;
-        BackendApi queries = new BackendApi();
         for (int i = 0; i < trainingResults.size(); i++) {
-            date = (Date) trainingResults.get(i).get(queries.TABLE_RESULTS_DATE_SESSION);
-            if (date != null) {
-                skillResult = (trainingResults.get(i).get(queries.TABLE_RESULTS_SKILL) != null)
-                        ? String.valueOf(trainingResults.get(i).get(queries.TABLE_RESULTS_SKILL))
-                        : "";
-                wodLevel = (trainingResults.get(i).get(queries.TABLE_RESULTS_WOD_LEVEL) != null)
-                        ? String.valueOf(trainingResults.get(i).get(queries.TABLE_RESULTS_WOD_LEVEL))
-                        : "";
-                wodResult = (trainingResults.get(i).get(queries.TABLE_RESULTS_WOD_RESULT) != null)
-                        ? String.valueOf(trainingResults.get(i).get(queries.TABLE_RESULTS_WOD_RESULT))
-                        : "";
-                newValues.put(DbHelper.OBJECT_ID, userId);
-                newValues.put(DbHelper.DATE_SESSION, date.getTime());
-                newValues.put(DbHelper.SKILL, skillResult);
-                newValues.put(DbHelper.WOD_LEVEL, wodLevel);
-                newValues.put(DbHelper.WOD, wodResult);
-                database.insert(DbHelper.TABLE_NAME, null, newValues);
-                newValues.clear();
-            }
+            newValues.put(DbHelper.OBJECT_ID, trainingResults.get(i).getUserId());
+            newValues.put(DbHelper.DATE_SESSION, trainingResults.get(i).getDateSession());
+            newValues.put(DbHelper.SKILL, trainingResults.get(i).getSkillResult());
+            newValues.put(DbHelper.WOD_LEVEL, trainingResults.get(i).getWodLevel());
+            newValues.put(DbHelper.WOD, trainingResults.get(i).getWodResult());
+            database.insert(DbHelper.TABLE_NAME, null, newValues);
+            newValues.clear();
         }
         database.close();
     }

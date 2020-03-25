@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 import ru.lizzzi.crossfit_rekord.ui.activities.MainActivity;
 import ru.lizzzi.crossfit_rekord.backend.BackendApi;
 import ru.lizzzi.crossfit_rekord.data.NotificationStorage;
-import ru.lizzzi.crossfit_rekord.utils.NetworkCheck;
+import ru.lizzzi.crossfit_rekord.utils.NetworkUtils;
 import ru.lizzzi.crossfit_rekord.items.NotificationItem;
 
 public class LoadNotificationsService extends Service {
@@ -42,7 +42,7 @@ public class LoadNotificationsService extends Service {
             public void run() {
                 for (int connectionAttempt = 0; connectionAttempt < 5; connectionAttempt++) {
                     dbStorage = new NotificationStorage(getApplicationContext());
-                    NetworkCheck network = new NetworkCheck(LoadNotificationsService.this);
+                    NetworkUtils network = new NetworkUtils(LoadNotificationsService.this);
                     boolean checkDone = network.checkConnection();
                     if (checkDone) {
                         String lastDateCheck = getLastDateCheck();

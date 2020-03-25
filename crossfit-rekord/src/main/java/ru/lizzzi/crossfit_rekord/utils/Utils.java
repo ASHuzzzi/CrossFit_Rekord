@@ -79,6 +79,7 @@ public class Utils {
         List<WorkoutResultItem> workoutResults = new ArrayList<>();
         for (Map resultItem: loadedResults) {
                 WorkoutResultItem workoutResultItem = new WorkoutResultItem(
+                        getDateAsLong(String.valueOf(resultItem.get(backendApi.TABLE_RESULTS_DATE_SESSION))),
                         String.valueOf(resultItem.get(backendApi.TABLE_RESULTS_USER_NAME)),
                         String.valueOf(resultItem.get(backendApi.TABLE_RESULTS_SURNAME)),
                         String.valueOf(resultItem.get(backendApi.TABLE_RESULTS_SKILL)),

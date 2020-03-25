@@ -6,11 +6,13 @@ import android.net.NetworkInfo;
 
 import java.io.IOException;
 
-public class NetworkCheck implements ru.lizzzi.crossfit_rekord.interfaces.NetworkCheck {
+import ru.lizzzi.crossfit_rekord.interfaces.NetworkCheck;
+
+public class NetworkUtils implements NetworkCheck {
 
     private Context context;
 
-    public NetworkCheck(Context context) {
+    public NetworkUtils(Context context) {
         this.context = context;
     }
 
@@ -19,10 +21,9 @@ public class NetworkCheck implements ru.lizzzi.crossfit_rekord.interfaces.Networ
         ConnectivityManager connectivityManager = (ConnectivityManager)context
                 .getApplicationContext()
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork =
-                connectivityManager != null
-                        ? connectivityManager.getActiveNetworkInfo()
-                        : null;
+        NetworkInfo activeNetwork = connectivityManager != null
+                ? connectivityManager.getActiveNetworkInfo()
+                : null;
         // проверка подключения
         if (activeNetwork != null && activeNetwork.isConnected()) {
             Runtime runtime = Runtime.getRuntime();
@@ -32,8 +33,9 @@ public class NetworkCheck implements ru.lizzzi.crossfit_rekord.interfaces.Networ
                 int exitValue = ipProcess.waitFor();
                 return (exitValue == 0);
             }
-            catch (IOException e)          { e.printStackTrace(); }
-            catch (InterruptedException e) { e.printStackTrace(); }
+            catch (IOException | InterruptedException e) {
+                e.printStackTrace();
+            }
             return true;
         }
         return false;

@@ -17,7 +17,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import ru.lizzzi.crossfit_rekord.backend.BackendApi;
-import ru.lizzzi.crossfit_rekord.utils.NetworkCheck;
+import ru.lizzzi.crossfit_rekord.utils.NetworkUtils;
 import ru.lizzzi.crossfit_rekord.items.ScheduleItem;
 import ru.lizzzi.crossfit_rekord.items.ScheduleWeekly;
 import ru.lizzzi.crossfit_rekord.interfaces.BackendResponseCallback;
@@ -132,7 +132,7 @@ public class GymScheduleViewModel extends AndroidViewModel {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                NetworkCheck networkCheck = new NetworkCheck(getApplication());
+                NetworkUtils networkCheck = new NetworkUtils(getApplication());
                 boolean isConnected = networkCheck.checkConnection();
                 liveDataConnection.postValue(isConnected);
             }

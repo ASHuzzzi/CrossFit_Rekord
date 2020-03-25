@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 
+import com.backendless.exceptions.BackendlessFault;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 
 import java.text.ParseException;
@@ -17,7 +18,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.TimeZone;
 import java.util.concurrent.Executor;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -26,7 +26,9 @@ import java.util.concurrent.TimeUnit;
 
 import ru.lizzzi.crossfit_rekord.backend.BackendApi;
 import ru.lizzzi.crossfit_rekord.data.WodStorage;
-import ru.lizzzi.crossfit_rekord.utils.NetworkCheck;
+import ru.lizzzi.crossfit_rekord.interfaces.BackendResponseCallback;
+import ru.lizzzi.crossfit_rekord.items.WorkoutResultItem;
+import ru.lizzzi.crossfit_rekord.utils.NetworkUtils;
 
 public class CalendarWodViewModel  extends AndroidViewModel {
 
@@ -42,11 +44,10 @@ public class CalendarWodViewModel  extends AndroidViewModel {
             TimeUnit.SECONDS,
             new LinkedBlockingQueue<Runnable>());
 
-    private final String APP_PREFERENCES_OBJECTID = "ObjectId";
     private final String APP_PREFERENCES_SELECTEDDAY = "SelectedDay";
     private SharedPreferences sharedPreferences;
 
-    private String userObjectID;
+    private String userId;
     private long timeStart;
     private long timeFinish;
     private Calendar calendar;
@@ -54,10 +55,10 @@ public class CalendarWodViewModel  extends AndroidViewModel {
     public CalendarWodViewModel(@NonNull Application application) {
         super(application);
         String APP_PREFERENCES = "audata";
-        sharedPreferences = getApplication().getSharedPreferences(
-                APP_PREFERENCES,
-                Context.MODE_PRIVATE);
-        userObjectID = sharedPreferences.getString(APP_PREFERENCES_OBJECTID, "");
+        String APP_PREFERENCES_OBJECTID = "ObjectId";
+        sharedPreferences =
+                getApplication().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        userId = sharedPreferences.getString(APP_PREFERENCES_OBJECTID, "");
         dbStorage = new WodStorage(getApplication());
         calendar = Calendar.getInstance();
     }
@@ -67,34 +68,42 @@ public class CalendarWodViewModel  extends AndroidViewModel {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                boolean datesIsLoading = false;
                 BackendApi backendApi = new BackendApi();
-                List<Map> trainingResults = backendApi.loadingCalendarWod(
-                        userObjectID,
+                backendApi.loadingCalendarWod(
+                        userId,
                         timeStart,
-                        timeFinish);
-                if (trainingResults != null) {
-                    ArrayList<Date> datesForLoadInLocalDb = new ArrayList<>();
-                    Date parseDate;
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-                            "EEE MMM dd HH:mm:ss z yyyy",
-                            Locale.ENGLISH);
-                    for (int i = 0; i < trainingResults.size(); i++) {
-                        String dateInStringFormat = String.valueOf(
-                                trainingResults.get(i).get(backendApi.TABLE_RESULTS_DATE_SESSION));
-                        try {
-                            parseDate = simpleDateFormat.parse(dateInStringFormat);
-                            datesForLoadInLocalDb.add(parseDate);
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    String userId = sharedPreferences.getString(APP_PREFERENCES_OBJECTID, "");
-                    dbStorage.saveDates(userId, trainingResults);
-                    selectDates = datesForLoadInLocalDb;
-                    datesIsLoading = true;
-                }
-                liveData.postValue(datesIsLoading);
+                        timeFinish,
+                        new BackendResponseCallback<List<WorkoutResultItem>>() {
+                            @Override
+                            public void handleSuccess(List<WorkoutResultItem> trainingResults) {
+                                if (trainingResults != null && !trainingResults.isEmpty()) {
+                                    dbStorage.saveDates(trainingResults);
+                                    ArrayList<Date> datesForLoadInLocalDb = new ArrayList<>();
+                                    Date parseDate;
+                                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+                                            "EEE MMM dd HH:mm:ss z yyyy",
+                                            Locale.ENGLISH);
+                                    for (int i = 0; i < trainingResults.size(); i++) {
+                                        String dateInStringFormat = String.valueOf(
+                                                trainingResults.get(i).getDateSession());
+                                        try {
+                                            parseDate = simpleDateFormat.parse(dateInStringFormat);
+                                            datesForLoadInLocalDb.add(parseDate);
+                                        } catch (ParseException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                    selectDates = datesForLoadInLocalDb;
+                                }
+                                liveData.postValue(true);
+                            }
+
+                            @Override
+                            public void handleFault(BackendlessFault fault) {
+                                liveData.postValue(false);
+                            }
+                        });
+
             }
         });
         return liveData;
@@ -105,7 +114,7 @@ public class CalendarWodViewModel  extends AndroidViewModel {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                NetworkCheck networkCheck = new NetworkCheck(getApplication());
+                NetworkUtils networkCheck = new NetworkUtils(getApplication());
                 boolean isConnected = networkCheck.checkConnection();
                 liveDataConnection.postValue(isConnected);
             }
@@ -115,7 +124,7 @@ public class CalendarWodViewModel  extends AndroidViewModel {
 
     public Boolean localDatesIsNotAvailable() {
         selectDates = dbStorage.selectDates(
-                sharedPreferences.getString(APP_PREFERENCES_OBJECTID, ""),
+                userId,
                 timeStart,
                 timeFinish);
         return selectDates.isEmpty();
